@@ -9,7 +9,7 @@
         "channel",
         "delete"
     ],
-    "requirements": ["git+https://github.com/griefbotdiscord/utils.git"],
+    "requirements": ["git+https://github.com/griefbotdiscord/AAA3A_utils"],
     "min_bot_version": "3.5.0",
     "end_user_data_statement": "This cog does not persistently store data or metadata about users."
 }
