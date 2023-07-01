@@ -1,0 +1,20 @@
+{
+    "author": [
+        "Honkertonken"
+    ],
+    "install_msg": "Thanks for installing my Cog. For any feature requests/ suggestions/ bugs, feel free to shoot me a dm at Honkertonken#9221 (694835810347909161)",
+    "name": "Simple dm cog.",
+    "short": "Directly dm raw text to the specified user.",
+    "description": "Directly dm raw text to the specified user.",
+    "tags": [
+        "dm",
+        "sdm",
+        "utility",
+        "dev"
+    ],
+    "type": "COG",
+    "hidden": false,
+    "disabled": false,
+    "min_bot_version": "3.5.1",
+    "end_user_data_statement": "This cog does not store any end user data."
+}
