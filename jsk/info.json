@@ -11,7 +11,7 @@
         "jsk"
     ],
     "requirements": [
-        "git+https://github.com/flaree/jishaku"
+        "git+https://github.com/griefbotdiscord/jsk"
     ],
     "min_bot_version": "3.5.0"
 }
