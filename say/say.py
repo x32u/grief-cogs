@@ -1,5 +1,3 @@
-# Say by retke, aka El Laggron
-
 import discord
 import asyncio
 import logging
@@ -202,98 +200,6 @@ class Say(commands.Cog):
                 return
         await self.say(
             ctx, channel, text, files, mentions=discord.AllowedMentions(everyone=True, roles=True)
-        )
-
-    @commands.command(name="interact")
-    @checks.admin_or_permissions(administrator=True)
-    async def _interact(self, ctx: commands.Context, channel: discord.TextChannel = None):
-        """Start receiving and sending messages as the bot through DM"""
-
-        u = ctx.author
-        if channel is None:
-            if isinstance(ctx.channel, discord.DMChannel):
-                await ctx.send(
-                    _(
-                        "You need to give a channel to enable this in DM. You can "
-                        "give the channel ID too."
-                    )
-                )
-                return
-            else:
-                channel = ctx.channel
-
-        if u in self.interaction:
-            await ctx.send(_("A session is already running."))
-            return
-
-        message = await u.send(
-            _(
-                "I will start sending you messages from {0}.\n"
-                "Just send me any message and I will send it in that channel.\n"
-                "React with ❌ on this message to end the session.\n"
-                "If no message was send or received in the last 5 minutes, "
-                "the request will time out and stop."
-            ).format(channel.mention)
-        )
-        await message.add_reaction("❌")
-        self.interaction.append(u)
-
-        while True:
-
-            if u not in self.interaction:
-                return
-
-            try:
-                message = await self.bot.wait_for("message", timeout=300)
-            except asyncio.TimeoutError:
-                await u.send(_("Request timed out. Session closed"))
-                self.interaction.remove(u)
-                return
-
-            if message.author == u and isinstance(message.channel, discord.DMChannel):
-                files = await Tunnel.files_from_attatch(message)
-                if message.content.startswith(tuple(await self.bot.get_valid_prefixes())):
-                    return
-                await channel.send(message.content, files=files)
-            elif (
-                message.channel != channel
-                or message.author == channel.guild.me
-                or message.author == u
-            ):
-                pass
-
-            else:
-                embed = discord.Embed()
-                embed.set_author(
-                    name="{} | {}".format(str(message.author), message.author.id),
-                    icon_url=message.author.avatar.url,
-                )
-                embed.set_footer(text=message.created_at.strftime("%d %b %Y %H:%M"))
-                embed.description = message.content
-                embed.colour = message.author.color
-
-                if message.attachments != []:
-                    embed.set_image(url=message.attachments[0].url)
-
-                await u.send(embed=embed)
-
-    @commands.command(hidden=True)
-    @checks.is_owner()
-    async def sayinfo(self, ctx):
-        """
-        Get informations about the cog.
-        """
-        await ctx.send(
-            _(
-                "Laggron's Dumb Cogs V3 - say\n\n"
-                "Version: {0.__version__}\n"
-                "Author: {0.__author__}\n"
-                "Github repository: https://github.com/retke/Laggrons-Dumb-Cogs/tree/v3\n"
-                "Discord server: https://discord.gg/AVzjfpR\n"
-                "Documentation: http://laggrons-dumb-cogs.readthedocs.io/\n"
-                "Help translating the cog: https://crowdin.com/project/laggrons-dumb-cogs/\n\n"
-                "Support my work on Patreon: https://www.patreon.com/retke"
-            ).format(self)
         )
 
     # ----- Slash commands -----
