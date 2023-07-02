@@ -36,7 +36,7 @@ class MemberCount(commands.Cog):
         pass
 
     @commands.guild_only()
-    @commands.command(aliases=["memberc"])
+    @commands.command(aliases=["mc"])
     async def membercount(self, ctx: GuildContext) -> None:
         """Get count of all members + humans and bots separately."""
         guild = ctx.guild
