@@ -1,4 +1,4 @@
-"""The autoroomset command."""
+
 import asyncio
 from abc import ABC
 from typing import Optional

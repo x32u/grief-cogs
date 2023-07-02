@@ -1,4 +1,3 @@
-"""A simple template engine, safe for untrusted user templates."""
 
 from contextlib import suppress
 from typing import Any, Optional

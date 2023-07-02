@@ -1,4 +1,4 @@
-"""The autoroom command."""
+
 import datetime
 from abc import ABC
 from typing import Any, Optional, Union

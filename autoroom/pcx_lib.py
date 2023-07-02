@@ -1,4 +1,4 @@
-"""Shared code across multiple cogs."""
+
 import asyncio
 from contextlib import suppress
 from typing import Any, Mapping, Optional, Union
