@@ -12,12 +12,6 @@ log = logging.getLogger("red.flare.antispam")
 
 
 class AntiSpam(commands.Cog):
-    """Blacklist those who spam commands."""
-
-    def format_help_for_context(self, ctx):
-        """Thanks Sinbad."""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\nCog Version: {self.__version__}\nAuthor: {self.__author__}"
 
     def __init__(self, bot):
         self.bot = bot
