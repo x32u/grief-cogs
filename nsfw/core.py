@@ -31,6 +31,19 @@ class Core(commands.Cog):
         """Nothing to delete."""
         return
 
+    def __init__(self, bot: Red):
+        self.bot = bot
+        self.session = aiohttp.ClientSession(
+            headers={
+                "User-Agent": (
+                    f"Red-DiscordBot PredaCogs-Nsfw/"
+                    f"(Python/{'.'.join(map(str, sys.version_info[:3]))} aiohttp/{aiohttp.__version__})"
+                )
+            }
+        )
+        self.config = Config.get_conf(self, identifier=512227974893010954, force_registration=True)
+        self.config.register_global(use_reddit_api=False)
+
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
 
