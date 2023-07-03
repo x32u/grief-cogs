@@ -63,10 +63,6 @@ class AnotherPingCog(commands.Cog):
                 self.bot.remove_command("ping")
                 self.bot.add_command(old_ping)
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad."""
-        return format_help(self, ctx)
-
     async def red_delete_data_for_user(self, **kwargs) -> None:
         """Nothing to delete"""
         return
