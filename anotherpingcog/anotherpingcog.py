@@ -37,12 +37,8 @@ LEFT_ARROW = "\N{LEFTWARDS BLACK ARROW}\N{VARIATION SELECTOR-16}"
 old_ping = None
 
 
-class AnotherPingCog(commands.Cog):
-    """
-    A rich embed ping command with latency timings.
+class AnotherPingCog:
 
-    You can customise the emojis, colours or force embeds with `[p]pingset`.
-    """
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
