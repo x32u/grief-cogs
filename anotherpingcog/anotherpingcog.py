@@ -532,5 +532,4 @@ async def setup(bot: Red) -> None:
         bot.remove_command(old_ping.name)
 
     cog = AnotherPingCog(bot)
-    await out_of_date_check("anotherpingcog", cog.__version__)
     await bot.add_cog(cog)
