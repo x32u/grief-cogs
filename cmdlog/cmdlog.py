@@ -60,10 +60,6 @@ class CmdLog(commands.Cog):
 
         log.trace("cmdlog unload")
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad."""
-        return format_help(self, ctx)
-
     # not supporting red_delete_data_for_user - see EUD statement in info.json or `[p]cog info`
     # whilst it is possible to remove data from the internal cache, data in the bot's logs isn't
     # so easy to remove so imo there's no point removing only 1 data location

@@ -10,9 +10,6 @@ from redbot.core.utils.predicates import ReactionPredicate
 
 
 class AutoKick(commands.Cog):
-    """
-    AutoKick users on join.
-    """
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot

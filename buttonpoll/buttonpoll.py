@@ -53,10 +53,6 @@ class ButtonPoll(commands.Cog):
                         ).poll_user_choices() as user_choices:
                             del user_choices[poll_id][user]
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad."""
-        return format_help(self, ctx)
-
     async def cog_unload(self) -> None:
         self.loop.cancel()
         self.bot.remove_dev_env_value("bpoll")
@@ -68,11 +64,6 @@ class ButtonPoll(commands.Cog):
         self.plot_executor.shutdown(wait=False)
 
         log.verbose("buttonpoll successfully unloaded")
-
-    @commands.command(hidden=True)
-    async def buttonpollinfo(self, ctx: commands.Context):
-        main = await format_info(ctx, self.qualified_name, self.__version__)
-        return await ctx.send(main)
 
     async def cog_load(self) -> None:
         # re-initialise views

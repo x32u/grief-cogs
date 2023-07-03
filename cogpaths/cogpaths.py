@@ -14,10 +14,6 @@ class CogPaths(commands.Cog):
     def __init__(self, bot: Red):
         self.bot = bot
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        context = super().format_help_for_context(ctx)
-        return f"{context}\n\nAuthor: {self.__author__}\nVersion: {self.__version__}"
-
     async def red_delete_data_for_user(self, **kwargs):
         return
 

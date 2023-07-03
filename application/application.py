@@ -44,10 +44,6 @@ class Application(commands.Cog):
         # nothing to delete
         return
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        context = super().format_help_for_context(ctx)
-        return f"{context}\n\nVersion: {self.__version__}"
-
     @commands.max_concurrency(1, commands.BucketType.member, wait=True)
     @commands.command()
     @commands.guild_only()
