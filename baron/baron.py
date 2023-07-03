@@ -35,11 +35,6 @@ def disabled_or_data(data):
 
 class Baron(commands.Cog):
 
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        n = "\n" if "\n\n" not in pre_processed else ""
-        return f"{pre_processed}{n}\nCog Version: {self.__version__}"
-
     default_global = {
         "limit": 0,
         "log_channel": None,

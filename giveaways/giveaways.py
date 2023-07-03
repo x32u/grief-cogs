@@ -22,11 +22,6 @@ GIVEAWAY_KEY = "giveaways"
 
 
 class Giveaways(commands.Cog):
-    """Giveaway Commands"""
-
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\nCog Version: {self.__version__}\nAuthor: {self.__author__}"
 
     def __init__(self, bot):
         self.bot = bot

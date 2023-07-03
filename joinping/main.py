@@ -17,8 +17,6 @@ guild_defaults = {
 
 
 class JoinPing(commands.Cog):
-    """
-    Ghost ping users when they join."""
 
     def __init__(self, bot: Red):
         self.bot = bot

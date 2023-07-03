@@ -12,7 +12,6 @@ from redbot.core.utils.chat_formatting import humanize_list
 
 
 class Deleter(commands.Cog):
-    """Set channels for their messages to be auto-deleted after a specified amount of time."""
 
     def __init__(self, bot):
         self.bot = bot

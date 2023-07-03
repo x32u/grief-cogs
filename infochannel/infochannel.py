@@ -43,12 +43,6 @@ async def get_channel_counts(category, guild):
 
 
 class InfoChannel(Cog):
-    """
-    Create a channel with updating server info
-
-    This relies on editing channels, which is a strictly rate-limited activity.
-    As such, updates will not be frequent. Currently capped at 1 per 5 minutes per server.
-    """
 
     def __init__(self, bot: Red):
         super().__init__()

@@ -78,11 +78,6 @@ class CapturePrint:
 
 
 class FIFO(commands.Cog):
-    """
-    Simple Scheduling Cog
-
-    Named after the simplest scheduling algorithm: First In First Out
-    """
 
     def __init__(self, bot: Red):
         super().__init__()

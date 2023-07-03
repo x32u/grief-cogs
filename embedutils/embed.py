@@ -52,19 +52,9 @@ def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
 
 
 class EmbedUtils(commands.Cog):
-    """
-    Create, post, and store embeds.
-    """
-
-    __version__ = "1.6.0"
 
     EMBED_LIMIT = 50
     GLOBAL_EMBED_LIMIT = 100
-
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        n = "\n" if "\n\n" not in pre_processed else ""
-        return f"{pre_processed}{n}\nCog Version: {self.__version__}"
 
     def __init__(self, bot):
         self.bot = bot

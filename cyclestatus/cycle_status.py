@@ -91,12 +91,6 @@ else:
 
 
 class CycleStatus(commands.Cog):
-    """Automatically change the status of your bot every minute"""
-
-    __authors__: Final[List[str]] = ["Jojo#7791"]
-    # These people have suggested something for this cog!
-    __suggesters__: Final[List[str]] = ["ItzXenonUnity | Lou#2369", "StormyGalaxy#1297"]
-    __version__: Final[str] = "1.0.12"
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -113,16 +107,6 @@ class CycleStatus(commands.Cog):
 
     async def cog_unload(self) -> None:
         self.main_task.cancel()
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        pre = super().format_help_for_context(ctx)
-        plural = "s" if len(self.__authors__) > 1 else ""
-        return (
-            f"{pre}\n"
-            f"Author{plural}: `{humanize_list(self.__authors__)}`\n"
-            f"Version: `{self.__version__}`\n"
-            f"People who have put in suggestions: `{humanize_list(self.__suggesters__)}`"
-        )
 
     @commands.command(name="cyclestatusversion", aliases=["csversion"])
     async def cycle_status_version(self, ctx: commands.Context):

@@ -24,14 +24,6 @@ BUMP_RE = re.compile(r"!d bump\b")
 
 
 class DisboardReminder(commands.Cog):
-    """
-    Set a reminder to bump on Disboard.
-    """
-
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        n = "\n" if "\n\n" not in pre_processed else ""
-        return f"{pre_processed}{n}\nCog Version: {self.__version__}"
 
     default_guild_cache = {"channel": None, "tasks": {}}
 

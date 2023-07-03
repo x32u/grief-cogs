@@ -5,7 +5,7 @@ from redbot.core import checks
 
 
 class Hider(commands.Cog):
-	"""Hide commands from users in help."""
+	
 	def __init__(self, bot):
 		self.bot = bot
 		self.config = Config.get_conf(self, identifier=145519400223506432)

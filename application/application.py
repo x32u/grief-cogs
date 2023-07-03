@@ -11,9 +11,6 @@ from redbot.core.bot import Red
 
 
 class Application(commands.Cog):
-    """
-    Receive and moderate staff applications with customizable questions.
-    """
 
     def __init__(self, bot: Red):
         self.bot = bot

@@ -9,6 +9,7 @@ humanize_bool = lambda b: "enabled" if b else "disabled"
 
 
 class BanOnLeave(commands.Cog):
+    
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, 1234567890, force_registration=True)

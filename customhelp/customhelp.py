@@ -56,9 +56,6 @@ Config Structure:
 
 @cog_i18n(_)
 class CustomHelp(commands.Cog):
-    """
-    A custom customisable help for fun and profit
-    """
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -101,13 +98,6 @@ class CustomHelp(commands.Cog):
 
     def cog_unload(self):
         self.bot.reset_help_formatter()
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """
-        Thanks Sinbad!
-        """
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
 
     async def refresh_arrows(self):
         """This is to make the emoji arrows objects be in their proper types"""

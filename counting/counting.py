@@ -33,11 +33,7 @@ class Counting(commands.Cog):
         for guild in self.bot.guilds:
             if user_id == await self.config.guild(guild).last():
                 await self.config.guild(guild).last.clear()
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        context = super().format_help_for_context(ctx)
-        return f"{context}\n\nVersion: {self.__version__}"
-
+                
     @checks.admin()
     @checks.bot_has_permissions(manage_channels=True, manage_messages=True)
     @commands.group(autohelp=True, aliases=["counting"])

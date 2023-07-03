@@ -10,9 +10,6 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
 class DevLogs(commands.Cog):
-    """
-    Keep a log of all that evals and debugs.
-    """
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
@@ -24,13 +21,6 @@ class DevLogs(commands.Cog):
 
         default_global = {"default_channel": None, "bypass": []}
         self.config.register_global(**default_global)
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """
-        Thanks Sinbad!
-        """
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
 
     async def red_delete_data_for_user(
         self, *, requester: RequestType, user_id: int

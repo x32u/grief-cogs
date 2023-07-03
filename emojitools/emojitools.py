@@ -23,7 +23,6 @@ ROLE_HIERARCHY = "I cannot perform this action due to the Discord role hierarchy
 
 
 class EmojiTools(commands.Cog):
-    """Tools for Managing Custom Emojis"""
 
     def __init__(self, bot):
         self.bot = bot

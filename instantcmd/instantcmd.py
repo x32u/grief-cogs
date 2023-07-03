@@ -54,9 +54,6 @@ class FakeListener:
 
 
 class InstantCommands(BaseCog):
-    """
-    Generate a new command from a code snippet, without making a new cog.
-    """
 
     def __init__(self, bot: Red):
         self.bot = bot

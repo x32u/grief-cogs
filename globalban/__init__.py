@@ -14,14 +14,6 @@ logger = getLogger("red.dia.GlobalBan")
 
 
 class GlobalBan(commands.Cog):
-    """Ban users globally from all servers I'm in."""
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad."""
-        pre_processed = super().format_help_for_context(ctx)
-        return (
-            f"{pre_processed}\n**Cog Version:** {self.__version__}\n**Author:** {self.__author__}"
-        )
 
     def get_avatar_url(self, user: Union[discord.User, discord.Member]) -> str:
         if discord.version_info.major == 1:

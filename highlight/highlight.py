@@ -32,7 +32,6 @@ async def restrictedhighlight_check(ctx):
 
 
 class Highlight(commands.Cog):
-    """Be notified when keywords are sent."""
 
     def __init__(self, bot):
         self.bot = bot
@@ -80,18 +79,6 @@ class Highlight(commands.Cog):
         for channel in data:
             async with self.config.channel_from_id(channel).highlight() as highlight:
                 del highlight[str(user_id)]
-        await self.generate_cache()
-
-    __version__ = "1.11.1"
-    __author__ = "flare#0001"
-
-    def format_help_for_context(self, ctx: commands.Context):
-        """Thanks Sinbad."""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\nCog Version: {self.__version__}\nAuthor: {self.__author__}"
-
-    async def initalize(self):
-        await self.migrate_config()
         await self.generate_cache()
 
     async def generate_cache(self):

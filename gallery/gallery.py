@@ -10,9 +10,6 @@ from redbot.core.utils.chat_formatting import humanize_list
 
 
 class Gallery(commands.Cog):
-    """
-    Set channels as galleries, deleting all messages that don't contain any attachments.
-    """
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -25,10 +22,6 @@ class Gallery(commands.Cog):
     async def red_delete_data_for_user(self, *, requester, user_id):
         # nothing to delete
         return
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        context = super().format_help_for_context(ctx)
-        return f"{context}\n\nVersion: {self.__version__}"
 
     @commands.group(autohelp=True)
     @commands.guild_only()

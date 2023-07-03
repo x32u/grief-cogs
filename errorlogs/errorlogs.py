@@ -1,4 +1,4 @@
-"""Module for the ErrorLogs cog."""
+
 import asyncio
 import contextlib
 import re
@@ -27,7 +27,6 @@ LATEST_LOG_RE = re.compile(r"latest(?:-part(?P<part>\d+))?\.log")
 
 
 class ErrorLogs(commands.Cog):
-    """Log tracebacks of command errors in discord channels."""
 
     def __init__(self):
         self.conf = Config.get_conf(self, identifier=UNIQUE_ID, force_registration=True)

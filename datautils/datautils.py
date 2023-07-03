@@ -20,15 +20,10 @@ from .utils import _
 
 @cog_i18n(_)
 class DataUtils(commands.Cog):
-    """Commands for getting information about users or servers."""
 
     # noinspection PyMissingConstructor
     def __init__(self, bot):
         self.bot = bot
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:  # Thanks Sinbad!
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\n**Version**: {self.__version__}"
 
     async def red_delete_data_for_user(self, **kwargs):
         return

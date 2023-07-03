@@ -16,10 +16,6 @@ logger = logging.getLogger("red.trusty-cogs.ExtendedModLog")
 
 @cog_i18n(_)
 class ExtendedModLog(EventMixin, commands.Cog):
-    """
-    Extended modlogs
-    Works with core modlogset channel
-    """
 
     def __init__(self, bot):
         self.bot = bot
@@ -29,13 +25,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
         self.settings = {}
         self._ban_cache = {}
         self.invite_links_loop.start()
-
-    def format_help_for_context(self, ctx: commands.Context):
-        """
-        Thanks Sinbad!
-        """
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
 
     async def cog_unload(self):
         self.invite_links_loop.stop()

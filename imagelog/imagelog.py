@@ -7,7 +7,6 @@ from typing import Optional
 IMAGE_TYPES = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp")
 
 class ImageLog(commands.Cog):
-    """Logs deleted images for moderation purposes."""
 
     def __init__(self, bot):
         super().__init__()

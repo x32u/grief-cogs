@@ -41,12 +41,6 @@ CHANNELS = [
 
 
 class JoinMessage(commands.Cog):
-    """Send a message on guild join."""
-
-    def format_help_for_context(self, ctx):
-        """Thanks Sinbad."""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\nCog Version: {self.__version__}\nAuthor: {self.__author__}"
 
     async def red_get_data_for_user(self, *, user_id: int):
         # this cog does not story any data
