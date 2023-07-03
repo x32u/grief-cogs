@@ -37,7 +37,7 @@ LEFT_ARROW = "\N{LEFTWARDS BLACK ARROW}\N{VARIATION SELECTOR-16}"
 old_ping = None
 
 
-class AnotherPingCog(commands.Cog):
+class AnotherPingCog:
 
 
     def __init__(self, bot: Red) -> None:
