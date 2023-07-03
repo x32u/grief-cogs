@@ -45,34 +45,6 @@ def get_vex_logger(name: str) -> RedTraceLogger:
 
     return red_get_logger(final_name)
 
-
-def format_help(self: commands.Cog, ctx: commands.Context) -> str:
-    """Wrapper for format_help_for_context. **Not** currently for use outside my cogs.
-
-    Thanks Sinbad.
-
-    Parameters
-    ----------
-    self : commands.Cog
-        The Cog class
-    context : commands.Context
-        Context
-
-    Returns
-    -------
-    str
-        Formatted help
-    """
-    docs = DOCS_BASE.format(self.qualified_name.lower())
-    pre_processed = super(type(self), self).format_help_for_context(ctx)  # type:ignore
-
-    return (
-        f"{pre_processed}\n\nAuthor: **`{self.__author__}`**\nCog Version: "  # type:ignore
-        f"**`{self.__version__}`**\n{docs}"  # type:ignore
-    )
-    # adding docs link here so doesn't show up in auto generated docs
-
-
 # TODO: stop using red internal util
 
 
