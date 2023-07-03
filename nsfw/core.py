@@ -47,11 +47,6 @@ class Core(commands.Cog):
     def cog_unload(self):
         self.bot.loop.create_task(self.session.close())
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad!"""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
-
     async def _get_imgs(self, subs: List[str] = None):
         """Get images from Reddit API."""
         tries = 0
