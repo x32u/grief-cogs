@@ -16,9 +16,8 @@ log = logging.getLogger("red.sticky")
 
 
 class Sticky(commands.Cog):
-    """Sticky messages to your channels."""
 
-    REPOST_COOLDOWN = 3
+    REPOST_COOLDOWN = 10
 
     def __init__(self, bot):
         super().__init__()

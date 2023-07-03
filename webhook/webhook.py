@@ -50,11 +50,6 @@ class Webhook(commands.Cog):
     async def red_delete_data_for_user(self, **kwargs):
         return
 
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        n = "\n" if "\n\n" not in pre_processed else ""
-        return f"{pre_processed}{n}\nCog Version: {self.__version__}"
-
     @staticmethod
     async def delete_quietly(ctx: commands.Context):
         if ctx.channel.permissions_for(ctx.me).manage_messages:

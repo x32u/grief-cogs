@@ -22,7 +22,6 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
 class NitroRole(commands.Cog):
-    """Welcome new nitro boosters and/or give them a special role!"""
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot

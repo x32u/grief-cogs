@@ -25,7 +25,6 @@ class LIStsSTaRtaTiNDeX1(commands.CheckFailure):
 
 
 class Maintenance(commands.Cog):
-    """Put the bot on maintenance, and allow a customizable message to the people not whitelisted"""
 
     def __init__(self, bot):
         self.bot = bot

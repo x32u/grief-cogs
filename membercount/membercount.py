@@ -9,8 +9,7 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
 class MemberCount(commands.Cog):
-    """Get count of all members + humans and bots separately."""
-
+    
     async def red_get_data_for_user(self, *, user_id: int) -> Dict[str, Any]:
         # this cog does not story any data
         return {}

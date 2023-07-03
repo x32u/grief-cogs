@@ -8,12 +8,6 @@ from redbot.core.utils.chat_formatting import pagify
 
 
 class Pp(commands.Cog):
-    """
-    Shows your or someone else's pp length.
-
-    Note - 100% accurate
-
-    """
 
     def __init__(self, bot: Red):
         self.bot = bot

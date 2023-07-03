@@ -12,25 +12,12 @@ log = logging.getLogger("red.kuro-cogs.reactlog")
 
 
 class ReactLog(commands.Cog):
-    """Log when reactions are added or removed."""
-
-    __author__ = humanize_list(["Kuro"])
-    __version__ = "0.0.1"
 
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, 9517306284, True)
         self.config.register_guild(
             channel=None, log_all=False, react_add=False, react_remove=False
-        )
-
-    def format_help_for_context(self, ctx: commands.Context):
-        """Thanks Sinbad!"""
-        pre_processed = super().format_help_for_context(ctx)
-        return (
-            f"{pre_processed}\n\n"
-            f"`Cog Author  :` {self.__author__}\n"
-            f"`Cog Version :` {self.__version__}"
         )
 
     @commands.guild_only()

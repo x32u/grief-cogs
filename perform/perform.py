@@ -140,13 +140,6 @@ class Perform(commands.Cog):
         self.config.register_custom("Target", **default_target)
         self.cache = {}
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """
-        Thanks Sinbad!
-        """
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nAuthors: {', '.join(self.__author__)}\nCog Version: {self.__version__}"
-
     def cog_unload(self):
         global hug
         if hug:

@@ -72,10 +72,6 @@ class LastFM(
         self.chart_data = {}
         self.chart_data_loop = self.bot.loop.create_task(self.chart_clear_loop())
 
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
-
     async def red_delete_data_for_user(self, *, requester, user_id):
         await self.config.user_from_id(user_id).clear()
 

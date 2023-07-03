@@ -18,16 +18,11 @@ from .dashboard_integration import DashboardIntegration
 from .settings import settings
 from .ticket import Ticket
 
-# Credits:
-# General repo credits.
-# Thanks to Yami for the technique in the init file of some cogs to load the interaction client only if it is not already loaded! Before this fix, when a user clicked a button, the actions would be run about 10 times, causing a huge spam and loop in the channel.
-
 _ = Translator("TicketTool", __file__)
 
 
 @cog_i18n(_)
 class TicketTool(settings, DashboardIntegration, Cog):
-    """A cog to manage a tickets system!"""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)

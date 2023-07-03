@@ -24,9 +24,6 @@ ROLE_MENTION_REGEX = re.compile(r"<@&(?P<id>[0-9]{17,19})>")
 
 @cog_i18n(_)
 class Say(commands.Cog):
-    """
-    Speak as if you were the bot
-    """
 
     def __init__(self, bot: "Red"):
         self.bot = bot

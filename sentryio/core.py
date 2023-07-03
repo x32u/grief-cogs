@@ -16,8 +16,7 @@ log = logging.getLogger("red.sentinel.sentryio.core")
 
 
 class SentryIO(commands.Cog):
-    """Sentry.IO Logger integration"""
-
+    
     def __init__(self, bot):
         self.bot = bot
 

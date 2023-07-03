@@ -10,7 +10,6 @@ LATEST_LOGS = os.path.join(core_data_path(), "logs/latest.log")
 MAX_PAGE_LENGTH = 1970
 
 class Logs(commands.Cog):
-    """Owner cog to show the latest logs."""
 
     def __init__(self, bot: Red):
         super().__init__()

@@ -70,14 +70,7 @@ class Welcome(Events, commands.Cog):
         self.joined = {}
         self.today_count = {"now": datetime.now(timezone.utc)}
         self.group_welcome.start()
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """
-        Thanks Sinbad!
-        """
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
-
+        
     async def red_delete_data_for_user(self, **kwargs):
         """
         Nothing to delete

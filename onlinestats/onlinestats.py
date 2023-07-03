@@ -3,7 +3,7 @@ from redbot.core import commands
 
 
 class OnlineStats(commands.Cog):
-	"""Information about what devices people are using to run discord."""
+
 	def __init__(self, bot):
 		self.bot = bot
 

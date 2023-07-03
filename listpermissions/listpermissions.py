@@ -11,7 +11,6 @@ from prettytable import PrettyTable
 
 
 class ListPermissions(commands.Cog):
-    """Get the allowed/disable permissions in a guild or channel for a role or member"""
 
     def __init__(self, bot):
         self.bot = bot

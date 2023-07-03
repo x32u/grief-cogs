@@ -12,9 +12,6 @@ from redbot.core.bot import Red
 
 
 class Marriage(commands.Cog):
-    """
-    Marry, divorce, and give gifts to other members.
-    """
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -81,10 +78,6 @@ class Marriage(commands.Cog):
                     if len(member_spouses) == 0:
                         await self.config.member(member).married.set(False)
                     await self.config.member(member).spouses.set(member_spouses)
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        context = super().format_help_for_context(ctx)
-        return f"{context}\n\nVersion: {self.__version__}"
 
     @property
     def _DEFAULT_ACTIONS(self):

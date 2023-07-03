@@ -12,7 +12,6 @@ _ = Translator("UrlButtons", __file__)
 
 @cog_i18n(_)
 class UrlButtons(Cog):
-    """A cog to have url-buttons!"""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)

@@ -9,6 +9,3 @@ jishaku.Flags.FORCE_PAGINATOR = True
 class Jishaku(*STANDARD_FEATURES, *OPTIONAL_FEATURES):
     """Jishaku ported to Red"""
 
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\nCog Version: {self.__version__}\nAuthor: {self.__author__}"

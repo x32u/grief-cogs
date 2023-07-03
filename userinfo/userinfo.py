@@ -13,10 +13,6 @@ log = logging.getLogger("red.flare.userinfo")
 
 class Userinfo(commands.Cog):
 
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\nCog Version: {self.__version__}"
-
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 95932766180343808, force_registration=True)

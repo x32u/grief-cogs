@@ -19,12 +19,7 @@ CacheType = Literal["edit", "delete"]
 
 class Snipe(commands.Cog):
     """Snipe the last message from a server."""
-
-    def format_help_for_context(self, ctx):
-        """Thanks Sinbad."""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\nCog Version: {self.__version__}"
-
+    
     def __init__(self, bot):
         defaults_guild = {"toggle": False, "timeout": 30, "max": 1, "ignore": []}
         self.config = Config.get_conf(self, identifier=95932766180343808, force_registration=True)

@@ -26,16 +26,6 @@ class JoinPing(commands.Cog):
         self.config.register_guild(**guild_defaults)
         self.cache = {}
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        pre_processed = super().format_help_for_context(ctx)
-        n = "\n" if "\n\n" not in pre_processed else ""
-        text = [
-            f"{pre_processed}{n}",
-            f"Cog Version: **{self.__version__}**",
-            f"Author: {humanize_list(self.__author__)}",
-        ]
-        return "\n".join(text)
-
     async def _build_cache(self):
         self.cache = await self.config.all_guilds()
 

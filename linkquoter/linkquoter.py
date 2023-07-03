@@ -28,14 +28,6 @@ def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
 
 
 class LinkQuoter(commands.Cog):
-    """
-    Quote Discord message links.
-    """
-
-    def format_help_for_context(self, ctx):
-        pre_processed = super().format_help_for_context(ctx)
-        n = "\n" if "\n\n" not in pre_processed else ""
-        return f"{pre_processed}{n}\nCog Version: {self.__version__}"
 
     def __init__(self, bot):
         self.bot = bot

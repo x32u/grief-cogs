@@ -61,13 +61,6 @@ class Starboard(StarboardEvents, commands.Cog):
     async def cog_check(self, ctx: commands.Context) -> bool:
         return self.ready.is_set()
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """
-        Thanks Sinbad!
-        """
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
-
     @commands.group()
     @checks.admin_or_permissions(manage_channels=True)
     @commands.guild_only()

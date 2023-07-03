@@ -37,12 +37,6 @@ ZERO_WIDTH = "\u200b"
 
 
 class System(commands.Cog):
-    """
-    Get system metrics.
-
-    Most commands work on all OSes or omit certian information.
-    See the help for individual commands for detailed limitations.
-    """
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot

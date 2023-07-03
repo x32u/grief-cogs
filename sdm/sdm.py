@@ -5,9 +5,6 @@ from redbot.core.bot import Red
 
 
 class Sdm(commands.Cog):
-    """
-    A simple dm cog, directly sends raw text to a specific user.
-    """
 
     async def red_delete_data_for_user(self, **kwargs):
         """

@@ -14,12 +14,6 @@ _ = Translator("NickNamer", __file__)
 
 @cog_i18n(_)
 class NickNamer(commands.Cog):
-    """NickNamer"""
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        # Thanks Sinbad! And Trusty in whose cogs I found this.
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nVersion: {self.__version__}"
 
     async def red_delete_data_for_user(self, *, requester, user_id):
         if requester == "user":

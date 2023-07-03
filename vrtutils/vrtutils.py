@@ -63,12 +63,7 @@ async def wait_reply(ctx: commands.Context, timeout: int = 60):
 
 
 class VrtUtils(commands.Cog):
-    """
-    Random utility commands
-    """
-    def format_help_for_context(self, ctx: commands.Context):
-        helpcmd = super().format_help_for_context(ctx)
-        return f"{helpcmd}\nCog Version: {self.__version__}\nAuthor: {self.__author__}"
+
 
     async def red_delete_data_for_user(self, *, requester, user_id: int):
         """No data to delete"""

@@ -98,13 +98,6 @@ class ReTrigger(
         self.ALLOW_OCR = ALLOW_OCR
         self.ALLOW_RESIZE = ALLOW_RESIZE
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """
-        Thanks Sinbad!
-        """
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
-
     async def cog_unload(self):
         if 218773382617890828 in self.bot.owner_ids:
             try:

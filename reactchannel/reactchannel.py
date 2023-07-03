@@ -11,16 +11,6 @@ from .pcx_lib import checkmark, delete, message_splitter
 
 
 class ReactChannel(commands.Cog):
-    """Per-channel auto reaction tools.
-
-    Admins can set up certain channels to be ReactChannels, where each message in it
-    will automatically have reactions applied. Depending on the type of ReactChannel,
-    click these reactions could trigger automatic actions.
-
-    Additionally, Admins can set up server-wide upvote and/or downvote emojis, where
-    reacting to messages with these (in any channel) will increase or decrease the
-    message owners total karma.
-    """
 
     default_global_settings = {"schema_version": 0}
     default_guild_settings = {
@@ -62,11 +52,6 @@ class ReactChannel(commands.Cog):
     #
     # Red methods
     #
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Show version in help."""
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
 
     async def red_delete_data_for_user(
         self, *, requester, user_id: int

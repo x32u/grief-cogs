@@ -22,7 +22,6 @@ _ = lambda s: s
 
 
 class MentionPrefix(commands.Cog):
-    """Ping the bot to see its prefixes."""
 
     intervals = [
         (timedelta(seconds=30), 1),

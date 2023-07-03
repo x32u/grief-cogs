@@ -9,9 +9,6 @@ from redbot.core.bot import Red
 
 
 class Suggestion(commands.Cog):
-    """
-    Per guild, as well as global, suggestion box voting system.
-    """
 
     def __init__(self, bot: Red):
         self.bot = bot
@@ -65,10 +62,6 @@ class Suggestion(commands.Cog):
                     await self.config.custom(
                         "SUGGESTION", guild.id, suggestion_id
                     ).author.clear()
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        context = super().format_help_for_context(ctx)
-        return f"{context}\n\nVersion: {self.__version__}"
 
     @commands.command()
     @commands.guild_only()
