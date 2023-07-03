@@ -16,7 +16,6 @@ from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 
 class Reminder(commands.Cog):
-    """Utilities to remind yourself of whatever you want"""
 
     TIME_AMNT_REGEX = re.compile("([1-9][0-9]*)([a-z]+)", re.IGNORECASE)
     TIME_QUANTITIES = collections.OrderedDict(
@@ -43,8 +42,7 @@ class Reminder(commands.Cog):
     def __init__(self, bot: Red):
         super().__init__()
         self.bot = bot
-        unique_id = int(hashlib.sha512((self.__author__[0] + "@" + self.__class__.__name__).encode()).hexdigest(), 16)
-        self.config = Config.get_conf(self, identifier=unique_id, force_registration=True)
+        self.config = Config.get_conf(self,force_registration=True)
         self.config.register_user(reminders=[], offset=0)
         self.futures = {}
         asyncio.ensure_future(self.start_saved_reminders())
