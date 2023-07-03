@@ -15,9 +15,6 @@ _ = Translator("Nsfw", __file__)
 class Nsfw(Core):
     """
     Send random NSFW images from random subreddits
-
-    If `[p]help Nsfw` or any other Nsfw commands are used in a non-nsfw channel,
-    you will not be able to see the list of commands for this category.
     """
 
     @commands.command()

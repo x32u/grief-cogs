@@ -17,13 +17,7 @@ log = get_vex_logger(__name__)
 
 
 class ButtonPoll(commands.Cog):
-    """
-    Create polls with buttons, and get a pie chart afterwards!
-    """
-
-    __author__ = "Vexed#3211"
-    __version__ = "1.1.1"
-
+    
     def __init__(self, bot: Red) -> None:
         self.bot = bot
 

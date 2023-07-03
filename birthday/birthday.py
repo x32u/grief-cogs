@@ -14,7 +14,6 @@ from typing import Literal
 
 
 class Birthday(commands.Cog):
-    """Track birthdays, add birthday role, and annouce birthdays for users."""
 
     def __init__(self, bot):
         self.bot = bot

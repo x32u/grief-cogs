@@ -14,22 +14,7 @@ from redbot.core.utils.menus import SimpleMenu
 
 
 class WelcomeModeration(Cog):
-    """
-    Use custom welcome messages and a verification role on a guild-by-guild basis.
-
-    The verification role will be given to a member if it obtains any role in whatever way,
-    except if the role obtained is blacklisted in the settings.
-
-    The use for this is to have one role to set up permissions for. If used properly,
-    this role can only be given to those who satisfy the Discord verification level.
-    Example usage: a guild that has a role for each rank of a certain game,
-    but want one role to manage the permissions of all people that have a role
-    (whilst not giving those perms to `@everyone`).
-
-    Both the welcome functionality and verification functionality are optional and customisable.
-    """
-
-    __author__ = "#s#8059"
+    
     # Emoji.
     BIN = ":put_litter_in_its_place: "
     DONE = ":white_check_mark: "

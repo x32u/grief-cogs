@@ -38,9 +38,6 @@ class ServerStats(commands.Cog):
     A lot of commands are bot owner only
     """
 
-    __author__ = ["TrustyJAID", "Preda"]
-    __version__ = "1.7.0"
-
     def __init__(self, bot):
         self.bot: Red = bot
         default_global: dict = {"join_channel": None}

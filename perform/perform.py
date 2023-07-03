@@ -1,19 +1,4 @@
-"""
-Copyright 2021 Onii-chan.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-"""
 
 
 import logging
@@ -154,9 +139,6 @@ class Perform(commands.Cog):
         self.config.init_custom("Target", 2)
         self.config.register_custom("Target", **default_target)
         self.cache = {}
-
-    __author__ = ["Onii-chan", "sravan"]
-    __version__ = "5.6.5"  # idk what im doing with version
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """

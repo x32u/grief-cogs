@@ -66,10 +66,6 @@ class VrtUtils(commands.Cog):
     """
     Random utility commands
     """
-
-    __author__ = "Vertyco"
-    __version__ = "1.5.15"
-
     def format_help_for_context(self, ctx: commands.Context):
         helpcmd = super().format_help_for_context(ctx)
         return f"{helpcmd}\nCog Version: {self.__version__}\nAuthor: {self.__author__}"

@@ -61,12 +61,6 @@ log = logging.getLogger("red.trusty-cogs.Welcome")
 
 @cog_i18n(_)
 class Welcome(Events, commands.Cog):
-    """Welcomes new members and goodbye those who leave to the guild
-    in the default channel rewritten for V3 from
-    https://github.com/irdumbs/Dumb-Cogs/blob/master/welcome/welcome.py"""
-
-    __author__ = ["irdumb", "TrustyJAID"]
-    __version__ = "2.4.5"
 
     def __init__(self, bot):
         self.bot = bot

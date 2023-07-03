@@ -26,16 +26,11 @@ ROLE_MENTION_REGEX = re.compile(r"<@&(?P<id>[0-9]{17,19})>")
 class Say(commands.Cog):
     """
     Speak as if you were the bot
-
-    Documentation: http://laggron.red/say.html
     """
 
     def __init__(self, bot: "Red"):
         self.bot = bot
         self.interaction = []
-
-    __author__ = ["retke (El Laggron)"]
-    __version__ = "2.0.0"
 
     async def say(
         self,

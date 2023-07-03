@@ -11,12 +11,7 @@ adventure_bank = None
 
 log = logging.getLogger("red.flare.userinfo")
 
-
-# Thanks Preda, core logic is from https://github.com/PredaaA/predacogs/blob/master/serverinfo/serverinfo.py
 class Userinfo(commands.Cog):
-    """Replace original Red userinfo command with more details."""
-
-    __version__ = "0.4.1"
 
     def format_help_for_context(self, ctx):
         pre_processed = super().format_help_for_context(ctx)

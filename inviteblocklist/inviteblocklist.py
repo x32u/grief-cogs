@@ -31,10 +31,6 @@ class ValidServerID(IDConverter):
 class ChannelUserRole(IDConverter):
     """
     This will check to see if the provided argument is a channel, user, or role
-
-    Guidance code on how to do this from:
-    https://github.com/Rapptz/discord.py/blob/rewrite/discord/ext/commands/converter.py#L85
-    https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/mod/mod.py#L24
     """
 
     async def convert(
@@ -77,9 +73,6 @@ class ChannelUserRole(IDConverter):
 
 
 class InviteBlocklist(commands.Cog):
-
-    __author__ = ["TrustyJAID"]
-    __version__ = "1.1.3"
 
     def __init__(self, bot):
         self.bot = bot

@@ -15,8 +15,6 @@ class Application(commands.Cog):
     Receive and moderate staff applications with customizable questions.
     """
 
-    __version__ = "1.4.1"
-
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(

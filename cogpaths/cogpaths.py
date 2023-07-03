@@ -10,11 +10,7 @@ from redbot.core.utils.chat_formatting import box
 
 
 class CogPaths(commands.Cog):
-    """Get information about a cog's paths."""
-
-    __author__ = "Kreusada"
-    __version__ = "1.1.0"
-
+    
     def __init__(self, bot: Red):
         self.bot = bot
 

@@ -60,8 +60,6 @@ class CustomHelp(commands.Cog):
     A custom customisable help for fun and profit
     """
 
-    __version__ = "1.1.0"
-
     def __init__(self, bot: Red):
         self.bot = bot
         self.feature_list = {

@@ -16,8 +16,6 @@ class Marriage(commands.Cog):
     Marry, divorce, and give gifts to other members.
     """
 
-    __version__ = "1.6.3"
-
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(

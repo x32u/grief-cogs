@@ -43,9 +43,6 @@ CHANNELS = [
 class JoinMessage(commands.Cog):
     """Send a message on guild join."""
 
-    __version__ = "0.1.0"
-    __author__ = "flare#0001"
-
     def format_help_for_context(self, ctx):
         """Thanks Sinbad."""
         pre_processed = super().format_help_for_context(ctx)

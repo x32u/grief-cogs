@@ -75,9 +75,6 @@ class ReTrigger(
     Trigger bot events using regular expressions
     """
 
-    __author__ = ["TrustyJAID"]
-    __version__ = "2.22.0"
-
     def __init__(self, bot):
         super().__init__()
         self.bot = bot

@@ -12,9 +12,6 @@ class TickChanger(commands.Cog):
     Change the emoji that gets reacted with when `await ctx.tick()`
     is called anywhere in the bot"""
 
-    __author__ = ["crayyy_zee#2900"]
-    __version__ = "1.2.0"
-
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(None, 987654321, True, "Tick")

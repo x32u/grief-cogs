@@ -56,8 +56,6 @@ class FakeListener:
 class InstantCommands(BaseCog):
     """
     Generate a new command from a code snippet, without making a new cog.
-
-    Documentation https://laggron.red/instantcommands.html
     """
 
     def __init__(self, bot: Red):
@@ -70,9 +68,6 @@ class InstantCommands(BaseCog):
 
         # resume all commands and listeners
         bot.loop.create_task(self.resume_commands())
-
-    __author__ = ["retke (El Laggron)"]
-    __version__ = "1.3.2"
 
     # def get_config_identifier(self, name):
     # """

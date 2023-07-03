@@ -21,9 +21,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
     Works with core modlogset channel
     """
 
-    __author__ = ["RePulsar", "TrustyJAID"]
-    __version__ = "2.11.1"
-
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 154457677895, force_registration=True)

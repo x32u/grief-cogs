@@ -25,9 +25,6 @@ class DevLogs(commands.Cog):
         default_global = {"default_channel": None, "bypass": []}
         self.config.register_global(**default_global)
 
-    __author__ = ["sravan"]
-    __version__ = "1.0.5"
-
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """
         Thanks Sinbad!

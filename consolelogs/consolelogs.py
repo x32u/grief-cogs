@@ -28,10 +28,6 @@ from rich.panel import Panel
 
 from .dashboard_integration import DashboardIntegration
 
-# Credits:
-# General repo credits.
-# Thanks to Tobotimus for the part to get logs files lines (https://github.com/Tobotimus/Tobo-Cogs/blob/V3/errorlogs/errorlogs.py).
-
 _ = Translator("ConsoleLogs", __file__)
 
 LATEST_LOG_RE = re.compile(r"latest(?:-part(?P<part>\d+))?\.log")

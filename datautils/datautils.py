@@ -22,8 +22,6 @@ from .utils import _
 class DataUtils(commands.Cog):
     """Commands for getting information about users or servers."""
 
-    __version__ = "2.6.13"
-
     # noinspection PyMissingConstructor
     def __init__(self, bot):
         self.bot = bot

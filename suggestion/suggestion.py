@@ -13,8 +13,6 @@ class Suggestion(commands.Cog):
     Per guild, as well as global, suggestion box voting system.
     """
 
-    __version__ = "1.7.0"
-
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(

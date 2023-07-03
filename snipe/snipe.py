@@ -20,8 +20,6 @@ CacheType = Literal["edit", "delete"]
 class Snipe(commands.Cog):
     """Snipe the last message from a server."""
 
-    __version__ = "0.4.0"
-
     def format_help_for_context(self, ctx):
         """Thanks Sinbad."""
         pre_processed = super().format_help_for_context(ctx)

@@ -20,7 +20,7 @@ BASES = [EditGuild, EditRole, EditTextChannel, EditThread, EditVoiceChannel]  # 
 
 @cog_i18n(_)
 class DiscordEdit(*BASES, Cog):
-    """A cog to edit Discord default objects, like guilds, roles, text channels, voice channels, threads and AutoMod!"""
+    """A cog to edit Discord default objects, like guilds, roles, text channels, voice channels, threads and AutoMod."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)

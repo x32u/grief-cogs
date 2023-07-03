@@ -20,9 +20,6 @@ class JoinPing(commands.Cog):
     """
     Ghost ping users when they join."""
 
-    __version__ = "1.0.2"
-    __author__ = ["crayyy_zee#2900"]
-
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=56789, force_registration=True)

@@ -24,20 +24,6 @@ class AutoRoom(
     commands.Cog,
     metaclass=CompositeMetaClass,
 ):
-    """Automatic voice channel management.
-
-    This cog facilitates automatic voice channel creation.
-    When a member joins an AutoRoom Source (voice channel),
-    this cog will move them to a brand new AutoRoom that they have control over.
-    Once everyone leaves the AutoRoom, it is automatically deleted.
-
-    For a quick rundown on how to get started with this cog,
-    check out [the readme](https://github.com/PhasecoreX/PCXCogs/tree/master/autoroom/README.md)
-    """
-
-    __author__ = "PhasecoreX"
-    __version__ = "3.5.0"
-
     default_global_settings = {"schema_version": 0}
     default_guild_settings = {
         "admin_access": True,

@@ -7,8 +7,6 @@ from redbot.core.bot import Red
 
 class ViewAssets(commands.Cog):
     """Display assets from servers and users"""
-
-    __author__ = "#s#8059"
     # Messages.
     X = ":x: Error: "
     MEMBER_NO_GUILD_AVATAR = X + "this user does not have a server avatar."

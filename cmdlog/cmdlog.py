@@ -21,20 +21,7 @@ log = get_vex_logger(__name__)
 
 
 class CmdLog(commands.Cog):
-    """
-    Log command usage in a form searchable by user ID, server ID or command name.
-
-    The cog keeps an internal cache and everything is also logged to the bot's main logs under
-    `red.vex.cmdlog`, level INFO.
-
-    The internal cache is non persistant and subsequently is lost on cog unload,
-    including bot shutdowns. The logged data will last until Red's custom logging
-    rotator deletes old logs.
-    """
-
-    __author__ = "Vexed#0714"
-    __version__ = "1.5.4"
-
+    
     def __init__(self, bot: Red) -> None:
         self.bot = bot
 

@@ -11,9 +11,6 @@ LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 els
 class VanityInStatus(commands.Cog):
     """Give users a if they have a vanity in their status."""
 
-    __version__ = "0.0.2"
-    __author__ = "dia ♡#0666 (696828906191454221)"
-
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad."""
         pre_processed = super().format_help_for_context(ctx)

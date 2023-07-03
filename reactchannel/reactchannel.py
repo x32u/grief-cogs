@@ -1,4 +1,4 @@
-"""ReactChannel cog for Red-DiscordBot by PhasecoreX."""
+
 import datetime
 from typing import List, Optional, Union
 
@@ -21,9 +21,6 @@ class ReactChannel(commands.Cog):
     reacting to messages with these (in any channel) will increase or decrease the
     message owners total karma.
     """
-
-    __author__ = "PhasecoreX"
-    __version__ = "3.0.0"
 
     default_global_settings = {"schema_version": 0}
     default_guild_settings = {

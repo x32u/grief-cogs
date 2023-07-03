@@ -1,5 +1,3 @@
-# Reminder was originally written by ZeLarpMaster#0818
-# https://github.com/ZeLarpMaster/ZeCogsV3/blob/master/reminder/reminder.py
 
 import asyncio
 import collections
@@ -19,8 +17,6 @@ from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
 
 class Reminder(commands.Cog):
     """Utilities to remind yourself of whatever you want"""
-
-    __author__ = ["ZeLarpMaster#0818", "aikaterna#1393"]
 
     TIME_AMNT_REGEX = re.compile("([1-9][0-9]*)([a-z]+)", re.IGNORECASE)
     TIME_QUANTITIES = collections.OrderedDict(

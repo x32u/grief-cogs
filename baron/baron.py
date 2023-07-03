@@ -34,11 +34,6 @@ def disabled_or_data(data):
 
 
 class Baron(commands.Cog):
-    """
-    Tools for managing guild joins and leaves.
-    """
-
-    __version__ = "1.2.4"
 
     def format_help_for_context(self, ctx):
         pre_processed = super().format_help_for_context(ctx)

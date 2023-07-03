@@ -14,8 +14,6 @@ class Gallery(commands.Cog):
     Set channels as galleries, deleting all messages that don't contain any attachments.
     """
 
-    __version__ = "1.3.1"
-
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(

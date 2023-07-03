@@ -11,11 +11,6 @@ from redbot.core.bot import Red
 
 
 class Counting(commands.Cog):
-    """
-    Make a counting channel with goals.
-    """
-
-    __version__ = "1.4.0"
 
     def __init__(self, bot: Red):
         self.bot = bot

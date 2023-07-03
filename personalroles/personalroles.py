@@ -43,8 +43,6 @@ async def role_icons_feature(ctx):
 class PersonalRoles(commands.Cog):
     """Assign and edit personal roles"""
 
-    __version__ = "2.2.0"
-
     # noinspection PyMissingConstructor
     def __init__(self, bot: commands.Bot):
         self.bot = bot
