@@ -178,4 +178,4 @@ class Deleter(commands.Cog):
         if not channel:
             channel = ctx.channel
         await self.conf.channel(channel).messages.set({})
-        await ctx.tick
+        await ctx.tick()
