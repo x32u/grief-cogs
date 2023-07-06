@@ -89,6 +89,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             "thread_create": _("Thread created"),
             "thread_delete": _("Thread deleted"),
             "thread_change": _("Thread changed"),
+            "image_log": _("Image logging"),
         }
         msg = _("Setting for {guild}\n Modlog Channel {channel}\n\n").format(
             guild=guild.name, channel=modlog_channel
