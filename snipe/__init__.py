@@ -10,7 +10,7 @@ from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.commands import Cog as RedCog
 from redbot.core.utils import chat_formatting as cf
-from redbot.core.utils.views import BaseMenu, ListPages
+from redbot.core.utils.views import SimpleMenu as BaseMenu
 
 
 class MiniMsg:
@@ -227,7 +227,7 @@ class Sniper(RedCog):
                     else:
                         embed.set_author(name="Unknown Member")
                     embeds.append(embed)
-                await BaseMenu(ListPages(embeds), timeout=120, ctx=ctx).start(ctx)
+                await BaseMenu(embeds, timeout=120).start(ctx)
             else:
                 await ctx.reply("There's nothing to snipe!")
         else:
@@ -245,7 +245,7 @@ class Sniper(RedCog):
         if embs_obj := [msg.embed for msg in reversed(self.delete_cache[channel.id]) if msg.embed]:
             if len(embs_obj) == 1:
                 return await self.reply(ctx, embed=embs_obj[0])
-            await BaseMenu(ListPages(embs_obj), timeout=120, ctx=ctx).start(ctx)
+            await BaseMenu(embs_obj, timeout=120).start(ctx)
         else:
             await ctx.reply("There's nothing to snipe!")
 
@@ -294,7 +294,7 @@ class Sniper(RedCog):
                 embeds.append(embed)
             if len(embeds) == 1:
                 return await self.reply(ctx, embed=embeds[0])
-            await BaseMenu(ListPages(embeds), timeout=120, ctx=ctx).start(ctx)
+            await BaseMenu(embeds, timeout=120).start(ctx)
         else:
             await ctx.reply("There's nothing to snipe!")
 
@@ -403,7 +403,7 @@ class Sniper(RedCog):
                     embeds.append(embed)
                 if len(embeds) == 1:
                     return await self.reply(ctx, embed=embeds[0])
-                await BaseMenu(ListPages(embeds), timeout=120, ctx=ctx).start(ctx)
+                await BaseMenu(embeds, timeout=120).start(ctx)
             else:
                 await ctx.reply("There's nothing to snipe!")
         else:
@@ -453,7 +453,7 @@ class Sniper(RedCog):
                 embeds.append(embed)
             if len(embeds) == 1:
                 return await self.reply(ctx, embed=embeds[0])
-            await BaseMenu(ListPages(embeds), timeout=120, ctx=ctx).start(ctx)
+            await BaseMenu(embeds, timeout=120).start(ctx)
         else:
             await ctx.reply("There's nothing to snipe!")
 
@@ -544,7 +544,7 @@ class Sniper(RedCog):
                         icon_url=author.display_avatar.url,
                     )
                     embeds.append(embed)
-                await BaseMenu(ListPages(embeds), timeout=120, ctx=ctx).start(ctx)
+                await BaseMenu(embeds, timeout=120).start(ctx)
             else:
                 await ctx.reply("There's nothing to snipe!")
         else:
@@ -588,7 +588,7 @@ class Sniper(RedCog):
                 embeds.append(embed)
             if len(embeds) == 1:
                 return await self.reply(ctx, embed=embeds[0])
-            await BaseMenu(ListPages(embeds), timeout=120, ctx=ctx).start(ctx)
+            await BaseMenu(embeds, timeout=120).start(ctx)
         else:
             await ctx.reply("There's nothing to snipe!")
 
