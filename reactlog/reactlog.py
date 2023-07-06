@@ -1,26 +1,4 @@
-"""
-MIT License
 
-Copyright (c) 2021-present Kuro-Rui
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
 
 import logging
 import re
@@ -36,23 +14,11 @@ log = logging.getLogger("red.kuro-cogs.reactlog")
 class ReactLog(commands.Cog):
     """Log when reactions are added or removed."""
 
-    __author__ = humanize_list(["Kuro"])
-    __version__ = "0.0.2"
-
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, 9517306284, True)
         self.config.register_guild(
             channel=None, log_all=False, react_add=False, react_remove=False
-        )
-
-    def format_help_for_context(self, ctx: commands.Context):
-        """Thanks Sinbad!"""
-        pre_processed = super().format_help_for_context(ctx)
-        return (
-            f"{pre_processed}\n\n"
-            f"`Cog Author  :` {self.__author__}\n"
-            f"`Cog Version :` {self.__version__}"
         )
 
     @commands.admin()
@@ -107,28 +73,6 @@ class ReactLog(commands.Cog):
         await ctx.send("I won't log when reactions removed.")
 
     @reactlog.command()
-    @app_commands.describe(toggle="True or False")
-    async def logall(self, ctx: commands.Context, toggle: bool = None):
-        """
-        Set whether to log all reactions or not.
-
-        If enabled, all reactions will be logged.
-        If disabled, only first added or last removed reactions will be logged.
-
-        Just a gentle reminder, it would be spammy if enabled.
-        """
-        current = await self.config.guild(ctx.guild).log_all()
-        if toggle is None:
-            await self.config.guild(ctx.guild).log_all.set(not current)
-        else:
-            await self.config.guild(ctx.guild).log_all.set(toggle)
-
-        if await self.config.guild(ctx.guild).log_all():
-            await ctx.send("I will log all reactions from now.")
-            return
-        await ctx.send("I won't log all reactions from now.")
-
-    @reactlog.command()
     async def settings(self, ctx: commands.Context):
         """Show current reaction log settings."""
         channel = await self.config.guild(ctx.guild).channel()
@@ -143,7 +87,6 @@ class ReactLog(commands.Cog):
             embed = discord.Embed(title="Reaction Log Settings", color=await ctx.embed_color())
             embed.add_field(name="Log On Reaction Add?", value=react_add_status, inline=True)
             embed.add_field(name="Log On Reaction Remove?", value=react_remove_status, inline=True)
-            embed.add_field(name="Log All Reactions?", value=log_all_status, inline=True)
             embed.add_field(name="Channel", value=channel_mention, inline=True)
             embed.set_footer(text=ctx.guild.name, icon_url=getattr(ctx.guild.icon, "url", None))
             await ctx.send(embed=embed)
@@ -153,7 +96,6 @@ class ReactLog(commands.Cog):
                 f"Channel: {channel_mention}\n"
                 f"Log On Reaction Add: {react_add_status}\n"
                 f"Log On Reaction Remove: {react_remove_status}\n"
-                f"Log All Reactions: {log_all_status}"
             )
 
     @commands.Cog.listener()
@@ -225,7 +167,7 @@ class ReactLog(commands.Cog):
             if "20e3" in chars:
                 chars.remove("fe0f")
             url = f"https://twemoji.maxcdn.com/v/14.0.2/72x72/{'-'.join(chars)}.png"
-        color = discord.Color.green() if added else discord.Color.red()
+        color = discord.Color.dark_theme()
         embed = discord.Embed(
             description=description, color=color, timestamp=discord.utils.utcnow()
         )
