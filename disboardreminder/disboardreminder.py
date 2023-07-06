@@ -31,7 +31,7 @@ class DisboardReminder(commands.Cog):
         "channel": None,
         "role": None,
         "message": "It's been 2 hours since the last successful bump, could someone run </bump:947088344167366698>?",
-        "tyMessage": "{member(mention)} thank you for bumping! Make sure to leave a review at <https://disboard.org/server/{guild(id)}>.",
+        "tyMessage": "{member.mention} thank you for bumping! Make sure to leave a review at <https://disboard.org/server/{guild(id)}>.",
         "nextBump": None,
         "lock": False,
         "clean": False,
@@ -203,7 +203,7 @@ class DisboardReminder(commands.Cog):
     @bumpreminder.command("thankyou", aliases=["ty"])
     async def bumpreminder_thankyou(self, ctx, *, message: str = None):
         """
-        Change the message used for 'Thank You' messages. Providing no message will reset to the default message.
+        Change the message used for 'thank you' messages. Providing no message will reset to the default message.
 
         The thank you message supports TagScript blocks which can customize the message and even add an embed!
         [View the TagScript documentation here.](https://phen-cogs.readthedocs.io/en/latest/index.html)
