@@ -94,11 +94,11 @@ class ServerStats(commands.Cog):
         passed = f"<t:{int(guild.created_at.timestamp())}:R>"
 
         created_at = _(
-            "{bot} has joined a server!\n "
-            "That's **{num}** servers now!\n"
-            "That's a total of **{users}** users !\n"
+            "{bot} has joined a server.\n "
+            "That's **{num}** servers now.\n"
+            "That's a total of **{users}** users .\n"
             "Server created on **{since}**. "
-            "That's over **{passed}**!"
+            "That's over **{passed}**."
         ).format(
             bot=channel.guild.me.mention,
             num=humanize_number(len(self.bot.guilds)),
