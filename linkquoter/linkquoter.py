@@ -280,7 +280,7 @@ class LinkQuoter(commands.Cog):
         else:
             await ctx.send("This server is no longer opted in to cross-server quoting.")
 
-    @commands.check(webhook_check)
+    @commands.check
     @checks.bot_has_permissions(manage_webhooks=True)
     @linkquoteset.command(name="webhook")
     async def linkquoteset_webhook(self, ctx, true_or_false: bool = None):
