@@ -20,6 +20,11 @@ log = logging.getLogger("red.phenom4n4n.webhook")
 
 
 class Webhook(commands.Cog):
+    "Webhook utility commands."
+
+    __author__ = "PhenoM4n4n"
+
+    __version__ = "1.3.0"
 
     def __init__(self, bot):
         self.bot = bot
