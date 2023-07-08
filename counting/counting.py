@@ -99,7 +99,6 @@ class Counting(commands.Cog):
             )
         await self.config.guild(ctx.guild).previous.clear()
         await self.config.guild(ctx.guild).last.clear()
-        await c.send("Counting has been reset.")
         goal = await self.config.guild(ctx.guild).goal()
         await ctx.send("Counting has been reset.")
 
