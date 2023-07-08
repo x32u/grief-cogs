@@ -140,7 +140,7 @@ class LinkQuoter(commands.Cog):
         if not e:
             content = message.content
             e = discord.Embed(
-                color=discord.Colour.dark_theme,
+                color= 0x313338,
                 description=content,
                 timestamp=message.created_at,
             )
@@ -354,7 +354,7 @@ class LinkQuoter(commands.Cog):
             f"**Delete Messages:** {data['delete']}",
             f"**Use Webhooks:** {data['webhooks']}",
         ]
-        e = discord.Embed(color=await discord.Colour.dark_theme(), description="\n".join(description))
+        e = discord.Embed(color= 0x313338, description="\n".join(description))
         e.set_author(name=f"{ctx.guild} LinkQuoter Settings", icon_url=ctx.guild.icon.url)
         await ctx.send(embed=e)
 
