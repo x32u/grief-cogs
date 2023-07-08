@@ -38,11 +38,11 @@ class LinkQuoter(commands.Cog):
         )
 
         default_guild = {
-            "on": False,
-            "webhooks": True,
-            "cross_server": False,
+            "on": True,
+            "webhooks": False,
+            "cross_server": True,
             "respect_perms": False,
-            "delete": False,
+            "delete": True,
         }
         self.config.register_guild(**default_guild)
 
@@ -293,26 +293,6 @@ class LinkQuoter(commands.Cog):
         else:
             await ctx.send("This server is no longer opted in to cross-server quoting.")
 
-    @commands.check(webhook_check)
-    @checks.bot_has_permissions(manage_webhooks=True)
-    @linkquoteset.command(name="webhook")
-    async def linkquoteset_webhook(self, ctx, true_or_false: bool = None):
-        """
-        Toggle whether [botname] should use webhooks to quote.
-
-        [botname] must have Manage Webhook permissions to use webhooks when quoting.
-        """
-        target_state = (
-            true_or_false
-            if true_or_false is not None
-            else not (await self.config.guild(ctx.guild).webhooks())
-        )
-        await self.config.guild(ctx.guild).webhooks.set(target_state)
-        if target_state:
-            await ctx.send("I will now use webhooks to quote.")
-        else:
-            await ctx.send("I will no longer use webhooks to quote.")
-
     @linkquoteset.command(name="settings")
     async def linkquoteset_settings(self, ctx: commands.Context):
         """View LinkQuoter settings."""
@@ -321,7 +301,6 @@ class LinkQuoter(commands.Cog):
             f"**Automatic Quoting:** {data['on']}",
             f"**Cross-Server:** {data['cross_server']}",
             f"**Delete Messages:** {data['delete']}",
-            f"**Use Webhooks:** {data['webhooks']}",
         ]
         e = discord.Embed(color=await ctx.embed_color(), description="\n".join(description))
         e.set_author(name=f"{ctx.guild} LinkQuoter Settings", icon_url=ctx.guild.icon.url)
