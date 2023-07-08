@@ -53,8 +53,6 @@ class Counting(commands.Cog):
             return await ctx.send("Channel removed.")
         await self.config.guild(ctx.guild).channel.set(channel.id)
         goal = await self.config.guild(ctx.guild).goal()
-        if await self.config.guild(ctx.guild).topic():
-            await self._set_topic(0, goal, 1, channel)
         await ctx.send(f"{channel.name} has been set for counting.")
 
     @countset.command(name="goal")
