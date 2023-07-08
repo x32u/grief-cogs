@@ -55,6 +55,8 @@ class LinkQuoter(commands.Cog):
     Quote Discord message links.
     """
 
+    __version__ = "1.2.2"
+
     def format_help_for_context(self, ctx):
         pre_processed = super().format_help_for_context(ctx)
         n = "\n" if "\n\n" not in pre_processed else ""
@@ -69,11 +71,11 @@ class LinkQuoter(commands.Cog):
         )
 
         default_guild = {
-            "on": True,
-            "webhooks": False,
-            "cross_server": True,
+            "on": False,
+            "webhooks": True,
+            "cross_server": False,
             "respect_perms": False,
-            "delete": True,
+            "delete": False,
         }
         self.config.register_guild(**default_guild)
 
@@ -87,8 +89,8 @@ class LinkQuoter(commands.Cog):
 
     async def initialize(self):
         for guild_id, guild_data in (await self.config.all_guilds()).items():
-            if guild_data["off"]:
-                self.enabled_guilds.remove(guild_id)
+            if guild_data["on"]:
+                self.enabled_guilds.add(guild_id)
 
     async def get_messages(self, guild: discord.Guild, author: discord.Member, links: list):
         messages = []
@@ -140,7 +142,7 @@ class LinkQuoter(commands.Cog):
         if not e:
             content = message.content
             e = discord.Embed(
-                color= 0x313338,
+                color=message.author.color,
                 description=content,
                 timestamp=message.created_at,
             )
@@ -280,10 +282,10 @@ class LinkQuoter(commands.Cog):
         await self.config.guild(ctx.guild).on.set(target_state)
         if target_state:
             await ctx.send("I will now automatically quote links.")
-            self.enabled_guilds.remove(ctx.guild.id)
+            self.enabled_guilds.add(ctx.guild.id)
         else:
             await ctx.send("I will no longer automatically quote links.")
-            self.enabled_guilds.add(ctx.guild.id)
+            self.enabled_guilds.remove(ctx.guild.id)
 
     @linkquoteset.command(name="delete")
     async def linkquoteset_delete(self, ctx, true_or_false: bool = None):
@@ -354,7 +356,7 @@ class LinkQuoter(commands.Cog):
             f"**Delete Messages:** {data['delete']}",
             f"**Use Webhooks:** {data['webhooks']}",
         ]
-        e = discord.Embed(color= 0x313338, description="\n".join(description))
+        e = discord.Embed(color=await ctx.embed_color(), description="\n".join(description))
         e.set_author(name=f"{ctx.guild} LinkQuoter Settings", icon_url=ctx.guild.icon.url)
         await ctx.send(embed=e)
 
