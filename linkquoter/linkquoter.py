@@ -87,8 +87,8 @@ class LinkQuoter(commands.Cog):
 
     async def initialize(self):
         for guild_id, guild_data in (await self.config.all_guilds()).items():
-            if guild_data["on"]:
-                self.enabled_guilds.add(guild_id)
+            if guild_data["off"]:
+                self.enabled_guilds.remove(guild_id)
 
     async def get_messages(self, guild: discord.Guild, author: discord.Member, links: list):
         messages = []
