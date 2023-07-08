@@ -26,7 +26,7 @@ class LinkQuoter(commands.Cog):
 
         default_guild = {
             "on": False,
-            "webhooks": True,
+            "webhooks": False,
             "cross_server": False,
             "respect_perms": False,
             "delete": False,
