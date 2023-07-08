@@ -20,7 +20,7 @@ def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
             "I need the **Manage Webhooks** permission for webhook quoting."
         )
     cog = ctx.bot.get_cog("Webhook")
-        return cog
+    return cog
     raise commands.UserFeedbackCheckFailure(
         "The Webhook cog by PhenoM4n4n must be loaded for webhook quoting."
     )
