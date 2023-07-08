@@ -190,21 +190,6 @@ class LinkQuoter(commands.Cog):
             message_link = ref.resolved or await ctx.guild.get_channel(
                 ref.channel_id
             ).fetch_message(ref.message_id)
-        cog = webhook_check(ctx)
-        if (await self.config.guild(ctx.guild).webhooks()) and cog:
-            embed = await self.message_to_embed(
-                message_link, invoke_guild=ctx.guild, author_field=False
-            )
-            await cog.send_to_channel(
-                ctx.channel,
-                ctx.me,
-                ctx.author,
-                reason=f"For the {ctx.command.qualified_name} command",
-                username=message_link.author.display_name,
-                avatar_url=message_link.author.display_avatar.url,
-                embed=embed,
-            )
-        else:
             embed = await self.message_to_embed(message_link, invoke_guild=ctx.guild)
             await ctx.send(embed=embed)
 
@@ -324,33 +309,6 @@ class LinkQuoter(commands.Cog):
             quoted_message = await LinkToMessage().convert(ctx, message.content)
         except commands.BadArgument:
             return
-
-        if not await self.bot.message_eligible_as_command(message):
-            return
-
-        try:
-            cog = webhook_check(ctx)
-        except commands.CheckFailure:
-            cog = False
-
-        data = await self.config.guild(ctx.guild).all()
-        tasks = []
-        if cog and data["webhooks"] and channel.type == discord.ChannelType.text:
-            embed = await self.message_to_embed(
-                quoted_message, invoke_guild=ctx.guild, author_field=False
-            )
-            tasks.append(
-                cog.send_to_channel(
-                    ctx.channel,
-                    ctx.me,
-                    ctx.author,
-                    reason=f"For the {ctx.command.qualified_name} command",
-                    username=quoted_message.author.display_name,
-                    avatar_url=quoted_message.author.display_avatar.url,
-                    embed=embed,
-                )
-            )
-        else:
             embed = await self.message_to_embed(quoted_message, invoke_guild=ctx.guild)
             tasks.append(channel.send(embed=embed))
         if data["delete"]:
