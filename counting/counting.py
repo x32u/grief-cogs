@@ -26,7 +26,6 @@ class Counting(commands.Cog):
             whitelist=None,
             warning=False,
             seconds=0,
-            topic=True,
         )
 
     async def red_delete_data_for_user(self, *, requester, user_id):
@@ -78,8 +77,6 @@ class Counting(commands.Cog):
         await self.config.guild(ctx.guild).last.clear()
         goal = await self.config.guild(ctx.guild).goal()
         next_number = number + 1
-        if await self.config.guild(ctx.guild).topic():
-            await self._set_topic(number, goal, next_number, channel)
         await channel.send(number)
         if c_id != ctx.channel.id:
             await ctx.send(f"Counting start set to {number}.")
@@ -104,8 +101,6 @@ class Counting(commands.Cog):
         await self.config.guild(ctx.guild).last.clear()
         await c.send("Counting has been reset.")
         goal = await self.config.guild(ctx.guild).goal()
-        if await self.config.guild(ctx.guild).topic():
-            await self._set_topic(0, goal, 1, c)
         if c_id != ctx.channel.id:
             await ctx.send("Counting has been reset.")
 
@@ -190,8 +185,6 @@ class Counting(commands.Cog):
                 if current - 1 == previous:
                     await self.config.guild(message.guild).previous.set(current)
                     await self.config.guild(message.guild).last.set(message.author.id)
-                    if await self.config.guild(message.guild).topic():
-                        return await self._update_topic(message.channel)
                     return
             except (TypeError, ValueError):
                 pass
@@ -240,16 +233,3 @@ class Counting(commands.Cog):
                     await message.channel.send(deleted)
         except (TypeError, ValueError):
             return
-
-    async def _update_topic(self, channel):
-        goal = await self.config.guild(channel.guild).goal()
-        prev = await self.config.guild(channel.guild).previous()
-        if goal != 0 and prev < goal:
-            await channel.edit(
-                topic=f"Let's count! | Next message must be {prev + 1}! | Goal is {goal}!"
-            )
-        elif goal != 0 and prev == goal:
-            await channel.send("We've reached the goal! :tada:")
-            await channel.edit(topic=f"Goal reached! :tada:")
-        else:
-            await channel.edit(topic=f"Let's count! | Next message must be {prev + 1}!")
