@@ -69,11 +69,11 @@ class LinkQuoter(commands.Cog):
         )
 
         default_guild = {
-            "on": False,
-            "webhooks": True,
-            "cross_server": False,
+            "on": True,
+            "webhooks": False,
+            "cross_server": True,
             "respect_perms": False,
-            "delete": False,
+            "delete": True,
         }
         self.config.register_guild(**default_guild)
 
@@ -140,7 +140,7 @@ class LinkQuoter(commands.Cog):
         if not e:
             content = message.content
             e = discord.Embed(
-                color=message.author.color,
+                color=discord.Colour.dark_theme,
                 description=content,
                 timestamp=message.created_at,
             )
@@ -354,7 +354,7 @@ class LinkQuoter(commands.Cog):
             f"**Delete Messages:** {data['delete']}",
             f"**Use Webhooks:** {data['webhooks']}",
         ]
-        e = discord.Embed(color=await ctx.embed_color(), description="\n".join(description))
+        e = discord.Embed(color=await discord.Colour.dark_theme(), description="\n".join(description))
         e.set_author(name=f"{ctx.guild} LinkQuoter Settings", icon_url=ctx.guild.icon.url)
         await ctx.send(embed=e)
 
