@@ -1,4 +1,26 @@
+"""
+MIT License
 
+Copyright (c) 2020-present phenom4n4n
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
 
 import asyncio
 import logging
@@ -20,7 +42,11 @@ log = logging.getLogger("red.phenom4n4n.webhook")
 
 
 class Webhook(commands.Cog):
+    """Webhook utility commands."""
 
+    __author__ = "PhenoM4n4n"
+
+    __version__ = "1.3.0"
 
     def __init__(self, bot):
         self.bot = bot
@@ -50,6 +76,11 @@ class Webhook(commands.Cog):
 
     async def red_delete_data_for_user(self, **kwargs):
         return
+
+    def format_help_for_context(self, ctx):
+        pre_processed = super().format_help_for_context(ctx)
+        n = "\n" if "\n\n" not in pre_processed else ""
+        return f"{pre_processed}{n}\nCog Version: {self.__version__}"
 
     @staticmethod
     async def delete_quietly(ctx: commands.Context):
@@ -208,7 +239,7 @@ class Webhook(commands.Cog):
                     await webhook.delete(
                         reason=f"Mass webhook deletion requested by {ctx.author} ({ctx.author.id})"
                     )
-                except discord.InvalidArgument:
+                except ValueError:
                     pass
                 else:
                     count += 1
@@ -403,7 +434,7 @@ class Webhook(commands.Cog):
                 allowed_mentions=allowed_mentions,
                 **kwargs,
             )
-        except (discord.InvalidArgument, discord.NotFound) as exc:
+        except (ValueError, discord.NotFound) as exc:
             try:
                 del self.link_cache[webhook.id]
             except KeyError:
@@ -486,7 +517,7 @@ class Webhook(commands.Cog):
                 return
             try:
                 return await webhook.send(allowed_mentions=allowed_mentions, **kwargs)
-            except (discord.InvalidArgument, discord.NotFound):
+            except (ValueError, discord.NotFound):
                 del self.channel_cache[channel.id]
                 if index >= 5:
                     log.debug(
