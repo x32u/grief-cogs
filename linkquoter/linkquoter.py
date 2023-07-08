@@ -1,7 +1,30 @@
+"""
+MIT License
 
+Copyright (c) 2020-present phenom4n4n
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
 
 import asyncio
 import logging
+from copy import deepcopy
 from typing import List, Optional, Tuple, Union
 
 import discord
@@ -13,7 +36,29 @@ log = logging.getLogger("red.phenom4n4n.linkquoter")
 
 COOLDOWN = (3, 10, commands.BucketType.channel)
 
+
+def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
+    if not ctx.channel.permissions_for(ctx.me).manage_webhooks:
+        raise commands.UserFeedbackCheckFailure(
+            "I need the **Manage Webhooks** permission for webhook quoting."
+        )
+    cog = ctx.bot.get_cog("Webhook")
+    if cog and cog.__author__ == "PhenoM4n4n":
+        return cog
+    raise commands.UserFeedbackCheckFailure(
+        "The Webhook cog by PhenoM4n4n must be loaded for webhook quoting."
+    )
+
+
 class LinkQuoter(commands.Cog):
+    """
+    Quote Discord message links.
+    """
+
+    def format_help_for_context(self, ctx):
+        pre_processed = super().format_help_for_context(ctx)
+        n = "\n" if "\n\n" not in pre_processed else ""
+        return f"{pre_processed}{n}\nCog Version: {self.__version__}"
 
     def __init__(self, bot):
         self.bot = bot
@@ -24,11 +69,11 @@ class LinkQuoter(commands.Cog):
         )
 
         default_guild = {
-            "on": True,
-            "webhooks": False,
-            "cross_server": True,
+            "on": False,
+            "webhooks": True,
+            "cross_server": False,
             "respect_perms": False,
-            "delete": True,
+            "delete": False,
         }
         self.config.register_guild(**default_guild)
 
@@ -84,11 +129,11 @@ class LinkQuoter(commands.Cog):
         image = None
         e: discord.Embed = None
         if message.embeds:
-            embed = message.embeds[0].copy()
+            embed = message.embeds[0]
             if str(embed.type) == "rich":
                 if footer_field:
                     embed.timestamp = message.created_at
-                e = embed
+                e = discord.Embed.from_dict(deepcopy(embed.to_dict()))
             if str(embed.type) in ("image", "article"):
                 image = embed.url
 
@@ -123,8 +168,8 @@ class LinkQuoter(commands.Cog):
 
         if not image and (stickers := getattr(message, "stickers", [])):
             for sticker in stickers:
-                if sticker.image_url:
-                    image = str(sticker.image_url)
+                if sticker.url:
+                    image = str(sticker.url)
                     e.add_field(name="Stickers", value=f"[{sticker.name}]({image})", inline=False)
                     break
 
@@ -190,6 +235,21 @@ class LinkQuoter(commands.Cog):
             message_link = ref.resolved or await ctx.guild.get_channel(
                 ref.channel_id
             ).fetch_message(ref.message_id)
+        cog = webhook_check(ctx)
+        if (await self.config.guild(ctx.guild).webhooks()) and cog:
+            embed = await self.message_to_embed(
+                message_link, invoke_guild=ctx.guild, author_field=False
+            )
+            await cog.send_to_channel(
+                ctx.channel,
+                ctx.me,
+                ctx.author,
+                reason=f"For the {ctx.command.qualified_name} command",
+                username=message_link.author.display_name,
+                avatar_url=message_link.author.display_avatar.url,
+                embed=embed,
+            )
+        else:
             embed = await self.message_to_embed(message_link, invoke_guild=ctx.guild)
             await ctx.send(embed=embed)
 
@@ -264,6 +324,26 @@ class LinkQuoter(commands.Cog):
         else:
             await ctx.send("This server is no longer opted in to cross-server quoting.")
 
+    @commands.check(webhook_check)
+    @checks.bot_has_permissions(manage_webhooks=True)
+    @linkquoteset.command(name="webhook")
+    async def linkquoteset_webhook(self, ctx, true_or_false: bool = None):
+        """
+        Toggle whether [botname] should use webhooks to quote.
+
+        [botname] must have Manage Webhook permissions to use webhooks when quoting.
+        """
+        target_state = (
+            true_or_false
+            if true_or_false is not None
+            else not (await self.config.guild(ctx.guild).webhooks())
+        )
+        await self.config.guild(ctx.guild).webhooks.set(target_state)
+        if target_state:
+            await ctx.send("I will now use webhooks to quote.")
+        else:
+            await ctx.send("I will no longer use webhooks to quote.")
+
     @linkquoteset.command(name="settings")
     async def linkquoteset_settings(self, ctx: commands.Context):
         """View LinkQuoter settings."""
@@ -272,6 +352,7 @@ class LinkQuoter(commands.Cog):
             f"**Automatic Quoting:** {data['on']}",
             f"**Cross-Server:** {data['cross_server']}",
             f"**Delete Messages:** {data['delete']}",
+            f"**Use Webhooks:** {data['webhooks']}",
         ]
         e = discord.Embed(color=await ctx.embed_color(), description="\n".join(description))
         e.set_author(name=f"{ctx.guild} LinkQuoter Settings", icon_url=ctx.guild.icon.url)
@@ -309,6 +390,33 @@ class LinkQuoter(commands.Cog):
             quoted_message = await LinkToMessage().convert(ctx, message.content)
         except commands.BadArgument:
             return
+
+        if not await self.bot.message_eligible_as_command(message):
+            return
+
+        try:
+            cog = webhook_check(ctx)
+        except commands.CheckFailure:
+            cog = False
+
+        data = await self.config.guild(ctx.guild).all()
+        tasks = []
+        if cog and data["webhooks"] and channel.type == discord.ChannelType.text:
+            embed = await self.message_to_embed(
+                quoted_message, invoke_guild=ctx.guild, author_field=False
+            )
+            tasks.append(
+                cog.send_to_channel(
+                    ctx.channel,
+                    ctx.me,
+                    ctx.author,
+                    reason=f"For the {ctx.command.qualified_name} command",
+                    username=quoted_message.author.display_name,
+                    avatar_url=quoted_message.author.display_avatar.url,
+                    embed=embed,
+                )
+            )
+        else:
             embed = await self.message_to_embed(quoted_message, invoke_guild=ctx.guild)
             tasks.append(channel.send(embed=embed))
         if data["delete"]:
