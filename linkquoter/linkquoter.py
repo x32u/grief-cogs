@@ -14,6 +14,19 @@ log = logging.getLogger("red.phenom4n4n.linkquoter")
 COOLDOWN = (3, 10, commands.BucketType.channel)
 
 
+def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
+    if not ctx.channel.permissions_for(ctx.me).manage_webhooks:
+        raise commands.UserFeedbackCheckFailure(
+            "I need the **Manage Webhooks** permission for webhook quoting."
+        )
+    cog = ctx.bot.get_cog("Webhook")
+    if cog == "PhenoM4n4n":
+        return cog
+    raise commands.UserFeedbackCheckFailure(
+        "The Webhook cog by PhenoM4n4n must be loaded for webhook quoting."
+    )
+
+
 class LinkQuoter(commands.Cog):
 
     def __init__(self, bot):
@@ -26,7 +39,7 @@ class LinkQuoter(commands.Cog):
 
         default_guild = {
             "on": False,
-            "webhooks": False,
+            "webhooks": True,
             "cross_server": False,
             "respect_perms": False,
             "delete": False,
@@ -280,6 +293,26 @@ class LinkQuoter(commands.Cog):
         else:
             await ctx.send("This server is no longer opted in to cross-server quoting.")
 
+    @commands.check(webhook_check)
+    @checks.bot_has_permissions(manage_webhooks=True)
+    @linkquoteset.command(name="webhook")
+    async def linkquoteset_webhook(self, ctx, true_or_false: bool = None):
+        """
+        Toggle whether [botname] should use webhooks to quote.
+
+        [botname] must have Manage Webhook permissions to use webhooks when quoting.
+        """
+        target_state = (
+            true_or_false
+            if true_or_false is not None
+            else not (await self.config.guild(ctx.guild).webhooks())
+        )
+        await self.config.guild(ctx.guild).webhooks.set(target_state)
+        if target_state:
+            await ctx.send("I will now use webhooks to quote.")
+        else:
+            await ctx.send("I will no longer use webhooks to quote.")
+
     @linkquoteset.command(name="settings")
     async def linkquoteset_settings(self, ctx: commands.Context):
         """View LinkQuoter settings."""
@@ -288,6 +321,7 @@ class LinkQuoter(commands.Cog):
             f"**Automatic Quoting:** {data['on']}",
             f"**Cross-Server:** {data['cross_server']}",
             f"**Delete Messages:** {data['delete']}",
+            f"**Use Webhooks:** {data['webhooks']}",
         ]
         e = discord.Embed(color=await ctx.embed_color(), description="\n".join(description))
         e.set_author(name=f"{ctx.guild} LinkQuoter Settings", icon_url=ctx.guild.icon.url)
