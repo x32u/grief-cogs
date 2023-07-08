@@ -280,10 +280,10 @@ class LinkQuoter(commands.Cog):
         await self.config.guild(ctx.guild).on.set(target_state)
         if target_state:
             await ctx.send("I will now automatically quote links.")
-            self.enabled_guilds.add(ctx.guild.id)
+            self.enabled_guilds.remove(ctx.guild.id)
         else:
             await ctx.send("I will no longer automatically quote links.")
-            self.enabled_guilds.remove(ctx.guild.id)
+            self.enabled_guilds.add(ctx.guild.id)
 
     @linkquoteset.command(name="delete")
     async def linkquoteset_delete(self, ctx, true_or_false: bool = None):
