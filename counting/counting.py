@@ -101,8 +101,7 @@ class Counting(commands.Cog):
         await self.config.guild(ctx.guild).last.clear()
         await c.send("Counting has been reset.")
         goal = await self.config.guild(ctx.guild).goal()
-        if channel.id != ctx.channel.id:
-            await ctx.send("Counting has been reset.")
+        await ctx.send("Counting has been reset.")
 
     @countset.command(name="role")
     async def countset_role(
