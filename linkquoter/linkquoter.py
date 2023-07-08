@@ -13,13 +13,6 @@ log = logging.getLogger("red.phenom4n4n.linkquoter")
 
 COOLDOWN = (3, 10, commands.BucketType.channel)
 
-
-def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
-    if not ctx.channel.permissions_for(ctx.me).manage_webhooks:
-        raise commands.UserFeedbackCheckFailure(
-            "I need the **Manage Webhooks** permission for webhook quoting."
-        )
-
 class LinkQuoter(commands.Cog):
 
     def __init__(self, bot):
