@@ -391,7 +391,7 @@ class ServerStats(commands.Cog):
             if ctx.channel.permissions_for(ctx.me).embed_links:
                 embed = discord.Embed()
                 embed.description = page
-                embed.set_author(name=f"{guild.name} " + _("Roles"), icon_url=guild.icon.url)
+                embed.set_author(name=f"{guild.name} " + _("Roles"), icon_url=guild.icon)
                 embed.colour = 0x313338
                 msg_list.append(embed)
             else:
