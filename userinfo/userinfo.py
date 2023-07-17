@@ -37,7 +37,7 @@ class Userinfo(commands.Cog):
                 "bug_hunter": 848556247632052225,
                 "bug_hunter_level_2": 706199712402898985,
                 "partner": 848556249192202247,
-                "verified_bot": 848561838974697532,
+                "verified_bot": <:discordearlyverifiedbotdev:1130500155146256594>,
                 "verified_bot2": 848561839260434482,
             },
         }
