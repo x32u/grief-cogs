@@ -26,20 +26,6 @@ class Userinfo(commands.Cog):
                 "offline": 749221433049088082,
                 "streaming": 749221434039205909,
             },
-            "badge_emojis": {
-                "staff": 848556248832016384,
-                "early_supporter": 706198530837970998,
-                "hypesquad_balance": 706198531538550886,
-                "hypesquad_bravery": 706198532998299779,
-                "hypesquad_brilliance": 706198535846101092,
-                "hypesquad": 706198537049866261,
-                "verified_bot_developer": 706198727953612901,
-                "bug_hunter": 848556247632052225,
-                "bug_hunter_level_2": 706199712402898985,
-                "partner": 848556249192202247,
-                "verified_bot": <:discordearlyverifiedbotdev:1130500155146256594>,
-                "verified_bot2": 848561839260434482,
-            },
         }
         self.config.register_global(**default_global)
         self.emojis = self.bot.loop.create_task(self.init())
