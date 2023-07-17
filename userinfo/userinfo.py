@@ -307,6 +307,8 @@ class Userinfo(commands.Cog):
                         emoji = f"{emoji1}{emoji2}" if emoji1 else None
                     else:
                         emoji = self.badge_emojis.get(badge)
+                    if emoji:
+                        badges += f"{emoji} {badge.replace('_', ' ').title()}\n"
                     badge_count += 1
             if badges:
                 data.add_field(name="Badges" if badge_count > 1 else "Badge", value=badges)
