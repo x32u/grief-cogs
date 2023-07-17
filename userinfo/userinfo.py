@@ -370,7 +370,6 @@ async def setup(bot):
     await bot.add_cog(uinfo)
 
 
-    @commands.hybrid_command()
     @commands.guild_only()
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.bot_has_permissions(embed_links=True)
