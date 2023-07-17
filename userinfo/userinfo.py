@@ -309,6 +309,8 @@ class Userinfo(commands.Cog):
                         emoji = self.badge_emojis.get(badge)
                     if emoji:
                         badges += f"{emoji} {badge.replace('_', ' ').title()}\n"
+                    else:
+                        badges += f"\N{BLACK QUESTION MARK ORNAMENT}\N{VARIATION SELECTOR-16} {badge.replace('_', ' ').title()}\n"
                     badge_count += 1
             if badges:
                 data.add_field(name="Badges" if badge_count > 1 else "Badge", value=badges)
@@ -366,3 +368,19 @@ async def setup(bot):
     if _old_userinfo := bot.get_command("userinfo"):
         bot.remove_command(_old_userinfo.name)
     await bot.add_cog(uinfo)
+
+
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.bot_has_permissions(embed_links=True)
+    async def banner(self, ctx, *, user: discord.Member = None):
+        await self.bot.http.request(discord.http.Route("GET", f"/users/{user.id}"))
+.get("banner", None)
+if banner is not None:
+                    ext = ".gif" if banner.startswith("a_") else ".png"
+                    banner_url = (
+                        f"https://cdn.discordapp.com/banners/{user.id}/{banner}{ext}?size=4096"
+                    )
+                    data.set_image(url=banner_url)
+            await ctx.send(embed=data)
