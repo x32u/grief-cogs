@@ -308,9 +308,9 @@ class Userinfo(commands.Cog):
                     else:
                         emoji = self.badge_emojis.get(badge)
                     if emoji:
-                        badges +="/N"
+                        badges += f"{emoji} {badge.replace('_', ' ').title()}\n"
                     else:
-                        badges +="\N"
+                        badges += f"\N{BLACK QUESTION MARK ORNAMENT}\N{VARIATION SELECTOR-16} {badge.replace('_', ' ').title()}\n"
                     badge_count += 1
             if badges:
                 data.add_field(name="Badges" if badge_count > 1 else "Badge", value=badges)
