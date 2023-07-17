@@ -310,7 +310,7 @@ class Userinfo(commands.Cog):
                     if emoji:
                         badges += f"{emoji} {badge.replace('_', ' ').title()}\n"
                     else:
-                        badges += f"\N{BLACK QUESTION MARK ORNAMENT}\N{VARIATION SELECTOR-16} {badge.replace('_', ' ').title()}\n"
+                        badges += f"\N"
                     badge_count += 1
             if badges:
                 data.add_field(name="Badges" if badge_count > 1 else "Badge", value=badges)
