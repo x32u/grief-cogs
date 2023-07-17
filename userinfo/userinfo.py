@@ -376,7 +376,7 @@ async def setup(bot):
     @commands.bot_has_permissions(embed_links=True)
     async def banner(self, ctx, *, user: discord.Member = None):
                 await self.bot.http.request(discord.http.Route("GET", f"/users/{user.id}"))
-    .get("banner")
+    get("banner, None")
     if banner is not None:
                     ext = ".gif" if banner.startswith("a_") else ".png"
                     banner_url = (
