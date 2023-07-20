@@ -629,7 +629,7 @@ class ServerStats(commands.Cog):
     @commands.hybrid_command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.bot_has_permissions(read_message_history=True, add_reactions=True, embed_links=True)
-    async def serverinfo(self, ctx: commands.Context, *, guild: GuildConverter = None) -> None:
+    async def getguild(self, ctx: commands.Context, *, guild: GuildConverter = None) -> None:
         """
         Display info about servers the bot is on
 
