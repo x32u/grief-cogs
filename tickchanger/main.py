@@ -8,6 +8,12 @@ old_tick = commands.context.TICK
 
 
 class TickChanger(commands.Cog):
+    """
+    Change the emoji that gets reacted with when `await ctx.tick()`
+    is called anywhere in the bot"""
+
+    __author__ = ["crayyy_zee"]
+    __version__ = "1.3.0"
 
     def __init__(self, bot):
         self.bot = bot
@@ -16,6 +22,16 @@ class TickChanger(commands.Cog):
 
     async def red_delete_data_for_user(self, *, requester, user_id: int):
         """No data to delete"""
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        pre_processed = super().format_help_for_context(ctx) or ""
+        n = "\n" if "\n\n" not in pre_processed else ""
+        text = [
+            f"{pre_processed}{n}",
+            f"Cog Version: **{self.__version__}**",
+            f"Author: {humanize_list(self.__author__)}",
+        ]
+        return "\n".join(text)
 
     @classmethod
     async def initialize(cls, bot: Red):
