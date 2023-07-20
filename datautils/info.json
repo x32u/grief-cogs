@@ -18,7 +18,7 @@
   "requirements": [
     "tabulate",
     "wcwidth",
-    "git+https://github.com/fixator10/F10-Cogs-Utils"
+    "git+https://github.com/fixator10/F10-Cogs-Utils.git"
   ],
   "end_user_data_statement": "This cog does not persistently store data or metadata about users."
 }
