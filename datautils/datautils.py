@@ -143,7 +143,7 @@ class DataUtils(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
-    async def serverinfo(self, ctx, details: bool = True):
+    async def serverinfo(
 
         guild = ctx.guild
         created_at = _("Created on {date_and_time}. That's {relative_time}!").format(
