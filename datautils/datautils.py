@@ -11,6 +11,13 @@ from redbot.core import commands
 from redbot.core.i18n import cog_i18n
 from redbot.core.utils import chat_formatting as chat
 from redbot.core.utils.predicates import ReactionPredicate
+from redbot.core.utils.chat_formatting import (
+    bold,
+    escape,
+    italics,
+    humanize_number,
+    humanize_timedelta,
+)
 
 from .common_variables import CHANNEL_TYPE_EMOJIS, GUILD_FEATURES, KNOWN_CHANNEL_TYPES
 from .embeds import emoji_embed
