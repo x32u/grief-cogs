@@ -129,7 +129,7 @@ class DankHelp(ThemesMeta):
             return
 
         command = obj
-        signature = _("`{ctx.clean_prefix}{command.qualified_name} {command.signature}`").format(
+        signature = _("`{command.qualified_name} {command.signature}`").format(
             ctx=ctx, command=command
         )
         subcommands = None
