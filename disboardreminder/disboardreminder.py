@@ -31,7 +31,7 @@ class DisboardReminder(commands.Cog):
         "channel": None,
         "role": None,
         "message": "It's been 2 hours since the last successful bump, could someone run </bump:947088344167366698>?",
-        "tyMessage": "{user.mention} thank you for bumping! Make sure to leave a review at <https://disboard.org/server/{guild(id)}>.",
+        "tyMessage": "{member(mention)} thank you for bumping! Make sure to leave a review at <https://disboard.org/server/{guild(id)}>.",
         "nextBump": None,
         "lock": False,
         "clean": False,
