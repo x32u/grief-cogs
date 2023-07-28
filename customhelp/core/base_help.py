@@ -333,7 +333,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
                     )
                 
             for i in pagify("\n".join(page_raw_str_data), page_length=1018):
-                emb["fields"].append(EmbedField(":", i, False))
+                emb["fields"].append(EmbedField("", i, False))
             
             
             pages = await self.make_embeds(ctx, emb, help_settings=help_settings)
