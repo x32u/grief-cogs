@@ -768,21 +768,6 @@ class Perform(commands.Cog):
         await self.config.user(ctx.author).happy.set(used + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="cute")
-    @commands.guild_only()
-    async def cute(self, ctx: commands.Context):
-        """
-        Act cute!
-        """
-        embed = await kawaiiembed(self, ctx, "is acting cute!", "cute")
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
-        used = await self.config.user(ctx.author).cute()
-        embed.set_footer(text=f"{ctx.author.name}'s total cuteness: {used + 1}")
-        await send_embed(self, ctx, embed)
-        await self.config.user(ctx.author).cute.set(used + 1)
-
-    @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="lonely", aliases=["alone"])
     @commands.guild_only()
     async def lonely(self, ctx: commands.Context):
