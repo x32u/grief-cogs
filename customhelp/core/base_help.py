@@ -331,7 +331,8 @@ class BaguetteHelp(commands.RedHelpFormatter):
                     page_raw_str_data.append(
                         f"{str(cat.reaction) if cat.reaction else ''} **{cat.desc}**\n"
                     )
-
+                
+                emb["fields"].append(EmbedField("Categories:", i, False))
 
             pages = await self.make_embeds(ctx, emb, help_settings=help_settings)
             if get_pages:
