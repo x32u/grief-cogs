@@ -134,13 +134,7 @@ class DisboardReminder(commands.Cog):
         remaining = end_time - now
         if remaining > 60:
             return
-
-        # if remaining <= 0:
-        #    task_name = f"bump_remind:{guild.id}-{end_time}"
-        #    if task_name in self.bump_tasks[guild.id]:
-        #        return
-        #    task = self.create_task(self.bump_remind(guild), name=task_name)
-        # else:
+        
         task_name = f"bump_timer:{guild.id}-{end_time}"
         if task_name in self.bump_tasks[guild.id]:
             return
@@ -205,19 +199,19 @@ class DisboardReminder(commands.Cog):
         """
         Change the message used for 'thank you' messages. Providing no message will reset to the default message.
 
-        The thank you message supports TagScript blocks which can customize the message and even add an embed!
-        [View the TagScript documentation here.](https://phen-cogs.readthedocs.io/en/latest/index.html)
+        The thank you message supports TagScript blocks which can customize the message and even add an embed.
+        [View the TagScript documentation here.](https://docs.grief.cloud/documentation/variables)
 
         Variables:
-        `{member}` - [The user who bumped](https://phen-cogs.readthedocs.io/en/latest/tags/default_variables.html#author-block)
-        `{server}` - [This server](https://phen-cogs.readthedocs.io/en/latest/tags/default_variables.html#server-block)
+        `{member}` - [The user who bumped](https://docs.grief.cloud/documentation/variables#author-block)
+        `{server}` - [This server](https://docs.grief.cloud/documentation/variables#server-block)
 
         Blocks:
-        `embed` - [Embed to be sent in the thank you message](https://phen-cogs.readthedocs.io/en/latest/tags/parsing_blocks.html#embed-block)
+        `embed` - [Embed to be sent in the thank you message](https://docs.grief.cloud/documentation/variables#embed-block)
 
         **Examples:**
-        > `[p]bprm ty Thanks {member} for bumping! You earned 10 brownie points from phen!`
-        > `[p]bprm ty {embed(description):{member(mention)}, thank you for bumping! Make sure to vote for **{server}** on [our voting page](https://disboard.org/server/{guild(id)}).}`
+        > `&bprm ty Thanks {member} for bumping.`
+        > `&bprm ty {embed(description):{member(mention)}, thank you for bumping, make sure to vote for **{server}** on [our voting page](https://disboard.org/server/{guild(id)}).}`
         """
         if message:
             await self.config.guild(ctx.guild).tyMessage.set(message)
