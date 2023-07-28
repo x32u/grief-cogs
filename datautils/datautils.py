@@ -354,4 +354,3 @@ class DataUtils(commands.Cog):
             data.set_footer(text=joined_on)
 
         await ctx.send(embed=data)
-        )
