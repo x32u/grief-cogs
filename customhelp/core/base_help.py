@@ -259,7 +259,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         description = command.description or ""
 
         signature = _(
-            "`Syntax: {ctx.clean_prefix}{command.qualified_name} {command.signature}`"
+            "`Syntax: {command.qualified_name} {command.signature}`"
         ).format(ctx=ctx, command=command)
         subcommands = None
 
@@ -329,7 +329,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
                         continue
 
                     page_raw_str_data.append(
-                        f"{str(cat.reaction) if cat.reaction else ''} `{ctx.clean_prefix}help {cat.name:<10}:`**{cat.desc}**\n"
+                        f"{str(cat.reaction) if cat.reaction else ''} `{cat.name:<10}:`**{cat.desc}**\n"
                     )
 
             for i in pagify("\n".join(page_raw_str_data), page_length=1018):
