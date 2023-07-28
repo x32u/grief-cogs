@@ -41,12 +41,12 @@ class DankHelp(ThemesMeta):
 
                     title = (
                         str(cat.reaction) + " " if cat.reaction else ""
-                    ) + cat.name.capitalize()
+                    ) + cat.name()
 
                     emb["fields"].append(
                         EmbedField(
                             title,
-                            f"`{ctx.clean_prefix}help {cat.name}`\n{cat.long_desc if cat.long_desc else ''}",
+                            f"`{cat.long_desc if cat.long_desc else ''}",
                             True,
                         )
                     )
