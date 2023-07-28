@@ -193,7 +193,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
             spacing = len(max(spacer_list, key=len))
             for cog_name, data in coms:
                 cog_text = "\n" + "\n".join(
-                    shorten_line(f"{command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"`{name:<{spacing}}:`{command.format_shortdoc_for_context(ctx)}")
                     for name, command in sorted(data.items())
                 )
                 all_cog_text += cog_text
@@ -225,7 +225,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
             if coms:
                 spacing = len(max(coms.keys(), key=len))
                 command_text = "\n".join(
-                    shorten_line(f"{command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"`{name:<{spacing}}:`{command.format_shortdoc_for_context(ctx)}")
                     for name, command in sorted(coms.items())
                 )
                 for i, page in enumerate(pagify(command_text, page_length=500, shorten_by=0)):
@@ -259,7 +259,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         description = command.description or ""
 
         signature = _(
-            "`Syntax: {command.qualified_name} {command.signature}`"
+            "`Syntax: {ctx.clean_prefix}{command.qualified_name} {command.signature}`"
         ).format(ctx=ctx, command=command)
         subcommands = None
 
@@ -297,7 +297,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
             if subcommands:
                 spacing = len(max(subcommands.keys(), key=len))
                 subtext = "\n" + "\n".join(
-                    shorten_line(f"{command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"`{name:<{spacing}}:`{command.format_shortdoc_for_context(ctx)}")
                     for name, command in sorted(subcommands.items())
                 )
                 for i, page in enumerate(pagify(subtext, page_length=500, shorten_by=0)):
@@ -329,7 +329,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
                         continue
 
                     page_raw_str_data.append(
-                        f"{str(cat.reaction) if cat.reaction else ''} :`**{cat.desc}**\n"
+                        f"{str(cat.reaction) if cat.reaction else ''} `{ctx.clean_prefix}help {cat.name:<10}:`**{cat.desc}**\n"
                     )
 
             for i in pagify("\n".join(page_raw_str_data), page_length=1018):
@@ -670,21 +670,33 @@ class HybridMenus:
                 if self.category_page_mapping:
                     # haccerman
                     home_style = Counter([arrow.style for arrow in ARROWS]).most_common(1)[0][0]
-                    view_menu.add_item(
-                        ReactButton(
-                            emoji=ARROWS["home"].emoji,
-                            style=home_style,
-                            custom_id="home",
-                            row=4 if self.settings["menutype"] != "buttons" else None,
+                    # If menutype is select, chug it in the select bar
+                    # To save space
+                    if self.settings["menutype"] == "select":
+                        for child in view_menu.children:
+                            if type(child) == SelectMenuHelpBar:
+                                child.add_option(
+                                    label="Home",
+                                    description="Go to the main page",
+                                    emoji=ARROWS["home"].emoji,
+                                )
+                                
+                    else:
+                        view_menu.add_item(
+                            ReactButton(
+                                emoji=ARROWS["home"].emoji,
+                                style=home_style,
+                                custom_id="home",
+                                row=3 if self.settings["menutype"] != "buttons" else None,
+                            )
                         )
-                    )
 
                 class Button(discord.ui.Button):
                     view: BaseInteractionMenu
 
-                    def __init__(self, name, **kwargs):
+                    def __init__(self, name, row=4, **kwargs):
                         self.name = name
-                        super().__init__(**kwargs, row=3)
+                        super().__init__(**kwargs, row=row)
 
                     async def callback(self, interaction):
                         await self.view.hmenu.arrow_emoji_button[self.name](interaction)
@@ -693,7 +705,7 @@ class HybridMenus:
                     if len(self.pages) == 1:
                         self.no_arrows_yet = True
                         arrow = ARROWS["cross"]
-                        button = Button(arrow.name, **arrow.items())
+                        button = Button(arrow.name, **arrow.items(), row=None)
                         view_menu.add_item(button)
                     else:
                         for arrow in ARROWS:
