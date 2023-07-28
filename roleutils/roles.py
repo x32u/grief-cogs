@@ -179,14 +179,14 @@ class Roles(MixinMeta):
         if len(ctx.guild.roles) >= 250:
             return await ctx.send("This server has reached the maximum role limit (250).")
 
-        role = await ctx.guild.create_role(name=name, colour=color, hoist=hoist)
-        await ctx.send(f"**{role}** created!", embed=await self.get_info(role))
+        role = await ctx.guild.create_role(name=name, colour= 0x313338, hoist=hoist)
+        await ctx.send(f"**{role}** created.", embed=await self.get_info(role))
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("color", aliases=["colour"])
     async def role_color(
-        self, ctx: commands.Context, role: StrictRole(check_integrated=False), color: discord.Color
+        self, ctx: commands.Context, role: StrictRole(check_integrated=False), color: discord.Color.dark_theme
     ):
         """Change a role's color."""
         await role.edit(color=color)
