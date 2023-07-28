@@ -143,11 +143,6 @@ class DankHelp(ThemesMeta):
             if description := command.description:
                 emb["embed"]["title"] = f"{description[:250]}"
 
-            command_help = command.format_help_for_context(ctx)
-            if command_help:
-                splitted = command_help.split("\n\n")
-                name = splitted[0]
-                value = "\n\n".join(splitted[1:])
                 emb["fields"].append(EmbedField("Description:", name[:250], False))
             else:
                 value = ""
