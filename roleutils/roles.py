@@ -179,7 +179,7 @@ class Roles(MixinMeta):
         if len(ctx.guild.roles) >= 250:
             return await ctx.send("This server has reached the maximum role limit (250).")
 
-        role = await ctx.guild.create_role(name=name, colour= , hoist=hoist)
+        role = await ctx.guild.create_role(name=name, colour=0x313338, hoist=hoist)
         await ctx.send(f"**{role}** created.", embed=await self.get_info(role))
 
     @commands.has_guild_permissions(manage_roles=True)
