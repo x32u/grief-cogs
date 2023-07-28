@@ -680,8 +680,8 @@ class HybridMenus:
                                     description="Go to the main page",
                                     emoji=ARROWS["home"].emoji,
                                 )
+                                break
                                 
-                    else:
                         view_menu.add_item(
                             ReactButton(
                                 emoji=ARROWS["home"].emoji,
