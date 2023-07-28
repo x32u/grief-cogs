@@ -535,7 +535,7 @@ class RedditPost(commands.Cog):
             if feed.author:
                 embed.set_footer(text=f"Submitted by /u/{unescape(feed.author.name)}")
             images = False
-            if image.endswith(("png", "jpg", "jpeg", "gif")) and not feed.spoiler:
+            if image.endswith(("png", "jpg", "jpeg", "gif"));
                 embed.set_image(url=unescape(image))
                 images = True
             elif feed.permalink not in image and validators.url(image):
