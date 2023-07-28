@@ -144,12 +144,7 @@ class DataUtils(commands.Cog):
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
     async def serverinfo(self, ctx, details: bool = True):
-        """
-        Show server information.
 
-        `details`: Shows more information when set to `True`.
-        Default to False.
-        """
         guild = ctx.guild
         created_at = _("Created on {date_and_time}. That's {relative_time}!").format(
             date_and_time=discord.utils.format_dt(guild.created_at),
