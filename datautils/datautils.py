@@ -160,7 +160,7 @@ class DataUtils(commands.Cog):
         Default to False.
         """
         guild = ctx.guild
-        created_at = _("Created on {date_and_time}. That's {relative_time}!").format(
+        created_at = _("Created on {date_and_time}. That's {relative_time}.").format(
             date_and_time=discord.utils.format_dt(guild.created_at),
             relative_time=discord.utils.format_dt(guild.created_at, "R"),
         )
