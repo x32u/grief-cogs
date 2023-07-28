@@ -193,7 +193,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
             spacing = len(max(spacer_list, key=len))
             for cog_name, data in coms:
                 cog_text = "\n" + "\n".join(
-                    shorten_line(f"`{name:<{spacing}}:`{command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"{command.format_shortdoc_for_context(ctx)}")
                     for name, command in sorted(data.items())
                 )
                 all_cog_text += cog_text
@@ -225,7 +225,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
             if coms:
                 spacing = len(max(coms.keys(), key=len))
                 command_text = "\n".join(
-                    shorten_line(f"`{name:<{spacing}}:`{command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"{command.format_shortdoc_for_context(ctx)}")
                     for name, command in sorted(coms.items())
                 )
                 for i, page in enumerate(pagify(command_text, page_length=500, shorten_by=0)):
@@ -297,7 +297,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
             if subcommands:
                 spacing = len(max(subcommands.keys(), key=len))
                 subtext = "\n" + "\n".join(
-                    shorten_line(f"`{name:<{spacing}}:`{command.format_shortdoc_for_context(ctx)}")
+                    shorten_line(f"{command.format_shortdoc_for_context(ctx)}")
                     for name, command in sorted(subcommands.items())
                 )
                 for i, page in enumerate(pagify(subtext, page_length=500, shorten_by=0)):
@@ -329,7 +329,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
                         continue
 
                     page_raw_str_data.append(
-                        f"{str(cat.reaction) if cat.reaction else ''} `{cat.name:<10}:`**{cat.desc}**\n"
+                        f"{str(cat.reaction) if cat.reaction else ''} :`**{cat.desc}**\n"
                     )
 
             for i in pagify("\n".join(page_raw_str_data), page_length=1018):
