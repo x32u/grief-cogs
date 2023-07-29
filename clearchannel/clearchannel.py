@@ -85,10 +85,5 @@ class ClearChannel(Cog, DashboardIntegration):
                 await CustomMessageConverter(**config["custom_message"]).send_message(
                     ctx, channel=new_channel, env=env
                 )
-
-    @commands.guild_only()
-    @commands.guildowner()
-    @commands.hybrid_group(name="nukeset", aliases=["ns"])
-    async def configuration(self, ctx: commands.Context) -> None:
-        """Configure nuke for your server."""
+                
         pass
