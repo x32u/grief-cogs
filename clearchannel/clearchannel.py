@@ -29,7 +29,7 @@ class ClearChannel(Cog, DashboardIntegration):
         )
         self.clearchannel_guild = {
             "channel_delete": True,
-            "first_message": False,
+            "first_message": True,
             "author_dm": False,
             "custom_message": {},
         }
@@ -68,6 +68,7 @@ class ClearChannel(Cog, DashboardIntegration):
             global_path=[],
             use_profiles_system=False,
             can_edit=True,
+            commands_group=self.configuration,
         )
 
     async def cog_load(self):
@@ -149,3 +150,10 @@ class ClearChannel(Cog, DashboardIntegration):
                     "All messages in channel #{old_channel.name} ({old_channel.id}) have been deleted! You can find the new channel, with the same permissions: #{new_channel.name} ({new_channel.id})."
                 ).format(old_channel=old_channel, new_channel=new_channel)
             )
+
+    @commands.guild_only()
+    @commands.guildowner()
+    @commands.hybrid_group(name="nukeset", aliases=["ns"])
+    async def configuration(self, ctx: commands.Context) -> None:
+        """Configure nuke for your server."""
+        pass
