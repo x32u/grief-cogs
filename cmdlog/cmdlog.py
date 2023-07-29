@@ -217,7 +217,7 @@ class CmdLog(commands.Cog):
         cache_size = humanize_bytes(self.cache_size(), 1)
         cache_count = humanize_number(len(self.log_cache))
         extra = f"\nCache size: {cache_size} with {cache_count} commands."
-        await ctx.send(main + extra)
+        await ctx.send(extra)
 
     @commands.is_owner()
     @commands.group(aliases=["cmdlogs"])
