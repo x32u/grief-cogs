@@ -27,49 +27,6 @@ class ClearChannel(Cog, DashboardIntegration):
             identifier=205192943327321000143939875896557571750,  # 837018163805
             force_registration=True,
         )
-        self.clearchannel_guild = {
-            "channel_delete": True,
-            "first_message": True,
-            "author_dm": False,
-            "custom_message": {},
-        }
-        self.config.register_guild(**self.clearchannel_guild)
-
-        _settings: typing.Dict[
-            str, typing.Dict[str, typing.Union[typing.List[str], bool, str]]
-        ] = {
-            "delete_channel": {
-                "path": ["channel_delete"],
-                "converter": bool,
-                "description": "If this option is disabled, the bot will not delete the original channel: it will duplicate it as normal, but move it to the end of the server's channel list.",
-            },
-            "first_message": {
-                "path": ["first_message"],
-                "converter": bool,
-                "description": "If this option is enabled, the bot will send a message to the emptied channel to inform that it has been emptied.",
-            },
-            "dm_author": {
-                "path": ["author_dm"],
-                "converter": bool,
-                "description": "If this option is enabled, the bot will try to send a dm to the author of the order to confirm that everything went well.",
-            },
-            "custom_message": {
-                "path": ["custom_message"],
-                "converter": CustomMessageConverter,
-                "description": "Specify a custom message to be sent from the link of another message or a json (https://discohook.org/ for example).\n\nUse `{name}` or `{icon_url}` for the user.",
-            },
-        }
-        self.settings: Settings = Settings(
-            bot=self.bot,
-            cog=self,
-            config=self.config,
-            group=self.config.GUILD,
-            settings=_settings,
-            global_path=[],
-            use_profiles_system=False,
-            can_edit=True,
-            commands_group=self.configuration,
-        )
 
     async def cog_load(self):
         await super().cog_load()
@@ -111,12 +68,6 @@ class ClearChannel(Cog, DashboardIntegration):
         new_channel = await old_channel.clone(reason=reason)
         if config["channel_delete"]:
             await old_channel.delete(reason=reason)
-        else:
-            await old_channel.edit(
-                name=_("🗑️-Deleted-{old_channel.name}").format(old_channel=old_channel),
-                position=len(ctx.guild.channels),
-                reason=reason,
-            )
         await new_channel.edit(
             position=channel_position,
             reason=reason,
@@ -135,12 +86,6 @@ class ClearChannel(Cog, DashboardIntegration):
                 await CustomMessageConverter(**config["custom_message"]).send_message(
                     ctx, channel=new_channel, env=env
                 )
-        if config["author_dm"]:
-            await ctx.author.send(
-                _(
-                    "All messages in channel #{old_channel.name} ({old_channel.id}) have been deleted! You can find the new channel, with the same permissions: #{new_channel.name} ({new_channel.id})."
-                ).format(old_channel=old_channel, new_channel=new_channel)
-            )
 
     @commands.guild_only()
     @commands.guildowner()
