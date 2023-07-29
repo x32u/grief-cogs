@@ -30,7 +30,6 @@ class ClearChannel(Cog, DashboardIntegration):
 
     async def cog_load(self):
         await super().cog_load()
-        await self.settings.add_commands()
 
     async def red_delete_data_for_user(self, *args, **kwargs) -> None:
         """Nothing to delete."""
