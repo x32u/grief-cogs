@@ -74,16 +74,4 @@ class ClearChannel(Cog, DashboardIntegration):
         self.log.info(
             f"{ctx.author} ({ctx.author.id}) deleted all messages in channel {old_channel.name} ({old_channel.id})."
         ),
-        if config["first_message"]:
-            if not config["custom_message"]:
-                await new_channel.send("first")
-            else:
-                env = {
-                    "user_name": ctx.author.display_name,
-                    "icon_url": ctx.author.display_avatar,
-                }
-                await CustomMessageConverter(**config["custom_message"]).send_message(
-                    ctx, channel=new_channel, env=env
-                )
-
-        pass
+        await new_channel.send("first")
