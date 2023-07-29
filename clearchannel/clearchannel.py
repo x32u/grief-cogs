@@ -29,7 +29,7 @@ class ClearChannel(Cog, DashboardIntegration):
         )
         self.clearchannel_guild = {
             "channel_delete": True,
-            "first_message": True,
+            "first_message": False,
             "author_dm": False,
             "custom_message": {},
         }
