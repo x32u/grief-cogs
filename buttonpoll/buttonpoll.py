@@ -56,8 +56,6 @@ class ButtonPoll(commands.Cog):
     async def cog_unload(self) -> None:
         self.loop.cancel()
         self.bot.remove_dev_env_value("bpoll")
-
-        # if the cog will be reloaded, best to clean up views as they are re-initialised on load
         for poll in self.polls:
             poll.view.stop()
 
@@ -88,23 +86,19 @@ class ButtonPoll(commands.Cog):
         This is an interactive setup. By default the current channel will be used,
         but if you want to start a poll remotely you can send the channel name
         along with the buttonpoll command.
-
-        **Examples:**
-        - `[p]buttonpoll` - start a poll in the current channel
-        - `[p]buttonpoll #polls` start a poll somewhere else
         """
         channel = chan or ctx.channel
         if TYPE_CHECKING:
             assert isinstance(channel, (TextChannel, discord.Thread))
-            assert isinstance(ctx.author, discord.Member)  # we are in a guild...
+            assert isinstance(ctx.author, discord.Member) 
 
         # these two checks are untested :)
-        if not channel.permissions_for(ctx.author).send_messages:  # type:ignore
+        if not channel.permissions_for(ctx.author).send_messages:
             return await ctx.send(
                 f"You don't have permission to send messages in {channel.mention}, so I can't "
                 "start a poll there."
             )
-        if not channel.permissions_for(ctx.me).send_messages:  # type:ignore
+        if not channel.permissions_for(ctx.me).send_messages:
             return await ctx.send(
                 f"I don't have permission to send messages in {channel.mention}, so I can't "
                 "start a poll there."
@@ -118,7 +112,6 @@ class ButtonPoll(commands.Cog):
             await ctx.send("Click bellow to start a poll!", view=view)
 
     async def buttonpoll_loop(self):
-        """Background loop for checking for finished polls."""
         await self.bot.wait_until_red_ready()
         while True:
             try:
@@ -129,7 +122,7 @@ class ButtonPoll(commands.Cog):
                 log.verbose("ButtonPoll loop finished.")
             except Exception as e:
                 log.exception(
-                    "Something went wrong with the ButtonPoll loop. Please report this to Vexed.",
+                    "Something went wrong with the ButtonPoll loop. Please report this in grief support server.",
                     exc_info=e,
                 )
                 self.loop_meta.iter_error(e)
