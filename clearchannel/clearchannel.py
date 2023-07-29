@@ -29,7 +29,7 @@ class ClearChannel(Cog, DashboardIntegration):
         )
         self.clearchannel_guild = {
             "channel_delete": True,
-            "first_message": False,
+            "first_message": True,
             "author_dm": False,
             "custom_message": {},
         }
@@ -126,7 +126,7 @@ class ClearChannel(Cog, DashboardIntegration):
         ),
         if config["first_message"]:
             if not config["custom_message"]:
-                return await ctx.send("first")
+                await new_channel.send("first")
             else:
                 env = {
                     "user_name": ctx.author.display_name,
