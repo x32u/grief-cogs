@@ -126,16 +126,7 @@ class ClearChannel(Cog, DashboardIntegration):
         ),
         if config["first_message"]:
             if not config["custom_message"]:
-                embed: discord.Embed = discord.Embed()
-                embed.title = _("Nuked")
-                embed.description = _("The channel has been deleted and recreated.")
-                embed.color = 0x313338
-                embed.set_author(
-                    name=ctx.author.display_name,
-                    url=ctx.author.display_avatar,
-                    icon_url=ctx.author.display_avatar,
-                )
-                await new_channel.send(embed=embed)
+                return await ctx.send("first")
             else:
                 env = {
                     "user_name": ctx.author.display_name,
