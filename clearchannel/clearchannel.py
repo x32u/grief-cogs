@@ -68,7 +68,6 @@ class ClearChannel(Cog, DashboardIntegration):
             global_path=[],
             use_profiles_system=False,
             can_edit=True,
-            commands_group=self.configuration,
         )
 
     async def cog_load(self):
