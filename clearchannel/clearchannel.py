@@ -29,7 +29,7 @@ class ClearChannel(Cog, DashboardIntegration):
         )
         self.clearchannel_guild = {
             "channel_delete": True,
-            "first_message": True,
+            "first_message": False,
             "author_dm": False,
             "custom_message": {},
         }
@@ -89,9 +89,6 @@ class ClearChannel(Cog, DashboardIntegration):
     @commands.hybrid_command(name="nuke")
     async def nuke_channel(self, ctx: commands.Context, confirmation: bool = False) -> None:
         """Delete all messages from the current channel by duplicating it and then deleting it.
-
-        For security reasons, only the server owner and the bot owner can use the command. Use the "permissions" cog for more options.
-        ⚠ The channel will be cloned, and then **deleted**.
         """
         config = await self.config.guild(ctx.guild).all()
         old_channel = ctx.channel
@@ -153,10 +150,3 @@ class ClearChannel(Cog, DashboardIntegration):
                     "All messages in channel #{old_channel.name} ({old_channel.id}) have been deleted! You can find the new channel, with the same permissions: #{new_channel.name} ({new_channel.id})."
                 ).format(old_channel=old_channel, new_channel=new_channel)
             )
-
-    @commands.guild_only()
-    @commands.guildowner()
-    @commands.hybrid_group(name="nukeset", aliases=["ns"])
-    async def configuration(self, ctx: commands.Context) -> None:
-        """Configure nuke for your server."""
-        pass
