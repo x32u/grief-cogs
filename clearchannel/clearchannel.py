@@ -10,9 +10,6 @@ from AAA3A_utils.settings import CustomMessageConverter
 
 from .dashboard_integration import DashboardIntegration
 
-# Credits:
-# General repo credits.
-
 _ = Translator("ClearChannel", __file__)
 
 
@@ -32,11 +29,9 @@ class ClearChannel(Cog, DashboardIntegration):
         await super().cog_load()
 
     async def red_delete_data_for_user(self, *args, **kwargs) -> None:
-        """Nothing to delete."""
         return
 
     async def red_get_data_for_user(self, *args, **kwargs) -> typing.Dict[str, typing.Any]:
-        """Nothing to get."""
         return {}
 
     @commands.guild_only()

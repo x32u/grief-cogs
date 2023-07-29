@@ -24,19 +24,16 @@ class ChannelLogger:
         self._loop_meta = VexLoop("CmdLog channels", 60.0)
 
         self.last_send = self._utc_now() - datetime.timedelta(seconds=65)
-        # basically make next sendable time now
 
         self._queue: Queue[Log] = Queue()
 
     def stop(self) -> None:
-        """Stop the channel logger task."""
         if self.task:
             self.task.cancel()
 
         log.verbose("CmdLog channel logger task stopped.")
 
     def start(self) -> None:
-        """Start the channel logger task."""
         self._queue = Queue()
         self.task = self.bot.loop.create_task(self._cmdlog_channel_task())
 
@@ -70,9 +67,6 @@ class ChannelLogger:
 
             except Exception as e:
                 log.warning(
-                    "Something went wrong preparing and sending the messages for the CmdLog "
-                    "channel. Some will have been lost, however they will still be available "
-                    "under the `[p]cmdlog` command in Discord. Please report this to Vexed.",
                     exc_info=e,
                 )
 
@@ -86,7 +80,4 @@ class ChannelLogger:
                 f"Waiting {to_wait}s for next safe sendable time, last send was {last_send}s ago."
             )
             await asyncio.sleep(to_wait)
-            # else:
-            #     log.debug(f"Last send was {last_send}s ago, only waiting 5 seconds.")
-            #     await asyncio.sleep(5)
         log.trace("Wait finished")

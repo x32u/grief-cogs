@@ -60,10 +60,6 @@ class CmdLog(commands.Cog):
 
         log.trace("cmdlog unload")
 
-    # not supporting red_delete_data_for_user - see EUD statement in info.json or `[p]cog info`
-    # whilst it is possible to remove data from the internal cache, data in the bot's logs isn't
-    # so easy to remove so imo there's no point removing only 1 data location
-
     def log_com(self, ctx: commands.Context) -> None:
         logged_com = LoggedCommand(
             user=ctx.author,
@@ -194,15 +190,13 @@ class CmdLog(commands.Cog):
 
             elif inter.type == InteractionType.component:
                 log.trace("skipping logging of %s - type is %s", inter, inter.type)
-                # TODO: add support for component interaction
                 return
 
             elif inter.type == InteractionType.modal_submit:
                 log.trace("skipping logging of %s - type is %s", inter, inter.type)
-                # TODO: MAYBE add support for modals
                 return
 
-            else:  # we should never get here
+            else:
                 log.warning(
                     "Skipping logging of %s - unknown type - type is %s. Please report this to"
                     " Vexed, it should never happen.",
@@ -220,7 +214,7 @@ class CmdLog(commands.Cog):
 
     @commands.command(hidden=True)
     async def cmdloginfo(self, ctx: commands.Context):
-        main = await format_info(ctx, self.qualified_name, self.__version__)
+        main = await format_info(ctx, self.qualified_name)
         cache_size = humanize_bytes(self.cache_size(), 1)
         cache_count = humanize_number(len(self.log_cache))
         extra = f"\nCache size: {cache_size} with {cache_count} commands."
@@ -231,13 +225,10 @@ class CmdLog(commands.Cog):
     async def cmdlog(self, ctx: commands.Context):
         """
         View command logs.
-
-        Note the cache is limited to 100 000 commands, which is approximately 50MB of RAM
         """
 
     @cmdlog.command()
     async def content(self, ctx: commands.Context, to_log: bool):
-        """Set whether or not whole message content should be logged. Default false."""
         await self.config.log_content.set(to_log)
         self.log_content = to_log
         await ctx.send("Message content will " + ("now" if to_log else "now not") + " be logged.")
@@ -246,14 +237,9 @@ class CmdLog(commands.Cog):
     @cmdlog.command()
     async def channel(self, ctx: commands.Context, channel: Optional[TextChannel]):
         """Set the channel to send logs to, this is optional.
-
+        
         Run the comand without a channel to stop sending.
-
-        **Example:**
-        - `[p]cmdlog channel #com-log` - set the log channel to #com-log
-        - `[p]cmdlog channel` - stop sending logs
         """
-        # guild only check
         if TYPE_CHECKING:
             assert isinstance(ctx.me, discord.Member)
 
@@ -280,12 +266,7 @@ class CmdLog(commands.Cog):
         self.channel_logger = ChannelLogger(self.bot, channel)
         self.channel_logger.start()
         await ctx.send(
-            f"Command logs will now be sent to {channel.mention}. Please be aware "
-            "of the privacy implications of permanently logging End User Data (unlike the other "
-            "logs in this cog, which are either in memory or part of logging rotation) and ensure "
-            "permissions for accessing this channel are restricted - you are responsible. Logging "
-            "this End User Data is a grey area in Discord's Terms of Service.\n\n"
-            "To avoid rate limits, **logs will only be sent every 60 seconds**."
+            f"Command logs will now be sent to {channel.mention}."
         )
 
     @cmdlog.command()
@@ -330,9 +311,6 @@ class CmdLog(commands.Cog):
     async def user(self, ctx: commands.Context, user_id: int):
         """
         Upload all the logs that are stored for a specific User ID in the cache.
-
-        **Example:**
-        - `[p]cmdlog user 418078199982063626`
         """
         now = datetime.datetime.now().strftime(TIME_FORMAT)
         logs = [f"[{i.time}] {i}" for i in self.log_cache if i.user.id == user_id]
@@ -366,9 +344,6 @@ class CmdLog(commands.Cog):
     async def server(self, ctx: commands.Context, server_id: int):
         """
         Upload all the logs that are stored for for a specific server ID in the cache.
-
-        **Example:**
-        - `[p]cmdlog server 527961662716772392`
         """
         now = datetime.datetime.now().strftime(TIME_FORMAT)
         logs = [f"[{i.time}] {i}" for i in self.log_cache if i.guild and i.guild.id == server_id]
@@ -402,20 +377,7 @@ class CmdLog(commands.Cog):
     async def command(self, ctx: commands.Context, *, command: str):
         """
         Upload all the logs that are stored for a specific command in the cache.
-
-        This does not check it is a real command, so be careful. Do not enclose it in " if there
-        are spaces.
-
-        You can search for a group command (eg `cmdlog`) or a full command (eg `cmdlog user`).
-        As arguments are not stored, you cannot search for them.
-
-        **Examples:**
-        - `[p]cmdlog command ping`
-        - `[p]cmdlog command playlist`
-        - `[p]cmdlog command playlist create`
         """
-        # not checking if a command exists because want to allow for this to find it if it was
-        # unloaded (eg if com was found to be intensive, see if it was one user spamming it)
         now = datetime.datetime.now().strftime(TIME_FORMAT)
         logs = [f"[{i.time}] {i}" for i in self.log_cache if i.command.startswith(command)]
 
