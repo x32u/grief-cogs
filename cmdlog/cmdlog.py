@@ -95,10 +95,6 @@ class CmdLog(commands.Cog):
             error_info = "the bot missing permissions/roles"
         elif isinstance(error, (commands.CheckFailure)):
             error_info = "an error with the command checks"
-        elif isinstance(error, (commands.CommandNotFound)):
-            error_info = "invoking an invalid command"
-        else:
-            error_info = "an unexpected error"
 
         logged_com = LoggedComError(
             user=ctx.author,
@@ -212,13 +208,6 @@ class CmdLog(commands.Cog):
         except Exception as e:
             self.log_list_error(e)
 
-    @commands.command(hidden=True)
-    async def cmdloginfo(self, ctx: commands.Context):
-        cache_size = humanize_bytes(self.cache_size(), 1)
-        cache_count = humanize_number(len(self.log_cache))
-        extra = f"\nCache size: {cache_size} with {cache_count} commands."
-        await ctx.send(extra)
-
     @commands.is_owner()
     @commands.group(aliases=["cmdlogs"])
     async def cmdlog(self, ctx: commands.Context):
@@ -267,15 +256,6 @@ class CmdLog(commands.Cog):
         await ctx.send(
             f"Command logs will now be sent to {channel.mention}."
         )
-
-    @cmdlog.command()
-    async def cache(self, ctx: commands.Context):
-        """Show the size of the internal command cache."""
-        cache_bytes = self.cache_size()
-        log.debug(f"Cache size is exactly {cache_bytes} bytes.")
-        cache_size = humanize_bytes(cache_bytes, 1)
-        cache_count = humanize_number(len(self.log_cache))
-        await ctx.send(f"\nCache size: {cache_size} with {cache_count} commands.")
 
     @commands.bot_has_permissions(attach_files=True)
     @cmdlog.command()
