@@ -20,6 +20,9 @@ from redbot.core.data_manager import bundled_data_path
 
 from .view import GuildStatsView
 
+# Credits:
+# General repo credits.
+
 _ = Translator("GuildStats", __file__)
 
 
@@ -281,7 +284,7 @@ class GuildStats(Cog):
                     continue
                 if guild not in new_cache:
                     new_cache[guild] = {"channels": {}, "members": {}}
-                new_cache[guild]["channels"][channel] = {"total_messages": 0, "total_humans_messages": 0, "total_bots_messages": 0, "total_messages_members": {}, "messages": {}, "total_voice": 0, "total_humans_voice": 0, "total_bots_voice": 0, "total_voice_members": {}, "voice_cache": data["voice_cache"]}
+                new_cache[guild]["channels"][channel] = {"total_messages": 0, "total_humans_messages": 0, "total_bots_messages": 0, "total_messages_members": {}, "messages": {}, "total_voice": 0, "total_humans_voice": 0, "total_bots_voice": 0, "total_voice_members": {}, "voice": {}, "voice_cache": data["voice_cache"]}
             for member, data in cache[guild]["members"].items():
                 if not data["activities_cache"]:
                     continue
@@ -387,7 +390,7 @@ class GuildStats(Cog):
         if message.guild not in self.cache:
             self.cache[message.guild] = {"channels": {}, "members": {}}
         if message.channel not in self.cache[message.guild]:
-            self.cache[message.guild]["channels"][message.channel] = {"total_messages": 0, "total_humans_messages": 0, "total_bots_messages": 0, "total_messages_members": {}, "messages": {}, "total_voice": 0, "total_humans_voice": 0, "total_bots_voice": 0, "total_voice_members": {}, "voice_cache": {}}
+            self.cache[message.guild]["channels"][message.channel] = {"total_messages": 0, "total_humans_messages": 0, "total_bots_messages": 0, "total_messages_members": {}, "messages": {}, "total_voice": 0, "total_humans_voice": 0, "total_bots_voice": 0, "total_voice_members": {}, "voice": {}, "voice_cache": {}}
         self.cache[message.guild]["channels"][message.channel]["total_messages"] += 1
         if not message.author.bot:
             self.cache[message.guild]["channels"][message.channel]["total_humans_messages"] += 1
@@ -419,7 +422,7 @@ class GuildStats(Cog):
             if after.channel.guild not in self.cache:
                 self.cache[after.channel.guild] = {"channels": {}, "members": {}}
             if after.channel not in self.cache[member.guild]["channels"]:
-                self.cache[after.channel.guild]["channels"][after.channel] = {"total_messages": 0, "total_humans_messages": 0, "total_bots_messages": 0, "total_messages_members": {}, "messages": {}, "total_voice": 0, "total_humans_voice": 0, "total_bots_voice": 0, "total_voice_members": {}, "voice_cache": {}}
+                self.cache[after.channel.guild]["channels"][after.channel] = {"total_messages": 0, "total_humans_messages": 0, "total_bots_messages": 0, "total_messages_members": {}, "messages": {}, "total_voice": 0, "total_humans_voice": 0, "total_bots_voice": 0, "total_voice_members": {}, "voice": {}, "voice_cache": {}}
             self.cache[after.channel.guild]["channels"][after.channel]["voice_cache"][member] = datetime.datetime.now(datetime.timezone.utc)
         if before.channel is not None:
             if isinstance(after.channel, discord.StageChannel):
