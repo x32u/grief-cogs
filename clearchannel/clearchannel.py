@@ -65,7 +65,7 @@ class ClearChannel(Cog, DashboardIntegration):
 
         reason = _("Nuke requested by {ctx.author} ({ctx.author.id}).").format(ctx=ctx)
         new_channel = await old_channel.clone(reason=reason)
-            await old_channel.delete(reason=reason)
+        await old_channel.delete(reason=reason)
         await new_channel.edit(
             position=channel_position,
             reason=reason,
