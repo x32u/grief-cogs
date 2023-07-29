@@ -20,9 +20,6 @@ from redbot.core.data_manager import bundled_data_path
 
 from .view import GuildStatsView
 
-# Credits:
-# General repo credits.
-
 _ = Translator("GuildStats", __file__)
 
 
@@ -2050,25 +2047,6 @@ class GuildStats(Cog):
         if _object == "activities" and not await self.config.toggle_activities_stats():
             raise commands.UserFeedbackCheckFailure(_("Activities stats are disabled on this bot."))
         await GuildStatsView(cog=self, _object=_object if _object not in ["voice", "messages", "activities"] else (ctx.guild, _object), members_type=members_type, show_graphic_in_main=False, graphic_mode=True).start(ctx)
-
-    @guildstats.command()
-    async def ignoreme(self, ctx: commands.Context) -> None:
-        """Asking GuildStats to ignore your actions."""
-        user = ctx.author
-        ignored_users = await self.config.ignored_users()
-        if user.id not in ignored_users:
-            ignored_users.append(user.id)
-            await self.config.ignored_users.set(ignored_users)
-            await self.red_delete_data_for_user(requester="user", user_id=user.id)
-            await ctx.send(
-                _(
-                    "You will no longer be seen by this cog and the data I held on you have been deleted."
-                )
-            )
-        else:
-            ignored_users.remove(user.id)
-            await self.config.ignored_users.set(ignored_users)
-            await ctx.send(_("You'll be seen again by this cog."))
 
     @commands.is_owner()
     @guildstats.command()
