@@ -592,8 +592,8 @@ class Roles(MixinMeta):
         await ctx.send(embed=e, reference=ref)
 
         
-        @role.command(name="delete")
-        async def role_delete(
+    @role.command(name="delete")
+    async def role_delete(
         self,
         ctx: commands.Context,
         role: discord.Role,
