@@ -446,16 +446,12 @@ class Roles(MixinMeta):
     async def target(self, ctx: commands.Context):
         """
         Modify roles using 'targeting' args.
-
-        An explanation of Targeter and test commands to preview the members affected can be found with `[p]target`.
         """
 
     @target.command("add")
     async def target_add(self, ctx: commands.Context, role: StrictRole, *, args: TargeterArgs):
         """
-        Add a role to members using targeting args.
-
-        An explanation of Targeter and test commands to preview the members affected can be found with `[p]target`.
+        Add a role to members.
         """
         await self.super_massrole(
             ctx,
@@ -467,9 +463,7 @@ class Roles(MixinMeta):
     @target.command("remove")
     async def target_remove(self, ctx: commands.Context, role: StrictRole, *, args: TargeterArgs):
         """
-        Remove a role from members using targeting args.
-
-        An explanation of Targeter and test commands to preview the members affected can be found with `[p]target`.
+        Remove a role from members.
         """
         await self.super_massrole(
             ctx,
@@ -593,12 +587,10 @@ class Roles(MixinMeta):
         if not confirmation and not ctx.assume_yes:
             if ctx.bot_permissions.embed_links:
                 embed: discord.Embed = discord.Embed()
-                embed.title = ("⚠️ - Delete role")
                 embed.description = (
                     "Do you really want to delete the role {role.mention} ({role.id})?"
                 ).format(role=role)
-                embed.color = 0xF00020
-                content = ctx.author.mention
+                embed.color = 0x313338
             else:
                 embed = None
                 content = f"{ctx.author.mention} " + _(
