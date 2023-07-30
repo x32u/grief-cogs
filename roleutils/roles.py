@@ -597,7 +597,7 @@ class Roles(MixinMeta):
                     "Do you really want to delete the role {role.mention} ({role.id})?"
                 ).format(role=role)
             if not await CogsUtils.ConfirmationAsk(
-                ctx, content=content, embed=embed
+                ctx, embed=embed
             ):
                 await CogsUtils.delete_message(ctx.message)
                 return
