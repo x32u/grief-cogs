@@ -28,6 +28,11 @@ import emoji
 
 from redbot.core.utils.chat_formatting import box, pagify
 
+try:
+    from emoji import UNICODE_EMOJI_ENGLISH as EMOJI_DATA  # emoji<2.0.0
+except ImportError:
+    from emoji import EMOJI_DATA  # emoji>=2.0.0
+
 log = logging.getLogger("red.phenom4n4n.roleutils")
 
 
