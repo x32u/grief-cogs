@@ -164,8 +164,6 @@ class EditRole(Cog):
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
 
-            )
-
     @editrole.command(name="position")
     async def editrole_position(
         self, ctx: commands.Context, role: discord.Role, position: PositionConverter
