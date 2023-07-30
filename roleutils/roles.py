@@ -82,6 +82,18 @@ class Roles(MixinMeta):
             )
         return True
 
+    class EmojiOrUrlConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str):
+        try:
+            return await discord.ext.commands.converter.CONVERTER_MAPPING[discord.Emoji]().convert(
+                ctx, argument
+            )
+        except commands.BadArgument:
+            pass
+        if argument.startswith("<") and argument.endswith(">"):
+            argument = argument[1:-1]
+        return argument
+
     @commands.guild_only()
     @commands.group(invoke_without_command=True)
     async def role(
