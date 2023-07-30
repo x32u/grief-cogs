@@ -589,7 +589,7 @@ class Roles(MixinMeta):
                 embed: discord.Embed = discord.Embed()
                 embed.description = (
                     "{user.mention} Do you really want to delete the role {role.mention}?"
-                ).format(role=role, user=member)
+                ).format(role=role, user=author)
                 embed.color = 0x313338
             else:
                 embed = None
