@@ -659,8 +659,8 @@ class Roles(MixinMeta):
             )
             
             
-    @editrole.command(name="icon")
-    async def editrole_icon(
+    @role.command(name="icon")
+    async def role_icon(
         self, ctx: commands.Context, role: discord.Role, display_icon: typing.Optional[EmojiOrUrlConverter] = None
     ) -> None:
         """Edit role display icon.
