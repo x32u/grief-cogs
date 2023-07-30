@@ -588,8 +588,8 @@ class Roles(MixinMeta):
             if ctx.bot_permissions.embed_links:
                 embed: discord.Embed = discord.Embed()
                 embed.description = (
-                    "{user.mention} Do you really want to delete the role {role.mention}?"
-                ).format(role=role, user=user)
+                    "Do you really want to delete the role {role.mention}?"
+                ).format(role=role)
                 embed.color = 0x313338
             else:
                 embed = None
