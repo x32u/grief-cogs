@@ -24,6 +24,7 @@ from .utils import (
 
 import aiohttp
 import typing
+import emoji
 
 from redbot.core.utils.chat_formatting import box, pagify
 
