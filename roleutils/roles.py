@@ -22,6 +22,10 @@ from .utils import (
     is_allowed_by_role_hierarchy,
 )
 
+import aiohttp
+
+from redbot.core.utils.chat_formatting import box, pagify
+
 log = logging.getLogger("red.phenom4n4n.roleutils")
 
 
