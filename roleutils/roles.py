@@ -23,6 +23,7 @@ from .utils import (
 )
 
 import aiohttp
+import typing
 
 from redbot.core.utils.chat_formatting import box, pagify
 
