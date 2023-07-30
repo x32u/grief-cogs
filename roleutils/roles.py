@@ -628,7 +628,7 @@ class Roles(MixinMeta):
         if not confirmation and not ctx.assume_yes:
             if ctx.bot_permissions.embed_links:
                 embed: discord.Embed = discord.Embed()
-                embed.title = _("⚠️ - Delete role")
+                embed.title = ("⚠️ - Delete role")
                 embed.description = _(
                     "Do you really want to delete the role {role.mention} ({role.id})?"
                 ).format(role=role)
