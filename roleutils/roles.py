@@ -82,7 +82,7 @@ class Roles(MixinMeta):
             )
         return True
 
-    class EmojiOrUrlConverter(commands.Converter):
+class EmojiOrUrlConverter(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str):
         try:
             return await discord.ext.commands.converter.CONVERTER_MAPPING[discord.Emoji]().convert(
