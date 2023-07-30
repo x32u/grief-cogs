@@ -590,3 +590,41 @@ class Roles(MixinMeta):
         )
         ref = ctx.message.to_reference(fail_if_not_exists=False)
         await ctx.send(embed=e, reference=ref)
+
+        
+        @role.command(name="delete")
+        async def role_delete(
+        self,
+        ctx: commands.Context,
+        role: discord.Role,
+        confirmation: bool = False,
+    ) -> None:
+        """Delete a role."""
+        await self.check_role(ctx, role)
+        if not confirmation and not ctx.assume_yes:
+            if ctx.bot_permissions.embed_links:
+                embed: discord.Embed = discord.Embed()
+                embed.title = _("⚠️ - Delete role")
+                embed.description = _(
+                    "Do you really want to delete the role {role.mention} ({role.id})?"
+                ).format(role=role)
+                embed.color = 0xF00020
+                content = ctx.author.mention
+            else:
+                embed = None
+                content = f"{ctx.author.mention} " + _(
+                    "Do you really want to delete the role {role.mention} ({role.id})?"
+                ).format(role=role)
+            if not await CogsUtils.ConfirmationAsk(
+                ctx, content=content, embed=embed
+            ):
+                await CogsUtils.delete_message(ctx.message)
+                return
+        try:
+            await role.delete(
+                reason=f"{ctx.author} ({ctx.author.id}) has deleted the role {role.name} ({role.id})."
+            )
+        except discord.HTTPException as e:
+            raise commands.UserFeedbackCheckFailure(
+                _(ERROR_MESSAGE).format(error=box(e, lang="py"))
+            )
