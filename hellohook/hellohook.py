@@ -54,7 +54,7 @@ class Hellohook(commands.Cog):
         if "https://&&USERNAME&&" in greetMessageStr:
             greetMessageStr = greetMessageStr.replace("https://&&USERNAME&&", str(userObj.name))
         if "https://&&USERNAME1234&&" in greetMessageStr:
-            greetMessageStr = greetMessageStr.replace("https://&&USERNAME1234&&", str(userObj.name)+"#"+str(userObj.discriminator))
+            greetMessageStr = greetMessageStr.replace("https://&&USERNAME1234&&", str(userObj.name))
         if "https://&&SERVERCOUNT&&" in greetMessageStr:
             greetMessageStr = greetMessageStr.replace("https://&&SERVERCOUNT&&", str(userObj.guild.member_count))
         if "https://&&SERVERCOUNTORD&&" in greetMessageStr:
