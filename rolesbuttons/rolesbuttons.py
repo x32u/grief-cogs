@@ -10,18 +10,12 @@ from functools import partial
 
 from .converters import Emoji, EmojiRoleConverter
 
-# Credits:
-# General repo credits.
-# Thanks to TrustyJAID for the two converter for the bulk command arguments! (https://github.com/TrustyJAID/Trusty-cogs/blob/main/roletools/converter.py)
-# Thanks to Yami for the technique in the init file of some cogs to load the interaction client only if it is not already loaded! Before this fix, when a user clicked a button, the actions would be run about 10 times, causing a huge spam and loop in the channel.
-# Thanks to Kuro for the emoji converter (https://canary.discord.com/channels/133049272517001216/133251234164375552/1014520590239019048)!
-
 _ = Translator("RolesButtons", __file__)
 
 
 @cog_i18n(_)
 class RolesButtons(Cog):
-    """A cog to have roles-buttons!"""
+    """A cog to have roles-buttons."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)
