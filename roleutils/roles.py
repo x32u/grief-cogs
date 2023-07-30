@@ -83,8 +83,6 @@ class Roles(MixinMeta):
         self, ctx: commands.Context, member: TouchableMember(False), *, role: StrictRole(False)
     ):
         """Base command for modifying roles.
-
-        Invoking this command will add or remove the given role from the member, depending on whether they already had it.
         """
         if role in member.roles and await can_run_command(ctx, "role remove"):
             com = self.bot.get_command("role remove")
@@ -138,39 +136,6 @@ class Roles(MixinMeta):
         output = self.interpreter.process(formatting, {"member": MemberAdapter(member)})
         return output.body
 
-    @commands.bot_has_permissions(attach_files=True)
-    @commands.has_guild_permissions(manage_roles=True)
-    @role.command("members", aliases=["dump"])
-    async def role_members(
-        self,
-        ctx: commands.Context,
-        role: FuzzyRole,
-        *,
-        formatting: str = "{member} - {member(id)}",
-    ):
-        """
-        Sends a list of members in a role.
-
-        You can supply a custom formatting tagscript for each member.
-        The [member](https://phen-cogs.readthedocs.io/en/latest/tags/default_variables.html#author-block) block is available to use, found on the [TagScript documentation](https://phen-cogs.readthedocs.io/en/latest/index.html).
-
-        **Example:**
-        `[p]role dump @admin <t:{member(timestamp)}> - {member(mention)}`
-        """
-        if guild_roughly_chunked(ctx.guild) is False and self.bot.intents.members:
-            await ctx.guild.chunk()
-        if not role.members:
-            return await ctx.send(f"**{role}** has no members.")
-        members = "\n".join(self.format_member(member, formatting) for member in role.members)
-        if len(members) > 2000:
-            await ctx.send(file=text_to_file(members, f"members.txt"))
-        else:
-            await ctx.send(members, allowed_mentions=discord.AllowedMentions.none())
-
-    @staticmethod
-    def get_hsv(role: discord.Role):
-        return rgb_to_hsv(*role.color.to_rgb())
-
     @commands.bot_has_permissions(embed_links=True)
     @commands.has_guild_permissions(manage_roles=True)
     @role.command("colors")
@@ -199,8 +164,6 @@ class Roles(MixinMeta):
     ):
         """
         Creates a role.
-
-        Color and whether it is hoisted can be specified.
         """
         if len(ctx.guild.roles) >= 250:
             return await ctx.send("This server has reached the maximum role limit (250).")
@@ -214,7 +177,7 @@ class Roles(MixinMeta):
     async def role_color(
         self, ctx: commands.Context, role: StrictRole(check_integrated=False), color: discord.Color
     ):
-        """Change a role's color."""
+        """Edit a role's color."""
         await role.edit(color=color)
         await ctx.send(
             f"**{role}** color changed to **{color}**.", embed=await self.get_info(role)
@@ -229,7 +192,7 @@ class Roles(MixinMeta):
         role: StrictRole(check_integrated=False),
         hoisted: bool = None,
     ):
-        """Toggle whether a role should appear seperate from other roles."""
+        """Edit role hoist."""
         hoisted = hoisted if hoisted is not None else not role.hoist
         await role.edit(hoist=hoisted)
         now = "now" if hoisted else "no longer"
@@ -401,7 +364,7 @@ class Roles(MixinMeta):
     @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def humans(self, ctx: commands.Context, *, role: StrictRole):
-        """Add a role to all humans (non-bots) in the server."""
+        """Add a role to all humans."""
         await self.super_massrole(
             ctx,
             [member for member in ctx.guild.members if not member.bot],
@@ -413,7 +376,7 @@ class Roles(MixinMeta):
     @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def rhumans(self, ctx: commands.Context, *, role: StrictRole):
-        """Remove a role from all humans (non-bots) in the server."""
+        """Remove a role from all humans."""
         await self.super_massrole(
             ctx,
             [member for member in ctx.guild.members if not member.bot],
@@ -426,7 +389,7 @@ class Roles(MixinMeta):
     @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def bots(self, ctx: commands.Context, *, role: StrictRole):
-        """Add a role to all bots in the server."""
+        """Add a role to all bots."""
         await self.super_massrole(
             ctx,
             [member for member in ctx.guild.members if member.bot],
@@ -438,7 +401,7 @@ class Roles(MixinMeta):
     @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def rbots(self, ctx: commands.Context, *, role: StrictRole):
-        """Remove a role from all bots in the server."""
+        """Remove a role from all bots."""
         await self.super_massrole(
             ctx,
             [member for member in ctx.guild.members if member.bot],
