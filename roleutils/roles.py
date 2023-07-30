@@ -141,21 +141,6 @@ class Roles(MixinMeta):
         output = self.interpreter.process(formatting, {"member": MemberAdapter(member)})
         return output.body
 
-    @commands.bot_has_permissions(embed_links=True)
-    @commands.has_guild_permissions(manage_roles=True)
-    @role.command("colors")
-    async def role_colors(self, ctx: commands.Context):
-        """Sends the server's roles, ordered by color."""
-        roles = defaultdict(list)
-        for r in ctx.guild.roles:
-            roles[str(r.color)].append(r)
-        roles = dict(sorted(roles.items(), key=lambda v: self.get_hsv(v[1][0])))
-
-        lines = [f"**{color}**\n{' '.join(r.mention for r in rs)}" for color, rs in roles.items()]
-        for page in pagify("\n".join(lines)):
-            e = discord.Embed(description=page)
-            await ctx.send(embed=e)
-
     @commands.bot_has_permissions(manage_roles=True)
     @commands.has_guild_permissions(manage_roles=True)
     @role.command("create")
