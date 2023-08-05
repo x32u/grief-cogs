@@ -36,7 +36,7 @@ def get_vex_logger(name: str) -> RedTraceLogger:
     Logger
         The logger
     """
-    final_name = "red.vex."
+    final_name = "grief."
     split = name.split(".")
     if len(split) == 2 and split[0] == split[1]:  # for example make `cmdlog.cmdlog` just `cmdlog`
         final_name += split[0]
