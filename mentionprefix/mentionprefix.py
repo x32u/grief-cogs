@@ -14,7 +14,7 @@ from redbot.core.commands import Context
 from redbot.core.utils.antispam import AntiSpam
 from redbot.core.utils.chat_formatting import humanize_list
 
-log = logging.getLogger("red.Trusty-Cogs.mentionprefix")
+log = logging.getLogger("grief.mentionprefix")
 
 HELP_RE = re.compile(r"^.*help$", flags=re.I)
 
@@ -127,15 +127,15 @@ class MentionPrefix(commands.Cog):
             ctx: Context = Context(prefix=None, view=view, bot=self.bot, message=message)
             if not await help_command.can_run(ctx):
                 return await destination.send(
-                    _("Hey there, {verb} the following:\n{p_list}").format(
+                    _("Hey there, {verb} the following:{p_list}").format(
                         p_list=prefixes_string, verb=verb
                     )
                 )
             else:
                 return await destination.send(
                     _(
-                        "Hey there, {verb} the following:\n{p_list}\n"
-                        "Why don't you try `{p}{command}` to see everything I can do."
+                        "Hey there, {verb} the following:{p_list}\n"
+                        "Why don't you try `{p}{command}` to see everything I can do?"
                     ).format(
                         p_list=prefixes_string,
                         p=single_prefix,
@@ -145,7 +145,7 @@ class MentionPrefix(commands.Cog):
                 )
         else:
             return await destination.send(
-                _("Hey there, {verb} the following:\n{p_list}").format(
+                _("Hey there, {verb} the following:{p_list}").format(
                     p_list=prefixes_string, verb=verb
                 )
             )
