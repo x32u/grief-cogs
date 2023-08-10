@@ -626,6 +626,7 @@ class ServerStats(commands.Cog):
             except discord.HTTPException:
                 return
 
+    @commands.is_owner()
     @commands.hybrid_command()
     @commands.bot_has_permissions(embed_links=True)
     @commands.bot_has_permissions(read_message_history=True, add_reactions=True, embed_links=True)
@@ -654,9 +655,9 @@ class ServerStats(commands.Cog):
             ctx=ctx,
         ).start(ctx=ctx)
 
+    @commands.is_owner()
     @commands.hybrid_command()
     @commands.bot_has_permissions(embed_links=True)
-    @checks.admin()
     @commands.bot_has_permissions(read_message_history=True, add_reactions=True, embed_links=True)
     async def getguilds(self, ctx: commands.Context, *, guilds: MultiGuildConverter) -> None:
         """
