@@ -68,6 +68,11 @@ class EditGuild(Cog):
             f"**Guild name:** {guild.name}\n**Guild ID:** {guild.id}\n**First channel's ID**: {channel.id}\n**Invite URL:** {invite_url}"
         )
 
+    
+    
+    @commands.guild_only()
+    @commands.admin_or_permissions(manage_guild=True)
+    @commands.bot_has_permissions(manage_guild=True)
     @editguild.command(name="name")
     async def editguild_name(self, ctx: commands.Context, *, name: str) -> None:
         """Edit guild name."""
