@@ -97,6 +97,9 @@ class EditRole(Cog):
         """Commands for edit a role."""
         pass
 
+    @commands.guild_only()
+    @commands.admin_or_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
     @commands.bot_has_permissions(embed_links=True)
     @editrole.command(name="list")
     async def editrole_list(
@@ -119,6 +122,9 @@ class EditRole(Cog):
         await Menu(pages=embeds).start(ctx)
 
 
+    @commands.guild_only()
+    @commands.admin_or_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
     @editrole.command(name="icon")
     async def editrole_icon(
         self, ctx: commands.Context, role: discord.Role, display_icon: typing.Optional[EmojiOrUrlConverter] = None
@@ -164,6 +170,9 @@ class EditRole(Cog):
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
 
+    @commands.guild_only()
+    @commands.admin_or_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
     @editrole.command(name="position")
     async def editrole_position(
         self, ctx: commands.Context, role: discord.Role, position: PositionConverter
@@ -183,6 +192,9 @@ class EditRole(Cog):
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
 
+    @commands.guild_only()
+    @commands.admin_or_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
     @editrole.command(name="permissions")
     async def editrole_permissions(
         self, ctx: commands.Context, role: discord.Role, true_or_false: bool, permissions: commands.Greedy[PermissionConverter]
