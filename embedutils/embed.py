@@ -93,7 +93,7 @@ class EmbedUtils(commands.Cog):
         if not embeds:
             raise EmbedNotFound("That message has no embeds.")
         index = max(min(index, len(embeds)), 0)
-        embed = message.embeds[index]
+        embed = message.embeds
         if embed.type == "rich":
             return embed
         raise EmbedNotFound("That is not a rich embed.")
