@@ -159,7 +159,7 @@ class Roles(MixinMeta):
             return await ctx.send("This server has reached the maximum role limit (250).")
 
         role = await ctx.guild.create_role(name=name, colour=color, hoist=hoist)
-        await ctx.send(f"**{role}** created.", embed=await self.get_info(role))
+        await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -169,9 +169,7 @@ class Roles(MixinMeta):
     ):
         """Edit a role's color."""
         await role.edit(color=color)
-        await ctx.send(
-            f"**{role}** color changed to **{color}**.", embed=await self.get_info(role)
-        )
+        await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -197,7 +195,7 @@ class Roles(MixinMeta):
         """Change a role's name."""
         old_name = role.name
         await role.edit(name=name)
-        await ctx.send(f"Changed **{old_name}** to **{name}**.", embed=await self.get_info(role))
+        await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -211,7 +209,7 @@ class Roles(MixinMeta):
             return
         reason = get_audit_reason(ctx.author)
         await member.add_roles(role, reason=reason)
-        await ctx.send(f"Added **{role.name}** to **{member}**.")
+        await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -227,7 +225,7 @@ class Roles(MixinMeta):
             return
         reason = get_audit_reason(ctx.author)
         await member.remove_roles(role, reason=reason)
-        await ctx.send(f"Removed **{role.name}** from **{member}**.")
+        await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
