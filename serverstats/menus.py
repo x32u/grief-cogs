@@ -16,7 +16,7 @@ _ = Translator("serverstats", __file__)
 class AvatarPages(menus.ListPageSource):
     def __init__(self, members: List[discord.abc.User]):
         super().__init__(members, per_page=1)
-        self.use_display_avatar: bool = True
+        self.use_display_avatar: bool = False
 
     def is_paginating(self):
         return False
@@ -39,7 +39,7 @@ class AvatarPages(menus.ListPageSource):
             name = f"{member} {f'~ {member.nick}' if member.nick else ''}"
         else:
             name = str(member)
-        em.set_image(url=member.display_avatar)
+        em.set_image(url=url)
         em.set_author(name=name, icon_url=url, url=url)
         return em
 
