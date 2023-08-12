@@ -305,9 +305,7 @@ class PersonalRoles(commands.Cog):
             ctx.command.reset_cooldown(ctx)
             await ctx.send(chat.error(_("Unable to edit role: {}").format(e)))
         else:
-            await ctx.send(
-                _("Changed name of {user}'s personal role to {name}").format(user=ctx.message.author.name, name=name)
-            )
+            await ctx.tick()
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @myrole.command()
@@ -426,7 +424,7 @@ class PersonalRoles(commands.Cog):
         role = await self.config.member(ctx.author).role()
         role = ctx.guild.get_role(role)
         if not role:
-            await ctx.send(chat.warning(f"Please create your role using `{ctx.prefix}myrole create`!"))
+            await ctx.send(chat.warning(f"Please create your role using `{ctx.prefix}myrole create`."))
             return
 
         if not (ctx.message.attachments or url):
@@ -457,7 +455,7 @@ class PersonalRoles(commands.Cog):
             await ctx.send(chat.error(_("Unable to edit role: {}").format(e)))
         else:
             await ctx.tick()
-            
+
     @icon.command(name="reset", aliases=["remove"])
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def icon_reset(self, ctx):
@@ -476,7 +474,7 @@ class PersonalRoles(commands.Cog):
                 unicode_emoji=None,
                 reason=get_audit_reason(ctx.author, _("Personal Role")),
             )
-            await ctx.send(_("Removed icon of {user}'s personal role").format(user=ctx.message.author.name))
+            await ctx.tick()
         except discord.Forbidden:
             ctx.command.reset_cooldown(ctx)
             await ctx.send(chat.error(_("Unable to edit role.\nRole must be lower than my top role")))
