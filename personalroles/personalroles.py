@@ -338,11 +338,9 @@ class PersonalRoles(commands.Cog):
                 await ctx.send(chat.warning("Could not create your personal role, please contact an admin."))
                 return
 
-            await ctx.send(
-                f"Role created! You can edit it using `{ctx.prefix}myrole name` and `{ctx.prefix}myrole colour` commands."
-            )
+            await ctx.tick()
         else:
-            await ctx.send(chat.warning("You already have a personal role!"))
+            await ctx.send(chat.warning("You already have a personal role."))
 
     @myrole.group()
     @commands.check(has_assigned_role)
@@ -359,7 +357,7 @@ class PersonalRoles(commands.Cog):
         role = await self.config.member(ctx.author).role()
         role = ctx.guild.get_role(role)
         if not role:
-            await ctx.send(chat.warning(f"Please create your role using `{ctx.prefix}myrole create`!"))
+            await ctx.send(chat.warning(f"Please create your role using `{ctx.prefix}myrole create`."))
             return
 
         if not emoji:
@@ -419,7 +417,7 @@ class PersonalRoles(commands.Cog):
             ctx.command.reset_cooldown(ctx)
             await ctx.send(chat.error(_("Unable to edit role: {}").format(e)))
         else:
-            await ctx.send(_("Changed icon of {user}'s personal role").format(user=ctx.message.author.name))
+            await ctx.tick()
 
     @icon.command(name="image", aliases=["url"])
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -458,8 +456,8 @@ class PersonalRoles(commands.Cog):
             ctx.command.reset_cooldown(ctx)
             await ctx.send(chat.error(_("Unable to edit role: {}").format(e)))
         else:
-            await ctx.send(_("Changed icon of {user}'s personal role").format(user=ctx.message.author.name))
-
+            await ctx.tick()
+            
     @icon.command(name="reset", aliases=["remove"])
     @commands.cooldown(1, 30, commands.BucketType.user)
     async def icon_reset(self, ctx):
