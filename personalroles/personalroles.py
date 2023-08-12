@@ -68,11 +68,7 @@ class PersonalRoles(commands.Cog):
     async def assign(self, ctx, user: discord.Member, *, role: discord.Role):
         """Assign personal role to someone"""
         await self.config.member(user).role.set(role.id)
-        await ctx.send(
-            _("Ok. I just assigned {user.name} ({user.id}) to role {role.name} ({role.id}).").format(
-                user=user, role=role
-            )
-        )
+        await ctx.tick()
 
     @myrole.command()
     @checks.admin_or_permissions(manage_roles=True)
@@ -87,20 +83,12 @@ class PersonalRoles(commands.Cog):
             try:
                 await role.delete()
             except:
-                await ctx.send(
-                    _(
-                        "Ok. I just unassigned {user.name} ({user.id}) from their personal role.\nHowever, I could not delete the role."
-                    ).format(user=user)
-                )
+                await ctx.tick()
         else:
             await ctx.send("User didn't have a role or it wasn't found. Role unassigned anyway to make sure.")
             return
 
-        await ctx.send(
-            _("Ok. I just unassigned {user.name} ({user.id}) from their personal role and deleted the role.").format(
-                user=user
-            )
-        )
+        await ctx.tick()
 
     @myrole.command(name="list")
     @checks.admin_or_permissions(manage_roles=True)
@@ -185,11 +173,9 @@ class PersonalRoles(commands.Cog):
 
         msg = ""
         if added:
-            msg += "Added: {}\n".format(chat.humanize_list(list(added)))
+            await ctx.tick()
         if removed:
-            msg += "Removed: {}".format(chat.humanize_list(list(removed)))
-
-        await ctx.send(msg)
+            await ctx.tick()
 
     @myrole_auto.command(name="pos")
     async def myrole_auto_autopos(self, ctx, *, role_pos: discord.Role):
@@ -224,7 +210,7 @@ class PersonalRoles(commands.Cog):
                 await ctx.send(chat.error(_("`{}` is already in blacklist").format(rolename)))
             else:
                 blacklist.append(rolename)
-                await ctx.send(chat.info(_("Added `{}` to blacklisted roles list").format(rolename)))
+                await ctx.tick()
 
     @blacklist.command()
     @checks.admin_or_permissions(manage_roles=True)
@@ -236,8 +222,8 @@ class PersonalRoles(commands.Cog):
                 await ctx.send(chat.error(_("`{}` is not blacklisted").format(rolename)))
             else:
                 blacklist.remove(rolename)
-                await ctx.send(chat.info(_("Removed `{}` from blacklisted roles list").format(rolename)))
-
+                await ctx.tick()
+                
     @blacklist.command(name="list")
     @checks.admin_or_permissions(manage_roles=True)
     async def bl_list(self, ctx):
@@ -282,11 +268,7 @@ class PersonalRoles(commands.Cog):
             if not colour.value:
                 await ctx.send(_("Reset {user}'s personal role color").format(user=ctx.message.author.name))
             else:
-                await ctx.send(
-                    _("Changed color of {user}'s personal role to {color}").format(
-                        user=ctx.message.author.name, color=colour
-                    )
-                )
+                await ctx.tick()
 
     @commands.cooldown(1, 30, commands.BucketType.user)
     @myrole.command()
