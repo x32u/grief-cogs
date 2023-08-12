@@ -39,7 +39,7 @@ class AvatarPages(menus.ListPageSource):
             name = f"{member} {f'~ {member.nick}' if member.nick else ''}"
         else:
             name = str(member)
-        em.set_image(url=url)
+        em.set_image(url=member.display_avatar)
         em.set_author(name=name, icon_url=url, url=url)
         return em
 
