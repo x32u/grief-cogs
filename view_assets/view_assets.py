@@ -16,17 +16,56 @@ class ViewAssets(commands.Cog):
         super().__init__()
         self.bot = bot
 
-    # Commands
-    @commands.command(aliases=["server_logo", "server_image", "server_images"])
-    async def assets(self, ctx: commands.Context):
+    @commands.command(aliases=["sicon"])
+    async def icon(self, ctx: commands.Context):
         """Get the server image(s) as embed
 
         If only a server logo exists, that will be displayed.
         Otherwise, a menu including a server banner and splash will be sent."""
         gld: discord.Guild = ctx.guild
         img_dict = {
-            "Server Logo": gld.icon.url if gld.icon else None,
+            "Server Icon": gld.icon.url if gld.icon else None,
+        }
+        embed_list = []
+        for name, img_url in img_dict.items():
+            if img_url:
+                embed = discord.Embed(colour=discord.Colour.blurple(), title=name)
+                embed.description = self.IMAGE_HYPERLINK.format(img_url)
+                embed.set_image(url=img_url)
+                embed_list.append(embed)
+        if not embed_list:
+            await ctx.send("This server doesn't have a icon set.")
+        await SimpleMenu(embed_list).start(ctx)
+
+    @commands.command(aliases=["sbanner"])
+    async def banner(self, ctx: commands.Context):
+        """Get the server image(s) as embed
+
+        If only a server logo exists, that will be displayed.
+        Otherwise, a menu including a server banner and splash will be sent."""
+        gld: discord.Guild = ctx.guild
+        img_dict = {
             "Server Banner": gld.banner.url if gld.banner else None,
+        }
+        embed_list = []
+        for name, img_url in img_dict.items():
+            if img_url:
+                embed = discord.Embed(colour=discord.Colour.blurple(), title=name)
+                embed.description = self.IMAGE_HYPERLINK.format(img_url)
+                embed.set_image(url=img_url)
+                embed_list.append(embed)
+        if not embed_list:
+            await ctx.send("This server doesn't have a banner set.")
+            await SimpleMenu(embed_list).start(ctx)
+        
+    @commands.command()
+    async def splash(self, ctx: commands.Context):
+        """Get the server image(s) as embed
+
+        If only a server logo exists, that will be displayed.
+        Otherwise, a menu including a server banner and splash will be sent."""
+        gld: discord.Guild = ctx.guild
+        img_dict = {
             "Server Invite Splash": gld.splash.url if gld.splash else None,
             "Server Discovery Splash": gld.discovery_splash.url if gld.discovery_splash else None,
         }
@@ -38,10 +77,5 @@ class ViewAssets(commands.Cog):
                 embed.set_image(url=img_url)
                 embed_list.append(embed)
         if not embed_list:
-            await ctx.send("No images.")
+            await ctx.send("This server doesn't have a discovery or invite splash set.")
         await SimpleMenu(embed_list).start(ctx)
-
-    # Config
-    async def red_delete_data_for_user(self, *, _requester, _user_id):
-        """Do nothing, as no user data is stored."""
-        pass
