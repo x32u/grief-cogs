@@ -68,9 +68,11 @@ class ServerStats(commands.Cog):
             if save:
                 await self.config.guild_from_id(guild_id).set(data)
 
-    @commands.hybrid_command(name="avatar")
+    @commands.hybrid_command()
     @commands.bot_has_permissions(read_message_history=True, add_reactions=True, embed_links=True)
-    async def avatar(self, ctx: commands.Context, *, member: Optional[discord.Member]):
+    async def avatar(
+        self, ctx: commands.Context, *, member: Optional[Union[discord.Member, discord.User]]
+    ):
         """
         Display a users avatar in chat
         """
@@ -83,6 +85,7 @@ class ServerStats(commands.Cog):
             source=AvatarPages(members=members),
             cog=self,
         ).start(ctx=ctx)
+
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
