@@ -364,7 +364,7 @@ class DataUtils(commands.Cog):
                 )
                 data.add_field(name=_("Nitro Boost:"), value=nitro_boost)
             if guild.splash:
-                data.set_image(url=guild.splash.replace(format="png"))
+                data.set_image(url=guild.banner.replace(format="png"))
             data.set_footer(text=joined_on)
 
         await ctx.send(embed=data)
