@@ -57,7 +57,7 @@ class AvatarPages(menus.ListPageSource):
                     self.avatar_display = style
                     # iterate upwards and replace until we find the
                     # highest level which is the guild specific avatar
-        em = discord.Embed(title=self.avatar_display.get_name(), colour=member.colour)
+        em = discord.Embed(title=self.avatar_display.get_name(), colour=0x313338)
         url = self.avatar_display.get_asset(member)
         assert isinstance(url, discord.Asset)
         self.adjust_buttons(menu, member)
