@@ -66,7 +66,7 @@ class ViewAssets(commands.Cog):
         Otherwise, a menu including a server banner and splash will be sent."""
         gld: discord.Guild = ctx.guild
         img_dict = {
-            "Server Discovery Splash": gld.discovery_splash.url if gld.discovery_splash else None,
+            "Server Invite Splash": gld.splash.url if gld.splash else None,
         }
         embed_list = []
         for name, img_url in img_dict.items():
@@ -100,3 +100,6 @@ class ViewAssets(commands.Cog):
         if not embed_list:
             await ctx.send("No images.")
         await SimpleMenu(embed_list).start(ctx)
+
+
+        
