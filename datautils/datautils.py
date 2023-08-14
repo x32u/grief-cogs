@@ -363,8 +363,8 @@ class DataUtils(commands.Cog):
                     bitrate=bold(_bitsize(guild.bitrate_limit)),
                 )
                 data.add_field(name=_("Nitro Boost:"), value=nitro_boost)
-            if guild.splash:
-                data.set_image(url=guild.banner(format="png"))
+            if guild.banner:
+                data.set_image(url=guild.banner)
             data.set_footer(text=joined_on)
 
         await ctx.send(embed=data)
