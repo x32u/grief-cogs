@@ -136,8 +136,8 @@ class ViewAssets(commands.Cog):
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
 
-    @commands.command(aliases=["sbanner"])
-    async def banner(self, ctx: commands.Context):
+    @commands.command(aliases=["abanner"])
+    async def ubanner(self, ctx: commands.Context):
         """Get the server image(s) as embed
 
         If only a server logo exists, that will be displayed.
