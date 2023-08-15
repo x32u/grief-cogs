@@ -141,7 +141,7 @@ class ViewAssets(commands.Cog):
         """Get an enhanced version of someone's avatar"""
         if user is None:
             user = ctx.author
-        banner = discord.Member.banner
+        banner = "https://cdn.discordapp.com/banners/{user.id}/{banner}{ext}?size=4096"
 
         embed = discord.Embed(colour=discord.Colour.dark_theme())
         embed.title = f"Avatar of {user.display_name}"
