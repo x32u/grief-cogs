@@ -136,16 +136,13 @@ class ViewAssets(commands.Cog):
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
 
-    @commands.command()
-    async def ubanner(self, ctx: commands.Context, user: discord.User = None):
-        """Get an enhanced version of someone's avatar"""
-        if user is None:
-            user = ctx.author
-        banner = "https://cdn.discordapp.com/banners/{user.id}/{banner}{ext}?size=4096"
-
-        embed = discord.Embed(colour=discord.Colour.dark_theme())
-        embed.title = f"Avatar of {user.display_name}"
-        embed.description = self.IMAGE_HYPERLINK.format(banner)
-        embed.set_image(url=banner)
-        embed.set_footer(text=f"User ID: {user.id}")
-        await ctx.reply(embed=embed, mention_author=False)
+@commands.command()
+async def banner(ctx, user:discord.Member):
+    if user == None:
+        user = ctx.author
+    req = await bot.http.request(discord.http.Route("GET", "/users/{uid}", uid=user.id))
+    banner_id = req["banner"]
+    # If statement because the user may not have a banner
+    if banner_id:
+        banner_url = f"https://cdn.discordapp.com/banners/{user.id}/{banner_id}?size=1024"
+    await ctx.send(f"{banner_url}")
