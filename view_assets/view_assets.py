@@ -66,7 +66,8 @@ class ViewAssets(commands.Cog):
                 embed_list.append(embed)
         if not embed_list:
             await ctx.send("This server doesn't have a icon set.")
-        await SimpleMenu(embed_list).start(ctx) 
+        if embed_list:
+            await SimpleMenu(embed_list).start(ctx) 
 
     @commands.command(aliases=["sbanner"])
     async def banner(self, ctx: commands.Context):
