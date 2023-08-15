@@ -45,7 +45,7 @@ class ViewAssets(commands.Cog):
             embed.description = self.IMAGE_HYPERLINK.format(gld_avatar_url)
             embed.set_image(url=gld_avatar_url)
             embed.set_footer(text=f"User ID: {user.id}")
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed, mention_author=False)
     
     @commands.command(aliases=["sicon"])
     async def icon(self, ctx: commands.Context):
