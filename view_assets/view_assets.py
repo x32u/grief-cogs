@@ -139,14 +139,12 @@ class ViewAssets(commands.Cog):
     @commands.command()
     async def banner(self, ctx: commands.Context, user: discord.User = None):
         """Get an enhanced version of someone's avatar"""
-        banner=user.bannner.url
         if user is None:
             user = ctx.author
         user = await self.bot.fetch_user(user.id)
-        if not banner:
-            await ctx.send("This user doesn't have a banner set.")
-        else:
-            embed = discord.Embed(colour=discord.Colour.dark_theme())
+        
+        banner=user.bannner.url
+        embed = discord.Embed(colour=discord.Colour.dark_theme())
         embed.title = f"{user.display_name}'s banner"
         embed.set_image(url=banner)
         embed.set_footer(text=f"User ID: {user.id}")
