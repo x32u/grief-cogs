@@ -135,3 +135,25 @@ class ViewAssets(commands.Cog):
             await ctx.send("This server doesn't have an discovery splash set.")
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
+
+    @commands.command(aliases=["sbanner"])
+    async def ubanner(self, ctx: commands.Context):
+        """Get the server image(s) as embed
+
+        If only a server logo exists, that will be displayed.
+        Otherwise, a menu including a server banner and splash will be sent."""
+        mld: discord.Member = ctx.member
+        img_dict = {
+            "Server Banner": mld.banner.url if mld.banner else None,
+        }
+        embed_list = []
+        for name, img_url in img_dict.items():
+            if img_url:
+                embed = discord.Embed(colour=discord.Colour.dark_theme(), title=name)
+                embed.description = self.IMAGE_HYPERLINK.format(img_url)
+                embed.set_image(url=img_url)
+                embed_list.append(embed)
+        if not embed_list:
+            await ctx.send("This server doesn't have a banner set.")
+        if embed_list:
+            await SimpleMenu(embed_list).start(ctx) 
