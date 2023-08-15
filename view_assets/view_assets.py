@@ -145,6 +145,6 @@ class ViewAssets(commands.Cog):
         embed = discord.Embed(colour=discord.Colour.dark_theme())
         embed.title = f"Avatar of {user.display_name}"
         embed.description = self.IMAGE_HYPERLINK.format(_url)
-        embed.set_image(url=user.banner.url)
+        embed.set_image(url=user.banner)
         embed.set_footer(text=f"User ID: {user.id}")
         await ctx.reply(embed=embed, mention_author=False)
