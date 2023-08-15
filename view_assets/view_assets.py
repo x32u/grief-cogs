@@ -12,10 +12,9 @@ class ViewAssets(commands.Cog):
     # Other constants.
     IMAGE_HYPERLINK = "**Image link:**  [Click here]({})"
 
-    def __init__(self, bot: Red):
-        super().__init__()
+    def __init__(self, bot):
         self.bot = bot
-        self = bot
+        super().__init__()
 
     @commands.command(aliases=["av"])
     async def avatar(self, ctx: commands.Context, user: discord.User = None):
@@ -138,10 +137,10 @@ class ViewAssets(commands.Cog):
             await SimpleMenu(embed_list).start(ctx) 
 
     @commands.command()
-    async def ubanner(ctx, user:discord.Member):
+    async def ubanner(self, ctx, user:discord.Member):
         if user == None:
             user = ctx.author
-        await self.bot.http.request(discord.http.Route("GET", f"/users/{user.id}"))
+        req = await self.bot.http.request(discord.http.Route("GET", "/users/{uid}", uid=user.id))
         banner_id = req["banner"]
         if banner_id:
             banner_url = f"https://cdn.discordapp.com/banners/{user.id}/{banner_id}?size=1024"
