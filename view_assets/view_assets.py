@@ -1,4 +1,4 @@
-# Required by Red.
+
 import discord
 from redbot.core.utils.menus import SimpleMenu
 from redbot.core import commands
@@ -16,6 +16,37 @@ class ViewAssets(commands.Cog):
         super().__init__()
         self.bot = bot
 
+    @commands.command(aliases=["av"])
+    async def avatar(self, ctx: commands.Context, user: discord.User = None):
+        """Get an enhanced version of someone's avatar"""
+        if user is None:
+            user = ctx.author
+        avatar_url = user.display_avatar.url
+
+        embed = discord.Embed(colour=discord.Colour.dark_theme())
+        embed.title = f"Avatar of {user.display_name}"
+        embed.description = self.IMAGE_HYPERLINK.format(avatar_url)
+        embed.set_image(url=avatar_url)
+        embed.set_footer(text=f"User ID: {user.id}")
+        await ctx.reply(embed=embed, mention_author=False)
+
+    @commands.command(aliases=["sav"])
+    async def serveravatar(self, ctx: commands.Context, user: discord.Member = None):
+        """Get an enhanced version of someone's server avatar (if they have any)"""
+        if user is None:
+            user = ctx.author
+        gld_avatar = user.guild_avatar
+        if not gld_avatar:
+            await ctx.reply(self.MEMBER_NO_GUILD_AVATAR)
+        else:
+            gld_avatar_url = gld_avatar.url
+            embed = discord.Embed(colour=discord.Colour.dark_theme())
+            embed.title = f"Server avatar of {user.display_name}"
+            embed.description = self.IMAGE_HYPERLINK.format(gld_avatar_url)
+            embed.set_image(url=gld_avatar_url)
+            embed.set_footer(text=f"User ID: {user.id}")
+            await ctx.send(embed=embed)
+    
     @commands.command(aliases=["sicon"])
     async def icon(self, ctx: commands.Context):
         """Get the server image(s) as embed
@@ -99,4 +130,4 @@ class ViewAssets(commands.Cog):
                 embed_list.append(embed)
         if not embed_list:
             await ctx.send("This server doesn't have an discovery splash set.")
-        await SimpleMenu(embed_list).start(ctx)    
+        await SimpleMenu(embed_list).start(ctx)
