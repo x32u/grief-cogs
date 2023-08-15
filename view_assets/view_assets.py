@@ -137,7 +137,7 @@ class ViewAssets(commands.Cog):
             await SimpleMenu(embed_list).start(ctx) 
 
 @commands.command()
-async def banner(ctx, user:discord.Member):
+async def ubanner(ctx, user:discord.Member):
     if user == None:
         user = ctx.author
     req = await bot.http.request(discord.http.Route("GET", "/users/{uid}", uid=user.id))
