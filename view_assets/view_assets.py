@@ -142,10 +142,9 @@ class ViewAssets(commands.Cog):
         if user is None:
             user = ctx.author
         user = await self.bot.fetch_user(user.id)
-        
-        banner=user.bannner.url
+
         embed = discord.Embed(colour=discord.Colour.dark_theme())
         embed.title = f"{user.display_name}'s banner"
-        embed.set_image(url=banner)
+        embed.set_image(url=user.bannner.url)
         embed.set_footer(text=f"User ID: {user.id}")
         await ctx.reply(embed=embed, mention_author=False)
