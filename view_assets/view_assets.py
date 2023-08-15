@@ -136,7 +136,7 @@ class ViewAssets(commands.Cog):
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
 
-    @commands.command(aliases=["av"])
+    @commands.command()
     async def ubanner(self, ctx: commands.Context, user: discord.User = None):
         """Get an enhanced version of someone's avatar"""
         if user is None:
