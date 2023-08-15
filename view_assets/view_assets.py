@@ -136,24 +136,16 @@ class ViewAssets(commands.Cog):
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
 
-    @commands.command()
-    async def ubanner(self, ctx: commands.Context):
-        """Get the server image(s) as embed
+    @commands.command(aliases=["av"])
+    async def ubanner(self, ctx: commands.Context, user: discord.User = None):
+        """Get an enhanced version of someone's avatar"""
+        if user is None:
+            user = ctx.author
+        banner_url = user.banner.url
 
-        If only a server logo exists, that will be displayed.
-        Otherwise, a menu including a server banner and splash will be sent."""
-        mld: discord.Member.ban
-        img_dict = {
-            "Server Banner": mld.banner.url,
-        }
-        embed_list = []
-        for name, img_url in img_dict.items():
-            if img_url:
-                embed = discord.Embed(colour=discord.Colour.dark_theme(), title=name)
-                embed.description = self.IMAGE_HYPERLINK.format(img_url)
-                embed.set_image(url=img_url)
-                embed_list.append(embed)
-        if not embed_list:
-            await ctx.send("This server doesn't have a banner set.")
-        if embed_list:
-            await SimpleMenu(embed_list).start(ctx) 
+        embed = discord.Embed(colour=discord.Colour.dark_theme())
+        embed.title = f"Avatar of {user.display_name}"
+        embed.description = self.IMAGE_HYPERLINK.format(banner_url)
+        embed.set_image(url=banner_url)
+        embed.set_footer(text=f"User ID: {user.id}")
+        await ctx.reply(embed=embed, mention_author=False)
