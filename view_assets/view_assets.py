@@ -88,7 +88,8 @@ class ViewAssets(commands.Cog):
                 embed_list.append(embed)
         if not embed_list:
             await ctx.send("This server doesn't have a banner set.")
-        await SimpleMenu(embed_list).start(ctx) 
+        if embed_list:
+            await SimpleMenu(embed_list).start(ctx) 
         
     @commands.command()
     async def invsplash(self, ctx: commands.Context):
@@ -109,7 +110,8 @@ class ViewAssets(commands.Cog):
                 embed_list.append(embed)
         if not embed_list:
             await ctx.send("This server doesn't have a discovery or invite splash set.")
-        await SimpleMenu(embed_list).start(ctx) 
+        if embed_list:
+            await SimpleMenu(embed_list).start(ctx) 
 
 
     @commands.command()
@@ -131,4 +133,5 @@ class ViewAssets(commands.Cog):
                 embed_list.append(embed)
         if not embed_list:
             await ctx.send("This server doesn't have an discovery splash set.")
-        await SimpleMenu(embed_list).start(ctx)
+        if embed_list:
+            await SimpleMenu(embed_list).start(ctx) 
