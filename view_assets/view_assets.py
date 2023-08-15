@@ -142,9 +142,9 @@ class ViewAssets(commands.Cog):
         if user is None:
             user = ctx.author
         user = await self.bot.fetch_user(user.id)
-        banner=user.banner
         if not banner:
-            await ctx.reply("{user.display_name} doesn't have a banner set.")
+            await ctx.reply("Member doesn't have a banner set.")
+        banner=user.banner
 
         embed = discord.Embed(colour=discord.Colour.dark_theme())
         embed.title = f"{user.display_name}'s banner"
