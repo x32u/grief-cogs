@@ -142,9 +142,9 @@ class ViewAssets(commands.Cog):
 
         If only a server logo exists, that will be displayed.
         Otherwise, a menu including a server banner and splash will be sent."""
-        mld: discord.Member.banner
+        mld: discord.Member.ban
         img_dict = {
-            "Server Banner": mld.banner.url if mld.banner else None,
+            "Server Banner": mld.banner.url,
         }
         embed_list = []
         for name, img_url in img_dict.items():
