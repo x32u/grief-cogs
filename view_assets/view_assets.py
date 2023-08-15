@@ -140,7 +140,7 @@ class ViewAssets(commands.Cog):
     async def ubanner(ctx, user:discord.Member):
         if user == None:
             user = ctx.author
-        req = await bot.http.request(discord.http.Route("GET", "/users/{uid}", uid=user.id))
+        req = await self.bot.http.request(discord.http.Route("GET", "/users/{uid}", uid=user.id))
         banner_id = req["banner"]
         if banner_id:
             banner_url = f"https://cdn.discordapp.com/banners/{user.id}/{banner_id}?size=1024"
