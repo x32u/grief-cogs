@@ -12,9 +12,9 @@ class ViewAssets(commands.Cog):
     # Other constants.
     IMAGE_HYPERLINK = "**Image link:**  [Click here]({})"
 
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(self, bot: Red):
         super().__init__()
+        self.bot = bot
 
     @commands.command(aliases=["av"])
     async def avatar(self, ctx: commands.Context, user: discord.User = None):
@@ -137,11 +137,15 @@ class ViewAssets(commands.Cog):
             await SimpleMenu(embed_list).start(ctx) 
 
     @commands.command()
-    async def ubanner(self, ctx, user:discord.Member):
-        if user == None:
-            user = ctx.author
-        req = await self.bot.http.request(discord.http.Route("GET", "/users/{uid}", uid=user.id))
-        banner_id = req["banner"]
-        if banner_id:
-            banner_url = f"https://cdn.discordapp.com/banners/{user.id}/{banner_id}?size=1024"
-        await ctx.send(f"{banner_url}")
+    async def ubanner(self, ctx: commands.Context, user: discord.User = None):
+        """Get an enhanced version of someone's avatar"""
+        if user is None:
+            user = await bot.fetch_user()
+        banner_url = user.banner.url
+
+        embed = discord.Embed(colour=discord.Colour.dark_theme())
+        embed.title = f"Avatar of {user.display_name}"
+        embed.description = self.IMAGE_HYPERLINK.format(_url)
+        embed.set_image(url=banner_url)
+        embed.set_footer(text=f"User ID: {user.id}")
+        await ctx.reply(embed=embed, mention_author=False)
