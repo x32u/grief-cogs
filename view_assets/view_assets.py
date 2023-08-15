@@ -69,8 +69,8 @@ class ViewAssets(commands.Cog):
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
 
-    @commands.command(aliases=["sbanner"])
-    async def banner(self, ctx: commands.Context):
+    @commands.command()
+    async def sbanner(self, ctx: commands.Context):
         """Get the server image(s) as embed
 
         If only a server logo exists, that will be displayed.
@@ -137,14 +137,14 @@ class ViewAssets(commands.Cog):
             await SimpleMenu(embed_list).start(ctx) 
 
     @commands.command()
-    async def ubanner(self, ctx: commands.Context, user: discord.User = None):
+    async def banner(self, ctx: commands.Context, user: discord.User = None):
         """Get an enhanced version of someone's avatar"""
         if user is None:
             user = ctx.author
         user = await self.bot.fetch_user(user.id)
 
         embed = discord.Embed(colour=discord.Colour.dark_theme())
-        embed.title = f"Avatar of {user.display_name}"
+        embed.title = f"{user.display_name}'s banner"
         embed.set_image(url=user.banner.url)
         embed.set_footer(text=f"User ID: {user.id}")
         await ctx.reply(embed=embed, mention_author=False)
