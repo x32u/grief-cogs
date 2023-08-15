@@ -140,7 +140,8 @@ class ViewAssets(commands.Cog):
     async def ubanner(self, ctx: commands.Context, user: discord.User = None):
         """Get an enhanced version of someone's avatar"""
         if user is None:
-            user = await self.bot.fetch_user(user.id)
+            user = ctx.author
+        user = await self.bot.fetch_user(user.id)
 
         embed = discord.Embed(colour=discord.Colour.dark_theme())
         embed.title = f"Avatar of {user.display_name}"
