@@ -15,6 +15,7 @@ class ViewAssets(commands.Cog):
     def __init__(self, bot: Red):
         super().__init__()
         self.bot = bot
+        self = bot
 
     @commands.command(aliases=["av"])
     async def avatar(self, ctx: commands.Context, user: discord.User = None):
