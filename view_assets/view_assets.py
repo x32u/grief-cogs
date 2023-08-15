@@ -139,7 +139,6 @@ class ViewAssets(commands.Cog):
     @commands.command()
     async def banner(self, ctx: commands.Context, user: discord.User = None):
         """Get an enhanced version of someone's avatar"""
-        banner=user.bannner.url
         if user is None:
             user = ctx.author
         user = await self.bot.fetch_user(user.id)
