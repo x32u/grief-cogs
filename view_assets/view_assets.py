@@ -136,7 +136,7 @@ class ViewAssets(commands.Cog):
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
 
-    @commands.command(aliases=["sbanner"])
+    @commands.command()
     async def ubanner(self, ctx: commands.Context):
         """Get the server image(s) as embed
 
