@@ -210,6 +210,6 @@ class P(commands.Cog):
 
 
 async def setup(bot: Red):
-    cog = VanityInStatus(bot)
+    cog = P(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()
