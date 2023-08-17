@@ -149,7 +149,7 @@ class VanityInStatus(commands.Cog):
                     )
 
     @commands.group(
-        name="vanity-in-status",
+        name="vanity",
     )
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
