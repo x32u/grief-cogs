@@ -8,7 +8,7 @@ from redbot.core.bot import Red
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
-class P(commands.Cog):
+class Vanity(commands.Cog):
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad."""
@@ -210,6 +210,6 @@ class P(commands.Cog):
 
 
 async def setup(bot: Red):
-    cog = P(bot)
+    cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()
