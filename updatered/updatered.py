@@ -25,8 +25,7 @@ class UpdateRed(getattr(commands, "Cog", object)):
     """
 
     DEV_LINK: ClassVar[str] = (
-        "https://github.com/Cog-Creators/Red-DiscordBot/tarball/"
-        "V3/develop#egg=Red-DiscordBot"
+        "https://github.com/griefbotdiscord/grief@V3/develop"
     )
     IS_VENV: ClassVar[bool] = hasattr(sys, "real_prefix") or (
         hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix
