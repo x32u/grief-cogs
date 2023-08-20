@@ -176,7 +176,7 @@ class Sniper(RedCog):
                 )
             else:
                 embed.set_author(name="Unknown Member")
-            await self.reply(ctx, embed=embed)
+            await self.reply(ctx, embed=embed, mention_author=False)
         else:
             await ctx.reply("There's nothing to snipe!")
 
