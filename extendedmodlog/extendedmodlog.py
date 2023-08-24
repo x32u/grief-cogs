@@ -545,9 +545,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             **thread_create:** Thread created,
             **thread_delete:** Thread deleted,
             **thread_change:** Thread changed
-            
             **You can run multiple events at once to configure multiple events to the same channel.**
-
             **Note: run {prefix}modlogset to configure moderation logs.**""".format(
             prefix=ctx.clean_prefix
         )
