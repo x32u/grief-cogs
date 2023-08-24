@@ -524,7 +524,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
         """Explanation of the events grief supports."""
 
         msg = """
-            **Events:**
+            **Events:**\n
             **message_edit:** Message edits
             **message_delete:** Message delete
             **user_change:** Member changes
