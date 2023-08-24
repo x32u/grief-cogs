@@ -524,32 +524,30 @@ class ExtendedModLog(EventMixin, commands.Cog):
         """Explanation of the events grief supports."""
 
         msg = """
-        **ExtendedModLog events**
-        
-            "message_edit": Message edits,
-            "message_delete": _Message delete,
-            "user_change": Member changes,
-            "role_change": Role changes,
-            "role_create": Role created,
-            "role_delete": Role deleted,
-            "voice_change": Voice changes,
-            "user_join": Member join,
-            "user_left": Member left,
-            "channel_change": Channel changes,
-            "channel_create": Channel created,
-            "channel_delete": Channel deleted,
-            "guild_change": Guild changes,
-            "emoji_change": Emoji changes,
-            "stickers_change": Stickers changes,
-            "invite_created": Invite created,
-            "invite_deleted": Invite deleted,
-            "thread_create": Thread created,
-            "thread_delete": Thread deleted,
-            "thread_change": Thread changed
+            **message_edit:** Message edits,
+            **message_delete:** Message delete,
+            **user_change:** Member changes,
+            **role_change":** Role changes,
+            **role_create:** Role created,
+            **role_delete:** Role deleted,
+            **voice_change:** Voice changes,
+            **user_join:** Member join,
+            **user_left:** Member left,
+            **channel_change:** Channel changes,
+            **channel_create:** Channel created,
+            **channel_delete:** Channel deleted,
+            **guild_change:** Guild changes,
+            **emoji_change:** Emoji changes,
+            **stickers_change:** Stickers changes,
+            **invite_created:** Invite created,
+            **invite_deleted:** Invite deleted,
+            **thread_create:** Thread created,
+            **thread_delete:** Thread deleted,
+            **thread_change:** Thread changed
             
             You can run multiple events at once to configure multiple events to the same channel.
 
-            **Note: run {prefix}modlog to configure moderation logs.""".format(
+            **Note: run {prefix}modlog to configure moderation logs.**""".format(
             prefix=ctx.clean_prefix
         )
         embed = discord.Embed(
