@@ -528,7 +528,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             **message_edit:** Message edits,
             **message_delete:** Message delete,
             **user_change:** Member changes,
-            **role_change":** Role changes,
+            **role_change:** Role changes,
             **role_create:** Role created,
             **role_delete:** Role deleted,
             **voice_change:** Voice changes,
