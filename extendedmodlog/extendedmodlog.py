@@ -524,7 +524,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
         """Explanation of the events grief supports."""
 
         msg = """
-            **Events;**
+            **Events:**
             **message_edit:** Message edits,
             **message_delete:** Message delete,
             **user_change:** Member changes,
@@ -545,8 +545,8 @@ class ExtendedModLog(EventMixin, commands.Cog):
             **thread_create:** Thread created,
             **thread_delete:** Thread deleted,
             **thread_change:** Thread changed
-            **You can run multiple events at once to configure multiple events to the same channel.**
-            **Note: run {prefix}modlogset to configure moderation logs.**""".format(
+        **You can run multiple events at once to configure multiple events to the same channel.**
+        **Note: run {prefix}modlogset to configure moderation logs.**""".format(
             prefix=ctx.clean_prefix
         )
         embed = discord.Embed(
