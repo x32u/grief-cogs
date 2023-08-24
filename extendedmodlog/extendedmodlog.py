@@ -551,6 +551,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
             prefix=ctx.clean_prefix
         )
         embed = discord.Embed(
-            title="ExtendedModLog Events", description=msg, color=await ctx.embed_color()
+            title="ExtendedModLog Events", description=msg, thumbnail=bot.user.avatar_url, color=await ctx.embed_color()
         )
         await ctx.send(embed=embed)
