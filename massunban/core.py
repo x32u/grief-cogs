@@ -125,7 +125,7 @@ class MassUnban(commands.Cog):
                                 name=str(ctx.author.display_name), id=ctx.author.id
                             ),
                         )
-                        await asyncio.sleep(0.5)
+                        await asyncio.sleep(1)
                         unban_count += 1
 
         await ctx.send(_("Done. Unbanned {unban_count} users.").format(unban_count=unban_count))
