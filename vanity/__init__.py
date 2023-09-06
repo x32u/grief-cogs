@@ -19,7 +19,7 @@ class Vanity(commands.Cog):
 
     def __init__(self, bot: Red):
         self.bot: Red = bot
-        self.logger: Logger = getLogger("red.dia.VanityInStatus")
+        self.logger: Logger = getLogger("grief.Vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
             "role": None,
