@@ -14,6 +14,7 @@ from copy import deepcopy
 from pathlib import Path
 
 import plotly.graph_objects as go
+from fontTools.ttLib import TTFont
 from PIL import Image, ImageChops, ImageDraw, ImageFont
 from redbot.core.data_manager import bundled_data_path
 
@@ -149,6 +150,7 @@ class GuildStats(Cog):
             size: ImageFont.truetype(str(self.bold_font_path), size=size)
             for size in {30, 36, 40, 50, 60}
         }
+        self.font_to_remove_unprintable_characters: TTFont = TTFont(self.font_path)
         self.icons: typing.Dict[str, Path] = {
             name: (bundled_data_path(self) / f"{name}.png")
             for name in [
@@ -524,7 +526,7 @@ class GuildStats(Cog):
             return
         if message.guild not in self.cache:
             self.cache[message.guild] = {"channels": {}, "members": {}}
-        if message.channel not in self.cache[message.guild]:
+        if message.channel not in self.cache[message.guild]["channels"]:
             self.cache[message.guild]["channels"][message.channel] = {
                 "total_messages": 0,
                 "total_humans_messages": 0,
@@ -2049,7 +2051,8 @@ class GuildStats(Cog):
                                     _type[1], 0
                                 )
                             )
-                            if is_valid(int(member_id))
+                            if _object.get_member(int(member_id)) is not None
+                            and is_valid(int(member_id))
                         ]
                     )
                     return {
@@ -2082,7 +2085,11 @@ class GuildStats(Cog):
             members_messages_counter: Counter = Counter(
                 [
                     member_id
-                    for channel_id in [channel.id for channel in _object.channels]
+                    for channel_id in [
+                        channel.id
+                        for channel in _object.channels
+                        if channel.id in all_channels_data
+                    ]
                     for member_id, count_messages in all_channels_data[channel_id][
                         "total_messages_members"
                     ].items()
@@ -2094,7 +2101,11 @@ class GuildStats(Cog):
             members_voice_counter: Counter = Counter(
                 [
                     member_id
-                    for channel_id in [channel.id for channel in _object.channels]
+                    for channel_id in [
+                        channel.id
+                        for channel in _object.channels
+                        if channel.id in all_channels_data
+                    ]
                     for member_id, count_voice in all_channels_data[channel_id][
                         "total_voice_members"
                     ].items()
@@ -2106,14 +2117,22 @@ class GuildStats(Cog):
             top_messages_channels = Counter(
                 {
                     channel_id: all_channels_data[channel_id][f"total_{members_type_key}messages"]
-                    for channel_id in [channel.id for channel in _object.channels]
+                    for channel_id in [
+                        channel.id
+                        for channel in _object.channels
+                        if channel.id in all_channels_data
+                    ]
                     if _object.guild.get_channel(int(channel_id)) is not None
                 }
             )
             top_voice_channels = Counter(
                 {
                     channel_id: all_channels_data[channel_id][f"total_{members_type_key}voice"]
-                    for channel_id in [channel.id for channel in _object.channels]
+                    for channel_id in [
+                        channel.id
+                        for channel in _object.channels
+                        if channel.id in all_channels_data
+                    ]
                     if _object.guild.get_channel(int(channel_id)) is not None
                 }
             )
@@ -2121,14 +2140,22 @@ class GuildStats(Cog):
                 "server_lookback": {  # type: messages/hours
                     "text": sum(
                         all_channels_data[channel_id][f"total_{members_type_key}messages"]
-                        for channel_id in [channel.id for channel in _object.channels]
+                        for channel_id in [
+                            channel.id
+                            for channel in _object.channels
+                            if channel.id in all_channels_data
+                        ]
                     ),
                     "voice": roundest_value
                     if (
                         roundest_value := round(
                             sum(
                                 all_channels_data[channel_id][f"total_{members_type_key}voice"]
-                                for channel_id in [channel.id for channel in _object.channels]
+                                for channel_id in [
+                                    channel.id
+                                    for channel in _object.channels
+                                    if channel.id in all_channels_data
+                                ]
                             )
                             / 3600,
                             ndigits=2,
@@ -2141,7 +2168,11 @@ class GuildStats(Cog):
                     delta: len(
                         [
                             time
-                            for channel_id in all_channels_data
+                            for channel_id in [
+                                channel.id
+                                for channel in _object.channels
+                                if channel.id in all_channels_data
+                            ]
                             for member_id in all_channels_data[channel_id]["messages"]
                             for time in all_channels_data[channel_id]["messages"][member_id]
                             if time >= (utc_now - datetime.timedelta(days=delta)).timestamp()
@@ -2167,7 +2198,11 @@ class GuildStats(Cog):
                                     > 0
                                     else 0
                                 )
-                                for channel_id in [channel.id for channel in _object.channels]
+                                for channel_id in [
+                                    channel.id
+                                    for channel in _object.channels
+                                    if channel.id in all_channels_data
+                                ]
                                 for member_id in all_channels_data[channel_id]["voice"]
                                 for times in all_channels_data[channel_id]["voice"][member_id]
                                 if times[1]
@@ -2243,7 +2278,11 @@ class GuildStats(Cog):
                         day: len(
                             [
                                 time
-                                for channel_id in [channel.id for channel in _object.channels]
+                                for channel_id in [
+                                    channel.id
+                                    for channel in _object.channels
+                                    if channel.id in all_channels_data
+                                ]
                                 for member_id in all_channels_data[channel_id]["messages"]
                                 for time in all_channels_data[channel_id]["messages"][member_id]
                                 if (utc_now - datetime.timedelta(days=-day - 1)).timestamp()
@@ -2282,7 +2321,11 @@ class GuildStats(Cog):
                                         > 0
                                         else 0
                                     )
-                                    for channel_id in [channel.id for channel in _object.channels]
+                                    for channel_id in [
+                                        channel.id
+                                        for channel in _object.channels
+                                        if channel.id in all_channels_data
+                                    ]
                                     for member_id in all_channels_data[channel_id]["voice"]
                                     for times in all_channels_data[channel_id]["voice"][member_id]
                                     if (
@@ -2695,13 +2738,62 @@ class GuildStats(Cog):
         return text_size
 
     def number_to_text_with_suffix(self, number: float) -> str:
-        suffixes = ["", "k", "M", "B", "T", "P", "E", "Z", "Y"]
-        index = 0
-        while abs(number) >= 1000 and index < len(suffixes) - 1:
+        suffixes = ["k", "m", "b", "t", "q", "Q", "s", "S", "o", "n", "d", "U", "D", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Vi"]  # ["k", "M", "B", "T", "P", "E", "Z", "Y"]
+        index = None
+        while abs(number) >= 1000 and (index or -1) < len(suffixes) - 1:
             number /= 1000.0
+            if index is None:
+                index = -1
             index += 1
         # return f"{int(number) if number == int(number) else (f'{number:.1f}' if f'{number:.1f}' != '0.0' else (f'{number:.2f}' if f'{number:.2f}' != '0.0' else '0'))}{suffixes[index]}"
-        return f"{int(number) if number == int(number) else ((int(float(f'{number:.1f}')) if float(f'{number:.1f}') == int(float(f'{number:.1f}')) else f'{number:.1f}') if f'{number:.1f}' != '0.0' else ((int(float(f'{number:.2f}')) if float(f'{number:.2f}') == int(float(f'{number:.2f}')) else f'{number:.2f}') if f'{number:.2f}' != '0.0' else '0'))}{suffixes[index]}"
+        return f"{int(number) if number == int(number) else ((int(float(f'{number:.1f}')) if float(f'{number:.1f}') == int(float(f'{number:.1f}')) else f'{number:.1f}') if f'{number:.1f}' != '0.0' else ((int(float(f'{number:.2f}')) if float(f'{number:.2f}') == int(float(f'{number:.2f}')) else f'{number:.2f}') if f'{number:.2f}' != '0.0' else '0'))}{suffixes[index] if index is not None else ''}"
+
+    def remove_unprintable_characters(self, text: str) -> str:
+        return (
+            "".join(
+                [
+                    char
+                    for char in text
+                    if ord(char) in self.font_to_remove_unprintable_characters.getBestCmap()
+                    and char.isascii()
+                ]
+            )
+            .strip()
+            .strip("-|_")
+            .strip()
+        )
+
+    def get_member_display(self, member: discord.Member) -> str:
+        return (
+            self.remove_unprintable_characters(member.display_name)
+            if (
+                sum(
+                    1
+                    if ord(char) in self.font_to_remove_unprintable_characters.getBestCmap()
+                    else 0
+                    for char in member.display_name
+                )
+                / len(member.display_name)
+                > 0.8
+            )
+            and len(self.remove_unprintable_characters(member.display_name)) >= 5
+            else (
+                self.remove_unprintable_characters(member.global_name)
+                if member.global_name is not None
+                and (
+                    sum(
+                        1
+                        if ord(char) in self.font_to_remove_unprintable_characters.getBestCmap()
+                        else 0
+                        for char in member.global_name
+                    )
+                    / len(member.global_name)
+                    > 0.8
+                )
+                and len(self.remove_unprintable_characters(member.global_name)) >= 5
+                else member.name
+            )
+        )
 
     def _generate_prefix_image(
         self,
@@ -2758,13 +2850,18 @@ class GuildStats(Cog):
             except IndexError:
                 img.paste(image, (30, 30, 170, 170), mask=mask)
             if (
-                sum(1 if char.isascii() else 0 for char in _object.display_name)
+                sum(
+                    1
+                    if ord(char) in self.font_to_remove_unprintable_characters.getBestCmap()
+                    else 0
+                    for char in _object.display_name
+                )
                 / len(_object.display_name)
                 > 0.8
-            ):
+            ) and len(self.remove_unprintable_characters(_object.display_name)) >= 5:
                 draw.text(
                     (190, 30),
-                    text=_object.display_name,
+                    text=self.remove_unprintable_characters(_object.display_name),
                     fill=(255, 255, 255),
                     font=self.bold_font[50],
                 )
@@ -2776,18 +2873,29 @@ class GuildStats(Cog):
                 ) <= 1000:
                     draw.text(
                         (190 + display_name_size[2] + 25, 48),
-                        text=_object.global_name or _object.name,
+                        text=self.remove_unprintable_characters(_object.global_name)
+                        if _object.global_name is not None
+                        else _object.name,
                         fill=(163, 163, 163),
                         font=self.font[40],
                     )
             elif (
-                sum(1 if char.isascii() else 0 for char in _object.global_name)
-                / len(_object.global_name)
-                > 0.8
+                _object.global_name is not None
+                and (
+                    sum(
+                        1
+                        if ord(char) in self.font_to_remove_unprintable_characters.getBestCmap()
+                        else 0
+                        for char in _object.global_name
+                    )
+                    / len(_object.global_name)
+                    > 0.8
+                )
+                and len(self.remove_unprintable_characters(_object.global_name)) >= 5
             ):
                 draw.text(
                     (190, 30),
-                    text=_object.global_name,
+                    text=self.remove_unprintable_characters(_object.global_name),
                     fill=(255, 255, 255),
                     font=self.bold_font[50],
                 )
@@ -2817,7 +2925,10 @@ class GuildStats(Cog):
                 image = image.resize((140, 140))
                 img.paste(image, (30, 30, 170, 170), mask=image.split()[3])
             draw.text(
-                (190, 30), _("Role {_object.name}").format(_object=_object), fill=(255, 255, 255), font=self.bold_font[50]
+                (190, 30),
+                _("Role {_object.name}").format(_object=_object),
+                fill=(255, 255, 255),
+                font=self.bold_font[50],
             )
         elif isinstance(_object, discord.Guild):
             if _type is None:
@@ -2836,7 +2947,10 @@ class GuildStats(Cog):
                 )
             elif _type == "messages":
                 draw.text(
-                    (190, 30), text=_("Messages Stats"), fill=(255, 255, 255), font=self.bold_font[50]
+                    (190, 30),
+                    text=_("Messages Stats"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[50],
                 )
                 image = Image.open(self.icons["#"])
             elif _type == "voice":
@@ -2855,13 +2969,18 @@ class GuildStats(Cog):
             elif isinstance(_type, typing.Tuple):
                 if _type[0] == "top":
                     draw.text(
-                        (190, 30), text=_("Top Stats"), fill=(255, 255, 255), font=self.bold_font[50]
+                        (190, 30),
+                        text=_("Top Stats"),
+                        fill=(255, 255, 255),
+                        font=self.bold_font[50],
                     )
                     image = Image.open(self.icons["#" if _type[1] == "messages" else "sound"])
                 elif _type[0] == "activity":
                     draw.text(
                         (190, 30),
-                        text=_("Activity - {activity_name}").format(activity_name=_type[1]),
+                        text=_("Activity - {activity_name}").format(
+                            activity_name=self.remove_unprintable_characters(_type[1])
+                        ),
                         fill=(255, 255, 255),
                         font=self.bold_font[50],
                     )
@@ -2879,12 +2998,22 @@ class GuildStats(Cog):
             image = image.resize((140, 140))
             img.paste(image, (30, 30, 170, 170), mask=image.split()[3])
         elif isinstance(_object, discord.TextChannel):
-            draw.text((190, 30), _object.name, fill=(255, 255, 255), font=self.bold_font[50])
+            draw.text(
+                (190, 30),
+                self.remove_unprintable_characters(_object.name),
+                fill=(255, 255, 255),
+                font=self.bold_font[50],
+            )
             image = Image.open(self.icons["#"])
             image = image.resize((140, 140))
             img.paste(image, (30, 30, 170, 170), mask=image.split()[3])
         elif isinstance(_object, discord.VoiceChannel):
-            draw.text((190, 30), _object.name, fill=(255, 255, 255), font=self.bold_font[50])
+            draw.text(
+                (190, 30),
+                self.remove_unprintable_characters(_object.name),
+                fill=(255, 255, 255),
+                font=self.bold_font[50],
+            )
             image = Image.open(self.icons["sound"])
             image = image.resize((140, 140))
             img.paste(image, (30, 30, 170, 170), mask=image.split()[3])
@@ -2927,7 +3056,9 @@ class GuildStats(Cog):
             img.paste(image, (190, 105, 245, 160), mask=image.split()[3])
             draw.text(
                 (255, 105),
-                text=(_object if isinstance(_object, discord.Guild) else _object.guild).name,
+                text=self.remove_unprintable_characters(
+                    (_object if isinstance(_object, discord.Guild) else _object.guild).name
+                ),
                 fill=(163, 163, 163),
                 font=self.font[54],
             )
@@ -3283,35 +3414,14 @@ class GuildStats(Cog):
                     go.Pie(
                         labels=[
                             (
-                                label
+                                self.remove_unprintable_characters(label)
                                 if key.split("_")[0] != "top"
                                 else (
-                                    (
-                                        member.display_name
-                                        if (member := _object.get_member(label)).display_name
-                                        and (
-                                            sum(
-                                                1 if char.isascii() else 0
-                                                for char in member.display_name
-                                            )
-                                            / len(member.display_name)
-                                            > 0.8
-                                        )
-                                        else (
-                                            member.global_name
-                                            if (
-                                                sum(
-                                                    1 if char.isascii() else 0
-                                                    for char in member.global_name
-                                                )
-                                                / len(member.global_name)
-                                                > 0.8
-                                            )
-                                            else member.name
-                                        )
-                                    )
+                                    self.get_member_display(_object.get_member(label))
                                     if key.split("_")[-1] == "members"
-                                    else _object.get_channel(label).name
+                                    else self.remove_unprintable_characters(
+                                        _object.get_channel(label).name
+                                    )
                                 )
                             )[:20]
                             for label in data["graphic"][key].keys()
@@ -3369,12 +3479,18 @@ class GuildStats(Cog):
                 )
                 align_text_center(
                     (90, 972, 90, 1022),
-                    text=_("Tracking data in this server for {interval_string}.").format(interval_string=CogsUtils.get_interval_string(tracking_data_start_time, utc_now=utc_now)),
+                    text=_("Tracking data in this server for {interval_string}.").format(
+                        interval_string=CogsUtils.get_interval_string(
+                            tracking_data_start_time, utc_now=utc_now
+                        )
+                    ),
                     fill=(255, 255, 255),
                     font=self.bold_font[30],
                 )
             if members_type != "both":
-                members_type_text = _("Only {members_type} are taken into account.").format(members_type=members_type)
+                members_type_text = _("Only {members_type} are taken into account.").format(
+                    members_type=members_type
+                )
                 image = Image.open(self.icons["person"])
                 image = image.resize((50, 50))
                 img.paste(
@@ -3615,7 +3731,10 @@ class GuildStats(Cog):
             draw.rounded_rectangle((1326, 489, 1892, 565), radius=15, fill=(32, 34, 37))
             draw.rounded_rectangle((1326, 489, 1548, 565), radius=15, fill=(24, 26, 27))
             align_text_center(
-                (1326, 489, 1548, 565), text=_("30d"), fill=(255, 255, 255), font=self.bold_font[36]
+                (1326, 489, 1548, 565),
+                text=_("30d"),
+                fill=(255, 255, 255),
+                font=self.bold_font[36],
             )
             align_text_center(
                 (1548, 489, 1892, 565),
@@ -3699,9 +3818,11 @@ class GuildStats(Cog):
             ):
                 align_text_center(
                     (768, 712, 1218, 788),
-                    text=_object.guild.get_channel(
-                        data["top_channels_and_activity"]["text"]["channel"]
-                    ).name,
+                    text=self.remove_unprintable_characters(
+                        _object.guild.get_channel(
+                            data["top_channels_and_activity"]["text"]["channel"]
+                        ).name
+                    ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
                 )
@@ -3722,9 +3843,11 @@ class GuildStats(Cog):
             ):
                 align_text_center(
                     (768, 804, 1218, 880),
-                    text=_object.guild.get_channel(
-                        data["top_channels_and_activity"]["voice"]["channel"]
-                    ).name,
+                    text=self.remove_unprintable_characters(
+                        _object.guild.get_channel(
+                            data["top_channels_and_activity"]["voice"]["channel"]
+                        ).name
+                    ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
                 )
@@ -3789,7 +3912,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((50, 301, 616, 418), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((50, 301, 325, 418), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (50, 301, 325, 418), text=_("Text"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (50, 301, 325, 418),
+                    text=_("Text"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (325, 301, 616, 418),
@@ -3826,7 +3952,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 301, 1254, 377), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 301, 910, 377), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 301, 910, 377), text=_("1d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 301, 910, 377),
+                    text=_("1d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 301, 1254, 377),
@@ -3837,7 +3966,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 395, 1254, 471), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 395, 910, 471), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 395, 910, 471), text=_("7d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 395, 910, 471),
+                    text=_("7d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 395, 1254, 471),
@@ -3848,7 +3980,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 489, 1254, 565), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 489, 910, 565), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 489, 910, 565), text=_("30d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 489, 910, 565),
+                    text=_("30d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 489, 1254, 565),
@@ -3933,23 +4068,8 @@ class GuildStats(Cog):
                 ):
                     align_text_center(
                         (150, 712, 600, 829),
-                        text=member.display_name
-                        if (
-                            member := _object.get_member(data["top_members"]["text"]["member"])
-                        ).display_name
-                        and (
-                            sum(1 if char.isascii() else 0 for char in member.display_name)
-                            / len(member.display_name)
-                            > 0.8
-                        )
-                        else (
-                            member.global_name
-                            if (
-                                sum(1 if char.isascii() else 0 for char in member.global_name)
-                                / len(member.global_name)
-                                > 0.8
-                            )
-                            else member.name
+                        text=self.get_member_display(
+                            _object.get_member(data["top_members"]["text"]["member"])
                         ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
@@ -3971,23 +4091,8 @@ class GuildStats(Cog):
                 ):
                     align_text_center(
                         (150, 859, 600, 976),
-                        text=member.display_name
-                        if (
-                            member := _object.get_member(data["top_members"]["voice"]["member"])
-                        ).display_name
-                        and (
-                            sum(1 if char.isascii() else 0 for char in member.display_name)
-                            / len(member.display_name)
-                            > 0.8
-                        )
-                        else (
-                            member.global_name
-                            if (
-                                sum(1 if char.isascii() else 0 for char in member.global_name)
-                                / len(member.global_name)
-                                > 0.8
-                            )
-                            else member.name
+                        text=self.get_member_display(
+                            _object.get_member(data["top_members"]["voice"]["member"])
                         ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
@@ -4042,7 +4147,9 @@ class GuildStats(Cog):
                 ):
                     align_text_center(
                         (1105, 859, 1555, 976),
-                        text=_object.get_channel(data["top_channels"]["voice"]["channel"]).name,
+                        text=self.remove_unprintable_characters(
+                            _object.get_channel(data["top_channels"]["voice"]["channel"]).name
+                        ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
                     )
@@ -4093,7 +4200,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 301, 1254, 377), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 301, 910, 377), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 301, 910, 377), text=_("1d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 301, 910, 377),
+                    text=_("1d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 301, 1254, 377),
@@ -4104,7 +4214,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 395, 1254, 471), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 395, 910, 471), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 395, 910, 471), text=_("7d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 395, 910, 471),
+                    text=_("7d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 395, 1254, 471),
@@ -4115,7 +4228,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 489, 1254, 565), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 489, 910, 565), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 489, 910, 565), text=_("30d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 489, 910, 565),
+                    text=_("30d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 489, 1254, 565),
@@ -4195,23 +4311,8 @@ class GuildStats(Cog):
                 if len(data["top_messages_members"]) >= 1:
                     align_text_center(
                         (50, 712, 600, 788),
-                        text=member.display_name
-                        if (
-                            member := _object.get_member(data["top_messages_members"][0][0])
-                        ).display_name
-                        and (
-                            sum(1 if char.isascii() else 0 for char in member.display_name)
-                            / len(member.display_name)
-                            > 0.8
-                        )
-                        else (
-                            member.global_name
-                            if (
-                                sum(1 if char.isascii() else 0 for char in member.global_name)
-                                / len(member.global_name)
-                                > 0.8
-                            )
-                            else member.name
+                        text=self.get_member_display(
+                            _object.get_member(data["top_messages_members"][0][0])
                         ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
@@ -4227,23 +4328,8 @@ class GuildStats(Cog):
                 if len(data["top_messages_members"]) >= 2:
                     align_text_center(
                         (50, 804, 600, 880),
-                        text=member.display_name
-                        if (
-                            member := _object.get_member(data["top_messages_members"][1][0])
-                        ).display_name
-                        and (
-                            sum(1 if char.isascii() else 0 for char in member.display_name)
-                            / len(member.display_name)
-                            > 0.8
-                        )
-                        else (
-                            member.global_name
-                            if (
-                                sum(1 if char.isascii() else 0 for char in member.global_name)
-                                / len(member.global_name)
-                                > 0.8
-                            )
-                            else member.name
+                        text=self.get_member_display(
+                            _object.get_member(data["top_messages_members"][1][0])
                         ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
@@ -4259,23 +4345,8 @@ class GuildStats(Cog):
                 if len(data["top_messages_members"]) >= 3:
                     align_text_center(
                         (50, 896, 600, 972),
-                        text=member.display_name
-                        if (
-                            member := _object.get_member(data["top_messages_members"][2][0])
-                        ).display_name
-                        and (
-                            sum(1 if char.isascii() else 0 for char in member.display_name)
-                            / len(member.display_name)
-                            > 0.8
-                        )
-                        else (
-                            member.global_name
-                            if (
-                                sum(1 if char.isascii() else 0 for char in member.global_name)
-                                / len(member.global_name)
-                                > 0.8
-                            )
-                            else member.name
+                        text=self.get_member_display(
+                            _object.get_member(data["top_messages_members"][2][0])
                         ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
@@ -4304,7 +4375,9 @@ class GuildStats(Cog):
                 if len(data["top_messages_channels"]) >= 1:
                     align_text_center(
                         (1005, 712, 1555, 788),
-                        text=_object.get_channel(data["top_messages_channels"][0][0]).name,
+                        text=self.remove_unprintable_characters(
+                            _object.get_channel(data["top_messages_channels"][0][0]).name
+                        ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
                     )
@@ -4319,7 +4392,9 @@ class GuildStats(Cog):
                 if len(data["top_messages_channels"]) >= 2:
                     align_text_center(
                         (1005, 804, 1555, 880),
-                        text=_object.get_channel(data["top_messages_channels"][1][0]).name,
+                        text=self.remove_unprintable_characters(
+                            _object.get_channel(data["top_messages_channels"][1][0]).name
+                        ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
                     )
@@ -4334,7 +4409,9 @@ class GuildStats(Cog):
                 if len(data["top_messages_channels"]) >= 3:
                     align_text_center(
                         (1005, 896, 1555, 972),
-                        text=_object.get_channel(data["top_messages_channels"][2][0]).name,
+                        text=self.remove_unprintable_characters(
+                            _object.get_channel(data["top_messages_channels"][2][0]).name
+                        ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
                     )
@@ -4385,7 +4462,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 301, 1254, 377), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 301, 910, 377), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 301, 910, 377), text=_("1d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 301, 910, 377),
+                    text=_("1d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 301, 1254, 377),
@@ -4396,7 +4476,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 395, 1254, 471), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 395, 910, 471), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 395, 910, 471), text=_("7d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 395, 910, 471),
+                    text=_("7d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 395, 1254, 471),
@@ -4407,7 +4490,10 @@ class GuildStats(Cog):
                 draw.rounded_rectangle((688, 489, 1254, 565), radius=15, fill=(32, 34, 37))
                 draw.rounded_rectangle((688, 489, 910, 565), radius=15, fill=(24, 26, 27))
                 align_text_center(
-                    (688, 489, 910, 565), text=_("30d"), fill=(255, 255, 255), font=self.bold_font[36]
+                    (688, 489, 910, 565),
+                    text=_("30d"),
+                    fill=(255, 255, 255),
+                    font=self.bold_font[36],
                 )
                 align_text_center(
                     (910, 489, 1254, 565),
@@ -4487,23 +4573,8 @@ class GuildStats(Cog):
                 if len(data["top_voice_members"]) >= 1:
                     align_text_center(
                         (50, 712, 600, 788),
-                        text=member.display_name
-                        if (
-                            member := _object.get_member(data["top_voice_members"][0][0])
-                        ).display_name
-                        and (
-                            sum(1 if char.isascii() else 0 for char in member.display_name)
-                            / len(member.display_name)
-                            > 0.8
-                        )
-                        else (
-                            member.global_name
-                            if (
-                                sum(1 if char.isascii() else 0 for char in member.global_name)
-                                / len(member.global_name)
-                                > 0.8
-                            )
-                            else member.name
+                        text=self.get_member_display(
+                            _object.get_member(data["top_voice_members"][0][0])
                         ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
@@ -4519,23 +4590,8 @@ class GuildStats(Cog):
                 if len(data["top_voice_members"]) >= 2:
                     align_text_center(
                         (50, 804, 600, 880),
-                        text=member.display_name
-                        if (
-                            member := _object.get_member(data["top_voice_members"][1][0])
-                        ).display_name
-                        and (
-                            sum(1 if char.isascii() else 0 for char in member.display_name)
-                            / len(member.display_name)
-                            > 0.8
-                        )
-                        else (
-                            member.global_name
-                            if (
-                                sum(1 if char.isascii() else 0 for char in member.global_name)
-                                / len(member.global_name)
-                                > 0.8
-                            )
-                            else member.name
+                        text=self.get_member_display(
+                            _object.get_member(data["top_voice_members"][1][0])
                         ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
@@ -4551,23 +4607,8 @@ class GuildStats(Cog):
                 if len(data["top_voice_members"]) >= 3:
                     align_text_center(
                         (50, 896, 600, 972),
-                        text=member.display_name
-                        if (
-                            member := _object.get_member(data["top_voice_members"][2][0])
-                        ).display_name
-                        and (
-                            sum(1 if char.isascii() else 0 for char in member.display_name)
-                            / len(member.display_name)
-                            > 0.8
-                        )
-                        else (
-                            member.global_name
-                            if (
-                                sum(1 if char.isascii() else 0 for char in member.global_name)
-                                / len(member.global_name)
-                                > 0.8
-                            )
-                            else member.name
+                        text=self.get_member_display(
+                            _object.get_member(data["top_voice_members"][2][0])
                         ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
@@ -4596,7 +4637,9 @@ class GuildStats(Cog):
                 if len(data["top_voice_channels"]) >= 1:
                     align_text_center(
                         (1005, 712, 1555, 788),
-                        text=_object.get_channel(data["top_voice_channels"][0][0]).name,
+                        text=self.remove_unprintable_characters(
+                            _object.get_channel(data["top_voice_channels"][0][0]).name
+                        ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
                     )
@@ -4611,7 +4654,9 @@ class GuildStats(Cog):
                 if len(data["top_voice_channels"]) >= 2:
                     align_text_center(
                         (1005, 804, 1555, 880),
-                        text=_object.get_channel(data["top_voice_channels"][1][0]).name,
+                        text=self.remove_unprintable_characters(
+                            _object.get_channel(data["top_voice_channels"][1][0]).name
+                        ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
                     )
@@ -4626,7 +4671,9 @@ class GuildStats(Cog):
                 if len(data["top_voice_channels"]) >= 3:
                     align_text_center(
                         (1005, 896, 1555, 972),
-                        text=_object.get_channel(data["top_voice_channels"][2][0]).name,
+                        text=self.remove_unprintable_characters(
+                            _object.get_channel(data["top_voice_channels"][2][0]).name
+                        ),
                         fill=(255, 255, 255),
                         font=self.bold_font[36],
                     )
@@ -4663,7 +4710,7 @@ class GuildStats(Cog):
                         # align_text_center((100, current_y, 935, current_y + 50), text=top_activities[i - 1], fill=(255, 255, 255), font=self.font[36])
                         align_text_center(
                             (50, current_y, 580, current_y + 58),
-                            text=top_activities[i][:25],
+                            text=self.remove_unprintable_characters(top_activities[i][:25]),
                             fill=(255, 255, 255),
                             font=self.bold_font[36],
                         )
@@ -4697,7 +4744,8 @@ class GuildStats(Cog):
                     draw.rounded_rectangle((30, 204, 955, 996), radius=15, fill=(47, 49, 54))
                     align_text_center(
                         (50, 214, 50, 284),
-                        text=_("Tope") + f"{_('Messages') if _type[1] == 'messages' else _('Voice')} {_('Members') if _type[2] == 'members' else _('Channels')}",
+                        text=_("Tope")
+                        + f"{_('Messages') if _type[1] == 'messages' else _('Voice')} {_('Members') if _type[2] == 'members' else _('Channels')}",
                         fill=(255, 255, 255),
                         font=self.bold_font[40],
                     )
@@ -4717,31 +4765,12 @@ class GuildStats(Cog):
                             align_text_center(
                                 (50, current_y, 580, current_y + 58),
                                 text=(
-                                    member.display_name
-                                    if (member := _object.get_member(top[i])).display_name
-                                    and (
-                                        sum(
-                                            1 if char.isascii() else 0
-                                            for char in member.display_name
-                                        )
-                                        / len(member.display_name)
-                                        > 0.8
+                                    self.get_member_display(_object.get_member(top[i]))
+                                    if _type[2] == "members"
+                                    else self.remove_unprintable_characters(
+                                        _object.get_channel(top[i]).name
                                     )
-                                    else (
-                                        member.global_name
-                                        if (
-                                            sum(
-                                                1 if char.isascii() else 0
-                                                for char in member.global_name
-                                            )
-                                            / len(member.global_name)
-                                            > 0.8
-                                        )
-                                        else member.name
-                                    )
-                                )
-                                if _type[2] == "members"
-                                else _object.get_channel(top[i]).name,
+                                ),
                                 fill=(255, 255, 255),
                                 font=self.bold_font[36],
                             )
@@ -4792,30 +4821,7 @@ class GuildStats(Cog):
                         if len(top) >= i + 1:
                             align_text_center(
                                 (50, current_y, 580, current_y + 58),
-                                text=(
-                                    member.display_name
-                                    if (member := _object.get_member(top[i])).display_name
-                                    and (
-                                        sum(
-                                            1 if char.isascii() else 0
-                                            for char in member.display_name
-                                        )
-                                        / len(member.display_name)
-                                        > 0.8
-                                    )
-                                    else (
-                                        member.global_name
-                                        if (
-                                            sum(
-                                                1 if char.isascii() else 0
-                                                for char in member.global_name
-                                            )
-                                            / len(member.global_name)
-                                            > 0.8
-                                        )
-                                        else member.name
-                                    )
-                                ),
+                                text=self.get_member_display(_object.get_member(top[i])),
                                 fill=(255, 255, 255),
                                 font=self.bold_font[36],
                             )
@@ -4845,7 +4851,7 @@ class GuildStats(Cog):
 
             if show_graphic:
                 # Graphic. box = 940 / empty = 0 | + 411 (381 + 30) / 1 case / box = 264 / empty = 0
-                draw.rounded_rectangle((30, 1026, 1910, 1407), radius=15, fill=(47, 49, 54))
+                draw.rounded_rectangle((30, 1026, 1910, 1407 + 200), radius=15, fill=(47, 49, 54))
                 align_text_center(
                     (50, 1036, 50, 1106),
                     text=_("Graphic"),
@@ -4976,7 +4982,10 @@ class GuildStats(Cog):
             draw.rounded_rectangle((1326, 489, 1892, 565), radius=15, fill=(32, 34, 37))
             draw.rounded_rectangle((1326, 489, 1548, 565), radius=15, fill=(24, 26, 27))
             align_text_center(
-                (1326, 489, 1548, 565), text=_("30d"), fill=(255, 255, 255), font=self.bold_font[36]
+                (1326, 489, 1548, 565),
+                text=_("30d"),
+                fill=(255, 255, 255),
+                font=self.bold_font[36],
             )
             align_text_center(
                 (1548, 489, 1892, 565),
@@ -5007,23 +5016,8 @@ class GuildStats(Cog):
             ):
                 align_text_center(
                     (150, 712, 600, 829),
-                    text=member.display_name
-                    if (
-                        member := _object.guild.get_member(data["top_members"]["text"]["member"])
-                    ).display_name
-                    and (
-                        sum(1 if char.isascii() else 0 for char in member.display_name)
-                        / len(member.display_name)
-                        > 0.8
-                    )
-                    else (
-                        member.global_name
-                        if (
-                            sum(1 if char.isascii() else 0 for char in member.global_name)
-                            / len(member.global_name)
-                            > 0.8
-                        )
-                        else member.name
+                    text=self.get_member_display(
+                        _object.guild.get_member(data["top_members"]["text"]["member"])
                     ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
@@ -5045,23 +5039,8 @@ class GuildStats(Cog):
             ):
                 align_text_center(
                     (150, 859, 600, 976),
-                    text=member.display_name
-                    if (
-                        member := _object.guild.get_member(data["top_members"]["voice"]["member"])
-                    ).display_name
-                    and (
-                        sum(1 if char.isascii() else 0 for char in member.display_name)
-                        / len(member.display_name)
-                        > 0.8
-                    )
-                    else (
-                        member.global_name
-                        if (
-                            sum(1 if char.isascii() else 0 for char in member.global_name)
-                            / len(member.global_name)
-                            > 0.8
-                        )
-                        else member.name
+                    text=self.get_member_display(
+                        _object.guild.get_member(data["top_members"]["voice"]["member"])
                     ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
@@ -5095,7 +5074,9 @@ class GuildStats(Cog):
             ):
                 align_text_center(
                     (1105, 712, 1555, 829),
-                    text=_object.guild.get_channel(data["top_channels"]["text"]["channel"]).name,
+                    text=self.remove_unprintable_characters(
+                        _object.guild.get_channel(data["top_channels"]["text"]["channel"]).name
+                    ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
                 )
@@ -5116,7 +5097,9 @@ class GuildStats(Cog):
             ):
                 align_text_center(
                     (1105, 859, 1555, 976),
-                    text=_object.guild.get_channel(data["top_channels"]["voice"]["channel"]).name,
+                    text=self.remove_unprintable_characters(
+                        _object.guild.get_channel(data["top_channels"]["voice"]["channel"]).name
+                    ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
                 )
@@ -5234,7 +5217,10 @@ class GuildStats(Cog):
             draw.rounded_rectangle((1326, 489, 1892, 565), radius=15, fill=(32, 34, 37))
             draw.rounded_rectangle((1326, 489, 1548, 565), radius=15, fill=(24, 26, 27))
             align_text_center(
-                (1326, 489, 1548, 565), text=_("30d"), fill=(255, 255, 255), font=self.bold_font[36]
+                (1326, 489, 1548, 565),
+                text=_("30d"),
+                fill=(255, 255, 255),
+                font=self.bold_font[36],
             )
             align_text_center(
                 (1548, 489, 1892, 565),
@@ -5279,23 +5265,8 @@ class GuildStats(Cog):
             if len(data["top_messages_members"]) >= 1:
                 align_text_center(
                     (688, 712, 1218, 788),
-                    text=member.display_name
-                    if (
-                        member := _object.guild.get_member(data["top_messages_members"][0][0])
-                    ).display_name
-                    and (
-                        sum(1 if char.isascii() else 0 for char in member.display_name)
-                        / len(member.display_name)
-                        > 0.8
-                    )
-                    else (
-                        member.global_name
-                        if (
-                            sum(1 if char.isascii() else 0 for char in member.global_name)
-                            / len(member.global_name)
-                            > 0.8
-                        )
-                        else member.name
+                    text=self.get_member_display(
+                        _object.guild.get_member(data["top_messages_members"][0][0])
                     ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
@@ -5311,23 +5282,8 @@ class GuildStats(Cog):
             if len(data["top_messages_members"]) >= 2:
                 align_text_center(
                     (688, 804, 1218, 880),
-                    text=member.display_name
-                    if (
-                        member := _object.guild.get_member(data["top_messages_members"][1][0])
-                    ).display_name
-                    and (
-                        sum(1 if char.isascii() else 0 for char in member.display_name)
-                        / len(member.display_name)
-                        > 0.8
-                    )
-                    else (
-                        member.global_name
-                        if (
-                            sum(1 if char.isascii() else 0 for char in member.global_name)
-                            / len(member.global_name)
-                            > 0.8
-                        )
-                        else member.name
+                    text=self.get_member_display(
+                        _object.guild.get_member(data["top_messages_members"][1][0])
                     ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
@@ -5343,23 +5299,8 @@ class GuildStats(Cog):
             if len(data["top_messages_members"]) >= 3:
                 align_text_center(
                     (688, 896, 1218, 972),
-                    text=member.display_name
-                    if (
-                        member := _object.guild.get_member(data["top_messages_members"][2][0])
-                    ).display_name
-                    and (
-                        sum(1 if char.isascii() else 0 for char in member.display_name)
-                        / len(member.display_name)
-                        > 0.8
-                    )
-                    else (
-                        member.global_name
-                        if (
-                            sum(1 if char.isascii() else 0 for char in member.global_name)
-                            / len(member.global_name)
-                            > 0.8
-                        )
-                        else member.name
+                    text=self.get_member_display(
+                        _object.guild.get_member(data["top_messages_members"][2][0])
                     ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
@@ -5495,7 +5436,10 @@ class GuildStats(Cog):
             draw.rounded_rectangle((1326, 489, 1892, 565), radius=15, fill=(32, 34, 37))
             draw.rounded_rectangle((1326, 489, 1548, 565), radius=15, fill=(24, 26, 27))
             align_text_center(
-                (1326, 489, 1548, 565), text=_("30d"), fill=(255, 255, 255), font=self.bold_font[36]
+                (1326, 489, 1548, 565),
+                text=_("30d"),
+                fill=(255, 255, 255),
+                font=self.bold_font[36],
             )
             align_text_center(
                 (1548, 489, 1892, 565),
@@ -5540,23 +5484,8 @@ class GuildStats(Cog):
             if len(data["top_voice_members"]) >= 1:
                 align_text_center(
                     (688, 712, 1218, 788),
-                    text=member.display_name
-                    if (
-                        member := _object.guild.get_member(data["top_voice_members"][0][0])
-                    ).display_name
-                    and (
-                        sum(1 if char.isascii() else 0 for char in member.display_name)
-                        / len(member.display_name)
-                        > 0.8
-                    )
-                    else (
-                        member.global_name
-                        if (
-                            sum(1 if char.isascii() else 0 for char in member.global_name)
-                            / len(member.global_name)
-                            > 0.8
-                        )
-                        else member.name
+                    text=self.get_member_display(
+                        _object.guild.get_member(data["top_voice_members"][0][0])
                     ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
@@ -5572,23 +5501,8 @@ class GuildStats(Cog):
             if len(data["top_voice_members"]) >= 2:
                 align_text_center(
                     (688, 804, 1218, 880),
-                    text=member.display_name
-                    if (
-                        member := _object.guild.get_member(data["top_voice_members"][1][0])
-                    ).display_name
-                    and (
-                        sum(1 if char.isascii() else 0 for char in member.display_name)
-                        / len(member.display_name)
-                        > 0.8
-                    )
-                    else (
-                        member.global_name
-                        if (
-                            sum(1 if char.isascii() else 0 for char in member.global_name)
-                            / len(member.global_name)
-                            > 0.8
-                        )
-                        else member.name
+                    text=self.get_member_display(
+                        _object.guild.get_member(data["top_voice_members"][1][0])
                     ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
@@ -5604,23 +5518,8 @@ class GuildStats(Cog):
             if len(data["top_voice_members"]) >= 3:
                 align_text_center(
                     (688, 896, 1218, 972),
-                    text=member.display_name
-                    if (
-                        member := _object.guild.get_member(data["top_voice_members"][2][0])
-                    ).display_name
-                    and (
-                        sum(1 if char.isascii() else 0 for char in member.display_name)
-                        / len(member.display_name)
-                        > 0.8
-                    )
-                    else (
-                        member.global_name
-                        if (
-                            sum(1 if char.isascii() else 0 for char in member.global_name)
-                            / len(member.global_name)
-                            > 0.8
-                        )
-                        else member.name
+                    text=self.get_member_display(
+                        _object.guild.get_member(data["top_voice_members"][2][0])
                     ),
                     fill=(255, 255, 255),
                     font=self.bold_font[36],
@@ -5670,12 +5569,18 @@ class GuildStats(Cog):
                 img.paste(image, (30, 1427 + 200, 80, 1477 + 200), mask=image.split()[3])
                 align_text_center(
                     (90, 1427 + 200, 90, 1477 + 200),
-                    text=_("Tracking data in this server for {interval_string}.").format(interval_string=CogsUtils.get_interval_string(tracking_data_start_time, utc_now=utc_now)),
+                    text=_("Tracking data in this server for {interval_string}.").format(
+                        interval_string=CogsUtils.get_interval_string(
+                            tracking_data_start_time, utc_now=utc_now
+                        )
+                    ),
                     fill=(255, 255, 255),
                     font=self.bold_font[30],
                 )
             if members_type != "both":
-                members_type_text = _("Only {members_type} are taken into account.").format(members_type=members_type)
+                members_type_text = _("Only {members_type} are taken into account.").format(
+                    members_type=members_type
+                )
                 image = Image.open(self.icons["person"])
                 image = image.resize((50, 50))
                 img.paste(
@@ -5706,12 +5611,18 @@ class GuildStats(Cog):
                 img.paste(image, (30, 1016, 80, 1066), mask=image.split()[3])
                 align_text_center(
                     (90, 1016, 90, 1066),
-                    text=_("Tracking data in this server for {interval_string}.").format(interval_string=CogsUtils.get_interval_string(tracking_data_start_time, utc_now=utc_now)),
+                    text=_("Tracking data in this server for {interval_string}.").format(
+                        interval_string=CogsUtils.get_interval_string(
+                            tracking_data_start_time, utc_now=utc_now
+                        )
+                    ),
                     fill=(255, 255, 255),
                     font=self.bold_font[30],
                 )
             if members_type != "both":
-                members_type_text = _("Only {members_type} are taken into account.").format(members_type=members_type)
+                members_type_text = _("Only {members_type} are taken into account.").format(
+                    members_type=members_type
+                )
                 image = Image.open(self.icons["person"])
                 image = image.resize((50, 50))
                 img.paste(
