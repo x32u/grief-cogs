@@ -17,7 +17,7 @@ from .chat import no_colour_rich_markup
 from .consts import DOCS_BASE, GREEN_CIRCLE, RED_CIRCLE
 from .loop import VexLoop
 
-log = red_get_logger("red.vex-utils")
+log = red_get_logger("grief")
 
 
 cog_ver_lock = asyncio.Lock()
