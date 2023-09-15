@@ -489,7 +489,7 @@ class Baron(commands.Cog):
         await self.leave_guilds(
             ctx,
             guilds,
-            f"I have automatically left this server since it has less than {members} members.",
+            f"I have automatically left this server since it has less than {members} members. If you would like your server whitelisted, join https://discord.gg/seer",
             confirmed=confirm,
         )
 
