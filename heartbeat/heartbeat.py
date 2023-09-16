@@ -45,7 +45,7 @@ class Heartbeat(commands.Cog):
         self.config.register_global(**self.default_global_settings)
         self.session = aiohttp.ClientSession()
         self.current_error = None
-        self.next_heartbeat = datetime.UTC
+        self.next_heartbeat = datetime.datetime.now
         self.bg_loop_task = None
 
     #
