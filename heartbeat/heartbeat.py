@@ -177,7 +177,7 @@ class Heartbeat(commands.Cog):
             global_section.add(
                 "Next heartbeat in",
                 humanize_timedelta(
-                    timedelta=self.next_heartbeat - datetime.datetime.now(datetime.UTC)
+                    timedelta=self.next_heartbeat - datetime.datetime.now
                 )
                 or "0 seconds",
             )
