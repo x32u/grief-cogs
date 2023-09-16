@@ -597,8 +597,8 @@ class ConsoleLogs(Cog, DashboardIntegration):
             com_str = ctx.message.content
 
         embed = discord.Embed(
-            title=f"⚠ Exception in command `{ctx.command.qualified_name}`! ¯\\_(ツ)_/¯",
-            color=discord.Color.red(),
+            title=f"Exception in command `{ctx.command.qualified_name}`",
+            color=discord.Color.dark_theme(),
             timestamp=ctx.message.created_at,
             description=f">>> {com_str}",
         )
