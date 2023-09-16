@@ -121,7 +121,6 @@ class Heartbeat(commands.Cog):
             self.current_error = await self.send_heartbeat(url)
         while True:
             self.next_heartbeat = datetime.datetime.now(
-                datetime.UTC
             ) + datetime.timedelta(0, frequency)
             await asyncio.sleep(frequency)
             self.current_error = await self.send_heartbeat(url)
