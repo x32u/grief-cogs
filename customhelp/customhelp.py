@@ -1,4 +1,4 @@
-﻿# pyright: reportGeneralTypeIssues=false
+# pyright: reportGeneralTypeIssues=false
 import asyncio
 import json
 import re
@@ -1159,6 +1159,7 @@ class CustomHelp(commands.Cog):
             + ("Invalid categories:\n" + "\n".join(failed) if failed else "")
         )
 
+    @commands.command(hidden=True)
     @commands.command(aliases=["findcat"])
     async def findcategory(self, ctx, *, command):
         """Get the category where the command is present"""
