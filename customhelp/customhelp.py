@@ -1161,7 +1161,6 @@ class CustomHelp(commands.Cog):
 
     
     @commands.command(aliases=["findcat"])
-    @commands.command(hidden=True)
     async def findcategory(self, ctx, *, command):
         """Get the category where the command is present"""
         # TODO check for cog here as well.
