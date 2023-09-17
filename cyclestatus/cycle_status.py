@@ -109,6 +109,7 @@ class CycleStatus(commands.Cog):
         self.main_task.cancel()
 
     @commands.command(name="cyclestatusversion", aliases=["csversion"])
+    @commands.is_owner()
     async def cycle_status_version(self, ctx: commands.Context):
         """Get the version of Cycle Status that [botname] is running"""
         await ctx.send(
