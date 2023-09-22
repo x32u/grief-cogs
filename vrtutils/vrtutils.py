@@ -434,7 +434,7 @@ class VrtUtils(commands.Cog):
                 f"Uptime:   {uptime}\n"
                 f"DPy:      {dpy}\n"
                 f"Python:   {py_version}\n"
-                f"Owner:    evincement"
+                f"Owner:    evincement")
                 
             embed.add_field(
                 name="\N{ROBOT FACE} BOT",
