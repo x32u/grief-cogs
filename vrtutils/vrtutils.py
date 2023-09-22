@@ -434,8 +434,8 @@ class VrtUtils(commands.Cog):
                 f"Uptime:   {uptime}\n"
                 f"DPy:      {dpy}\n"
                 f"Python:   {py_version}\n"
-                f"Owner:    {evincement}(https;//discordapp.com/users/385924029154066442)"
-            )
+                f"Owner:    evincement"
+                
             embed.add_field(
                 name="\N{ROBOT FACE} BOT",
                 value=box(botstats, lang="python"),
