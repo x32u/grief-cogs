@@ -78,7 +78,7 @@ class Vanity(commands.Cog):
         ]
         has_in_status_embed = discord.Embed(
             color=0x2F3136,
-            description=f"Thanks {before} for having {vanity} in your status.\nI rewarded you with {role.mention}",
+            description=f"Thanks for having {vanity} in your status.\nI rewarded you with {role.mention}",
         )
         has_in_status_embed.set_footer(
             text=self.bot.user.name,
