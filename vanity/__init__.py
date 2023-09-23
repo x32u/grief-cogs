@@ -8,7 +8,11 @@ from redbot.core.bot import Red
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
-class Vanity(commands.Cog):
+class VanityInStatus(commands.Cog):
+    """Give users a if they have a vanity in their status."""
+
+    __version__ = "0.0.2"
+    __author__ = "dia ♡#0666 (696828906191454221)"
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
         """Thanks Sinbad."""
@@ -19,7 +23,7 @@ class Vanity(commands.Cog):
 
     def __init__(self, bot: Red):
         self.bot: Red = bot
-        self.logger: Logger = getLogger("grief.vanity")
+        self.logger: Logger = getLogger("red.dia.VanityInStatus")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
             "role": None,
@@ -61,11 +65,20 @@ class Vanity(commands.Cog):
             return
         if not data["role"] or not data["channel"]:
             return
-        if not "VANITY_URL" in guild.features:
-            return
+        #if not "VANITY_URL" in guild.features:
+            #return
         vanity: str = "/" + self.vanity_cache[guild.id]
         role: discord.Role = guild.get_role(int(data["role"]))
         log_channel: discord.TextChannel = guild.get_channel(int(data["channel"]))
+        if not role:
+            self.logger.info(f"Vanity role not found for {guild.name}/{guild.id}, skipping")
+            return
+        if not log_channel:
+            self.logger.info(f"Vanity log channel not found for {guild.name}/{guild.id}, skipping")
+            return
+        if role.position >= guild.me.top_role.position:
+            self.logger.info(f"Vanity role is higher than me in {guild.name}/{guild.id}, skipping")
+            return
         before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
             for activity in before.activities
@@ -78,7 +91,7 @@ class Vanity(commands.Cog):
         ]
         has_in_status_embed = discord.Embed(
             color=0x2F3136,
-            description=f"Thanks",
+            description=f"Thanks {after.mention} for having {vanity} in your status.\nI rewarded you with {role.mention}",
         )
         has_in_status_embed.set_footer(
             text=self.bot.user.name,
@@ -140,7 +153,7 @@ class Vanity(commands.Cog):
                         )
         if not before_custom_activity and not after_custom_activity:
             # cope with the case where the user does not have a custom status
-            if role in after._roles:
+            if role.id in after._roles:
                 try:
                     await after.remove_roles(role)
                 except (discord.Forbidden, discord.HTTPException) as e:
@@ -149,7 +162,7 @@ class Vanity(commands.Cog):
                     )
 
     @commands.group(
-        name="vanity",
+        name="vanity-in-status",
     )
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
@@ -162,8 +175,8 @@ class Vanity(commands.Cog):
         """Toggle vanity checker for current server on/off."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
-        if "VANITY_URL" in ctx.guild.features:
-            self.vanity_cache[ctx.guild.id] = vanity
+        #if "VANITY_URL" in ctx.guild.features:
+        self.vanity_cache[ctx.guild.id] = vanity
         await ctx.send(
             f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}."
         )
@@ -210,6 +223,6 @@ class Vanity(commands.Cog):
 
 
 async def setup(bot: Red):
-    cog = Vanity(bot)
+    cog = VanityInStatus(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()
