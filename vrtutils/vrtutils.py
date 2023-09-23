@@ -847,8 +847,6 @@ class VrtUtils(commands.Cog):
             await self.bot.tree.sync(guild=ctx.guild)
             await ctx.send("Synced slash commands for this guild!")
         await ctx.tick()
-
-        @commands.is_owner()
     
     @commands.is_owner()
     async def traceback(self, ctx: commands.Context, public: bool = True) -> None:
