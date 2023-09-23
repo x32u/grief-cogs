@@ -850,7 +850,7 @@ class VrtUtils(commands.Cog):
 
         @commands.is_owner()
     
-    @commands.hybrid_command()
+    @commands.is_owner()
     async def traceback(self, ctx: commands.Context, public: bool = True) -> None:
         """Sends to the owner the last command exception that has occurred.
 
