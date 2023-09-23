@@ -66,7 +66,7 @@ class Vanity(commands.Cog):
         vanity: str = "/" + self.vanity_cache[guild.id]
         role: discord.Role = guild.get_role(int(data["role"]))
         log_channel: discord.TextChannel = guild.get_channel(int(data["channel"]))
-        after_custom_activity: typing.List[discord.CustomActivity] = [
+        before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
             for activity in before.activities
             if isinstance(activity, discord.CustomActivity)
