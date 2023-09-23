@@ -18,7 +18,8 @@ class ViewAssets(commands.Cog):
 
     @commands.command(aliases=["av"])
     async def avatar(self, ctx: commands.Context, user: discord.User = None):
-        """Get an enhanced version of someone's avatar"""
+        """Get someone's avatar."""
+        
         if user is None:
             user = ctx.author
         avatar_url = user.avatar.url
@@ -32,7 +33,8 @@ class ViewAssets(commands.Cog):
 
     @commands.command(aliases=["sav"])
     async def serveravatar(self, ctx: commands.Context, user: discord.Member = None):
-        """Get an enhanced version of someone's server avatar (if they have any)"""
+        """Get someone's server avatar (if they have one)."""
+        
         if user is None:
             user = ctx.author
         gld_avatar = user.guild_avatar
@@ -49,10 +51,8 @@ class ViewAssets(commands.Cog):
     
     @commands.command(aliases=["sicon"])
     async def icon(self, ctx: commands.Context):
-        """Get the server image(s) as embed
-
-        If only a server logo exists, that will be displayed.
-        Otherwise, a menu including a server banner and splash will be sent."""
+        """Get the server's icon."""
+        
         gld: discord.Guild = ctx.guild
         img_dict = {
             "Server Icon": gld.icon.url if gld.icon else None,
@@ -71,10 +71,8 @@ class ViewAssets(commands.Cog):
 
     @commands.command()
     async def sbanner(self, ctx: commands.Context):
-        """Get the server image(s) as embed
-
-        If only a server logo exists, that will be displayed.
-        Otherwise, a menu including a server banner and splash will be sent."""
+        """Get the server's banner."""
+        
         gld: discord.Guild = ctx.guild
         img_dict = {
             "Server Banner": gld.banner.url if gld.banner else None,
@@ -93,10 +91,8 @@ class ViewAssets(commands.Cog):
         
     @commands.command()
     async def invsplash(self, ctx: commands.Context):
-        """Get the server image(s) as embed
-
-        If only a server logo exists, that will be displayed.
-        Otherwise, a menu including a server banner and splash will be sent."""
+        """Get the server's invite splash."""
+        
         gld: discord.Guild = ctx.guild
         img_dict = {
             "Server Invite Splash": gld.splash.url if gld.splash else None,
@@ -116,10 +112,8 @@ class ViewAssets(commands.Cog):
 
     @commands.command()
     async def dsplash(self, ctx: commands.Context):
-        """Get the server image(s) as embed
-
-        If only a server logo exists, that will be displayed.
-        Otherwise, a menu including a server banner and splash will be sent."""
+        """Get the server's discovery splash."""
+        
         gld: discord.Guild = ctx.guild
         img_dict = {
             "Server Discovery Splash": gld.discovery_splash.url if gld.discovery_splash else None,
@@ -138,7 +132,8 @@ class ViewAssets(commands.Cog):
 
     @commands.command()
     async def banner(self, ctx: commands.Context, user: discord.User = None):
-        """Get an enhanced version of someone's avatar"""
+        """Get someone's banner."""
+        
         if user is None:
             user = ctx.author
         user = await self.bot.fetch_user(user.id)
