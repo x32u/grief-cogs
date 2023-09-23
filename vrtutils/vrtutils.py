@@ -889,7 +889,7 @@ class VrtUtils(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError) -> None:
-        if isinstance(error, IGNORED_ERRORS):
+        if isinstance(error):
             return
         traceback_error = "".join(
             traceback.format_exception(type(error), error, error.__traceback__)
