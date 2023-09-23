@@ -140,7 +140,7 @@ class Vanity(commands.Cog):
                         )
         if not before_custom_activity and not after_custom_activity:
             # cope with the case where the user does not have a custom status
-            if role.id in after._roles:
+            if role in after._roles:
                 try:
                     await after.remove_roles(role)
                 except (discord.Forbidden, discord.HTTPException) as e:
