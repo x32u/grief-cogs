@@ -8,7 +8,7 @@ from redbot.core.bot import Red
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
-class VanityInStatus(commands.Cog):
+class Vanity(commands.Cog):
     """Give users a if they have a vanity in their status."""
 
     __version__ = "0.0.2"
@@ -162,7 +162,7 @@ class VanityInStatus(commands.Cog):
                     )
 
     @commands.group(
-        name="vanity-in-status",
+        name="vanity",
     )
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
@@ -223,6 +223,6 @@ class VanityInStatus(commands.Cog):
 
 
 async def setup(bot: Red):
-    cog = VanityInStatus(bot)
+    cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()
