@@ -11,7 +11,7 @@ from .menus import (
     ConfirmView,
 )
 
-log = getLogger("red.trusty-cogs.automod")
+log = getLogger("grief.automod")
 
 
 class AutoMod(commands.Cog):

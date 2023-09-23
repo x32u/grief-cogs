@@ -19,7 +19,7 @@ class Vanity(commands.Cog):
 
     def __init__(self, bot: Red):
         self.bot: Red = bot
-        self.logger: Logger = getLogger("grief.Vanity")
+        self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
             "role": None,
@@ -78,7 +78,7 @@ class Vanity(commands.Cog):
         ]
         has_in_status_embed = discord.Embed(
             color=0x2F3136,
-            description=f"Thanks {after.mention} for having {vanity} in your status.\nI rewarded you with {role.mention}",
+            description=f"Thanks",
         )
         has_in_status_embed.set_footer(
             text=self.bot.user.name,
