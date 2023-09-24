@@ -26,7 +26,7 @@ from .utils import _
 
 
 @cog_i18n(_)
-class Utils(commands.Cog):
+class DataUtils(commands.Cog):
 
     # noinspection PyMissingConstructor
     def __init__(self, bot):
