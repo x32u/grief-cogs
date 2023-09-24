@@ -19,7 +19,14 @@ from .views import URLView
 
 from .converter import FuzzyMember
 
-from AAA3A_utils import Cog, CogsUtils, Settings 
+from AAA3A_utils import Cog, CogsUtils, Settings  # isort:skip
+from redbot.core import commands, Config  # isort:skip
+from redbot.core.bot import Red  # isort:skip
+from redbot.core.i18n import Translator, cog_i18n  # isort:skip
+import discord  # isort:skip
+import typing  # isort:skip
+
+from AAA3A_utils.settings import CustomMessageConverter
 
 log = logging.getLogger("grief.modtools")
 
