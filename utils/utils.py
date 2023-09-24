@@ -3,7 +3,7 @@ from redbot.core.utils import AsyncIter
 
 from .common_variables import TWEMOJI_URL
 
-_ = Translator("Utils", __file__)
+_ = Translator("DataUtils", __file__)
 
 
 async def get_twemoji(emoji: str):
