@@ -200,7 +200,7 @@ class ModTools(commands.Cog):
     @commands.command()
     async def onlinestatus(self, ctx):
 	    """Print how many people are using each type of device."""
-	device = {
+	    device = {
 			(True, True, True): 0,
 			(False, True, True): 1,
 			(True, False, True): 2,
