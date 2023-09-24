@@ -39,6 +39,84 @@ class ModTools(commands.Cog):
             log.info(f"Tools Cog :: Error Occured :: \n{cause}\n")
 
     @commands.guild_only()
+	@commands.command(aliases=['onlinestats'])
+	async def onlinestatus(self, ctx):
+		"""Print how many people are using each type of device."""
+		device = {
+			(True, True, True): 0,
+			(False, True, True): 1,
+			(True, False, True): 2,
+			(True, True, False): 3,
+			(False, False, True): 4,
+			(True, False, False): 5,
+			(False, True, False): 6,
+			(False, False, False): 7
+		}
+		store = [0, 0, 0, 0, 0, 0, 0, 0]
+		for m in ctx.guild.members:
+			value = (
+				m.desktop_status == discord.Status.offline,
+				m.web_status == discord.Status.offline,
+				m.mobile_status == discord.Status.offline
+			)
+			store[device[value]] += 1
+		msg = (
+			f'offline all: {store[0]}'
+			f'\ndesktop only: {store[1]}'
+			f'\nweb only: {store[2]}'
+			f'\nmobile only: {store[3]}'
+			f'\ndesktop web: {store[4]}'
+			f'\nweb mobile: {store[5]}'
+			f'\ndesktop mobile: {store[6]}'
+			f'\nonline all: {store[7]}'
+		)
+		await ctx.send(f'```py\n{msg}```')
+
+	@commands.guild_only()
+	@commands.command()
+	async def devices(self, ctx, *, member: discord.Member=None):
+		"""Show what devices a member is using."""
+		if member is None:
+			member = ctx.author
+		d = str(member.desktop_status)
+		m = str(member.mobile_status)
+		w = str(member.web_status)
+		#because it isn't supported in d.py, manually override if streaming
+		if any([isinstance(a, discord.Streaming) for a in member.activities]):
+			d = d if d == 'offline' else 'streaming'
+			m = m if m == 'offline' else 'streaming'
+			w = w if w == 'offline' else 'streaming'
+		status = {
+			'online': '\U0001f7e2',
+			'idle': '\U0001f7e0',
+			'dnd': '\N{LARGE RED CIRCLE}',
+			'offline': '\N{MEDIUM WHITE CIRCLE}',
+			'streaming': '\U0001f7e3'
+		}
+		embed = discord.Embed(
+			title=f'**{member.display_name}\'s devices:**',
+			description=(
+				f'{status[d]} Desktop\n'
+				f'{status[m]} Mobile\n'
+				f'{status[w]} Web'
+			),
+			color=await ctx.embed_color()
+		)
+		if discord.version_info.major == 1:
+			embed.set_thumbnail(url=member.avatar_url)
+		else:
+			embed.set_thumbnail(url=member.display_avatar.url)
+		try:
+			await ctx.send(embed=embed)
+		except discord.errors.Forbidden:
+			await ctx.send(
+				f'{member.display_name}\'s devices:\n'
+				f'{status[d]} Desktop\n'
+				f'{status[m]} Mobile\n'
+				f'{status[w]} Web'
+			)
+    
+    @commands.guild_only()
     @commands.command()
     @checks.mod_or_permissions(manage_guild=True)
     async def banlist(self, ctx):
@@ -74,6 +152,20 @@ class ModTools(commands.Cog):
                 text = f"**Total bans:** {bancount}\n{page}"
                 text_list.append(text)
             await menu(ctx, text_list, DEFAULT_CONTROLS)
+
+    @commands.guild_only()
+    @commands.command()
+    async def einfo(self, ctx, emoji: discord.Emoji):
+        """Emoji information."""
+        yesno = {True: "Yes", False: "No"}
+        header = f"{str(emoji)}\n"
+        m = (
+            f"[Name]:       {emoji.name}\n"
+            f"[Guild]:      {emoji.guild}\n"
+            f"[URL]:        {emoji.url}\n"
+            f"[Animated]:   {yesno[emoji.animated]}"
+        )
+        await ctx.send(header + cf.box(m, lang="ini"))
 
     @commands.guild_only()
     @commands.command()
@@ -198,84 +290,6 @@ class ModTools(commands.Cog):
 
     @commands.guild_only()
     @commands.command()
-    async def onlinestatus(self, ctx):
-	    """Print how many people are using each type of device."""
-	    device = {
-			(True, True, True): 0,
-			(False, True, True): 1,
-			(True, False, True): 2,
-			(True, True, False): 3,
-			(False, False, True): 4,
-			(True, False, False): 5,
-			(False, True, False): 6,
-			(False, False, False): 7
-		}
-		store = [0, 0, 0, 0, 0, 0, 0, 0]
-		for m in ctx.guild.members:
-			value = (
-				m.desktop_status == discord.Status.offline,
-				m.web_status == discord.Status.offline,
-				m.mobile_status == discord.Status.offline
-			)
-			store[device[value]] += 1
-		msg = (
-			f'offline all: {store[0]}'
-			f'\ndesktop only: {store[1]}'
-			f'\nweb only: {store[2]}'
-			f'\nmobile only: {store[3]}'
-			f'\ndesktop web: {store[4]}'
-			f'\nweb mobile: {store[5]}'
-			f'\ndesktop mobile: {store[6]}'
-			f'\nonline all: {store[7]}'
-		)
-		await ctx.send(f'```py\n{msg}```')
-
-	@commands.guild_only()
-	@commands.command()
-	async def devices(self, ctx, *, member: discord.Member=None):
-		"""Show what devices a member is using."""
-		if member is None:
-			member = ctx.author
-		d = str(member.desktop_status)
-		m = str(member.mobile_status)
-		w = str(member.web_status)
-		#because it isn't supported in d.py, manually override if streaming
-		if any([isinstance(a, discord.Streaming) for a in member.activities]):
-			d = d if d == 'offline' else 'streaming'
-			m = m if m == 'offline' else 'streaming'
-			w = w if w == 'offline' else 'streaming'
-		status = {
-			'online': '\U0001f7e2',
-			'idle': '\U0001f7e0',
-			'dnd': '\N{LARGE RED CIRCLE}',
-			'offline': '\N{MEDIUM WHITE CIRCLE}',
-			'streaming': '\U0001f7e3'
-		}
-		embed = discord.Embed(
-			title=f'**{member.display_name}\'s devices:**',
-			description=(
-				f'{status[d]} Desktop\n'
-				f'{status[m]} Mobile\n'
-				f'{status[w]} Web'
-			),
-			color=await ctx.embed_color()
-		)
-		if discord.version_info.major == 1:
-			embed.set_thumbnail(url=member.avatar_url)
-		else:
-			embed.set_thumbnail(url=member.display_avatar.url)
-		try:
-			await ctx.send(embed=embed)
-		except discord.errors.Forbidden:
-			await ctx.send(
-				f'{member.display_name}\'s devices:\n'
-				f'{status[d]} Desktop\n'
-				f'{status[m]} Mobile\n'
-				f'{status[w]} Web'
-			)
-    
-    @commands.guild_only()
-    @commands.command()
     @checks.mod_or_permissions(manage_guild=True)
     async def perms(self, ctx, user: discord.Member = None):
         """Fetch a specific user's permissions."""
@@ -335,6 +349,63 @@ class ModTools(commands.Cog):
             await ctx.send(cf.box(data, lang="ini"))
 
 
+
+    @commands.guild_only()
+    @commands.command()
+    async def whatis(self, ctx, what_is_this_id: int):
+        """What is it?"""
+        it_is = False
+        msg = False
+        roles = []
+        rls = [s.roles for s in self.bot.guilds]
+        for rl in rls:
+            roles.extend(rl)
+
+        guild_list = [g for g in self.bot.guilds]
+        emoji_list = [e for e in self.bot.emojis]
+
+        look_at = (
+            guild_list
+            + emoji_list
+            + roles
+            + [m for m in self.bot.get_all_members()]
+            + [c for c in self.bot.get_all_channels()]
+        )
+
+        if ctx.guild.id == what_is_this_id:
+            it_is = ctx.guild
+        elif ctx.channel.id == what_is_this_id:
+            it_is = ctx.channel
+        elif ctx.author.id == what_is_this_id:
+            it_is = ctx.author
+
+        if not it_is:
+            it_is = discord.utils.get(look_at, id=what_is_this_id)
+
+        if not it_is:
+            for g in guild_list:
+                thread_or_sticker = g.get_thread(what_is_this_id)
+                if thread_or_sticker:
+                    return await ctx.invoke(self.chinfo, what_is_this_id)
+
+                for sticker in g.stickers:
+                    if sticker.id == what_is_this_id:
+                        return await ctx.invoke(self.stinfo, sticker)
+
+        if isinstance(it_is, discord.Guild):
+            await ctx.invoke(self.sinfo, what_is_this_id)
+        elif isinstance(it_is, discord.abc.GuildChannel):
+            await ctx.invoke(self.chinfo, what_is_this_id)
+        elif isinstance(it_is, discord.Thread):
+            await ctx.invoke(self.chinfo, what_is_this_id)
+        elif isinstance(it_is, (discord.User, discord.Member)):
+            await ctx.invoke(self.uinfo, it_is)
+        elif isinstance(it_is, discord.Role):
+            await ctx.invoke(self.rinfo, rolename=it_is)
+        elif isinstance(it_is, discord.Emoji):
+            await ctx.invoke(self.einfo, it_is)
+        else:
+            await ctx.send("I could not find anything for this ID.")
 
     @staticmethod
     def count_months(days):
