@@ -726,47 +726,6 @@ class VrtUtils(commands.Cog):
                 await ctx.send(embed=em)
 
     @commands.command()
-    @commands.guild_only()
-    async def inrole(self, ctx, role: discord.Role):
-        """View all members that have a specific role"""
-        members = []
-        async for member in AsyncIter(
-            ctx.guild.members, steps=500, delay=0.001
-        ):
-            if role.id in [r.id for r in member.roles]:
-                members.append(member)
-
-        if not members:
-            return await ctx.send(
-                f"There are no members with the {role.mention} role"
-            )
-
-        members = sorted(members, key=lambda x: x.name)
-        start = 0
-        stop = 10
-        pages = math.ceil(len(members) / 10)
-        embeds = []
-        for p in range(pages):
-            if stop > len(members):
-                stop = len(members)
-
-            page = ""
-            for i in range(start, stop, 1):
-                member = members[i]
-                page += f"{member.name} - `{member.id}`\n"
-            em = discord.Embed(
-                title=f"Members with role {role.name}",
-                description=page,
-                color=ctx.author.color,
-            )
-            em.set_footer(text=f"Page {p + 1}/{pages}")
-            embeds.append(em)
-            start += 10
-            stop += 10
-
-        await menu(ctx, embeds, DEFAULT_CONTROLS)
-
-    @commands.command()
     @commands.guildowner()
     @commands.guild_only()
     async def wipevcs(self, ctx: commands.Context):
