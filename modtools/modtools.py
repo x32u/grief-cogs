@@ -16,17 +16,9 @@ from redbot.core.utils.common_filters import filter_invites
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS, close_menu
 
 from .views import URLView
+from redbot.core.commands import GuildContext
 
 from .converter import FuzzyMember
-
-from AAA3A_utils import Cog, CogsUtils, Settings  # isort:skip
-from redbot.core import commands, Config  # isort:skip
-from redbot.core.bot import Red  # isort:skip
-from redbot.core.i18n import Translator, cog_i18n  # isort:skip
-import discord  # isort:skip
-import typing  # isort:skip
-
-from AAA3A_utils.settings import CustomMessageConverter
 
 log = logging.getLogger("grief.modtools")
 
@@ -83,6 +75,36 @@ class ModTools(commands.Cog):
 		)
         await ctx.send(f'```py\n{msg}```')
 
+    
+    @commands.guild_only()
+    @commands.command(aliases=["mc"])
+    async def membercount(self, ctx: GuildContext) -> None:
+        """Get count of all members + humans and bots separately."""
+        guild = ctx.guild
+        member_count = 0
+        human_count = 0
+        bot_count = 0
+        for member in guild.members:
+            if member.bot:
+                bot_count += 1
+            else:
+                human_count += 1
+            member_count += 1
+        if await ctx.embed_requested():
+            embed = discord.Embed(
+                timestamp=datetime.now(), color=await ctx.embed_color()
+            )
+            embed.add_field(name="Members", value=str(member_count))
+            embed.add_field(name="Humans", value=str(human_count))
+            embed.add_field(name="Bots", value=str(bot_count))
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send(
+                f"**Members:** {member_count}\n"
+                f"**Humans:** {human_count}\n"
+                f"**Bots:** {bot_count}"
+            )
+    
     @commands.guild_only()
     @commands.command()
     async def devices(self, ctx, *, member: discord.Member=None):
@@ -405,42 +427,6 @@ class ModTools(commands.Cog):
         view = URLView(label="Jump to message", jump_url=messages[0].jump_url)
 
         await ctx.send(embed=embed, view=view)
-
-    @commands.guild_only()
-    @commands.bot_has_permissions(manage_channels=True)
-    @commands.admin_or_permissions(manage_channels=True)
-    @commands.hybrid_command(name="nuke")
-    async def nuke_channel(self, ctx: commands.Context, confirmation: bool = False) -> None:
-        """Delete all messages from the current channel by duplicating it and then deleting it.
-        """
-        config = await self.config.guild(ctx.guild).all()
-        old_channel = ctx.channel
-        channel_position = old_channel.position
-
-        if not confirmation and not ctx.assume_yes:
-            embed: discord.Embed = discord.Embed()
-            embed.title = _("Nuke")
-            embed.description = _(
-                "Nuke channel {old_channel.mention} ({old_channel.id})?\n The channel will be deleted and recreated."
-            ).format(old_channel=old_channel)
-            embed.color = 0x313338
-            if not await CogsUtils.ConfirmationAsk(
-                ctx, content=f"{ctx.author.mention}", embed=embed
-            ):
-                await CogsUtils.delete_message(ctx.message)
-                return
-
-        reason = _("Nuke requested by {ctx.author} ({ctx.author.id}).").format(ctx=ctx)
-        new_channel = await old_channel.clone(reason=reason)
-        await old_channel.delete(reason=reason)
-        await new_channel.edit(
-            position=channel_position,
-            reason=reason,
-        )
-        self.log.info(
-            f"{ctx.author} ({ctx.author.id}) deleted all messages in channel {old_channel.name} ({old_channel.id})."
-        ),
-        await new_channel.send("first")
 
 
     @staticmethod
