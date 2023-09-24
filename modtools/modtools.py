@@ -54,12 +54,12 @@ class ModTools(commands.Cog):
 		}
         store = [0, 0, 0, 0, 0, 0, 0, 0]
         for m in ctx.guild.members:
-            value = (
-				m.desktop_status == discord.Status.offline,
-				m.web_status == discord.Status.offline,
-				m.mobile_status == discord.Status.offline
+                value = (
+				    m.desktop_status == discord.Status.offline,
+				    m.web_status == discord.Status.offline,
+				    m.mobile_status == discord.Status.offline
 			)
-            store[device[value]] += 1
+        store[device[value]] += 1
         msg = (
 			f'offline all: {store[0]}'
 			f'\ndesktop only: {store[1]}'
