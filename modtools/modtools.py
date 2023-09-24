@@ -37,7 +37,92 @@ class ModTools(commands.Cog):
         else:
             cause = error
             log.info(f"Tools Cog :: Error Occured :: \n{cause}\n")
+        def __init__(self, bot):
+        self.bot = bot
+        self.config = Config.get_conf(self, 95932766180343808, force_registration=True)
+        default_global = {
+            "banner": False,
+            "status_emojis": {
+                "mobile": 749067110931759185,
+                "online": 749221433552404581,
+                "away": 749221433095356417,
+                "dnd": 749221432772395140,
+                "offline": 749221433049088082,
+                "streaming": 749221434039205909,
+            },
+            "badge_emojis": {
+                "staff": 848556248832016384,
+                "early_supporter": 706198530837970998,
+                "hypesquad_balance": 706198531538550886,
+                "hypesquad_bravery": 706198532998299779,
+                "hypesquad_brilliance": 706198535846101092,
+                "hypesquad": 706198537049866261,
+                "verified_bot_developer": 706198727953612901,
+                "bug_hunter": 848556247632052225,
+                "bug_hunter_level_2": 706199712402898985,
+                "partner": 848556249192202247,
+                "verified_bot": 848561838974697532,
+                "verified_bot2": 848561839260434482,
+            },
+        }
+        self.config.register_global(**default_global)
+        self.emojis = self.bot.loop.create_task(self.init())
 
+    def cog_unload(self):
+        if self.emojis:
+            self.emojis.cancel()
+
+    async def init(self):
+        await self.bot.wait_until_ready()
+        await self.gen_emojis()
+
+    async def gen_emojis(self):
+        config = await self.config.all()
+        self.status_emojis = {
+            "mobile": discord.utils.get(self.bot.emojis, id=config["status_emojis"]["mobile"]),
+            "online": discord.utils.get(self.bot.emojis, id=config["status_emojis"]["online"]),
+            "away": discord.utils.get(self.bot.emojis, id=config["status_emojis"]["away"]),
+            "dnd": discord.utils.get(self.bot.emojis, id=config["status_emojis"]["dnd"]),
+            "offline": discord.utils.get(self.bot.emojis, id=config["status_emojis"]["offline"]),
+            "streaming": discord.utils.get(
+                self.bot.emojis, id=config["status_emojis"]["streaming"]
+            ),
+        }
+        self.badge_emojis = {
+            "staff": discord.utils.get(self.bot.emojis, id=config["badge_emojis"]["staff"]),
+            "early_supporter": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["early_supporter"]
+            ),
+            "hypesquad_balance": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["hypesquad_balance"]
+            ),
+            "hypesquad_bravery": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["hypesquad_bravery"]
+            ),
+            "hypesquad_brilliance": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["hypesquad_brilliance"]
+            ),
+            "hypesquad": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["hypesquad"]
+            ),
+            "verified_bot_developer": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["verified_bot_developer"]
+            ),
+            "bug_hunter": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["bug_hunter"]
+            ),
+            "bug_hunter_level_2": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["bug_hunter_level_2"]
+            ),
+            "partner": discord.utils.get(self.bot.emojis, id=config["badge_emojis"]["partner"]),
+            "verified_bot": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["verified_bot"]
+            ),
+            "verified_bot2": discord.utils.get(
+                self.bot.emojis, id=config["badge_emojis"]["verified_bot2"]
+            ),
+        }
+        
     @commands.guild_only()
     @checks.mod_or_permissions(manage_channels=True)
     @commands.group()
