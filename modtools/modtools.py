@@ -15,6 +15,8 @@ from redbot.core.utils import chat_formatting as cf
 from redbot.core.utils.common_filters import filter_invites
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS, close_menu
 
+from .views import URLView
+
 from .converter import FuzzyMember
 
 log = logging.getLogger("grief.modtools")
@@ -347,75 +349,54 @@ class ModTools(commands.Cog):
 
         for page in cf.pagify(data, ["\n"], page_length=1800):
             await ctx.send(cf.box(data, lang="ini"))
-        
+    
     @commands.command()
-    @commands.guild_only()
-    @commands.guildowner()
-    async def massunban(self, ctx: commands.Context, *, ban_reason: Optional[str] = None):
+    @commands.has_permissions(read_message_history=True)
+    @commands.bot_has_permissions(read_message_history=True)
+    async def firstmessage(
+        self,
+        ctx: commands.Context,
+        channel: Optional[
+            discord.TextChannel
+            | discord.Thread
+            | discord.DMChannel
+            | discord.GroupChannel
+            | discord.User
+            | discord.Member
+        ] = commands.CurrentChannel,
+    ):
         """
-        Mass unban everyone, or specific people.
+        Provide a link to the first message in current or provided channel.
         """
         try:
-            banlist: List[discord.BanEntry] = [entry async for entry in ctx.guild.bans()]
-        except discord.errors.Forbidden:
-            msg = _("I need the `Ban Members` permission to fetch the ban list for the guild.")
-            await ctx.send(msg)
-            return
-        except (discord.HTTPException, TypeError):
-            log.exception("Something went wrong while fetching the ban list!", exc_info=True)
-            return
+            messages = [message async for message in channel.history(limit=1, oldest_first=True)]
 
-        bancount: int = len(banlist)
-        if bancount == 0:
-            await ctx.send(_("No users are banned from this server."))
-            return
-
-        unban_count: int = 0
-        if not ban_reason:
-            warning_string = _(
-                "Are you sure you want to unban every banned person on this server?\n"
-                f"**Please read** `{ctx.prefix}help massunban` **as this action can cause a LOT of modlog messages!**\n"
-                "Type `Yes` to confirm, or `No` to cancel."
+            chan = (
+                f"<@{channel.id}>"
+                if isinstance(channel, discord.DMChannel | discord.User | discord.Member)
+                else f"<#{channel.id}>"
             )
-            await ctx.send(warning_string)
-            pred = MessagePredicate.yes_or_no(ctx)
-            try:
-                await self.bot.wait_for("message", check=pred, timeout=15)
-                if pred.result is True:
-                    async with ctx.typing():
-                        for ban_entry in banlist:
-                            await ctx.guild.unban(
-                                ban_entry.user,
-                                reason=_("Mass Unban requested by {name} ({id})").format(
-                                    name=str(ctx.author.display_name), id=ctx.author.id
-                                ),
-                            )
-                            await asyncio.sleep(0.5)
-                            unban_count += 1
-                else:
-                    return await ctx.send(_("Alright, I'm not unbanning everyone."))
-            except asyncio.TimeoutError:
-                return await ctx.send(
-                    _(
-                        "Response timed out. Please run this command again if you wish to try again."
-                    )
-                )
-        else:
-            async with ctx.typing():
-                for ban_entry in banlist:
-                    if not ban_entry.reason:
-                        continue
-                    if ban_reason.lower() in ban_entry.reason.lower():
-                        await ctx.guild.unban(
-                            ban_entry.user,
-                            reason=_("Mass Unban requested by {name} ({id})").format(
-                                name=str(ctx.author.display_name), id=ctx.author.id
-                            ),
-                        )
-                        await asyncio.sleep(1)
-                        unban_count += 1
 
-        await ctx.send(_("Done. Unbanned {unban_count} users.").format(unban_count=unban_count))
+            embed: discord.Embed = discord.Embed(
+                color=await ctx.embed_color(),
+                timestamp=messages[0].created_at,
+                description=f"[First message in]({messages[0].jump_url}) {chan}",
+            )
+            embed.set_author(
+                name=messages[0].author.display_name,
+                icon_url=messages[0].author.avatar.url
+                if messages[0].author.avatar
+                else messages[0].author.display_avatar.url,
+            )
+
+        except (discord.Forbidden, discord.HTTPException, IndexError, AttributeError):
+            log.exception(f"Unable to read message history for {channel.id}")
+            return await ctx.maybe_send_embed("Unable to read message history for that channel.")
+
+        view = URLView(label="Jump to message", jump_url=messages[0].jump_url)
+
+        await ctx.send(embed=embed, view=view)
+
 
     @staticmethod
     def count_months(days):
