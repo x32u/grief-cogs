@@ -39,7 +39,7 @@ class ModTools(commands.Cog):
             log.info(f"Tools Cog :: Error Occured :: \n{cause}\n")
 
     @commands.guild_only()
-	@commands.command(aliases=['onlinestats'])
+	@commands.command()
 	async def onlinestatus(self, ctx):
 		"""Print how many people are using each type of device."""
 		device = {
