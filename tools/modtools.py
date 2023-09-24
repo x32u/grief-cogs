@@ -1006,3 +1006,193 @@ class ModTools(commands.Cog):
             key=lambda t: t[0].position,
         )
         return channels, category_channels
+
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.bot_has_permissions(embed_links=True)
+    async def userinfo(self, ctx, *, user: discord.Member = None):
+        """Show userinfo with some more detail."""
+        mod = self.bot.get_cog("Mod")
+        async with ctx.typing():
+            author = ctx.author
+            guild = ctx.guild
+
+            if not user:
+                user = author
+            sharedguilds = (
+                user.mutual_guilds
+                if hasattr(user, "mutual_guilds")
+                else {
+                    guild
+                    async for guild in AsyncIter(self.bot.guilds, steps=100)
+                    if user in guild.members
+                }
+            )
+            roles = user.roles[-1:0:-1]
+            names, nicks = await mod.get_names_and_nicks(user)
+
+            joined_at = user.joined_at
+            since_created = int((ctx.message.created_at - user.created_at).days)
+            if joined_at is not None:
+                since_joined = int((ctx.message.created_at - joined_at).days)
+                user_joined = joined_at.strftime("%d %b %Y %H:%M")
+            else:
+                since_joined = "?"
+                user_joined = "Unknown"
+            user_created = user.created_at.strftime("%d %b %Y %H:%M")
+            voice_state = user.voice
+            member_number = (
+                sorted(guild.members, key=lambda m: m.joined_at or ctx.message.created_at).index(
+                    user
+                )
+                + 1
+            )
+
+            created_on = "{}\n({} day{} ago)".format(
+                user_created, since_created, "" if since_created == 1 else "s"
+            )
+            joined_on = "{}\n({} day{} ago)".format(
+                user_joined, since_joined, "" if since_joined == 1 else "s"
+            )
+            if user.is_on_mobile():
+                statusemoji = self.status_emojis["mobile"] or "\N{MOBILE PHONE}"
+            elif any(a.type is discord.ActivityType.streaming for a in user.activities):
+                statusemoji = self.status_emojis["streaming"] or "\N{LARGE PURPLE CIRCLE}"
+            elif user.status.name == "online":
+                statusemoji = self.status_emojis["online"] or "\N{LARGE GREEN CIRCLE}"
+            elif user.status.name == "offline":
+                statusemoji = self.status_emojis["offline"] or "\N{MEDIUM WHITE CIRCLE}"
+            elif user.status.name == "dnd":
+                statusemoji = self.status_emojis["dnd"] or "\N{LARGE RED CIRCLE}"
+            elif user.status.name == "idle":
+                statusemoji = self.status_emojis["away"] or "\N{LARGE ORANGE CIRCLE}"
+            else:
+                statusemoji = "\N{MEDIUM BLACK CIRCLE}\N{VARIATION SELECTOR-16}"
+            activity = "Chilling in {} status".format(user.status)
+            status_string = mod.get_status_string(user)
+
+            if roles:
+                role_str = ", ".join([x.mention for x in roles])
+                # 400 BAD REQUEST (error code: 50035): Invalid Form Body
+                # In embed.fields.2.value: Must be 1024 or fewer in length.
+                if len(role_str) > 1024:
+                    # Alternative string building time.
+                    # This is not the most optimal, but if you're hitting this, you are losing more time
+                    # to every single check running on users than the occasional user info invoke
+                    # We don't start by building this way, since the number of times we hit this should be
+                    # infintesimally small compared to when we don't across all uses of Red.
+                    continuation_string = (
+                        "and {numeric_number} more roles not displayed due to embed limits."
+                    )
+
+                    available_length = 1024 - len(
+                        continuation_string
+                    )  # do not attempt to tweak, i18n
+
+                    role_chunks = []
+                    remaining_roles = 0
+
+                    for r in roles:
+                        chunk = f"{r.mention}, "
+                        chunk_size = len(chunk)
+
+                        if chunk_size < available_length:
+                            available_length -= chunk_size
+                            role_chunks.append(chunk)
+                        else:
+                            remaining_roles += 1
+                    role_chunks.append(continuation_string.format(numeric_number=remaining_roles))
+
+                    role_str = "".join(role_chunks)
+            else:
+                role_str = None
+            data = discord.Embed(
+                description=(status_string or activity),
+                colour=0x313338,
+            )
+
+            data.add_field(name="Joined Discord on", value=created_on)
+            data.add_field(name="Joined this server on", value=joined_on)
+            if role_str is not None:
+                data.add_field(name="Roles", value=role_str, inline=False)
+            if names:
+                # May need sanitizing later, but mentions do not ping in embeds currently
+                val = filter_invites(", ".join(names))
+                data.add_field(name="Previous Names", value=val, inline=True)
+            if nicks:
+                # May need sanitizing later, but mentions do not ping in embeds currently
+                val = filter_invites(", ".join(nicks))
+                data.add_field(name="Previous Nicknames", value=val, inline=True)
+            if voice_state and voice_state.channel:
+                data.add_field(
+                    name="Current voice channel",
+                    value="{0.mention} ID: {0.id}".format(voice_state.channel),
+                    inline=False,
+                )
+            data.set_footer(text="Member #{} | User ID: {}".format(member_number, user.id))
+
+            name = str(user)
+            name = " ~ ".join((name, user.nick)) if user.nick else name
+            name = filter_invites(name)
+
+            avatar = user.display_avatar.replace(static_format="png").url
+            data.title = f"{statusemoji} {name}"
+            data.set_thumbnail(url=avatar)
+
+            flags = [f.name for f in user.public_flags.all()]
+            badges = ""
+            badge_count = 0
+            if flags:
+                for badge in sorted(flags):
+                    if badge == "verified_bot":
+                        emoji1 = self.badge_emojis["verified_bot"]
+                        emoji2 = self.badge_emojis["verified_bot2"]
+                        emoji = f"{emoji1}{emoji2}" if emoji1 else None
+                    else:
+                        emoji = self.badge_emojis.get(badge)
+                    if emoji:
+                        badges += f"{emoji} {badge.replace('_', ' ').title()}\n"
+                    else:
+                        badges += f"\N{BLACK QUESTION MARK ORNAMENT}\N{VARIATION SELECTOR-16} {badge.replace('_', ' ').title()}\n"
+                    badge_count += 1
+            if badges:
+                data.add_field(name="Badges" if badge_count > 1 else "Badge", value=badges)
+            if "Economy" in self.bot.cogs:
+                balance_count = 1
+                bankstat = f"**Bank**: {humanize_number(await bank.get_balance(user))} {await bank.get_currency_name(ctx.guild)}\n"
+
+                if "Unbelievaboat" in self.bot.cogs:
+                    cog = self.bot.get_cog("Unbelievaboat")
+                    state = await cog.walletdisabledcheck(ctx)
+                    if not state:
+                        balance_count += 1
+                        balance = await cog.walletbalance(user)
+                        bankstat += f"**Wallet**: {humanize_number(balance)} {await bank.get_currency_name(ctx.guild)}\n"
+
+                if "Adventure" in self.bot.cogs:
+                    cog = self.bot.get_cog("Adventure")
+                    if getattr(cog, "_separate_economy", False):
+                        global adventure_bank
+                        if adventure_bank is None:
+                            try:
+                                from adventure.bank import bank as adventure_bank
+                            except:
+                                pass
+                        if adventure_bank:
+                            adventure_currency = await adventure_bank.get_balance(user)
+                            balance_count += 1
+                            bankstat += f"**Adventure**: {humanize_number(adventure_currency)} {await adventure_bank.get_currency_name(ctx.guild)}"
+
+                data.add_field(name="Balances" if balance_count > 1 else "Balance", value=bankstat)
+            if await self.config.banner():
+                banner = (
+                    await self.bot.http.request(discord.http.Route("GET", f"/users/{user.id}"))
+                ).get("banner", None)
+                if banner is not None:
+                    ext = ".gif" if banner.startswith("a_") else ".png"
+                    banner_url = (
+                        f"https://cdn.discordapp.com/banners/{user.id}/{banner}{ext}?size=4096"
+                    )
+                    data.set_image(url=banner_url)
+            await ctx.send(embed=data)
