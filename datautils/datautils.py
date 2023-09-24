@@ -371,7 +371,7 @@ class DataUtils(commands.Cog):
 
     @commands.guild_only()
     @commands.command()
-    @checks.mod_or_permissions(manage_guild=True)
+    @commands.admin_or_permissions(ban_members=True)
     async def banlist(self, ctx):
         """Displays the server's banlist."""
         try:
