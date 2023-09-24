@@ -86,7 +86,7 @@ class ModTools(commands.Cog):
             d = d if d == 'offline' else 'streaming'
             m = m if m == 'offline' else 'streaming'
             w = w if w == 'offline' else 'streaming'
-            status = {
+        status = {
 			'online': '\U0001f7e2',
 			'idle': '\U0001f7e0',
 			'dnd': '\N{LARGE RED CIRCLE}',
