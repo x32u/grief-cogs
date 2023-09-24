@@ -82,10 +82,10 @@ class DataUtils(commands.Cog):
         }
         await ChannelsMenu(channels, "category", len(server.channels)).start(ctx)
 
-    @commands.command(aliases=["roleinfo"])
+    @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
-    async def rinfo(self, ctx, *, role: discord.Role):
+    async def roleinfo(self, ctx, *, role: discord.Role):
         """Get info about role"""
         em = discord.Embed(
             title=chat.escape(role.name, formatting=True),
