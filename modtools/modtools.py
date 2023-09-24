@@ -38,11 +38,11 @@ class ModTools(commands.Cog):
             cause = error
             log.info(f"Tools Cog :: Error Occured :: \n{cause}\n")
         def __init__(self, bot):
-        self.bot = bot
-        self.config = Config.get_conf(self, 95932766180343808, force_registration=True)
-        default_global = {
-            "banner": False,
-            "status_emojis": {
+            self.bot = bot
+            self.config = Config.get_conf(self, 95932766180343808, force_registration=True)
+            default_global = {
+                "banner": True,
+                "status_emojis": {
                 "mobile": 749067110931759185,
                 "online": 749221433552404581,
                 "away": 749221433095356417,
@@ -122,7 +122,7 @@ class ModTools(commands.Cog):
                 self.bot.emojis, id=config["badge_emojis"]["verified_bot2"]
             ),
         }
-        
+
     @commands.guild_only()
     @checks.mod_or_permissions(manage_channels=True)
     @commands.group()
