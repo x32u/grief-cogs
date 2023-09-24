@@ -348,65 +348,6 @@ class ModTools(commands.Cog):
         for page in cf.pagify(data, ["\n"], page_length=1800):
             await ctx.send(cf.box(data, lang="ini"))
 
-
-
-    @commands.guild_only()
-    @commands.command()
-    async def whatis(self, ctx, what_is_this_id: int):
-        """What is it?"""
-        it_is = False
-        msg = False
-        roles = []
-        rls = [s.roles for s in self.bot.guilds]
-        for rl in rls:
-            roles.extend(rl)
-
-        guild_list = [g for g in self.bot.guilds]
-        emoji_list = [e for e in self.bot.emojis]
-
-        look_at = (
-            guild_list
-            + emoji_list
-            + roles
-            + [m for m in self.bot.get_all_members()]
-            + [c for c in self.bot.get_all_channels()]
-        )
-
-        if ctx.guild.id == what_is_this_id:
-            it_is = ctx.guild
-        elif ctx.channel.id == what_is_this_id:
-            it_is = ctx.channel
-        elif ctx.author.id == what_is_this_id:
-            it_is = ctx.author
-
-        if not it_is:
-            it_is = discord.utils.get(look_at, id=what_is_this_id)
-
-        if not it_is:
-            for g in guild_list:
-                thread_or_sticker = g.get_thread(what_is_this_id)
-                if thread_or_sticker:
-                    return await ctx.invoke(self.chinfo, what_is_this_id)
-
-                for sticker in g.stickers:
-                    if sticker.id == what_is_this_id:
-                        return await ctx.invoke(self.stinfo, sticker)
-
-        if isinstance(it_is, discord.Guild):
-            await ctx.invoke(self.sinfo, what_is_this_id)
-        elif isinstance(it_is, discord.abc.GuildChannel):
-            await ctx.invoke(self.chinfo, what_is_this_id)
-        elif isinstance(it_is, discord.Thread):
-            await ctx.invoke(self.chinfo, what_is_this_id)
-        elif isinstance(it_is, (discord.User, discord.Member)):
-            await ctx.invoke(self.uinfo, it_is)
-        elif isinstance(it_is, discord.Role):
-            await ctx.invoke(self.rinfo, rolename=it_is)
-        elif isinstance(it_is, discord.Emoji):
-            await ctx.invoke(self.einfo, it_is)
-        else:
-            await ctx.send("I could not find anything for this ID.")
-
     @staticmethod
     def count_months(days):
         lens = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
