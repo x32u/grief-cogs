@@ -347,6 +347,75 @@ class ModTools(commands.Cog):
 
         for page in cf.pagify(data, ["\n"], page_length=1800):
             await ctx.send(cf.box(data, lang="ini"))
+        
+    @commands.command()
+    @commands.guild_only()
+    @commands.guildowner()
+    async def massunban(self, ctx: commands.Context, *, ban_reason: Optional[str] = None):
+        """
+        Mass unban everyone, or specific people.
+        """
+        try:
+            banlist: List[discord.BanEntry] = [entry async for entry in ctx.guild.bans()]
+        except discord.errors.Forbidden:
+            msg = _("I need the `Ban Members` permission to fetch the ban list for the guild.")
+            await ctx.send(msg)
+            return
+        except (discord.HTTPException, TypeError):
+            log.exception("Something went wrong while fetching the ban list!", exc_info=True)
+            return
+
+        bancount: int = len(banlist)
+        if bancount == 0:
+            await ctx.send(_("No users are banned from this server."))
+            return
+
+        unban_count: int = 0
+        if not ban_reason:
+            warning_string = _(
+                "Are you sure you want to unban every banned person on this server?\n"
+                f"**Please read** `{ctx.prefix}help massunban` **as this action can cause a LOT of modlog messages!**\n"
+                "Type `Yes` to confirm, or `No` to cancel."
+            )
+            await ctx.send(warning_string)
+            pred = MessagePredicate.yes_or_no(ctx)
+            try:
+                await self.bot.wait_for("message", check=pred, timeout=15)
+                if pred.result is True:
+                    async with ctx.typing():
+                        for ban_entry in banlist:
+                            await ctx.guild.unban(
+                                ban_entry.user,
+                                reason=_("Mass Unban requested by {name} ({id})").format(
+                                    name=str(ctx.author.display_name), id=ctx.author.id
+                                ),
+                            )
+                            await asyncio.sleep(0.5)
+                            unban_count += 1
+                else:
+                    return await ctx.send(_("Alright, I'm not unbanning everyone."))
+            except asyncio.TimeoutError:
+                return await ctx.send(
+                    _(
+                        "Response timed out. Please run this command again if you wish to try again."
+                    )
+                )
+        else:
+            async with ctx.typing():
+                for ban_entry in banlist:
+                    if not ban_entry.reason:
+                        continue
+                    if ban_reason.lower() in ban_entry.reason.lower():
+                        await ctx.guild.unban(
+                            ban_entry.user,
+                            reason=_("Mass Unban requested by {name} ({id})").format(
+                                name=str(ctx.author.display_name), id=ctx.author.id
+                            ),
+                        )
+                        await asyncio.sleep(1)
+                        unban_count += 1
+
+        await ctx.send(_("Done. Unbanned {unban_count} users.").format(unban_count=unban_count))
 
     @staticmethod
     def count_months(days):
