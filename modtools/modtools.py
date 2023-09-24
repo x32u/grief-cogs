@@ -20,6 +20,11 @@ from redbot.core.commands import GuildContext
 
 from .converter import FuzzyMember
 
+from asyncio import TimeoutError as AsyncTimeoutError
+from textwrap import shorten
+from types import SimpleNamespace
+from typing import Optional, Union
+
 log = logging.getLogger("grief.modtools")
 
 
