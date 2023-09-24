@@ -196,7 +196,7 @@ class ModTools(commands.Cog):
         else:
             await ctx.send(f"**{user.display_name}** joined this guild on **{joined_on}**.")
 
-    	@commands.guild_only()
+    @commands.guild_only()
 	@commands.command(aliases=['onlinestats'])
 	async def onlinestatus(self, ctx):
 		"""Print how many people are using each type of device."""
