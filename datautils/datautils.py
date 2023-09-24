@@ -67,7 +67,7 @@ class DataUtils(commands.Cog):
         else:
             await ctx.send(_("There is no invites for this server"))
             
-    @commands.command(aliases=["channellist", "listchannels"])
+    @commands.command()
     @commands.guild_only()
     @commands.admin_or_permissions(manage_channels=True)
     @commands.bot_has_permissions(embed_links=True)
