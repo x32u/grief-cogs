@@ -1030,7 +1030,6 @@ class ModTools(commands.Cog):
                 }
             )
             roles = user.roles[-1:0:-1]
-            names, nicks = await mod.get_names_and_nicks(user)
 
             joined_at = user.joined_at
             since_created = int((ctx.message.created_at - user.created_at).days)
@@ -1116,14 +1115,6 @@ class ModTools(commands.Cog):
             data.add_field(name="Joined this server on", value=joined_on)
             if role_str is not None:
                 data.add_field(name="Roles", value=role_str, inline=False)
-            if names:
-                # May need sanitizing later, but mentions do not ping in embeds currently
-                val = filter_invites(", ".join(names))
-                data.add_field(name="Previous Names", value=val, inline=True)
-            if nicks:
-                # May need sanitizing later, but mentions do not ping in embeds currently
-                val = filter_invites(", ".join(nicks))
-                data.add_field(name="Previous Nicknames", value=val, inline=True)
             if voice_state and voice_state.channel:
                 data.add_field(
                     name="Current voice channel",
