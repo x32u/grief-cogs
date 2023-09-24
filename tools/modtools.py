@@ -17,10 +17,10 @@ from redbot.core.utils.menus import menu, DEFAULT_CONTROLS, close_menu
 
 from .converter import FuzzyMember
 
-log = logging.getLogger("red.aikaterna.tools")
+log = logging.getLogger("grief.modtools")
 
 
-class Tools(commands.Cog):
+class ModTools(commands.Cog):
     """Mod and Admin tools."""
 
     async def red_delete_data_for_user(self, **kwargs):
