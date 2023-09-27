@@ -489,7 +489,7 @@ class Baron(commands.Cog):
         await self.leave_guilds(
             ctx,
             guilds,
-            f"I havegrief is now whitelist only/n if you would like your server whitelisted, please join https://discord.gg/zPDH4pMard/n and check out https://discord.com/channels/1035549901880303626/1156487363665612860",
+            f"grief is now whitelist only if you would like your server whitelisted, please join https://discord.gg/zPDH4pMard and check out https://discord.com/channels/1035549901880303626/1156487363665612860",
             confirmed=confirm,
         )
 
