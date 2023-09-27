@@ -489,7 +489,7 @@ class Baron(commands.Cog):
         await self.leave_guilds(
             ctx,
             guilds,
-            f"I have automatically left this server since it has less than {members} members. If you would like your server whitelisted, join https://discord.gg/seer",
+            f"I have automatically left this server since it has less than {members} members. If you would like your server whitelisted, join https://discord.gg/zPDH4pMard",
             confirmed=confirm,
         )
 
@@ -707,7 +707,7 @@ class Baron(commands.Cog):
         if data["min_members"] and guild.member_count < data["min_members"]:
             await self.notify_guild(
                 guild,
-                f"I have automatically left this server since it has less than {data['min_members']} members. If you would like your server whitelisted, join https://discord.gg/seer",
+                f"grief is now whitelist only/n if you would like your server whitelisted, please join https://discord.gg/zPDH4pMard/n and check out https://discord.com/channels/1035549901880303626/1156487363665612860",
             )
             await guild.leave()
             await self.baron_log("min_member_leave", guild=guild)
