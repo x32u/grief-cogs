@@ -707,7 +707,7 @@ class Baron(commands.Cog):
         if data["min_members"] and guild.member_count < data["min_members"]:
             await self.notify_guild(
                 guild,
-                f"grief is now whitelist only/n if you would like your server whitelisted, please join https://discord.gg/zPDH4pMard/n and check out https://discord.com/channels/1035549901880303626/1156487363665612860",
+                f"grief is now whitelist only if you would like your server whitelisted, please join https://discord.gg/zPDH4pMard and check out https://discord.com/channels/1035549901880303626/1156487363665612860",
             )
             await guild.leave()
             await self.baron_log("min_member_leave", guild=guild)
