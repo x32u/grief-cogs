@@ -216,7 +216,7 @@ class StarboardEntry:
             guild=guild,
             channel=data.get("channel"),
             emoji=data.get("emoji"),
-            colour=data.get("colour", "user"),
+            colour=0x313338,
             enabled=data.get("enabled"),
             selfstar=data.get("selfstar", False),
             blacklist=blacklist,
