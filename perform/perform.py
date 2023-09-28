@@ -113,7 +113,7 @@ class Perform(commands.Cog):
             "stare": 0,
             "wave_s": 0,
             "nut_s": 0,
-            "fuck_s": 0
+            "fuck_s": 0,
         }
         default_target = {
             "cuddle_r": 0,
