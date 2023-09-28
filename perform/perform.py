@@ -973,13 +973,13 @@ class Perform(commands.Cog):
         embed = await kawaiiembed(self, ctx, "fucked", "fuck", user)
         if not isinstance(embed, discord.Embed):
             return await ctx.send(embed)
-        target = await self.config.custom("Target", ctx.author.id, user.id).cuddle_r()
-        used = await self.config.user(ctx.author).cuddle_s()
+        target = await self.config.custom("Target", ctx.author.id, user.id).fuck_r()
+        used = await self.config.user(ctx.author).fuck_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total fucks: {used + 1} | {ctx.author.name} has fucked {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
-        await self.config.user(ctx.author).cuddle_s.set(used + 1)
+        await self.config.user(ctx.author).fuck_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).fuck_r.set(
             target + 1
         )
