@@ -156,7 +156,7 @@ class StarboardEntry:
             "enabled": self.enabled,
             "channel": self.channel,
             "emoji": self.emoji,
-            "colour": self.colour,
+            "colour": 0x313338,
             "selfstar": self.selfstar,
             "blacklist": self.blacklist,
             "whitelist": self.whitelist,
