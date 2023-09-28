@@ -64,14 +64,8 @@ class Perform(commands.Cog):
                 "https://c.tenor.com/pbyIf8fSIJsAAAAC/kick-balls-kick-in-the-balls.gif",
             ],
             "fuck": [
-                "https://media.discordapp.net/attachments/1154952210606739468/1157039918334345277/78deabab.gif?ex=651728e5&is=6515d765&hm=32684f172e68d0c0630c28bd1ee78a6a2c52f9651ca80139bbad83a83db6ac13&=&width=409&height=289"
-                "https://media.discordapp.net/attachments/1154952210606739468/1157039918892204164/0216255c.gif?ex=651728e5&is=6515d765&hm=c031f0c577940112d2eda67e9b345e22e1fd746bc935f52eb03430ae3c34e5d2&=&width=288&height=216"
-                "https://media.discordapp.net/attachments/1154952210606739468/1157040339979345961/7bf9f57f.gif?ex=65172949&is=6515d7c9&hm=018b1e6043e55dab536be16b0db0d6d9e6b5cd853629609340720686de788d56&=&width=432&height=242"
-                "https://media.discordapp.net/attachments/1154952210606739468/1157040593546006628/341ca01e.gif?ex=65172986&is=6515d806&hm=a71a7ded837149c2d5907b2ee00f09398d0cdf5213b9bebd17cff4d5d7d14c90&=&width=409&height=230"
-                "https://media.discordapp.net/attachments/1154952210606739468/1157041089442750585/065f78b9.gif?ex=651729fc&is=6515d87c&hm=f68ff4bfc61547c5d55ee2027a82871cd2d8b8560a637b10a04178cfa093409f&=&width=400&height=255"
-                "https://media.discordapp.net/attachments/1154952210606739468/1157042140870885376/83d6ea96.gif?ex=65172af7&is=6515d977&hm=da55b82e293aea18bceb99dda9ad683123eaabfda5682c658db321cce82b1ebc&=&width=384&height=192"
-                "https://media.discordapp.net/attachments/1154952210606739468/1157042545826742332/3e727d3e.gif?ex=65172b57&is=6515d9d7&hm=37baf6d0f8a18306a27c60cd6931171511e76b14e8bd3daf426fbc1ea4238bc7&=&width=398&height=222"
-                "https://media.discordapp.net/attachments/1154952210606739468/1157042571445542952/667de63d.gif?ex=65172b5d&is=6515d9dd&hm=88bcaca273847efda064c5c7c97d889da6f4e3ddf6caabf0a43e0804ab47d082&=&width=264&height=216"
+                "https://grief.b-cdn.net/fuck/0216255c.gif"
+                
             ],
         }
         default_member = {
