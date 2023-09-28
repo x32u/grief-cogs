@@ -64,8 +64,17 @@ class Perform(commands.Cog):
                 "https://c.tenor.com/pbyIf8fSIJsAAAAC/kick-balls-kick-in-the-balls.gif",
             ],
             "fuck": [
-                "https://grief.b-cdn.net/fuck/0216255c.gif"
-                
+                "https://cdn.grief.cloud/fuck/0216255c.gif",
+                "https://cdn.grief.cloud/fuck/065f78b9.gif",
+                "https://cdn.grief.cloud/fuck/341ca01e.gif",
+                "https://cdn.grief.cloud/fuck/3e727d3e.gif",
+                "https://cdn.grief.cloud/fuck/667de63d.gif",
+                "https://cdn.grief.cloud/fuck/78deabab.gif",
+                "https://cdn.grief.cloud/fuck/7bf9f57f.gif",
+                "https://cdn.grief.cloud/fuck/83d6ea96.gif",
+                "https://cdn.grief.cloud/fuck/IMG_2324.gif",
+                "https://cdn.grief.cloud/fuck/SPOILER_IMG_2319.gif",
+                "https://cdn.grief.cloud/fuck/SPOILER_IMG_2320.gif",
             ],
         }
         default_member = {
