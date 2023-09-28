@@ -971,7 +971,7 @@ class Perform(commands.Cog):
         Fuck a user!
         """
 
-        images = await self.config.nut()
+        images = await self.config.fuck()
 
         mn = len(images)
         i = randint(0, mn - 1)
