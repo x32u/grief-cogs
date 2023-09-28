@@ -970,7 +970,7 @@ class Perform(commands.Cog):
         """
         Fuck a user!
         """
-        embed = await kawaiiembed(self, ctx, "fucked", "fuck", user)
+        embed = await embed(self, ctx, "fucked", "fuck", user)
         if not isinstance(embed, discord.Embed):
             return await ctx.send(embed)
         target = await self.config.custom("Target", ctx.author.id, user.id).fuck_r()
