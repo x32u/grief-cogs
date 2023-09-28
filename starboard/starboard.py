@@ -707,7 +707,7 @@ class Starboard(StarboardEvents, commands.Cog):
                 return
             starboard = list(self.starboards[guild.id].values())[0]
         if isinstance(colour, str):
-            colour = colour.lower()
+            colour = 0x313338
             if colour not in ["user", "member", "author", "bot"]:
                 await ctx.send(_("The provided colour option is not valid."))
                 return
