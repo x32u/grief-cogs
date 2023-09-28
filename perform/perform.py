@@ -63,6 +63,9 @@ class Perform(commands.Cog):
                 "https://c.tenor.com/NpMUvPFLwCEAAAAC/ow-balls-kick.gif",
                 "https://c.tenor.com/pbyIf8fSIJsAAAAC/kick-balls-kick-in-the-balls.gif",
             ],
+            "fuck": [
+                "https://cdn.sex.com/images/pinporn/2015/09/04/13698978.gif?width=620"
+            ],
         }
         default_member = {
             "cuddle_s": 0,
@@ -110,6 +113,7 @@ class Perform(commands.Cog):
             "stare": 0,
             "wave_s": 0,
             "nut_s": 0,
+            "fuck_s": 0
         }
         default_target = {
             "cuddle_r": 0,
@@ -133,6 +137,7 @@ class Perform(commands.Cog):
             "protect_r": 0,
             "wave_r": 0,
             "nut_r": 0,
+            "fuck_r": 0,
         }
         self.config.register_global(**default_global)
         self.config.register_user(**default_member)
@@ -957,6 +962,27 @@ class Perform(commands.Cog):
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).nut_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).nut_r.set(target + 1)
+
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.command()
+    @commands.guild_only()
+    async def fuck(self, ctx: commands.Context, user: discord.Member):
+        """
+        Fuck a user!
+        """
+        embed = await kawaiiembed(self, ctx, "fucked", "fuck", user)
+        if not isinstance(embed, discord.Embed):
+            return await ctx.send(embed)
+        target = await self.config.custom("Target", ctx.author.id, user.id).cuddle_r()
+        used = await self.config.user(ctx.author).cuddle_s()
+        embed.set_footer(
+            text=f"{ctx.author.name}'s total fucks: {used + 1} | {ctx.author.name} has fucked {user.name} {target + 1} times"
+        )
+        await send_embed(self, ctx, embed, user)
+        await self.config.user(ctx.author).cuddle_s.set(used + 1)
+        await self.config.custom("Target", ctx.author.id, user.id).fuck_r.set(
+            target + 1
+        )
 
     @commands.is_owner()
     @commands.command()
