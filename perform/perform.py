@@ -64,7 +64,7 @@ class Perform(commands.Cog):
                 "https://c.tenor.com/pbyIf8fSIJsAAAAC/kick-balls-kick-in-the-balls.gif",
             ],
             "fuck": [
-                "https://cdn.sex.com/images/pinporn/2015/09/04/13698978.gif?width=620"
+                ""
             ],
         }
         default_member = {
