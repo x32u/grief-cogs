@@ -989,8 +989,8 @@ class Perform(commands.Cog):
             text=f"{ctx.author.name}'s total fucks: {used + 1} | {ctx.author.name} has fucked {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
-        await self.config.user(ctx.author).nut_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).nut_r.set(target + 1)
+        await self.config.user(ctx.author).fuck_s.set(used + 1)
+        await self.config.custom("Target", ctx.author.id, user.id).fuck_r.set(target + 1)
 
     @commands.is_owner()
     @commands.command()
