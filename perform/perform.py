@@ -64,7 +64,7 @@ class Perform(commands.Cog):
                 "https://c.tenor.com/pbyIf8fSIJsAAAAC/kick-balls-kick-in-the-balls.gif",
             ],
             "fuck": [
-                "https://us.rule34.xxx//images/540/d1ff4af8bfedbc09561f68b6de0987d4291a3e87.gif?1194264"
+                ""
             ],
         }
         default_member = {
