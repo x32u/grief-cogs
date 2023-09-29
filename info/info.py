@@ -5,7 +5,7 @@ from redbot.core import commands
 from redbot.core.bot import Red
 
 
-class ViewAssets(commands.Cog):
+class Info(commands.Cog):
     # Messages.
     X = ":x: Error: "
     MEMBER_NO_GUILD_AVATAR = X + "this user does not have a server avatar."
