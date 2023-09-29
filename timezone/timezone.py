@@ -8,8 +8,6 @@ from redbot.core.utils.chat_formatting import pagify
 from redbot.core.utils.menus import close_menu, menu, DEFAULT_CONTROLS
 
 
-__version__ = "2.1.1"
-
 
 class Timezone(commands.Cog):
     """Gets times across the world..."""
@@ -68,7 +66,7 @@ class Timezone(commands.Cog):
 
     @commands.guild_only()
     @commands.group()
-    async def time(self, ctx):
+    async def tz(self, ctx):
         """
         Checks the time.
 
@@ -77,7 +75,7 @@ class Timezone(commands.Cog):
         """
         pass
 
-    @time.command()
+    @tz.command()
     async def tz(self, ctx, *, timezone_name: Optional[str] = None):
         """Gets the time in any timezone."""
         if timezone_name is None:
@@ -92,7 +90,7 @@ class Timezone(commands.Cog):
                 fmt = "**%H:%M** %d-%B-%Y **%Z (UTC %z)**"
                 await ctx.send(time.strftime(fmt))
 
-    @time.command()
+    @tz.command()
     async def iso(self, ctx, *, iso_code=None):
         """Looks up ISO3166 country codes and gives you a supported timezone."""
         if iso_code is None:
@@ -113,7 +111,7 @@ class Timezone(commands.Cog):
                     "Use the two-character code under the `Alpha-2 code` column."
                 )
 
-    @time.command()
+    @tz.command()
     async def me(self, ctx, *, timezone_name=None):
         """
         Sets your timezone.
@@ -139,29 +137,7 @@ class Timezone(commands.Cog):
                 await self.config.user(ctx.author).usertime.set(tz_resp[0][0])
                 await ctx.send(f"Successfully set your timezone to **{tz_resp[0][0]}**.")
 
-    @time.command()
-    @commands.is_owner()
-    async def set(self, ctx, user: discord.User, *, timezone_name=None):
-        """
-        Allows the bot owner to edit users' timezones.
-        Use a user id for the user if they are not present in your server.
-        """
-        if not user:
-            user = ctx.author
-        if len(self.bot.users) == 1:
-            return await ctx.send("This cog requires Discord's Privileged Gateway Intents to function properly.")
-        if user not in self.bot.users:
-            return await ctx.send("I can't see that person anywhere.")
-        if timezone_name is None:
-            return await ctx.send_help()
-        else:
-            tz_results = self.fuzzy_timezone_search(timezone_name)
-            tz_resp = await self.format_results(ctx, tz_results)
-            if tz_resp:
-                await self.config.user(user).usertime.set(tz_resp[0][0])
-                await ctx.send(f"Successfully set {user.name}'s timezone to **{tz_resp[0][0]}**.")
-
-    @time.command()
+    @tz.command()
     async def user(self, ctx, user: discord.Member = None):
         """Shows the current time for the specified user."""
         if not user:
@@ -178,7 +154,7 @@ class Timezone(commands.Cog):
             else:
                 await ctx.send("That user hasn't set their timezone.")
 
-    @time.command()
+    @tz.command()
     async def compare(self, ctx, user: discord.Member = None):
         """Compare your saved timezone with another user's timezone."""
         if not user:
