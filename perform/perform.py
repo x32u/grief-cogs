@@ -60,8 +60,6 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/nutkick/nutkick6.gif",
                 "https://cdn.grief.cloud/roleplay/nutkick/nutkick7.gif",
                 "https://cdn.grief.cloud/roleplay/nutkick/nutkick8.gif",
-                "https://cdn.grief.cloud/roleplay/nutkick/nutkick9.gif",
-                "https://cdn.grief.cloud/roleplay/nutkick/nutkick10.gif",
             ],
             "fuck": [
                 "https://cdn.grief.cloud/roleplay/fuck/fuck1.gif",
