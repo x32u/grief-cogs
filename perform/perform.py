@@ -8,8 +8,6 @@ import discord
 from redbot.core import Config, commands
 from redbot.core.bot import Red
 
-from .utils import kawaiiembed, send_embed
-
 log = logging.getLogger("grief.roleplay")
 
 
