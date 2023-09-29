@@ -24,6 +24,7 @@ from pyfiglet import figlet_format
 from red_commons.logging import getLogger
 from redbot.core import commands
 from redbot.core.data_manager import bundled_data_path, cog_data_path
+from redbot.core.utils.chat_formatting import pagify
 
 from .converter import ImageFinder
 from .vw import macintoshplus
@@ -1819,3 +1820,35 @@ class NotSoBot(commands.Cog):
                 )
             await self.safe_send(ctx, f"Rotated: `{degrees}°`", file, file_size)
             b.close()
+    
+    @commands.command(name="pp")
+    async def pp(self, ctx, *users: discord.Member):
+        """
+        Detects a user's pp length.
+
+        Note : This is 100% accurate.
+
+        Enter multiple users for a comparison!
+
+        """
+        if not users:
+            users = {ctx.author}
+
+        lengths = {}
+
+        for user in users:
+            random.seed(None) if await self.config.random() else random.seed(str(user.id))
+
+            if user.id == ctx.bot.user.id or user.id in list(ctx.bot.owner_ids):
+                length = random.randint(30, 35)
+            else:
+                length = random.randint(0, 30)
+
+            lengths[user] = f'8{"=" * length}D'
+
+        lengths = sorted(lengths.items(), key=lambda x: x[1])
+
+        msg = "".join(f"**{user.display_name}'s size:**\n{length}\n" for user, length in lengths)
+
+        for page in pagify(msg):
+            await ctx.send(page)
