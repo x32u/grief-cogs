@@ -3,10 +3,13 @@
 
 import logging
 from random import randint
+from typing import Optional
 
 import discord
 from redbot.core import Config, commands
 from redbot.core.bot import Red
+
+from .utils import kawaiiembed, send_embed
 
 log = logging.getLogger("grief.roleplay")
 
@@ -547,7 +550,6 @@ class Perform(commands.Cog):
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).fuck_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).fuck_r.set(target + 1)
-
 
 async def setup(bot):
     global hug
