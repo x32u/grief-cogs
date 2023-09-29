@@ -10,7 +10,7 @@ from redbot.core.bot import Red
 
 from .utils import kawaiiembed, send_embed
 
-log = logging.getLogger("red.onii.perform")
+log = logging.getLogger("grief.roleplay")
 
 
 class Perform(commands.Cog):
@@ -64,17 +64,17 @@ class Perform(commands.Cog):
                 "https://c.tenor.com/pbyIf8fSIJsAAAAC/kick-balls-kick-in-the-balls.gif",
             ],
             "fuck": [
-                "https://cdn.grief.cloud/fuck/0216255c.gif",
-                "https://cdn.grief.cloud/fuck/065f78b9.gif",
-                "https://cdn.grief.cloud/fuck/341ca01e.gif",
-                "https://cdn.grief.cloud/fuck/3e727d3e.gif",
-                "https://cdn.grief.cloud/fuck/667de63d.gif",
-                "https://cdn.grief.cloud/fuck/78deabab.gif",
-                "https://cdn.grief.cloud/fuck/7bf9f57f.gif",
-                "https://cdn.grief.cloud/fuck/83d6ea96.gif",
-                "https://cdn.grief.cloud/fuck/IMG_2324.gif",
-                "https://cdn.grief.cloud/fuck/SPOILER_IMG_2319.gif",
-                "https://cdn.grief.cloud/fuck/SPOILER_IMG_2320.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck1.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck2.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck3.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck4.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck5.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck6.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck7.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck8.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck9.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck10.gif",
+                "https://cdn.grief.cloud/roleplay/fuck/fuck11.gif",
             ],
         }
         default_member = {
