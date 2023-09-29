@@ -30,7 +30,7 @@ from redbot.core.utils.chat_formatting import (
 
 from .diskspeed import get_disk_speed
 
-log = logging.getLogger("red.vrt.vrtutils")
+log = logging.getLogger("grief.moreutils")
 dpy = discord.__version__
 if dpy > "1.7.4":
     from .dpymenu import DEFAULT_CONTROLS, confirm, menu
@@ -62,7 +62,7 @@ async def wait_reply(ctx: commands.Context, timeout: int = 60):
         return None
 
 
-class VrtUtils(commands.Cog):
+class MoreUtils(commands.Cog):
 
 
     async def red_delete_data_for_user(self, *, requester, user_id: int):
@@ -77,7 +77,7 @@ class VrtUtils(commands.Cog):
             InteractionClient(bot, sync_commands=False)
         self.path = cog_data_path(self)
         self.threadpool = ThreadPoolExecutor(
-            max_workers=1, thread_name_prefix="vrt_utils"
+            max_workers=1, thread_name_prefix="more_utils"
         )
 
     # -/-/-/-/-/-/-/-/FORMATTING-/-/-/-/-/-/-/-/
