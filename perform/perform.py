@@ -167,7 +167,7 @@ class Perform(commands.Cog):
     @commands.guild_only()
     async def cuddle(self, ctx: commands.Context, user: discord.Member):
         """
-        Cuddle a user!
+        Cuddle a user.
         """
         embed = await kawaiiembed(self, ctx, "cuddled", "cuddle", user)
         if not isinstance(embed, discord.Embed):
@@ -188,7 +188,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def poke(self, ctx: commands.Context, user: discord.Member):
         """
-        Poke a user!
+        Poke a user.
         """
         embed = await kawaiiembed(self, ctx, "poked", "poke", user)
         if not isinstance(embed, discord.Embed):
@@ -209,7 +209,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def kiss(self, ctx: commands.Context, user: discord.Member):
         """
-        Kiss a user!
+        Kiss a user.
         """
         embed = await kawaiiembed(self, ctx, "just kissed", "kiss", user)
         if not isinstance(embed, discord.Embed):
@@ -230,7 +230,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def hug(self, ctx: commands.Context, user: discord.Member):
         """
-        Hugs a user!
+        Hugs a user.
         """
         embed = await kawaiiembed(self, ctx, "just hugged", "hug", user)
         if not isinstance(embed, discord.Embed):
@@ -249,7 +249,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def pat(self, ctx: commands.Context, user: discord.Member):
         """
-        Pats a user!
+        Pats a user.
         """
         embed = await kawaiiembed(self, ctx, "just patted", "pat", user)
         if not isinstance(embed, discord.Embed):
@@ -268,7 +268,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def tickle(self, ctx: commands.Context, user: discord.Member):
         """
-        Tickles a user!
+        Tickles a user.
         """
         embed = await kawaiiembed(self, ctx, "just tickled", "tickle", user)
         if not isinstance(embed, discord.Embed):
@@ -289,7 +289,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def lick(self, ctx: commands.Context, user: discord.Member):
         """
-        Licks a user!
+        Licks a user.
         """
         embed = await kawaiiembed(self, ctx, "just licked", "lick", user)
         if not isinstance(embed, discord.Embed):
@@ -310,7 +310,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def slap(self, ctx: commands.Context, user: discord.Member):
         """
-        Slaps a user!
+        Slaps a user.
         """
         embed = await kawaiiembed(self, ctx, "just slapped", "slap", user)
         if not isinstance(embed, discord.Embed):
@@ -331,7 +331,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def spank(self, ctx: commands.Context, user: discord.Member):
         """
-        Spanks a user!
+        Spanks a user.
         """
 
         images = await self.config.spank()
@@ -362,7 +362,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def feed(self, ctx: commands.Context, user: discord.Member):
         """
-        Feeds a user!
+        Feeds a user.
         """
 
         images = await self.config.feed()
@@ -393,7 +393,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def punch(self, ctx: commands.Context, user: discord.Member):
         """
-        Punch a user!
+        Punch a user.
         """
         embed = await kawaiiembed(self, ctx, "just punched", "punch", user)
         if embed is False:
@@ -413,7 +413,7 @@ class Perform(commands.Cog):
     @commands.guild_only()
     async def highfive(self, ctx: commands.Context, user: discord.Member):
         """
-        Highfive a user!
+        Highfive a user.
         """
         embed = await kawaiiembed(self, ctx, "highfived", "highfive", user)
         if not isinstance(embed, discord.Embed):
@@ -434,7 +434,7 @@ class Perform(commands.Cog):
     @commands.guild_only()
     async def kill(self, ctx: commands.Context, user: discord.Member):
         """
-        Kill a user!
+        Kill a user.
         """
         embed = await kawaiiembed(self, ctx, "killed", "kill", user)
         if not isinstance(embed, discord.Embed):
@@ -455,7 +455,7 @@ class Perform(commands.Cog):
     @commands.guild_only()
     async def bite(self, ctx: commands.Context, user: discord.Member):
         """
-        Bite a user!
+        Bite a user.
         """
         embed = await kawaiiembed(self, ctx, "is biting", "bite", user)
         if not isinstance(embed, discord.Embed):
@@ -476,7 +476,7 @@ class Perform(commands.Cog):
     @commands.guild_only()
     async def yeet(self, ctx: commands.Context, user: discord.Member):
         """
-        Yeet someone!
+        Yeet someone.
         """
         embed = await kawaiiembed(self, ctx, "yeeted", "yeet", user)
         if not isinstance(embed, discord.Embed):
@@ -497,7 +497,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def kicknuts(self, ctx: commands.Context, user: discord.Member):
         """
-        Kick a user on the nuts!
+        Kick a user in the balls.
         """
 
         images = await self.config.nut()
@@ -526,7 +526,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def fuck(self, ctx: commands.Context, user: discord.Member):
         """
-        Fuck a user!
+        Fuck a user.
         """
 
         images = await self.config.fuck()
@@ -549,78 +549,6 @@ class Perform(commands.Cog):
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).fuck_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).fuck_r.set(target + 1)
-
-
-#     @commands.command()
-#     @commands.guild_only()
-#     async def rstats(self, ctx: commands.Context, action: str, member: discord.Member = None):
-#         """RStats cog commands."""
-#         valid = [
-#             "cuddle",
-#             "poke",
-#             "kiss",
-#             "hug",
-#             "pat",
-#             "tickle",
-#             "smug",
-#             "lick",
-#             "slap",
-#             "cry",
-#             "sleep",
-#             "spank",
-#             "pout",
-#             "blush",
-#             "feed",
-#             "punch",
-#             "confuse",
-#             "amazed",
-#             "highfive",
-#             "plead",
-#             "clap",
-#             "facepalm",
-#             "headdesk",
-#             "kill",
-#             "love",
-#             "hide",
-#             "laugh",
-#             "peek",
-#             "bite",
-#             "dance",
-#             "yeet",
-#             "dodge",
-#             "happy",
-#             "cute",
-#             "lonely",
-#             "mad",
-#             "nosebleed",
-#             "protect",
-#             "run",
-#             "scared",
-#             "shrug",
-#             "scream",
-#             "stare",
-#             "wave",
-#             ]
-#         if action.lower() not in valid:
-#             return await ctx.send("Invalid action.")
-#         if member is None:
-#             member = ctx.author
-#         data = await self.config.custom("Target").all()
-#         top_10 = get_top10(data, member.id)
-#         embed = discord.Embed(title=f"Top 10 for {member.name}")
-#         top_10 = tabulate(top_10, tablefmt="psql", headers=["User", "Spanks"])
-#         embed.description = box(top_10)
-#         await ctx.send(embed=embed)
-
-
-# def get_top10(data, action: str):
-#     targets = []
-#     for i in data:
-#         for key, value in data[i].items():
-#             with contextlib.suppress(KeyError):
-#                 targets.append((value["spank_r"], key))
-#         targets.sort(key=lambda x: x[0], reverse = True)
-#     return targets[:10]
 
 
 async def setup(bot):
