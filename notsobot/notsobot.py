@@ -29,7 +29,7 @@ from redbot.core.utils.chat_formatting import pagify
 from .converter import ImageFinder
 from .vw import macintoshplus
 
-log = getLogger("red.trusty-cogs.NotSoBot")
+log = getLogger("grief.notsobot")
 
 try:
     import aalib
@@ -1837,7 +1837,7 @@ class NotSoBot(commands.Cog):
         lengths = {}
 
         for user in users:
-            random.seed(None) if await self.config.random() else random.seed(str(user.id))
+            random.seed(None)
 
             if user.id == ctx.bot.user.id or user.id in list(ctx.bot.owner_ids):
                 length = random.randint(30, 35)
