@@ -29,8 +29,6 @@ class MentionPrefix(commands.Cog):
         (timedelta(hours=1), 10),
         (timedelta(days=1), 24),
     ]
-    __version__ = "1.1.0"
-    __author__ = ["Draper", "TrustyJAID"]
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
@@ -52,26 +50,6 @@ class MentionPrefix(commands.Cog):
         self.mention_regex = re.compile(rf"^<@!?{self.bot.user.id}>$")
         self.disable_in = set(await self.config.disabled_in())
         self._event.set()
-
-    @commands.command(name="mentiontoggle")
-    @commands.guild_only()
-    @commands.admin_or_permissions(manage_guild=True)
-    async def commands_mentiontoggle(self, ctx: commands.Context):
-        """Toggle whether mentioning the bot will send a help message."""
-        if ctx.guild.id in self.disable_in:
-            self.disable_in.discard(ctx.guild.id)
-            await ctx.send(_("Mentioning the bot will trigger it to send a help message."))
-        else:
-            self.disable_in.add(ctx.guild.id)
-            await ctx.send(_("Mentioning the bot will no longer cause it to send a help message."))
-        await self.config.disabled_in.set(list(self.disable_in))
-
-    def handle_dm_help(self, message: discord.Message) -> bool:
-        if message.author.bot:
-            return False
-        if isinstance(message.channel, discord.DMChannel):
-            return HELP_RE.match(message.content) is not None
-        return False
 
     @commands.Cog.listener()
     async def on_message_without_command(self, message: discord.Message):
