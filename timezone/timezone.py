@@ -209,8 +209,3 @@ class Timezone(commands.Cog):
         position_text = "" if time_diff_text == "0" else f" {position} you"
 
         await ctx.send(f"{user.display_name}'s time is {other_time} which is {time_amt}{position_text}.")
-
-    @time.command()
-    async def version(self, ctx):
-        """Show the cog version."""
-        await ctx.send(f"Timezone version: {__version__}.")
