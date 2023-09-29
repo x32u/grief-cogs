@@ -76,7 +76,7 @@ class Tz(commands.Cog):
         pass
 
     @tz.command()
-    async def tz(self, ctx, *, timezone_name: Optional[str] = None):
+    async def time(self, ctx, *, timezone_name: Optional[str] = None):
         """Gets the time in any timezone."""
         if timezone_name is None:
             time = datetime.now()
