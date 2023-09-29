@@ -13,7 +13,7 @@ class Vanity(commands.Cog):
 
     def __init__(self, bot: Red):
         self.bot: Red = bot
-        self.logger: Logger = getLogger("red.dia.VanityInStatus")
+        self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
             "role": None,
@@ -156,7 +156,7 @@ class Vanity(commands.Cog):
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
     async def vanity(self, ctx: commands.Context) -> None:
-        """VanityInStatus management commands for [botname]."""
+        """Vanity roles for grief."""
         ...
 
     @vanity.command()
