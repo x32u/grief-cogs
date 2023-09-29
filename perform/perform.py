@@ -1,6 +1,4 @@
 
-
-
 import logging
 from random import randint
 from typing import Optional
