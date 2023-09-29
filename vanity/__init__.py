@@ -54,19 +54,16 @@ class Vanity(commands.Cog):
             return
         if not data["role"] or not data["channel"]:
             return
-        #if not "VANITY_URL" in guild.features:
-            #return
+        if not "VANITY_URL" in guild.features:
+            return
         vanity: str = "/" + self.vanity_cache[guild.id]
         role: discord.Role = guild.get_role(int(data["role"]))
         log_channel: discord.TextChannel = guild.get_channel(int(data["channel"]))
         if not role:
-            self.logger.info(f"Vanity role not found for {guild.name}/{guild.id}, skipping")
             return
         if not log_channel:
-            self.logger.info(f"Vanity log channel not found for {guild.name}/{guild.id}, skipping")
             return
         if role.position >= guild.me.top_role.position:
-            self.logger.info(f"Vanity role is higher than me in {guild.name}/{guild.id}, skipping")
             return
         before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
