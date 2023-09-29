@@ -10,7 +10,7 @@ from redbot.core.utils.predicates import MessagePredicate
 
 from .converters import ActionReason, MemberID
 
-logger = getLogger("red.dia.GlobalBan")
+logger = getLogger("grief.globalban")
 
 
 class GlobalBan(commands.Cog):
