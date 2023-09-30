@@ -34,8 +34,7 @@ log = logging.getLogger("red.trusty-cogs.ServerStats")
 @cog_i18n(_)
 class ServerStats(commands.Cog):
     """
-    Gather useful information about servers the bot is in
-    A lot of commands are bot owner only
+    Gather useful information about servers the bot is in.
     """
 
     def __init__(self, bot):

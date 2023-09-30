@@ -13,6 +13,7 @@ _ = Translator("Nsfw", __file__)
 
 @cog_i18n(_)
 class Nsfw(Core):
+    """NSFw commands."""
 
     @commands.is_owner()
     @commands.group()

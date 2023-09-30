@@ -6,7 +6,7 @@ from discord.ext import tasks
 from redbot.core.i18n import Translator, cog_i18n
 import logging
 
-log = logging.getLogger("red.dav-cogs.nicknamer")
+log = logging.getLogger("grief.nicknamer")
 
 
 _ = Translator("NickNamer", __file__)
@@ -14,6 +14,7 @@ _ = Translator("NickNamer", __file__)
 
 @cog_i18n(_)
 class NickNamer(commands.Cog):
+    """Commands to manage a users nickname."""
 
     async def red_delete_data_for_user(self, *, requester, user_id):
         if requester == "user":

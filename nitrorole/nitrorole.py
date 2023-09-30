@@ -16,12 +16,13 @@ from redbot.core.utils.predicates import MessagePredicate
 
 from .guild_data import GuildData
 
-log = logging.getLogger("red.jackcogs.nitrorole")
+log = logging.getLogger("grief.nitrorole")
 
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
 class NitroRole(commands.Cog):
+    """Collection of commands to use for boosters."""
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot

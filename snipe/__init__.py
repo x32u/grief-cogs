@@ -628,4 +628,4 @@ class Sniper(RedCog):
 
 
 async def setup(bot: Red):
-    await bot.add_cog(Sniper(bot))
+    await bot.add_cog(Snipe(bot))

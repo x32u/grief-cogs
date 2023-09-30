@@ -63,6 +63,7 @@ async def wait_reply(ctx: commands.Context, timeout: int = 60):
 
 
 class MoreUtils(commands.Cog):
+    """More utils for your server."""
 
 
     async def red_delete_data_for_user(self, *, requester, user_id: int):

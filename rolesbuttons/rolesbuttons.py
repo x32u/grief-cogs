@@ -15,7 +15,7 @@ _ = Translator("RolesButtons", __file__)
 
 @cog_i18n(_)
 class RolesButtons(Cog):
-    """A cog to have roles-buttons."""
+    """A cog to have role buttons. Embed/message must be sent by grief."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)

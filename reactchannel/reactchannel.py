@@ -11,6 +11,8 @@ from .pcx_lib import checkmark, delete, message_splitter
 
 
 class ReactChannel(commands.Cog):
+    """Setup auto-reaction in channels.
+    """
 
     default_global_settings = {"schema_version": 0}
     default_guild_settings = {

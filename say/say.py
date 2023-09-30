@@ -15,7 +15,7 @@ from redbot.core.utils.tunnel import Tunnel
 if TYPE_CHECKING:
     from redbot.core.bot import Red
 
-log = logging.getLogger("red.laggron.say")
+log = logging.getLogger("grief.say")
 _ = Translator("Say", __file__)
 
 
@@ -24,6 +24,7 @@ ROLE_MENTION_REGEX = re.compile(r"<@&(?P<id>[0-9]{17,19})>")
 
 @cog_i18n(_)
 class Say(commands.Cog):
+    """grief will repeat after you."""
 
     def __init__(self, bot: "Red"):
         self.bot = bot

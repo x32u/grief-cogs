@@ -7,7 +7,7 @@ from redbot.core.utils.chat_formatting import box, humanize_list
 
 from .utils import Coordinate
 
-log = logging.getLogger("red.craycogs.joinping")
+log = logging.getLogger("grief.joinping")
 
 guild_defaults = {
     "ping_channels": [],
@@ -17,6 +17,7 @@ guild_defaults = {
 
 
 class JoinPing(commands.Cog):
+    """Mention users on join."""
 
     def __init__(self, bot: Red):
         self.bot = bot

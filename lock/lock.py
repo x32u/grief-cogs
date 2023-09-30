@@ -16,6 +16,7 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
 class Lock(commands.Cog):
+    """Lock down channels or the entire server."""
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot

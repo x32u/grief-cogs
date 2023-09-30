@@ -11,6 +11,7 @@ from prettytable import PrettyTable
 
 
 class ListPermissions(commands.Cog):
+    """List member, server, channel, role, etc permissions."""
 
     def __init__(self, bot):
         self.bot = bot

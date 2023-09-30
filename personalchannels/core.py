@@ -51,8 +51,6 @@ class PositionConverter(commands.Converter):
 class PersonalChannels(commands.Cog):
     """
     Assign and edit personal channels.
-
-    Bot needs `manage_channels` guild permissions to utilize this cog.
     """
 
     def __init__(self, bot: Red) -> None:

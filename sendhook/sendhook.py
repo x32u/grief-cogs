@@ -8,7 +8,7 @@ import requests
 import json
 
 class Sendhook(commands.Cog):
-    """Send webhooks easily..."""
+    """Send webhooks easily."""
 
     def __init__(self):
         self.config = Config.get_conf(self, identifier=806715409318936616)

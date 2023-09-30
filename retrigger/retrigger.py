@@ -29,7 +29,7 @@ from .menus import BaseMenu, ExplainReTriggerPages, ReTriggerMenu, ReTriggerPage
 from .slash import ReTriggerSlash
 from .triggerhandler import TriggerHandler
 
-log = logging.getLogger("red.trusty-cogs.ReTrigger")
+log = logging.getLogger("grief.retrigger")
 _ = Translator("ReTrigger", __file__)
 
 try:

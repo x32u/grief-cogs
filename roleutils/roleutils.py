@@ -12,7 +12,7 @@ from redbot.core.config import Config
 from .reactroles import ReactRoles
 from .roles import Roles
 
-log = logging.getLogger("red.phenom4n4n.roleutils")
+log = logging.getLogger("grief.roleutils")
 
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 

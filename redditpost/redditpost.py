@@ -16,7 +16,7 @@ from redbot.core import Config, app_commands, commands
 from redbot.core.commands.converter import TimedeltaConverter
 from redbot.core.utils.chat_formatting import box, humanize_timedelta, pagify, spoiler
 
-log = logging.getLogger("red.flare.redditpost")
+log = logging.getLogger("grief.redditpost")
 
 REDDIT_LOGO = "https://www.redditinc.com/assets/images/site/reddit-logo.png"
 REDDIT_REGEX = re.compile(
