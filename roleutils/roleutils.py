@@ -30,6 +30,7 @@ class RoleUtils(
     commands.Cog,
     metaclass=CompositeMetaClass,
 ):
+    """Useful role commands. Includes massroling, role targeting, and reaction roles."""
     def __init__(self, bot: Red, *_args) -> None:
         self.cache = {}
         self.bot = bot
