@@ -61,6 +61,7 @@ log = logging.getLogger("red.trusty-cogs.Welcome")
 
 @cog_i18n(_)
 class Welcome(Events, commands.Cog):
+    """Welcomes new members and says goodbye to those who leave the guild."""
 
     def __init__(self, bot):
         self.bot = bot

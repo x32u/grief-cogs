@@ -12,10 +12,11 @@ from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
 
 UNIQUE_ID = 0x6AFE8000
 
-log = logging.getLogger("red.sticky")
+log = logging.getLogger("grief.sticky")
 
 
 class Sticky(commands.Cog):
+    """Have a message always appear at the bottom of the channel."""
 
     REPOST_COOLDOWN = 10
 

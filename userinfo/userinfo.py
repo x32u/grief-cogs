@@ -9,9 +9,10 @@ from redbot.core.utils.common_filters import filter_invites
 adventure_bank = None
 
 
-log = logging.getLogger("red.flare.userinfo")
+log = logging.getLogger("grief.userinfo")
 
 class Userinfo(commands.Cog):
+    """Userinfo."""
 
     def __init__(self, bot):
         self.bot = bot

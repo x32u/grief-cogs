@@ -9,6 +9,7 @@ from redbot.core.bot import Red
 
 
 class Suggestion(commands.Cog):
+    """Setup suggestions in your server."""
 
     def __init__(self, bot: Red):
         self.bot = bot

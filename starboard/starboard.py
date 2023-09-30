@@ -14,7 +14,7 @@ from .menus import BaseMenu, StarboardPages
 from .starboard_entry import FakePayload, StarboardEntry
 
 _ = Translator("Starboard", __file__)
-log = logging.getLogger("red.trusty-cogs.Starboard")
+log = logging.getLogger("grief.starboard")
 
 TimeConverter = commands.converter.TimedeltaConverter(
     minimum=timedelta(days=7), allowed_units=["days", "weeks"], default_unit="days"
@@ -24,7 +24,7 @@ TimeConverter = commands.converter.TimedeltaConverter(
 @cog_i18n(_)
 class Starboard(StarboardEvents, commands.Cog):
     """
-    Create a starboard to *pin* those special comments indefinitely
+    Create a starboard to pin those special comments indefinitely
     """
 
     def __init__(self, bot):

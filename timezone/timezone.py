@@ -11,6 +11,7 @@ from redbot.core.utils.menus import close_menu, menu, DEFAULT_CONTROLS
 
 class Tz(commands.Cog):
     """Gets times across the world..."""
+    
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 278049241001, force_registration=True)

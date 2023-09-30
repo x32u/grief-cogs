@@ -9,7 +9,7 @@ from redbot.core.bot import Red
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
 class Vanity(commands.Cog):
-    """Give users a if they have a vanity in their status."""
+    """Give users a if they have your vanity in their status."""
 
     def __init__(self, bot: Red):
         self.bot: Red = bot

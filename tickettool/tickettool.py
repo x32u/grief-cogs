@@ -23,6 +23,7 @@ _ = Translator("TicketTool", __file__)
 
 @cog_i18n(_)
 class TicketTool(settings, DashboardIntegration, Cog):
+    """Setup a ticket system to easier assist members."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)

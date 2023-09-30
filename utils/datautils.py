@@ -27,6 +27,7 @@ from .utils import _
 
 @cog_i18n(_)
 class DataUtils(commands.Cog):
+    """More information commands."""
 
     # noinspection PyMissingConstructor
     def __init__(self, bot):
