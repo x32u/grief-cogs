@@ -27,20 +27,15 @@ from .settings import SettingsMixin
 if TYPE_CHECKING:
     from redbot.core.bot import Red
 
-log = logging.getLogger("red.laggron.warnsystem")
+log = logging.getLogger("grief.warnsystem")
 _ = Translator("WarnSystem", __file__)
 
 EMBED_MODLOG = lambda x: _("A member got a level {} warning.").format(x)
-EMBED_USER = lambda x: _("The moderation team set you a level {} warning.").format(x)
+EMBED_USER = lambda x: _("The moderation team set you a warning.").format(x)
 
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):
-    """
-    This allows the metaclass used for proper type detection to
-    coexist with discord.py's metaclass
 
-    Credit to https://github.com/Cog-Creators/Red-DiscordBot (mod cog) for all mixin stuff.
-    """
 
     pass
 
@@ -48,26 +43,22 @@ class CompositeMetaClass(type(commands.Cog), type(ABC)):
 @cog_i18n(_)
 class WarnSystem(SettingsMixin, AutomodMixin, commands.Cog, metaclass=CompositeMetaClass):
     """
-    An alternative to the Red core moderation system, providing a different system of moderation\
-    similar to Dyno.
-
-    Report a bug or ask a question: https://discord.gg/AVzjfpR
-    Full documentation and FAQ: http://laggron.red/warnsystem.html
+    Providing a system of moderation similar to Dyno.
     """
 
     default_global = {
         "data_version": "0.0"  # will be edited after config update, current version is 1.0
     }
     default_guild = {
-        "delete_message": False,  # if the [p]warn commands should delete the context message
-        "show_mod": False,  # if the responsible mod should be revealed to the warned user
+        "delete_message": True,  # if the [p]warn commands should delete the context message
+        "show_mod": True,  # if the responsible mod should be revealed to the warned user
         "mute_role": None,  # the role used for mute
         "update_mute": False,  # if the bot should update perms of each new text channel/category
         "remove_roles": False,  # if the bot should remove all other roles on mute
-        "respect_hierarchy": False,  # if the bot should check if the mod is allowed by hierarchy
+        "respect_hierarchy": True,  # if the bot should check if the mod is allowed by hierarchy
         # TODO use bot settingfor respect_hierarchy ?
         "reinvite": True,  # if the bot should try to send an invite to an unbanned/kicked member
-        "log_manual": False,  # if the bot should log manual kicks and bans
+        "log_manual": True,  # if the bot should log manual kicks and bans
         "channels": {  # modlog channels
             "main": None,  # default
             "1": None,
@@ -148,9 +139,6 @@ class WarnSystem(SettingsMixin, AutomodMixin, commands.Cog, metaclass=CompositeM
         self.api = API(self.bot, self.data, self.cache)
 
         self.task: asyncio.Task
-
-    __version__ = "1.5.2"
-    __author__ = ["retke (El Laggron)"]
 
     # helpers
     async def call_warn(
@@ -451,277 +439,6 @@ class WarnSystem(SettingsMixin, AutomodMixin, commands.Cog, metaclass=CompositeM
         """
         await self.call_warn(ctx, 1, member, reason)
 
-    @_warn.command(name="1", aliases=["simple"])
-    @checks.mod_or_permissions(administrator=True)
-    async def warn_1(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
-        """
-        Set a simple warning on a user.
-
-        Note: You can either call `[p]warn 1` or `[p]warn`.
-        """
-        await self.call_warn(ctx, 1, member, reason)
-
-    @_warn.command(name="2", aliases=["mute"])
-    @checks.mod_or_permissions(administrator=True)
-    async def warn_2(
-        self,
-        ctx: commands.Context,
-        member: discord.Member,
-        time: Optional[TimedeltaConverter],
-        *,
-        reason: Optional[str] = None,
-    ):
-        """
-        Mute the user in all channels, including voice channels.
-
-        This mute will use a role that will automatically be created, if it was not already done.
-        Feel free to edit the role's permissions and move it in the roles hierarchy.
-
-        You can set a timed mute by providing a valid time before the reason.
-
-        Examples:
-        - `[p]warn 2 @user 30m`: 30 minutes mute
-        - `[p]warn 2 @user 5h Spam`: 5 hours mute for the reason "Spam"
-        - `[p]warn 2 @user Advertising`: Infinite mute for the reason "Advertising"
-        """
-        await self.call_warn(ctx, 2, member, reason, time)
-
-    @_warn.command(name="3", aliases=["kick"])
-    @checks.mod_or_permissions(administrator=True)
-    async def warn_3(
-        self, ctx: commands.Context, member: discord.Member, *, reason: Optional[str] = None
-    ):
-        """
-        Kick the member from the server.
-        """
-        await self.call_warn(ctx, 3, member, reason)
-
-    @_warn.command(name="4", aliases=["softban"])
-    @checks.mod_or_permissions(administrator=True)
-    async def warn_4(
-        self, ctx: commands.Context, member: discord.Member, *, reason: Optional[str] = None
-    ):
-        """
-        Softban the member from the server.
-
-        This means that the user will be banned and immediately unbanned, so it will purge their\
-        messages in all channels.
-
-        It will delete 7 days of messages by default, but you can edit this with the\
-        `[p]warnset bandays` command.
-        """
-        await self.call_warn(ctx, 4, member, reason)
-
-    @_warn.command(name="5", aliases=["ban"], usage="<member> [time] <reason>")
-    @checks.mod_or_permissions(administrator=True)
-    async def warn_5(
-        self,
-        ctx: commands.Context,
-        member: UnavailableMember,
-        time: Optional[TimedeltaConverter],
-        *,
-        reason: Optional[str] = None,
-    ):
-        """
-        Ban the member from the server.
-
-        This ban can be a normal ban, a temporary ban or a hack ban (bans a user not in the\
-        server).
-        It won't delete messages by default, but you can edit this with the `[p]warnset bandays`\
-        command.
-
-        If you want to perform a temporary ban, provide the time before the reason. A hack ban\
-        needs a user ID, you can get it with the Developer mode (enable it in the Appearance tab\
-        of the user settings, then right click on the user and select "Copy ID").
-
-        Examples:
-        - `[p]warn 5 @user`: Ban for no reason :c
-        - `[p]warn 5 @user 7d Insults`: 7 days ban for the reason "Insults"
-        - `[p]warn 5 012345678987654321 Advertising and leave`: Ban the user with the ID provided\
-        while they're not in the server for the reason "Advertising and leave" (if the user shares\
-        another server with the bot, a DM will be sent).
-        """
-        await self.call_warn(ctx, 5, member, reason, time)
-
-    @commands.group(invoke_without_command=True)
-    @commands.guild_only()
-    @checks.mod_or_permissions(administrator=True)
-    @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def masswarn(self, ctx: commands.Context, *selection: str):
-        """
-        Perform a warn on multiple members at once.
-
-        To select members, you have to use UNIX-like flags to add conditions\
-        which will be checked for each member.
-
-        Example: `[p]masswarn 3 --take-action --send-dm --has-role "Danger"\
-        --joined-after "May 2019" --reason "Cleaning dangerous members"`
-
-        To get the full list of flags and how to use them, please read the\
-        wiki: https://laggrons-dumb-cogs.readthedocs.io/
-        """
-        if not selection:
-            await ctx.send_help()
-            return
-        try:
-            selection = await AdvancedMemberSelect().convert(ctx, selection)
-        except commands.BadArgument as e:
-            await ctx.send(e)
-            return
-        await self.call_masswarn(
-            ctx,
-            1,
-            selection.members,
-            selection.unavailable_members,
-            selection.send_modlog,
-            selection.send_dm,
-            selection.take_action,
-            selection.reason,
-            None,
-            selection.confirm,
-        )
-
-    @masswarn.command(name="1", aliases=["simple"])
-    @checks.mod_or_permissions(administrator=True)
-    async def masswarn_1(self, ctx: commands.Context, *selection: str):
-        """
-        Perform a simple mass warning.
-        """
-        if not selection:
-            await ctx.send_help()
-            return
-        try:
-            selection = await AdvancedMemberSelect().convert(ctx, selection)
-        except commands.BadArgument as e:
-            await ctx.send(e)
-            return
-        await self.call_masswarn(
-            ctx,
-            1,
-            selection.members,
-            selection.unavailable_members,
-            selection.send_modlog,
-            selection.send_dm,
-            selection.take_action,
-            selection.reason,
-            None,
-            selection.confirm,
-        )
-
-    @masswarn.command(name="2", aliases=["mute"])
-    @checks.mod_or_permissions(administrator=True)
-    async def masswarn_2(self, ctx: commands.Context, *selection: str):
-        """
-        Perform a mass mute.
-
-        You can provide a duration with the `--time` flag, the format is the same as the simple\
-        level 2 warning.
-        """
-        if not selection:
-            await ctx.send_help()
-            return
-        try:
-            selection = await AdvancedMemberSelect().convert(ctx, selection)
-        except commands.BadArgument as e:
-            await ctx.send(e)
-            return
-        await self.call_masswarn(
-            ctx,
-            2,
-            selection.members,
-            selection.unavailable_members,
-            selection.send_modlog,
-            selection.send_dm,
-            selection.take_action,
-            selection.reason,
-            selection.time,
-            selection.confirm,
-        )
-
-    @masswarn.command(name="3", aliases=["kick"])
-    @checks.mod_or_permissions(administrator=True)
-    async def masswarn_3(self, ctx: commands.Context, *selection: str):
-        """
-        Perform a mass kick.
-        """
-        if not selection:
-            await ctx.send_help()
-            return
-        try:
-            selection = await AdvancedMemberSelect().convert(ctx, selection)
-        except commands.BadArgument as e:
-            await ctx.send(e)
-            return
-        await self.call_masswarn(
-            ctx,
-            3,
-            selection.members,
-            selection.unavailable_members,
-            selection.send_modlog,
-            selection.send_dm,
-            selection.take_action,
-            selection.reason,
-            None,
-            selection.confirm,
-        )
-
-    @masswarn.command(name="4", aliases=["softban"])
-    @checks.mod_or_permissions(administrator=True)
-    async def masswarn_4(self, ctx: commands.Context, *selection: str):
-        """
-        Perform a mass softban.
-        """
-        if not selection:
-            await ctx.send_help()
-            return
-        try:
-            selection = await AdvancedMemberSelect().convert(ctx, selection)
-        except commands.BadArgument as e:
-            await ctx.send(e)
-            return
-        await self.call_masswarn(
-            ctx,
-            4,
-            selection.members,
-            selection.unavailable_members,
-            selection.send_modlog,
-            selection.send_dm,
-            selection.take_action,
-            selection.reason,
-            None,
-            selection.confirm,
-        )
-
-    @masswarn.command(name="5", aliases=["ban"])
-    @checks.mod_or_permissions(administrator=True)
-    async def masswarn_5(self, ctx: commands.Context, *selection: str):
-        """
-        Perform a mass ban.
-
-        You can provide a duration with the `--time` flag, the format is the same as the simple\
-        level 5 warning.
-        """
-        if not selection:
-            await ctx.send_help()
-            return
-        try:
-            selection = await AdvancedMemberSelect().convert(ctx, selection)
-        except commands.BadArgument as e:
-            await ctx.send(e)
-            return
-        await self.call_masswarn(
-            ctx,
-            5,
-            selection.members,
-            selection.unavailable_members,
-            selection.send_modlog,
-            selection.send_dm,
-            selection.take_action,
-            selection.reason,
-            selection.time,
-            selection.confirm,
-        )
-
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.member)
@@ -774,7 +491,7 @@ class WarnSystem(SettingsMixin, AutomodMixin, commands.Cog, metaclass=CompositeM
         embed.add_field(
             name=_("Total number of warnings: ") + str(len(cases)), value=warn_field, inline=False
         )
-        embed.colour = user.top_role.colour
+        embed.colour = discord.Colour.dark_theme
 
         paginator = WarningsSelector(ctx, user, cases)
         await paginator.start(embed=embed)

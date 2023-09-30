@@ -1,10 +1,4 @@
-# This code was originally written by Rapptz for RobotDanny, licensed under MPL 2.0
-# The original file can be found here:
-# https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/utils/paginator.py
-# It was modified by laggron42 to work with Red and the context of WarnSystem
-# You can find a copy of RoboDanny's licence in this folder
-#
-# The GPL-v3 licence of this repository does not apply to this file
+
 
 from __future__ import annotations
 
@@ -19,7 +13,7 @@ if TYPE_CHECKING:
     from redbot.core.bot import Red
     from redbot.core.commands import Context
 
-log = logging.getLogger("ballsdex.core.utils.paginator")
+log = logging.getLogger("grief.paginator")
 _PageSource = TypeVar("_PageSource", bound=menus.PageSource)
 
 
