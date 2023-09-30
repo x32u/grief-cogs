@@ -15,6 +15,9 @@ from .utilities import sync_as_async
 
 
 class XCali(commands.Cog):
+    """
+    Repost TikTok and YouTube videos.
+    """
 
     def __init__(self, bot: Red):
         self.bot = bot
