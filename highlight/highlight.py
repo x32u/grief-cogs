@@ -14,7 +14,7 @@ from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
 from redbot.core.utils.mod import is_mod_or_superior
 from redbot.core.utils.predicates import MessagePredicate
 
-logger = logging.getLogger("red.flare.highlight")
+logger = logging.getLogger("grief.highlight")
 
 
 def chunks(l, n):
@@ -32,6 +32,7 @@ async def restrictedhighlight_check(ctx):
 
 
 class Highlight(commands.Cog):
+    """Get announcements when a specific word is said."""
 
     def __init__(self, bot):
         self.bot = bot

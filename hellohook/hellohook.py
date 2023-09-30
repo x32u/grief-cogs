@@ -8,6 +8,7 @@ import json
 import typing
 
 class Hellohook(commands.Cog):
+    """Use webhooks to announce joins and leaves."""
 
     def __init__(self, bot):
         self.config = Config.get_conf(self, identifier=806715409318936616)

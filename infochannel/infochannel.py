@@ -11,7 +11,7 @@ from redbot.core.commands import Cog
 # 10 minutes. Rate limit is 2 per 10, so 1 per 6 is safe.
 RATE_LIMIT_DELAY = 60 * 6  # If you're willing to risk rate limiting, you can decrease the delay
 
-log = logging.getLogger("red.fox_v3.infochannel")
+log = logging.getLogger("grief.infochannel")
 
 
 async def get_channel_counts(category, guild):
@@ -43,6 +43,7 @@ async def get_channel_counts(category, guild):
 
 
 class InfoChannel(Cog):
+    """Use channels to display info such as members, boosters, roles, online/offline members, etc."""
 
     def __init__(self, bot: Red):
         super().__init__()

@@ -20,9 +20,6 @@ from redbot.core.data_manager import bundled_data_path
 
 from .view import GuildStatsView
 
-# Credits:
-# General repo credits.
-
 _ = Translator("GuildStats", __file__)
 
 
@@ -71,7 +68,7 @@ class ObjectConverter(commands.Converter):
 
 @cog_i18n(_)
 class GuildStats(Cog):
-    """A cog to generate images with messages and voice stats, for members, roles, guilds, categories, text channels, voice channels and activities!"""
+    """A cog to generate images with messages and voice stats, for members, roles, guilds, categories, text channels, voice channels and activities."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)

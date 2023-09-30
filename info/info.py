@@ -6,6 +6,8 @@ from redbot.core.bot import Red
 
 
 class Info(commands.Cog):
+    """Suite of tools to grab banners, icons, etc."""
+    
     # Messages.
     X = ":x: Error: "
     MEMBER_NO_GUILD_AVATAR = X + "this user does not have a server avatar."

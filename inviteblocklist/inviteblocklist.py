@@ -9,7 +9,7 @@ from redbot.core import Config, VersionInfo, commands, version_info
 from redbot.core.i18n import Translator
 from redbot.core.utils.chat_formatting import humanize_list, pagify
 
-log = logging.getLogger("red.trusty-cogs.inviteblocklist")
+log = logging.getLogger("grief.inviteblocklist")
 
 _ = Translator("ExtendedModLog", __file__)
 
@@ -73,6 +73,7 @@ class ChannelUserRole(IDConverter):
 
 
 class InviteBlocklist(commands.Cog):
+    """Block invites from being sent in your server."""
 
     def __init__(self, bot):
         self.bot = bot

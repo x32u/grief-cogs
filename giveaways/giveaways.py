@@ -15,13 +15,11 @@ from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
 from .converter import Args
 from .objects import Giveaway, GiveawayEnterError, GiveawayExecError
 
-log = logging.getLogger("red.flare.giveaways")
+log = logging.getLogger("grief.giveaways")
 GIVEAWAY_KEY = "giveaways"
 
-# TODO: Add a way to delete giveaways that have ended from the config
-
-
 class Giveaways(commands.Cog):
+    """Create giveaways for your server."""
 
     def __init__(self, bot):
         self.bot = bot

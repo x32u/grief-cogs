@@ -14,6 +14,7 @@ logger = getLogger("grief.globalban")
 
 
 class GlobalBan(commands.Cog):
+    """Hardban users to make sure they remain banned."""
 
     def get_avatar_url(self, user: Union[discord.User, discord.Member]) -> str:
         if discord.version_info.major == 1:

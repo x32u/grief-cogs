@@ -10,6 +10,7 @@ from redbot.core.utils.chat_formatting import humanize_list
 
 
 class Gallery(commands.Cog):
+    """Setup image only channels."""
 
     def __init__(self, bot: Red):
         self.bot = bot
