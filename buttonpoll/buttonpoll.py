@@ -33,8 +33,6 @@ class ButtonPoll(commands.Cog):
 
         self.polls: List[Poll] = []
 
-        bot.add_dev_env_value(lambda _: self)
-
         self.plot_executor = ThreadPoolExecutor(
             max_workers=16, thread_name_prefix="buttonpoll_plot"
         )
