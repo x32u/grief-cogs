@@ -18,6 +18,7 @@ DEFAULT_USER: Dict[str, Any] = {
 
 
 class AwayFromKeyboard(RedCog):
+    """Global afk system."""
 
     def __init__(self, bot: Red):
         self.bot: Red = bot

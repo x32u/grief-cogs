@@ -52,6 +52,7 @@ def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
 
 
 class EmbedUtils(commands.Cog):
+    """Create embeds for your server."""
 
     EMBED_LIMIT = 50
     GLOBAL_EMBED_LIMIT = 100

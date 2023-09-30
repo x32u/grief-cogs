@@ -43,6 +43,7 @@ class StolenEmoji:
 
 
 class EmojiSteal(commands.Cog):
+    """Steal emojis and stickers from other servers to use in your server."""
     
     def __init__(self, bot):
         super().__init__()

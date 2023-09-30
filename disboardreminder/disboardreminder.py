@@ -15,7 +15,7 @@ from redbot.core.utils import AsyncIter
 
 from .converters import FuzzyRole
 
-log = logging.getLogger("red.phenom4n4n.disboardreminder")
+log = logging.getLogger("grief.disboardreminder")
 
 DISBOARD_BOT_ID = 302050872383242240
 LOCK_REASON = "DisboardReminder auto-lock"
@@ -24,6 +24,7 @@ BUMP_RE = re.compile(r"!d bump\b")
 
 
 class DisboardReminder(commands.Cog):
+    """Setup reminders for users to bump your server."""
 
     default_guild_cache = {"channel": None, "tasks": {}}
 
@@ -31,7 +32,7 @@ class DisboardReminder(commands.Cog):
         "channel": None,
         "role": None,
         "message": "It's been 2 hours since the last successful bump, could someone run </bump:947088344167366698>?",
-        "tyMessage": "(message.author.mention)) thank you for bumping! Make sure to leave a review at <https://disboard.org/server/{guild(id)}>.",
+        "tyMessage": "thank you for bumping! make sure to leave a review at <https://disboard.org/server/{guild(id)}>.",
         "nextBump": None,
         "lock": False,
         "clean": False,

@@ -620,17 +620,10 @@ class EmbedEditorView(discord.ui.View):
 
 
 class EmbedCreator(commands.Cog):
-    """Create embeds using buttons, modals and dropdowns!"""
-
-    __author__ = "Kreusada"
-    __version__ = "1.0.0"
+    """Create embeds using buttons, modals and dropdowns."""
 
     def __init__(self, bot: Red):
         self.bot = bot
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        context = super().format_help_for_context(ctx)
-        return f"{context}\n\nAuthor: {self.__author__}\nVersion: {self.__version__}"
 
     async def red_delete_data_for_user(self, **kwargs):
         return

@@ -11,11 +11,12 @@ from .eventmixin import EventChooser, EventMixin
 from .settings import inv_settings
 
 _ = Translator("ExtendedModLog", __file__)
-logger = logging.getLogger("red.trusty-cogs.ExtendedModLog")
+logger = logging.getLogger("grief.extendedmodlog")
 
 
 @cog_i18n(_)
 class ExtendedModLog(EventMixin, commands.Cog):
+    """Advanced Logging to keep track of events in your server."""
 
     def __init__(self, bot):
         self.bot = bot

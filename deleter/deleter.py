@@ -12,6 +12,7 @@ from redbot.core.utils.chat_formatting import humanize_list
 
 
 class Deleter(commands.Cog):
+    """Setup channels to auto-purge after a specified time."""
 
     def __init__(self, bot):
         self.bot = bot
