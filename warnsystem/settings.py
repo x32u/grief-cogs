@@ -792,7 +792,7 @@ channels, and prevented from talking in all voice channels.
                 embed.description = _(
                     "You can change all of these values with {prefix}warnset"
                 ).format(prefix=ctx.clean_prefix)
-                embed.set_footer(text=_("Cog made with ❤️ by Laggron"))
+                embed.set_footer(text=_("grief"))
                 embed.colour = color
             embeds[0].add_field(name=_("Log channels"), value=channels)
             embeds[0].add_field(name=_("Mute role"), value=mute_role)
