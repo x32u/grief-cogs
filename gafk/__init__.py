@@ -18,7 +18,7 @@ DEFAULT_USER: Dict[str, Any] = {
 
 
 class AwayFromKeyboard(RedCog):
-    """Let your friends know when you're afk, grief will add an autoresponder and update your nick in all shared servers.
+    """Let your friends know when you are afk, grief will add an autoresponder and update your nick in all shared servers.
     """
 
     def __init__(self, bot: Red):
