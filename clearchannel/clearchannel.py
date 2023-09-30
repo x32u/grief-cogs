@@ -15,6 +15,9 @@ _ = Translator("ClearChannel", __file__)
 
 @cog_i18n(_)
 class ClearChannel(Cog, DashboardIntegration):
+    """
+    Delete the channel and recreate it.
+    """
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)

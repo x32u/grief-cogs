@@ -17,7 +17,7 @@ _ = Translator("CommandsButtons", __file__)
 
 @cog_i18n(_)
 class CommandsButtons(Cog):
-    """A cog to allow a user to execute a command by clicking on a button!"""
+    """A cog to allow a user to execute a command by clicking on a button."""
 
     def __init__(self, bot: Red) -> None:
         self.bot: Red = bot

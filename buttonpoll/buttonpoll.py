@@ -17,6 +17,7 @@ log = get_vex_logger(__name__)
 
 
 class ButtonPoll(commands.Cog):
+    """Create polls using buttons."""
     
     def __init__(self, bot: Red) -> None:
         self.bot = bot

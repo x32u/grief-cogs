@@ -24,6 +24,8 @@ class AutoRoom(
     commands.Cog,
     metaclass=CompositeMetaClass,
 ):
+    """Create automated voice channels for your server."""
+    
     default_global_settings = {"schema_version": 0}
     default_guild_settings = {
         "admin_access": True,

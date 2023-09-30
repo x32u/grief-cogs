@@ -11,6 +11,7 @@ from redbot.core.bot import Red
 
 
 class Application(commands.Cog):
+    """Create staff applications for your server."""
 
     def __init__(self, bot: Red):
         self.bot = bot
