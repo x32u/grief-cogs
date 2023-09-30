@@ -64,7 +64,7 @@ class ReactionMsg:
         self.message = f"https://discord.com/channels/{payload.guild_id}/{payload.channel_id}/{payload.message_id}"
 
 
-class Sniper(RedCog):
+class Snipe(RedCog):
     """Snipe the last edited/deleted message."""
 
     def __init__(self, bot: Red):
