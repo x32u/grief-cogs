@@ -53,7 +53,7 @@ class WarnSystem(SettingsMixin, AutomodMixin, commands.Cog, metaclass=CompositeM
         "delete_message": True,  # if the [p]warn commands should delete the context message
         "show_mod": True,  # if the responsible mod should be revealed to the warned user
         "mute_role": None,  # the role used for mute
-        "update_mute": False,  # if the bot should update perms of each new text channel/category
+        "update_mute": True,  # if the bot should update perms of each new text channel/category
         "remove_roles": False,  # if the bot should remove all other roles on mute
         "respect_hierarchy": True,  # if the bot should check if the mod is allowed by hierarchy
         # TODO use bot settingfor respect_hierarchy ?
@@ -539,133 +539,6 @@ class WarnSystem(SettingsMixin, AutomodMixin, commands.Cog, metaclass=CompositeM
             for i, x in enumerate(pages, start=1)
         ]
         await menus.menu(ctx=ctx, pages=pages, controls=menus.DEFAULT_CONTROLS, timeout=60)
-
-    @commands.command()
-    @checks.mod_or_permissions(manage_roles=True)
-    async def wsunmute(self, ctx: commands.Context, member: discord.Member):
-        """
-        Unmute a member muted with WarnSystem.
-
-        If the member's roles were removed, they will be granted back.
-
-        *wsunmute = WarnSystem unmute. Feel free to add an alias.*
-        """
-        guild = ctx.guild
-        mute_role = guild.get_role(await self.cache.get_mute_role(guild))
-        if not mute_role:
-            await ctx.send(_("The mute role is not set or lost."))
-            return
-        if mute_role not in member.roles:
-            await ctx.send(_("That member isn't muted."))
-            return
-        case = await self.cache.get_temp_action(guild, member)
-        if case and case["level"] == 2:
-            roles = case["roles"]
-            await self.cache.remove_temp_action(guild, member)
-        else:
-            cases = await self.api.get_all_cases(guild, member)
-            roles = []
-            for data in cases[::-1]:
-                if data["level"] == 2:
-                    try:
-                        roles = data["roles"]
-                    except KeyError:
-                        continue
-                    break
-        await member.remove_roles(
-            mute_role,
-            reason=_("[WarnSystem] Member unmuted by {author} (ID: {author.id})").format(
-                author=ctx.author
-            ),
-        )
-        roles = list(filter(None, [guild.get_role(x) for x in roles]))
-        if not roles:
-            await ctx.send(_("Member unmuted."))
-            return
-        await ctx.send(
-            _("Member unmuted. {len_roles} roles to reassign...").format(len_roles=len(roles))
-        )
-        async with ctx.typing():
-            fails = []
-            for role in roles:
-                try:
-                    await member.add_roles(role)
-                except discord.errors.HTTPException as e:
-                    log.error(
-                        f"Failed to reapply role {role} ({role.id}) on guild {guild} "
-                        f"({guild.id}) after unmute.",
-                        exc_info=e,
-                    )
-                    fails.append(role)
-        text = _("Done.")
-        if fails:
-            text.append(_("\n\nFailed to add {fails}/{len_roles} roles back:\n"))
-            for role in fails:
-                text.append(f"- {role.name}\n")
-        for page in pagify(text):
-            await ctx.send(page)
-
-    @commands.command()
-    @commands.bot_has_permissions(ban_members=True)
-    @checks.mod_or_permissions(ban_members=True)
-    async def wsunban(self, ctx: commands.Context, member_id: int):
-        """
-        Unban a member banned with WarnSystem.
-
-        *wsunban = WarnSystem unban. Feel free to add an alias.*
-        """
-        guild = ctx.guild
-        try:
-            ban_entry = await guild.fetch_ban(discord.Object(member_id))
-        except discord.NotFound:
-            await ctx.send(_("That user is not banned."))
-            return
-        member = ban_entry.user
-        try:
-            await guild.unban(member)
-        except discord.errors.HTTPException as e:
-            await ctx.send(_("Failed to unban the given member. Check your logs for details."))
-            log.error(f"Can't unban user {member.id} from guild {guild} ({guild.id})", exc_info=e)
-            return
-        case = await self.cache.get_temp_action(guild, member)
-        if case and case["level"] == 5:
-            await self.cache.remove_temp_action(guild, member)
-        await ctx.send(_("User unbanned."))
-
-    @commands.command(hidden=True)
-    async def warnsysteminfo(self, ctx: commands.Context):
-        """
-        Get informations about the cog.
-        """
-        await ctx.send(
-            _(
-                "Laggron's Dumb Cogs V3 - warnsystem\n\n"
-                "Version: {0.__version__}\n"
-                "Author: {0.__author__[0]}\n\n"
-                "Github repository: https://github.com/retke/Laggrons-Dumb-Cogs/tree/v3\n"
-                "Discord server: https://discord.gg/AVzjfpR\n"
-                "Documentation: http://laggrons-dumb-cogs.readthedocs.io/\n"
-                "Help translating the cog: https://crowdin.com/project/laggrons-dumb-cogs/\n\n"
-                "Support my work on Patreon: https://www.patreon.com/retke"
-            ).format(self)
-        )
-
-    @commands.Cog.listener()
-    async def on_member_unban(self, guild: discord.Guild, user: discord.User):
-        # if a member gets unbanned, we check if he was temp banned with warnsystem
-        # if it was, we remove the case so it won't unban him a second time
-        warns = await self.cache.get_temp_action(guild)
-        to_remove = []  # there can be multiple temp bans, let's not question the moderators
-        for member, data in warns.items():
-            if data["level"] == 2 or int(member) != user.id:
-                continue
-            to_remove.append(UnavailableMember(self.bot, guild._state, member))
-        if to_remove:
-            await self.cache.bulk_remove_temp_action(guild, to_remove)
-            log.info(
-                f"[Guild {guild.id}] The temporary ban of user {user} (ID: {user.id}) "
-                "was cancelled due to his manual unban."
-            )
 
     @commands.Cog.listener()
     async def on_member_update(self, before: discord.Member, after: discord.Member):
