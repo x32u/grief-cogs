@@ -19,7 +19,6 @@ from warnsystem.components import WarningsSelector
 
 from . import errors
 from .api import API, UnavailableMember
-from .automod import AutomodMixin
 from .cache import MemoryCache
 from .converters import AdvancedMemberSelect
 from .settings import SettingsMixin
@@ -41,7 +40,7 @@ class CompositeMetaClass(type(commands.Cog), type(ABC)):
 
 
 @cog_i18n(_)
-class WarnSystem(SettingsMixin, AutomodMixin, commands.Cog, metaclass=CompositeMetaClass):
+class WarnSystem(SettingsMixin, commands.Cog, metaclass=CompositeMetaClass):
     """
     Providing a system of moderation similar to Dyno.
     """
