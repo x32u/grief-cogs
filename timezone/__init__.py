@@ -1,4 +1,4 @@
-from .timezone import Tz
+from .timezone import Timezone
 
 __red_end_user_data_statement__ = (
     "This cog stores data provided by users "

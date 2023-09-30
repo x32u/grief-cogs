@@ -7,5 +7,4 @@ jishaku.Flags.FORCE_PAGINATOR = True
 
 
 class Jishaku(*STANDARD_FEATURES, *OPTIONAL_FEATURES):
-    """Jishaku ported to Red"""
-
+    """Jishaku"""
