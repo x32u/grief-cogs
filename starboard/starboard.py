@@ -24,7 +24,7 @@ TimeConverter = commands.converter.TimedeltaConverter(
 @cog_i18n(_)
 class Starboard(StarboardEvents, commands.Cog):
     """
-    Create a starboard to pin those special comments indefinitely
+    Create a starboard to pin those special comments indefinitely.
     """
 
     def __init__(self, bot):
