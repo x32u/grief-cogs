@@ -11,6 +11,7 @@ from redbot.core.bot import Red
 
 
 class Counting(commands.Cog):
+    """Setup a counting channel for your server."""
 
     def __init__(self, bot: Red):
         self.bot = bot
