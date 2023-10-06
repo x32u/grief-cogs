@@ -28,12 +28,6 @@ from .core.views import ComponentType, MenuPicker, MenuView
 
 _ = Translator("CustomHelp", __file__)
 
-# Swtichable alphabetic ordered display
-# Crowdin stuff ;-;
-# Generating every category page on format_bot_help so as to save time in reaction stuff?
-# No need to fetch config uncat, when u can use global cache, but is that better?
-# TODO is rewriting everything to use global cache instead of config, better?
-# TODO Need to remove tons of redundant code in themes
 """
 Config Structure:
     {
@@ -323,7 +317,6 @@ class CustomHelp(commands.Cog):
         val = "\n".join([f"`{i:<10}`: " + (j if j else "default") for i, j in val.items()])
         emb = discord.Embed(
             title="Custom help settings",
-            description=f"Cog Version: {self.__version__}",
             color=await ctx.embed_color(),
         )
         emb.add_field(name="Theme", value=val)
