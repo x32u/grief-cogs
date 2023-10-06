@@ -142,12 +142,13 @@ class DankHelp(ThemesMeta):
             emb = await self.embed_template(help_settings, ctx)
             
             if description := command.description:
+            
+            command_help = command.format_help_for_context(ctx)
             if command_help:
                 splitted = command_help.split("\n\n")
                 name = splitted[0]
                 value = "\n\n".join(splitted[1:])
                 emb["embed"]["title"] = f"{description[:250]}"
-
                 emb["fields"].append(EmbedField("Description:", name[:250], False))
             else:
                 value = ""
@@ -164,7 +165,6 @@ class DankHelp(ThemesMeta):
 
             if value:
                 emb["fields"].append(EmbedField("Full description:", value[:1024], False))
-                command_help = command.format_help_for_context(ctx)
 
             if subcommands:
 
