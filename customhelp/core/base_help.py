@@ -172,7 +172,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         ctx: Context,
         obj: Category,
         help_settings: HelpSettings,
-        get_pages: bool = False,
+        get_pages: bool = True,
         **kwargs,
     ):
         coms = await self.get_category_help_mapping(
