@@ -31,7 +31,7 @@ from .utils import (
     get_category_page_mapper_chunk,
 )
 
-LOG = logging.getLogger("red.customhelp.core.base_help")
+LOG = logging.getLogger("grief.customhelp")
 
 HelpTarget = Union[
     commands.Command,
@@ -817,3 +817,7 @@ class HybridMenus:
     async def close_menu(self, interaction):
         self.stop()
         await self.bot_message.delete()
+    
+    async def home_page(self, ctx, interaction):
+        self.change_source(await self.get_pages(ctx, "home"))
+        await self.show_current_page(interaction)
