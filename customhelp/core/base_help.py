@@ -792,10 +792,6 @@ class HybridMenus:
             else:
                 await self.show_current_page(interaction)
 
-    async def home_page(self, ctx, interaction):
-        self.change_source(await self.get_pages(ctx, "home"))
-        await self.show_current_page(interaction)
-
     async def first_page(self, interaction):
         self.curr_page = 0
         await self.show_current_page(interaction)
