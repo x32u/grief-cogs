@@ -143,7 +143,7 @@ class DankHelp(ThemesMeta):
             if description := command.description:
                 emb["embed"]["title"] = f"{description[:250]}"
 
-                emb["fields"].append(EmbedField("Description:", name[:250], False))
+                emb["fields"].append(EmbedField("Description:", name[:250], True))
             else:
                 value = ""
             emb["fields"].append(EmbedField("Usage:", signature, False))
