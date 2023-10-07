@@ -179,7 +179,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
 
         if await ctx.embed_requested():
             emb = await self.embed_template(help_settings, ctx)
-            emb["thumbnail"] = obj.thumbnail
 
             if description := obj.long_desc or "":
                 emb["embed"]["description"] = f"{description[:250]}"
