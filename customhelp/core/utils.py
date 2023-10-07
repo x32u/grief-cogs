@@ -7,7 +7,6 @@ EMOJI_REGEX = r"<(?P<animated>a?):(?P<name>[a-zA-Z0-9_]{2,32}):(?P<id>[0-9]{18,2
 # https://www.w3resource.com/python-exercises/re/python-re-exercise-42.php
 LINK_REGEX = r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
 
-
 def emoji_converter(bot, emoji) -> Optional[str]:
     """General emoji converter"""
     if not emoji:
@@ -22,8 +21,6 @@ def shorten_line(a_line: str) -> str:
         return a_line
     return a_line[:67] + "..."
 
-
-# Add permissions
 def get_perms(command):
     final_perms = ""
     neat_format = lambda x: " ".join(i.capitalize() for i in x.replace("_", " ").split())
@@ -59,15 +56,12 @@ def get_cooldowns(command):
 
     return cooldowns
 
-
-# Add aliases
 def get_aliases(command, original):
     if alias := list(command.aliases):
         if original in alias:
             alias.remove(original)
             alias.append(command.name)
         return alias
-
 
 async def get_category_page_mapper_chunk(
     formatter, get_pages, ctx, cat, help_settings, page_mapping
