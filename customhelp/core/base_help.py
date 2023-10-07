@@ -373,13 +373,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
             "name": _("{ctx.me.display_name} help menu").format(ctx=ctx),
             "icon_url": ctx.me.display_avatar.url,
         }
-        offset = len(author_info["name"]) + 20
-        offset += len(embed_dict["embed"]["description"])
-        offset += len(embed_dict["embed"]["title"])
-        if page_char_limit + offset > 5500:
-            page_char_limit = 5500 - offset
-        elif page_char_limit < 250:
-            page_char_limit = 250
 
         field_groups = self.group_embed_fields(embed_dict["fields"], page_char_limit)
 
