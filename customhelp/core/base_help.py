@@ -1,3 +1,4 @@
+
 import asyncio
 import logging
 from collections import namedtuple
@@ -109,7 +110,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
     async def get_category_help_mapping(
         self, ctx, category, help_settings: HelpSettings, bypass_checks=False
     ):
-        # Having bypass_checks to prevent triggering self.blacklist many times.
         if not bypass_checks and not await self.blacklist(ctx, category.name):
             return
         sorted_iterable = []
@@ -117,10 +117,9 @@ class BaguetteHelp(commands.RedHelpFormatter):
         isuncategory = False
         if category.name == GLOBAL_CATEGORIES.uncategorised.name:
             isuncategory = True
-            sorted_cogs.append(None)  # TODO Need to add commands with no category here as well >_>
+            sorted_cogs.append(None)
         for cogname in sorted_cogs:
             cog = ctx.bot.get_cog(cogname)
-            # Simple kmaps for these conditions, math is dark magic
             if ((not cogname) or cog) and (
                 (isuncategory and cogname is None) or (cogname in category.cogs)
             ):
@@ -148,7 +147,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
 
         if isinstance(help_for, str):
             try:
-                help_for = await self.parse_command(ctx, help_for)  # type:ignore
+                help_for = await self.parse_command(ctx, help_for)
             except NoCommand:
                 await self.command_not_found(ctx, help_for, help_settings=help_settings)
                 return
@@ -232,7 +231,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
                     if i == 0:
                         title = _("**__Commands:__**")
                     else:
-                        title = _("**__Commands:__** (continued)")
+                        title = _("**__Commands:__**")
                     field = EmbedField(title, page, False)
                     emb["fields"].append(field)
 

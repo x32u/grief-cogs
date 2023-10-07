@@ -8,15 +8,13 @@ from redbot.core import commands
 if TYPE_CHECKING:
     import customhelp.core.base_help as base_help
 
-LOG = logging.getLogger("red.customhelp.core.views")
+LOG = logging.getLogger("grief.customhelp")
 
 
 class ComponentType(enum.IntEnum):
     MENU = 0
     ARROW = 1
 
-
-# PICKER MENUS (Stuff for selecting buttons, select etc)
 class MenuView(discord.ui.View):
     def __init__(self, uid, config, callback):
         super().__init__(timeout=120)
@@ -24,10 +22,10 @@ class MenuView(discord.ui.View):
         self.message: discord.Message
         self.update_callback = callback
         self.config = config
-        self.values: List[Optional[str]] = [None, None]  # menutype value,arrowtype value
+        self.values: List[Optional[str]] = [None, None]
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
-        if interaction.user.id == self.uid:  # type:ignore
+        if interaction.user.id == self.uid:
             return True
         else:
             await interaction.response.send_message(
@@ -60,7 +58,6 @@ class MenuView(discord.ui.View):
     async def on_timeout(self) -> None:
         await self.message.edit(content="Selection timed out.", view=None)
 
-
 class MenuPicker(discord.ui.Select):
     view: MenuView
 
@@ -71,15 +68,13 @@ class MenuPicker(discord.ui.Select):
             min_values=1,
             max_values=1,
             options=options,
-            row=self.menutype,  # HACKS
+            row=self.menutype,
         )
 
     async def callback(self, interaction: discord.Interaction):
         self.view.values[self.menutype] = self.values[0]
         await interaction.response.defer()
 
-
-# HELP MENU Interaction items
 class BaseInteractionMenu(discord.ui.View):
     def __init__(self, *, hmenu):
         self.hmenu: base_help.HybridMenus = hmenu
@@ -99,7 +94,6 @@ class BaseInteractionMenu(discord.ui.View):
 
     async def on_timeout(self):
         children = []
-        # Filter select bars and disable them
         for child in self.children:
             if isinstance(child, discord.ui.Select):
                 child.disabled = True
@@ -111,7 +105,7 @@ class BaseInteractionMenu(discord.ui.View):
 
         try:
             await self.message.edit(view=self)
-        except discord.NotFound:  # User unloaded the cog
+        except discord.NotFound:
             pass
 
     async def start(
@@ -133,7 +127,7 @@ class BaseInteractionMenu(discord.ui.View):
         else:
             self.message = message
         self.ctx = ctx
-        self.valid_ids = list(ctx.bot.owner_ids)  # type: ignore
+        self.valid_ids = list(ctx.bot.owner_ids)
         self.valid_ids.append(ctx.author.id)
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
@@ -156,14 +150,12 @@ class ReactButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         await self.view.hmenu.category_react_action(self.view.ctx, interaction, self.custom_id)
 
-
-# Selection Bar
 class SelectMenuHelpBar(discord.ui.Select):
     view: BaseInteractionMenu
 
     def __init__(self, categories: List[discord.SelectOption]):
         super().__init__(
-            placeholder="Select a category...",
+            placeholder="Select a category",
             min_values=1,
             max_values=1,
             options=categories,
@@ -179,7 +171,7 @@ class SelectArrowHelpBar(discord.ui.Select):
 
     def __init__(self, arrows: List[discord.SelectOption]):
         super().__init__(
-            placeholder="Select an arrow...",
+            placeholder="Select an arrow",
             min_values=1,
             max_values=1,
             options=arrows,
