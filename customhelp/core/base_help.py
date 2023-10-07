@@ -179,6 +179,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
 
         if await ctx.embed_requested():
             emb = await self.embed_template(help_settings, ctx)
+            emb["thumbnail"] = obj.thumbnail
 
             if description := obj.long_desc or "":
                 emb["embed"]["description"] = f"{description[:250]}"
@@ -359,6 +360,62 @@ class BaguetteHelp(commands.RedHelpFormatter):
         emb["footer"]["text"] = (help_settings.tagline) or self.get_default_tagline(ctx)
         return emb
 
+    async def make_embeds(
+        self,
+        ctx,
+        embed_dict: dict,
+        help_settings: HelpSettings,
+    ):
+        """Returns Embed pages (Really copy paste from core)"""
+        pages = []
+
+        page_char_limit = help_settings.page_char_limit
+        page_char_limit = min(page_char_limit, 5500)
+        author_info = {
+            "name": _("{ctx.me.display_name} help menu").format(ctx=ctx),
+            "icon_url": ctx.me.display_avatar.url,
+        }
+        offset = len(author_info["name"]) + 20
+        foot_text = embed_dict["footer"]["text"]
+        if foot_text:
+            offset += len(foot_text)
+        offset += len(embed_dict["embed"]["description"])
+        offset += len(embed_dict["embed"]["title"])
+        if page_char_limit + offset > 5500:
+            page_char_limit = 5500 - offset
+        elif page_char_limit < 250:
+            page_char_limit = 250
+
+        field_groups = self.group_embed_fields(embed_dict["fields"], page_char_limit)
+
+        color = await ctx.embed_color()
+        page_count = len(field_groups)
+
+        if not field_groups:
+            embed = discord.Embed(color=color, **embed_dict["embed"])
+            embed.set_author(**author_info)
+            embed.set_footer(**embed_dict["footer"])
+            pages.append(embed)
+
+        for i, group in enumerate(field_groups, 1):
+            embed = discord.Embed(color=color, **embed_dict["embed"])
+
+            if page_count > 1:
+                description = _("Page {page_num} of {page_count}\n{content_description}").format(
+                    content_description=embed.description,
+                    page_num=i,
+                    page_count=page_count,
+                )
+                embed.description = description
+
+            embed.set_author(**author_info)
+
+            for field in group:
+                embed.add_field(**field._asdict())
+            pages.append(embed)
+
+        return pages
+
     async def send_pages(
         self,
         ctx: Context,
@@ -373,6 +430,9 @@ class BaguetteHelp(commands.RedHelpFormatter):
         If page_mapping is non-empty, then it's the main help menu and we need to add the home button
         """
         channel_permissions = ctx.channel.permissions_for(ctx.me)
+
+        if channel_permissions.manage_messages and self.settings["deletemessage"]:
+            await ctx.message.delete()
 
         if not (channel_permissions.add_reactions and help_settings.use_menus):
             max_pages_in_guild = help_settings.max_pages_in_guild
