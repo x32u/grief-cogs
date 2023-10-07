@@ -359,51 +359,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
         emb["footer"]["text"] = (help_settings.tagline) or self.get_default_tagline(ctx)
         return emb
 
-    async def make_embeds(
-        self,
-        ctx,
-        embed_dict: dict,
-        help_settings: HelpSettings,
-    ):
-        """Returns Embed pages (Really copy paste from core)"""
-        pages = []
-        page_char_limit = help_settings.page_char_limit
-        page_char_limit = min(page_char_limit, 5500)
-        author_info = {
-            "name": _("{ctx.me.display_name} help menu").format(ctx=ctx),
-            "icon_url": ctx.me.display_avatar.url,
-        }
-
-        field_groups = self.group_embed_fields(embed_dict["fields"], page_char_limit)
-
-        color = await ctx.embed_color()
-        page_count = len(field_groups)
-
-        if not field_groups:
-            embed = discord.Embed(color=color, **embed_dict["embed"])
-            embed.set_author(**author_info)
-            embed.set_footer(**embed_dict["footer"])
-            pages.append(embed)
-
-        for i, group in enumerate(field_groups, 1):
-            embed = discord.Embed(color=color, **embed_dict["embed"])
-
-            if page_count > 1:
-                description = _("Page {page_num} of {page_count}\n{content_description}").format(
-                    content_description=embed.description,
-                    page_num=i,
-                    page_count=page_count,
-                )
-                embed.description = description
-
-            embed.set_author(**author_info)
-
-            for field in group:
-                embed.add_field(**field._asdict())
-            pages.append(embed)
-
-        return pages
-
     async def send_pages(
         self,
         ctx: Context,
