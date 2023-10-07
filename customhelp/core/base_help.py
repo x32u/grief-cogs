@@ -417,9 +417,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
 
             for field in group:
                 embed.add_field(**field._asdict())
-
-            if thumbnail_url:
-                embed.set_thumbnail(url=thumbnail_url)
             pages.append(embed)
 
         return pages
