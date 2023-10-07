@@ -374,9 +374,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
             "icon_url": ctx.me.display_avatar.url,
         }
         offset = len(author_info["name"]) + 20
-        foot_text = embed_dict["footer"]["text"]
-        if foot_text:
-            offset += len(foot_text)
         offset += len(embed_dict["embed"]["description"])
         offset += len(embed_dict["embed"]["title"])
         if page_char_limit + offset > 5500:
