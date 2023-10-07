@@ -368,7 +368,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
     ):
         """Returns Embed pages (Really copy paste from core)"""
         pages = []
-        thumbnail_url = embed_dict.get("thumbnail", None) or self.settings["thumbnail"]
         page_char_limit = help_settings.page_char_limit
         page_char_limit = min(page_char_limit, 5500)
         author_info = {
@@ -395,8 +394,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
             embed = discord.Embed(color=color, **embed_dict["embed"])
             embed.set_author(**author_info)
             embed.set_footer(**embed_dict["footer"])
-            if thumbnail_url:
-                embed.set_thumbnail(url=thumbnail_url)
             pages.append(embed)
 
         for i, group in enumerate(field_groups, 1):
