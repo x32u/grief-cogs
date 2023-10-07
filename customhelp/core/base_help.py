@@ -312,7 +312,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         self, ctx: Context, help_settings: HelpSettings, get_pages: bool = False
     ):
         if await ctx.embed_requested():
-            emb = await ctx.send("to view my commands: <https://dash.grief.cloud/commands>")
+            emb = await self.embed_template(help_settings, ctx, ctx.bot.description)
             filtered_categories = await self.filter_categories(ctx, GLOBAL_CATEGORIES)
 
             page_raw_str_data = []
@@ -327,6 +327,9 @@ class BaguetteHelp(commands.RedHelpFormatter):
                     page_raw_str_data.append(
                         f"{str(cat.reaction) if cat.reaction else ''} **{cat.desc}**\n"
                     )
+                
+            for i in pagify("\n".join(page_raw_str_data), page_length=1018):
+                emb["fields"].append(EmbedField("", i, False))
             
             
             pages = await self.make_embeds(ctx, emb, help_settings=help_settings)
@@ -368,7 +371,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
     ):
         """Returns Embed pages (Really copy paste from core)"""
         pages = []
-
+        thumbnail_url = embed_dict.get("thumbnail", None) or self.settings["thumbnail"]
         page_char_limit = help_settings.page_char_limit
         page_char_limit = min(page_char_limit, 5500)
         author_info = {
@@ -395,6 +398,8 @@ class BaguetteHelp(commands.RedHelpFormatter):
             embed = discord.Embed(color=color, **embed_dict["embed"])
             embed.set_author(**author_info)
             embed.set_footer(**embed_dict["footer"])
+            if thumbnail_url:
+                embed.set_thumbnail(url=thumbnail_url)
             pages.append(embed)
 
         for i, group in enumerate(field_groups, 1):
