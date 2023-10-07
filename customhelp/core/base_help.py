@@ -46,9 +46,6 @@ HelpTarget = Union[
 EmbedField = namedtuple("EmbedField", "name value inline")
 EMPTY_STRING = "\N{ZERO WIDTH SPACE}"
 
-
-# Note to anyone reading this, This is the default formatter deffo, just slightly edited.
-# page_mapping = { category_obj: generated_category_format_page}
 class BaguetteHelp(commands.RedHelpFormatter):
     """In the memory of Jack the virgin"""
 
@@ -349,7 +346,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
         else:
             await ctx.send(_("You need to enable embeds to use the help menu"))
 
-    # util to reduce code dupes
     async def embed_template(self, help_settings, ctx, description=None):
         emb = {
             "embed": {"title": "", "description": ""},
@@ -367,7 +363,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
         emb["footer"]["text"] = (help_settings.tagline) or self.get_default_tagline(ctx)
         return emb
 
-    # TODO maybe try lazy loading
     async def make_embeds(
         self,
         ctx,
@@ -380,7 +375,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         page_char_limit = help_settings.page_char_limit
         page_char_limit = min(page_char_limit, 5500)
         author_info = {
-            "name": _("{ctx.me.display_name} Help Menu").format(ctx=ctx),
+            "name": _("{ctx.me.display_name} help menu").format(ctx=ctx),
             "icon_url": ctx.me.display_avatar.url,
         }
         offset = len(author_info["name"]) + 20
@@ -399,7 +394,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         color = await ctx.embed_color()
         page_count = len(field_groups)
 
-        if not field_groups:  # This can happen on single command without a docstring
+        if not field_groups:
             embed = discord.Embed(color=color, **embed_dict["embed"])
             embed.set_author(**author_info)
             embed.set_footer(**embed_dict["footer"])
@@ -443,8 +438,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
         Sends pages based on settings.
         If page_mapping is non-empty, then it's the main help menu and we need to add the home button
         """
-
-        # save on config calls
         channel_permissions = ctx.channel.permissions_for(ctx.me)
 
         if channel_permissions.manage_messages and self.settings["deletemessage"]:
@@ -457,7 +450,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
             delete_delay = help_settings.delete_delay
             messages: List[discord.Message] = []
             for page in pages:
-                # TODO use the embed:bool on the function argument cause isinstance is costly
                 page_kwarg_dict = (
                     {"embed": page} if isinstance(page, discord.Embed) else {"content": page}
                 )
@@ -474,16 +466,11 @@ class BaguetteHelp(commands.RedHelpFormatter):
                     messages.append(msg)
             if use_DMs and help_settings.use_tick:
                 await ctx.tick()
-            # The if statement takes into account that 'destination' will be
-            # the context channel in non-DM context, reusing 'channel_permissions' to avoid
-            # computing the permissions twice.
             if (
-                not use_DMs  # we're not in DMs
-                and delete_delay > 0  # delete delay is enabled
-                and channel_permissions.manage_messages  # we can manage messages here
+                not use_DMs
+                and delete_delay > 0
+                and channel_permissions.manage_messages
             ):
-                # We need to wrap this in a task to not block after-sending-help interactions.
-                # The channel has to be TextChannel as we can't bulk-delete from DMs
                 async def _delete_delay_help(
                     channel,
                     messages: List[discord.Message],

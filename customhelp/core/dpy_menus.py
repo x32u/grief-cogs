@@ -33,7 +33,7 @@ class BaseMenu(menus.Menu):
         if self.use_reply:
             kwargs["reference"] = ctx.message.to_reference(
                 fail_if_not_exists=False
-            )  # sends message silently when message is deleted
+            )
         return await ctx.send(**kwargs, view=self.hmenu.menus[1])
 
     async def start(self, ctx, channel=None, wait=False):

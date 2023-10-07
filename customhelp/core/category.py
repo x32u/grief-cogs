@@ -7,7 +7,6 @@ from redbot.core import commands
 
 from . import GLOBAL_CATEGORIES
 
-
 @dataclass
 class Category:
     name: str
@@ -29,7 +28,6 @@ class Category:
     def to_dict(self) -> dict:
         return asdict(self)
 
-
 @dataclass(frozen=True)
 class Arrow:
     name: str
@@ -48,9 +46,7 @@ class Arrow:
 
     def items(self):
         return {key: getattr(self, key) for key in self.keys()}
-
-
-# Helpers
+    
 def get_category(category: Optional[str]) -> Optional[Category]:
     if not category:
         return
@@ -58,7 +54,6 @@ def get_category(category: Optional[str]) -> Optional[Category]:
     for x in GLOBAL_CATEGORIES:
         if x.name == category:
             return x
-
 
 class CategoryConvert(commands.Converter):
     async def convert(self, ctx, value: str):

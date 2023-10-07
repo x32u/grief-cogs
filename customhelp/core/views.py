@@ -176,3 +176,9 @@ class SelectArrowHelpBar(discord.ui.Select):
             max_values=1,
             options=arrows,
         )
+
+    async def callback(self, interaction):
+        if self.values:
+            if self.values[0] == "Home":
+                await self.view.hmenu.category_react_action(self.view.ctx, interaction, "home")
+            await self.view.hmenu.arrow_emoji_button[self.values[0]](interaction)
