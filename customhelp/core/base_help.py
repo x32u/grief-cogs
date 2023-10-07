@@ -327,9 +327,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
                     page_raw_str_data.append(
                         f"{str(cat.reaction) if cat.reaction else ''} **{cat.desc}**\n"
                     )
-                
-            for i in pagify("\n".join(page_raw_str_data), page_length=1018):
-                emb["fields"].append
             
             
             pages = await self.make_embeds(ctx, emb, help_settings=help_settings)
