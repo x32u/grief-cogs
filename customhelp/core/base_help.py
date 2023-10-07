@@ -308,44 +308,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
         else:
             await ctx.send(_("You need to enable embeds to use the help menu"))
 
-    async def format_bot_help(
-        self, ctx: Context, help_settings: HelpSettings, get_pages: bool = False
-    ):
-        if await ctx.embed_requested():
-            emb = await self.embed_template(help_settings, ctx, ctx.bot.description)
-            filtered_categories = await self.filter_categories(ctx, GLOBAL_CATEGORIES)
-
-            page_raw_str_data = []
-            page_mapping = {}
-            for cat in filtered_categories:
-                if cat.cogs:
-                    if not await get_category_page_mapper_chunk(
-                        self, get_pages, ctx, cat, help_settings, page_mapping
-                    ):
-                        continue
-
-                    page_raw_str_data.append(
-                        f"{str(cat.reaction) if cat.reaction else ''} **{cat.desc}**\n"
-                    )
-                
-            for i in pagify("\n".join(page_raw_str_data), page_length=1018):
-                emb["fields"].append(EmbedField("", i, False))
-            
-            
-            pages = await self.make_embeds(ctx, emb, help_settings=help_settings)
-            if get_pages:
-                return pages
-            else:
-                await self.send_pages(
-                    ctx,
-                    pages,
-                    embed=True,
-                    help_settings=help_settings,
-                    page_mapping=page_mapping,
-                )
-        else:
-            await ctx.send(_("You need to enable embeds to use the help menu"))
-
     async def embed_template(self, help_settings, ctx, description=None):
         emb = {
             "embed": {"title": "", "description": ""},
