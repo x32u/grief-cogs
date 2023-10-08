@@ -1,5 +1,5 @@
 from packaging import version
-from redbot import __version__
+from grief import __version__
 from grief.core.utils.chat_formatting import box, humanize_list, humanize_number
 
 from ..abc import ThemesMeta
