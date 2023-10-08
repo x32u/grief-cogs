@@ -10,7 +10,7 @@ import datetime
 from grief.core import commands
 from grief.core.bot import Red
 from grief.core.utils.chat_formatting import box
-from redbot.vendored.discord.ext import menus  # type:ignore
+from grief.vendored.discord.ext import menus  # type:ignore
 
 __all__ = ["Page", "Menu", "PositiveInt"]
 
