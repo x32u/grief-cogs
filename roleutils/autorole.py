@@ -26,7 +26,7 @@ import logging
 from typing import Union
 
 import discord
-from redbot.core import commands
+from grief.core import commands
 
 from .abc import MixinMeta
 from .converters import FuzzyRole

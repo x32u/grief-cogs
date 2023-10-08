@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Optional
 import discord
 from discord import Interaction, SelectOption, TextChannel, Thread, ui
 from discord.enums import ButtonStyle
-from redbot.core.commands import parse_timedelta
+from grief.core.commands import parse_timedelta
 
 from ..poll import Poll, PollOption
 from .poll import PollView

@@ -1,4 +1,4 @@
-from redbot.core import Config, commands, checks
+from grief.core import Config, commands, checks
 # from array import *
 import discord
 from discord import Webhook, SyncWebhook

@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Literal, Optional
 
 import discord
 from discord import app_commands
-from redbot.core import Config
-from redbot.core.i18n import Translator
+from grief.core import Config
+from grief.core.i18n import Translator
 
 from .abc import ReTriggerMixin
 

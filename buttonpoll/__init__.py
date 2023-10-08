@@ -4,9 +4,9 @@ import json
 from pathlib import Path
 
 import discord
-from redbot.core import VersionInfo
-from redbot.core.bot import Red
-from redbot.core.errors import CogLoadError
+from grief.core import VersionInfo
+from grief.core.bot import Red
+from grief.core.errors import CogLoadError
 
 from . import vexutils
 from .buttonpoll import ButtonPoll

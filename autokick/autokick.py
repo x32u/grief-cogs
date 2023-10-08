@@ -2,11 +2,11 @@ import asyncio
 import datetime
 
 import discord
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.config import Config
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import ReactionPredicate
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.config import Config
+from grief.core.utils.menus import start_adding_reactions
+from grief.core.utils.predicates import ReactionPredicate
 
 
 class AutoKick(commands.Cog):

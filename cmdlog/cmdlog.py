@@ -7,9 +7,9 @@ from typing import TYPE_CHECKING, Deque, Optional, Union
 import discord
 from discord import Interaction, InteractionType
 from discord.channel import TextChannel
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import humanize_number, humanize_timedelta
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import humanize_number, humanize_timedelta
 
 from cmdlog.objects import TIME_FORMAT, LoggedAppCom, LoggedComError, LoggedCommand
 

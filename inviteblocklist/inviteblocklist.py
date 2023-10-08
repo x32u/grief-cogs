@@ -5,9 +5,9 @@ from typing import Pattern, Union
 import discord
 from discord.ext.commands.converter import IDConverter, InviteConverter
 from discord.ext.commands.errors import BadArgument
-from redbot.core import Config, VersionInfo, commands, version_info
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import humanize_list, pagify
+from grief.core import Config, VersionInfo, commands, version_info
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import humanize_list, pagify
 
 log = logging.getLogger("grief.inviteblocklist")
 

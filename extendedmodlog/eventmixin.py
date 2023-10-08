@@ -7,9 +7,9 @@ import discord
 from discord.ext import tasks
 from discord.ext.commands.converter import Converter
 from discord.ext.commands.errors import BadArgument
-from redbot.core import Config, commands, i18n, modlog
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import (
+from grief.core import Config, commands, i18n, modlog
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import (
     escape,
     format_perms_list,
     humanize_list,

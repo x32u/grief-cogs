@@ -4,8 +4,8 @@ from random import randint
 from typing import Optional
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.bot import Red
+from grief.core import Config, commands
+from grief.core.bot import Red
 
 from .utils import kawaiiembed, send_embed
 

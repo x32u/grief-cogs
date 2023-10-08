@@ -4,11 +4,11 @@ import datetime
 from typing import Any, Dict, Optional
 
 import discord
-from redbot.core import Config as RedDB
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.commands import Cog as RedCog
-from redbot.core.utils.chat_formatting import humanize_timedelta
+from grief.core import Config as RedDB
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.commands import Cog as RedCog
+from grief.core.utils.chat_formatting import humanize_timedelta
 
 DEFAULT_USER: Dict[str, Any] = {
     "afk": False,

@@ -1,8 +1,8 @@
 from typing import Union
 
 import discord
-from redbot.core import commands
-from redbot.core.i18n import Translator
+from grief.core import commands
+from grief.core.i18n import Translator
 
 from .starboard_entry import StarboardEntry
 

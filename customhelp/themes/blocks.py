@@ -1,4 +1,4 @@
-from redbot.core.utils.chat_formatting import box
+from grief.core.utils.chat_formatting import box
 from tabulate import tabulate
 
 from ..abc import ThemesMeta

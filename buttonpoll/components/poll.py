@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Optional
 
 import discord
 from discord.enums import ButtonStyle
-from redbot.core.config import Config
+from grief.core.config import Config
 
 from ..vexutils import get_vex_logger
 

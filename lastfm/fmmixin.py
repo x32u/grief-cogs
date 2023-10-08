@@ -1,4 +1,4 @@
-from redbot.core import commands
+from grief.core import commands
 
 from .utils.tokencheck import tokencheck
 

@@ -3,9 +3,9 @@ import datetime
 from typing import List, Optional, Union
 
 import discord
-from redbot.core import Config, checks, commands
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import box, error, warning
+from grief.core import Config, checks, commands
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import box, error, warning
 
 from .pcx_lib import checkmark, delete, message_splitter
 

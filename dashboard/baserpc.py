@@ -6,11 +6,11 @@ import re
 
 import discord
 import markdown2
-from redbot.core.bot import Red
-from redbot.core.commands import commands
-from redbot.core.commands.requires import PrivilegeLevel
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_list, humanize_number, humanize_timedelta
+from grief.core.bot import Red
+from grief.core.commands import commands
+from grief.core.commands.requires import PrivilegeLevel
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import humanize_list, humanize_number, humanize_timedelta
 
 from .rpc.alias import DashboardRPC_AliasCC
 from .rpc.botsettings import DashboardRPC_BotSettings

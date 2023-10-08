@@ -6,13 +6,13 @@ import random
 from typing import Any, Awaitable, Callable, Dict, Literal, Union, cast
 
 import discord
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.commands import GuildContext, NoParseOptional as Optional
-from redbot.core.config import Config
-from redbot.core.data_manager import cog_data_path
-from redbot.core.utils.chat_formatting import box, pagify
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.commands import GuildContext, NoParseOptional as Optional
+from grief.core.config import Config
+from grief.core.data_manager import cog_data_path
+from grief.core.utils.chat_formatting import box, pagify
+from grief.core.utils.predicates import MessagePredicate
 
 from .guild_data import GuildData
 

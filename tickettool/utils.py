@@ -1,7 +1,7 @@
 import discord  # isort:skip
 import typing  # isort:skip
-from redbot.core import commands  # isort:skip
-from redbot.core.i18n import Translator  # isort:skip
+from grief.core import commands  # isort:skip
+from grief.core.i18n import Translator  # isort:skip
 
 import re
 

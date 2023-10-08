@@ -1,4 +1,4 @@
-from redbot.core.commands import BadArgument
+from grief.core.commands import BadArgument
 
 
 def convert_time(value):

@@ -2,11 +2,11 @@ import inspect
 import os
 import pathlib
 
-from redbot.core import commands, data_manager
-from redbot.core.bot import Red
-from redbot.core.commands import CogConverter
-from redbot.core.config import Config
-from redbot.core.utils.chat_formatting import box
+from grief.core import commands, data_manager
+from grief.core.bot import Red
+from grief.core.commands import CogConverter
+from grief.core.config import Config
+from grief.core.utils.chat_formatting import box
 
 
 class CogPaths(commands.Cog):

@@ -7,10 +7,10 @@ import discord
 from discord.ext.commands.converter import Converter, IDConverter, RoleConverter
 from discord.ext.commands.errors import BadArgument
 from redbot import VersionInfo, version_info
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import ReactionPredicate
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils.menus import start_adding_reactions
+from grief.core.utils.predicates import ReactionPredicate
 
 log = logging.getLogger("red.trusty-cogs.ReTrigger")
 _ = Translator("ReTrigger", __file__)

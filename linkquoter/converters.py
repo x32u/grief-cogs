@@ -27,7 +27,7 @@ from __future__ import annotations
 import re
 
 import discord
-from redbot.core import commands
+from grief.core import commands
 
 link_regex = re.compile(
     r"https?:\/\/(?:(?:ptb|canary)\.)?discord(?:app)?\.com"

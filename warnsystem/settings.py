@@ -7,10 +7,10 @@ from datetime import datetime
 from pathlib import Path
 from json import loads
 
-from redbot.core import commands, checks
-from redbot.core.i18n import Translator
-from redbot.core.utils import predicates, menus
-from redbot.core.utils.chat_formatting import pagify
+from grief.core import commands, checks
+from grief.core.i18n import Translator
+from grief.core.utils import predicates, menus
+from grief.core.utils.chat_formatting import pagify
 
 from .abc import MixinMeta
 

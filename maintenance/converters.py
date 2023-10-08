@@ -3,7 +3,7 @@
 import argparse
 import time
 
-from redbot.core.commands import BadArgument, Converter
+from grief.core.commands import BadArgument, Converter
 
 from .classes import ScheduledMaintenance
 from .utils import convert_time

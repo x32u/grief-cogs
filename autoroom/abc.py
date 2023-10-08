@@ -4,8 +4,8 @@ from typing import Any, Optional, Union
 
 import discord
 from discord.ext.commands import CooldownMapping
-from redbot.core import Config
-from redbot.core.bot import Red
+from grief.core import Config
+from grief.core.bot import Red
 
 from autoroom.pcx_template import Template
 

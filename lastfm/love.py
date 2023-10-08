@@ -1,5 +1,5 @@
 import discord
-from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
+from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 
 from .abc import MixinMeta
 from .exceptions import *

@@ -1,9 +1,9 @@
 import logging
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import box, humanize_list
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import box, humanize_list
 
 from .utils import Coordinate
 

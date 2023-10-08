@@ -1,14 +1,14 @@
 from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
-from redbot.core import commands  # isort:skip
-from redbot.core.i18n import Translator, cog_i18n  # isort:skip
-from redbot.core.bot import Red  # isort:skip
+from grief.core import commands  # isort:skip
+from grief.core.i18n import Translator, cog_i18n  # isort:skip
+from grief.core.bot import Red  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
 import asyncio
 import json
 
-from redbot.core.utils.chat_formatting import box, humanize_list, pagify
+from grief.core.utils.chat_formatting import box, humanize_list, pagify
 
 _ = Translator("DiscordEdit", __file__)
 

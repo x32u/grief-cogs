@@ -1,7 +1,7 @@
 from abc import ABC
 
-from redbot.core import Config, commands
-from redbot.core.bot import Red
+from grief.core import Config, commands
+from grief.core.bot import Red
 
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):

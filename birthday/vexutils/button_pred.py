@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Any, List, Optional
 
 import discord
-from redbot.core import commands
+from grief.core import commands
 
 if discord.__version__.startswith("1"):
     raise RuntimeError("This requires discord.py 2.X")

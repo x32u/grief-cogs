@@ -9,16 +9,16 @@ from asyncio import TimeoutError as AsyncTimeoutError
 from datetime import datetime, timezone
 from typing import Optional, Union, List, Tuple, TYPE_CHECKING, cast
 
-from redbot.core.i18n import Translator
-from redbot.core.utils import mod
-from redbot.core.commands import Context
+from grief.core.i18n import Translator
+from grief.core.utils import mod
+from grief.core.commands import Context
 from redbot.vendored.discord.ext import menus
 
 from .api import UnavailableMember
 from .paginator import Pages
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
+    from grief.core.bot import Red
     from .api import API
     from .warnsystem import WarnSystem
 

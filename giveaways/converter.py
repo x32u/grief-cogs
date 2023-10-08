@@ -3,8 +3,8 @@ from datetime import datetime, timezone
 
 import dateparser
 from discord.ext.commands.converter import EmojiConverter, RoleConverter, TextChannelConverter
-from redbot.core.commands import BadArgument, Converter
-from redbot.core.commands.converter import TimedeltaConverter
+from grief.core.commands import BadArgument, Converter
+from grief.core.commands.converter import TimedeltaConverter
 
 
 class NoExitParser(argparse.ArgumentParser):

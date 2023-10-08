@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from redbot.core.utils import get_end_user_data_statement
+from grief.core.utils import get_end_user_data_statement
 
 from .disboardreminder import DisboardReminder
 

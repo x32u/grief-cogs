@@ -1,5 +1,5 @@
-from redbot.core import checks, commands
-from redbot.core.i18n import Translator, cog_i18n
+from grief.core import checks, commands
+from grief.core.i18n import Translator, cog_i18n
 
 from .core import Core
 from . import constants as sub

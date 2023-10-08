@@ -2,8 +2,8 @@ from abc import ABC
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from redbot.core import Config
-    from redbot.core.bot import Red
+    from grief.core import Config
+    from grief.core.bot import Red
     from .cache import MemoryCache
     from .api import API
 

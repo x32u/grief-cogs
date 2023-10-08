@@ -1,4 +1,4 @@
-from redbot.core import commands
+from grief.core import commands
 
 from .functions import get_or_fetch_member
 

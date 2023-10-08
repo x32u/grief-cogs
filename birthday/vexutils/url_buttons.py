@@ -2,7 +2,7 @@ from typing import Optional
 
 import discord
 from discord.http import Route
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 
 class URLButton:

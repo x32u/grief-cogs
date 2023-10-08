@@ -2,8 +2,8 @@ import asyncio
 from typing import Optional
 
 import discord
-from redbot.core import commands
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import commands
+from grief.core.utils.predicates import MessagePredicate
 
 from .abc import MixinMeta
 from .exceptions import *

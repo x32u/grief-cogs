@@ -5,9 +5,9 @@ from abc import ABC, ABCMeta, abstractmethod
 from typing import Coroutine
 
 import discord
-from redbot.core.bot import Red
-from redbot.core.commands import CogMeta
-from redbot.core.config import Config
+from grief.core.bot import Red
+from grief.core.commands import CogMeta
+from grief.core.config import Config
 
 from .vexutils.loop import VexLoop
 

@@ -4,7 +4,7 @@ import logging
 from typing import TYPE_CHECKING, List, Optional
 
 import discord
-from redbot.core import commands
+from grief.core import commands
 
 if TYPE_CHECKING:
     import customhelp.core.base_help as base_help

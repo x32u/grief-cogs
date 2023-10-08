@@ -1,8 +1,8 @@
 
 from AAA3A_utils import Cog, CogsUtils, Settings  # isort:skip
-from redbot.core import commands, Config  # isort:skip
-from redbot.core.bot import Red  # isort:skip
-from redbot.core.i18n import Translator, cog_i18n  # isort:skip
+from grief.core import commands, Config  # isort:skip
+from grief.core.bot import Red  # isort:skip
+from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 

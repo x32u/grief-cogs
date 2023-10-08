@@ -8,11 +8,11 @@ from typing import Literal, Optional
 
 import discord
 import tabulate
-from redbot.core import Config, commands
-from redbot.core.utils.chat_formatting import box, humanize_list, inline
-from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
-from redbot.core.utils.mod import is_mod_or_superior
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import Config, commands
+from grief.core.utils.chat_formatting import box, humanize_list, inline
+from grief.core.utils.menus import DEFAULT_CONTROLS, menu
+from grief.core.utils.mod import is_mod_or_superior
+from grief.core.utils.predicates import MessagePredicate
 
 logger = logging.getLogger("grief.highlight")
 

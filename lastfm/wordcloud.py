@@ -3,7 +3,7 @@ from io import BytesIO
 from typing import Optional
 
 import discord
-from redbot.core import commands
+from grief.core import commands
 
 from .abc import MixinMeta
 from .exceptions import *

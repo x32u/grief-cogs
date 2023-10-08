@@ -1,5 +1,5 @@
 import discord
-from redbot.core.utils import chat_formatting as chat
+from grief.core.utils import chat_formatting as chat
 from redbot.vendored.discord.ext import menus
 
 from .common_variables import KNOWN_CHANNEL_TYPES

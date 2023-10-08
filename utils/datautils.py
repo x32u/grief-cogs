@@ -7,11 +7,11 @@ import discord
 import tabulate
 from fixcogsutils.dpy_future import TimestampStyle, get_markdown_timestamp
 from fixcogsutils.formatting import bool_emojify
-from redbot.core import commands
-from redbot.core.i18n import cog_i18n
-from redbot.core.utils import chat_formatting as chat
-from redbot.core.utils.predicates import ReactionPredicate
-from redbot.core.utils.chat_formatting import (
+from grief.core import commands
+from grief.core.i18n import cog_i18n
+from grief.core.utils import chat_formatting as chat
+from grief.core.utils.predicates import ReactionPredicate
+from grief.core.utils.chat_formatting import (
     bold,
     escape,
     italics,

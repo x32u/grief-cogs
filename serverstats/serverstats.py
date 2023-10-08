@@ -8,11 +8,11 @@ from typing import Dict, List, Literal, Optional, Tuple, Union, cast
 import aiohttp
 import discord
 from redbot import VersionInfo, version_info
-from redbot.core import Config, checks, commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import (
+from grief.core import Config, checks, commands
+from grief.core.bot import Red
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import (
     bold,
     box,
     escape,
@@ -21,8 +21,8 @@ from redbot.core.utils.chat_formatting import (
     humanize_timedelta,
     pagify,
 )
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
+from grief.core.utils.menus import start_adding_reactions
+from grief.core.utils.predicates import MessagePredicate, ReactionPredicate
 
 from .converters import GuildConverter, MultiGuildConverter, PermissionConverter
 from .menus import AvatarPages, BaseView, GuildPages, ListPages

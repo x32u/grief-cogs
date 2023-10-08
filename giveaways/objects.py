@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Tuple
 
 import discord
-from redbot.core import bank
+from grief.core import bank
 
 
 class GiveawayError(Exception):

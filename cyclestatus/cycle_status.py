@@ -11,10 +11,10 @@ from typing import Any, Final, List, Dict, Optional, TYPE_CHECKING
 
 import discord
 from discord.ext import tasks
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import humanize_list, humanize_number, pagify
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import humanize_list, humanize_number, pagify
+from grief.core.utils.predicates import MessagePredicate
 
 from .menus import Menu, Page, PositiveInt
 

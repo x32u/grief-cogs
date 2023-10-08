@@ -4,9 +4,9 @@ import logging
 import re
 
 import discord
-from redbot.core import Config, app_commands, commands
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import humanize_list
+from grief.core import Config, app_commands, commands
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import humanize_list
 
 log = logging.getLogger("red.kuro-cogs.reactlog")
 

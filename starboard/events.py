@@ -6,11 +6,11 @@ from typing import Dict, List, Literal, Union, cast
 import discord
 from discord.utils import snowflake_time
 from redbot import VersionInfo, version_info
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_timedelta
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import humanize_timedelta
 
 from .starboard_entry import FakePayload, StarboardEntry, StarboardMessage
 

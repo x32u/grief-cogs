@@ -1,8 +1,8 @@
 
 import discord
-from redbot.core.utils.menus import SimpleMenu
-from redbot.core import commands
-from redbot.core.bot import Red
+from grief.core.utils.menus import SimpleMenu
+from grief.core import commands
+from grief.core.bot import Red
 
 
 class Info(commands.Cog):

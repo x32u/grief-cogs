@@ -1,7 +1,7 @@
 import json
 import pathlib
 
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 from .cycle_status import CycleStatus
 

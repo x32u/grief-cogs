@@ -3,14 +3,14 @@ from asyncio import TimeoutError as AsyncTimeoutError
 from typing import Union
 
 import discord
-from redbot.core import checks
-from redbot.core import commands
-from redbot.core.config import Config
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils import chat_formatting as chat
-from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
-from redbot.core.utils.mod import get_audit_reason
-from redbot.core.utils.predicates import ReactionPredicate
+from grief.core import checks
+from grief.core import commands
+from grief.core.config import Config
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils import chat_formatting as chat
+from grief.core.utils.menus import menu, DEFAULT_CONTROLS
+from grief.core.utils.mod import get_audit_reason
+from grief.core.utils.predicates import ReactionPredicate
 from tabulate import tabulate
 from typing import Literal, List
 import asyncio

@@ -4,8 +4,8 @@ from typing import Optional, Union
 
 import discord
 from fuzzywuzzy import process
-from redbot.core import commands
-from redbot.core.utils.chat_formatting import pagify
+from grief.core import commands
+from grief.core.utils.chat_formatting import pagify
 
 from prettytable import PrettyTable
 

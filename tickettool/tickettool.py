@@ -1,7 +1,7 @@
 from AAA3A_utils import Cog, CogsUtils, Menu, Settings  # isort:skip
-from redbot.core import commands, Config  # isort:skip
-from redbot.core.bot import Red  # isort:skip
-from redbot.core.i18n import Translator, cog_i18n  # isort:skip
+from grief.core import commands, Config  # isort:skip
+from grief.core.bot import Red  # isort:skip
+from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
@@ -11,8 +11,8 @@ from copy import deepcopy
 from functools import partial
 
 import chat_exporter
-from redbot.core import modlog
-from redbot.core.utils.chat_formatting import pagify
+from grief.core import modlog
+from grief.core.utils.chat_formatting import pagify
 
 from .dashboard_integration import DashboardIntegration
 from .settings import settings

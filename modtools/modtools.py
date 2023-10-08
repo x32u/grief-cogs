@@ -10,13 +10,13 @@ from contextlib import suppress as sps
 from tabulate import tabulate
 from typing import Optional
 
-from redbot.core import checks, commands
-from redbot.core.utils import chat_formatting as cf
-from redbot.core.utils.common_filters import filter_invites
-from redbot.core.utils.menus import menu, DEFAULT_CONTROLS, close_menu
+from grief.core import checks, commands
+from grief.core.utils import chat_formatting as cf
+from grief.core.utils.common_filters import filter_invites
+from grief.core.utils.menus import menu, DEFAULT_CONTROLS, close_menu
 
 from .views import URLView
-from redbot.core.commands import GuildContext
+from grief.core.commands import GuildContext
 
 from .converter import FuzzyMember
 

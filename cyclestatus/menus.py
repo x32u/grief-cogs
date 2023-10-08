@@ -7,9 +7,9 @@ from typing import TYPE_CHECKING, List, Union, Optional
 from contextlib import suppress
 import discord
 import datetime
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import box
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import box
 from redbot.vendored.discord.ext import menus  # type:ignore
 
 __all__ = ["Page", "Menu", "PositiveInt"]

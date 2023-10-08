@@ -9,10 +9,10 @@ from math import ceil
 import re
 from typing import List, Literal, Optional
 
-from redbot.core import commands, Config
-from redbot.core.bot import Red
-from redbot.core.commands import Context
-from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
+from grief.core import commands, Config
+from grief.core.bot import Red
+from grief.core.commands import Context
+from grief.core.utils.menus import menu, DEFAULT_CONTROLS
 
 
 class Reminder(commands.Cog):

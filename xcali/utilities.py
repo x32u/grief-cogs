@@ -1,6 +1,6 @@
 from functools import partial
 
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 
 async def sync_as_async(bot: Red, func, *args, **kwargs):

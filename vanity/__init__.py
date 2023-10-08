@@ -3,8 +3,8 @@ import typing
 from logging import Logger, getLogger
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.bot import Red
+from grief.core import Config, commands
+from grief.core.bot import Red
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 

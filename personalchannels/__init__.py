@@ -1,6 +1,6 @@
 
 
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 from .core import PersonalChannels
 

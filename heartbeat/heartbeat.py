@@ -6,10 +6,10 @@ from datetime import timedelta
 from typing import ClassVar
 
 import aiohttp
-from redbot.core import Config, checks, commands
-from redbot.core import __version__ as redbot_version
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import error, humanize_timedelta, success
+from grief.core import Config, checks, commands
+from grief.core import __version__ as redbot_version
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import error, humanize_timedelta, success
 
 from .pcx_lib import SettingDisplay, delete
 

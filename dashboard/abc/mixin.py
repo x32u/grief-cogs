@@ -1,4 +1,4 @@
-from redbot.core import commands
+from grief.core import commands
 
 
 @commands.group(name="dashboard")

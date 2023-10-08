@@ -9,9 +9,9 @@ from typing import Coroutine, DefaultDict, Dict, Optional
 
 import discord
 import TagScriptEngine as tse
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.utils import AsyncIter
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.utils import AsyncIter
 
 from .converters import FuzzyRole
 

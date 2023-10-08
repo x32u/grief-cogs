@@ -3,10 +3,10 @@ import asyncio
 from typing import Any, Dict, List, Mapping, Optional, Tuple, Union
 
 import discord
-from redbot.core import __version__ as redbot_version
-from redbot.core import commands
-from redbot.core.utils import common_filters
-from redbot.core.utils.chat_formatting import box
+from grief.core import __version__ as redbot_version
+from grief.core import commands
+from grief.core.utils import common_filters
+from grief.core.utils.chat_formatting import box
 
 headers = {"user-agent": "Red-DiscordBot/" + redbot_version}
 

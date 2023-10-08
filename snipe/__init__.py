@@ -6,11 +6,11 @@ from sys import getsizeof
 from typing import Mapping, Optional
 
 import discord
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.commands import Cog as RedCog
-from redbot.core.utils import chat_formatting as cf
-from redbot.core.utils.views import SimpleMenu as BaseMenu
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.commands import Cog as RedCog
+from grief.core.utils import chat_formatting as cf
+from grief.core.utils.views import SimpleMenu as BaseMenu
 
 
 class MiniMsg:

@@ -6,7 +6,7 @@ from unidecode import unidecode
 from discord.ext.commands.converter import IDConverter, _get_from_guilds
 from discord.ext.commands.errors import BadArgument
 
-from redbot.core import commands
+from grief.core import commands
 
 
 class FuzzyMember(IDConverter):

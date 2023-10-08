@@ -4,9 +4,9 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.commands.converter import TimedeltaConverter
-from redbot.core.utils.chat_formatting import humanize_timedelta, pagify
+from grief.core import Config, commands
+from grief.core.commands.converter import TimedeltaConverter
+from grief.core.utils.chat_formatting import humanize_timedelta, pagify
 
 log = logging.getLogger("grief.antispam")
 

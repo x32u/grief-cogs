@@ -6,12 +6,12 @@ from collections import defaultdict
 from typing import TYPE_CHECKING
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.commands import CheckFailure
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import box, pagify, warning
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import ReactionPredicate
+from grief.core import Config, commands
+from grief.core.commands import CheckFailure
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import box, pagify, warning
+from grief.core.utils.menus import start_adding_reactions
+from grief.core.utils.predicates import ReactionPredicate
 from rich.table import Table  # type:ignore
 
 from .abc import MixinMeta

@@ -1,10 +1,10 @@
 import logging
 
 import discord
-from redbot.core import Config, bank, commands
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_number
-from redbot.core.utils.common_filters import filter_invites
+from grief.core import Config, bank, commands
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import humanize_number
+from grief.core.utils.common_filters import filter_invites
 
 adventure_bank = None
 
@@ -356,7 +356,7 @@ class Userinfo(commands.Cog):
 
 
 try:
-    from redbot.core.errors import CogLoadError
+    from grief.core.errors import CogLoadError
 except ImportError:
     CogLoadError = RuntimeError
 

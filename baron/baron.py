@@ -7,12 +7,12 @@ from typing import List, Literal, Optional, Tuple
 
 import discord
 from matplotlib import pyplot as plt
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.commands import GuildConverter, TimedeltaConverter
-from redbot.core.config import Config
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import (
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.commands import GuildConverter, TimedeltaConverter
+from grief.core.config import Config
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import (
     box,
     humanize_list,
     humanize_number,

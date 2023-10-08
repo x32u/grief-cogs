@@ -1,7 +1,7 @@
 import discord
-from redbot.core import commands
-from redbot.core import Config
-from redbot.core import checks
+from grief.core import commands
+from grief.core import Config
+from grief.core import checks
 
 
 class Hider(commands.Cog):

@@ -1,5 +1,5 @@
-from redbot.core import commands  # isort:skip
-from redbot.core.bot import Red  # isort:skip
+from grief.core import commands  # isort:skip
+from grief.core.bot import Red  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 

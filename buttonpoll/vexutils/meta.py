@@ -8,8 +8,8 @@ from typing import Literal, NamedTuple
 import aiohttp
 from red_commons.logging import RedTraceLogger
 from red_commons.logging import getLogger as red_get_logger
-from redbot.core import VersionInfo, commands
-from redbot.core import version_info as cur_red_version
+from grief.core import VersionInfo, commands
+from grief.core import version_info as cur_red_version
 from rich import box as rich_box
 from rich.table import Table  # type:ignore
 

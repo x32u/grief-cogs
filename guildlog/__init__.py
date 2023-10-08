@@ -1,6 +1,6 @@
 
 import discord
-from redbot.core.utils import get_end_user_data_statement
+from grief.core.utils import get_end_user_data_statement
 
 from .guildlog import GuildLog
 

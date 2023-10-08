@@ -5,9 +5,9 @@ from typing import Any, List, Optional
 
 import discord
 from discord.ext.commands.errors import BadArgument
-from redbot.core.commands import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import box, humanize_list, pagify
+from grief.core.commands import commands
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import box, humanize_list, pagify
 from redbot.vendored.discord.ext import menus
 
 from .converters import ChannelUserRole, Trigger, TriggerResponse

@@ -1,7 +1,7 @@
 ﻿from AAA3A_utils import Cog, CogsUtils, Menu, Loop  # isort:skip
-from redbot.core import commands, Config  # isort:skip
-from redbot.core.i18n import Translator, cog_i18n  # isort:skip
-from redbot.core.bot import Red  # isort:skip
+from grief.core import commands, Config  # isort:skip
+from grief.core.i18n import Translator, cog_i18n  # isort:skip
+from grief.core.bot import Red  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
@@ -14,11 +14,11 @@ from dataclasses import dataclass
 
 from colorama import Fore
 from redbot import __version__ as red_version
-from redbot.core import data_manager
-from redbot.core.utils.chat_formatting import box, humanize_list, pagify
+from grief.core import data_manager
+from grief.core.utils.chat_formatting import box, humanize_list, pagify
 
 try:
-    from redbot.core._events import INTRO
+    from grief.core._events import INTRO
 except ModuleNotFoundError:  # Lemon's fork.
     INTRO = ""
 

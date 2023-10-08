@@ -6,8 +6,8 @@ import aiohttp
 import discord
 import pytube
 import yarl
-from redbot.core import Config, commands
-from redbot.core.bot import Red
+from grief.core import Config, commands
+from grief.core.bot import Red
 
 from .constants import (TIKTOK_DESKTOP_PATTERN, TIKTOK_MOBILE_PATTERN,
                         YOUTUBE_PATTERN, ydl_tok)

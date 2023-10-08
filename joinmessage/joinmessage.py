@@ -1,7 +1,7 @@
 import logging
 
 import discord
-from redbot.core import Config, commands
+from grief.core import Config, commands
 
 log = logging.getLogger("red.flare.joinmessage")
 

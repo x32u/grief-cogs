@@ -5,13 +5,13 @@ from typing import TYPE_CHECKING, Optional, cast
 from discord.interactions import Interaction
 from discord.ui import View, Modal, TextInput, button
 
-from redbot.core import app_commands
-from redbot.core.i18n import Translator
-from redbot.core.commands import BadArgument, Context
-from redbot.core.commands.converter import parse_timedelta
+from grief.core import app_commands
+from grief.core.i18n import Translator
+from grief.core.commands import BadArgument, Context
+from grief.core.commands.converter import parse_timedelta
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
+    from grief.core.bot import Red
     from .warnsystem import WarnSystem
 
 _ = Translator("WarnSystem", __file__)

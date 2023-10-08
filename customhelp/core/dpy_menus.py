@@ -5,7 +5,7 @@ import asyncio
 from typing import Any, List, Optional, Union
 
 import discord
-from redbot.core.bot import Red
+from grief.core.bot import Red
 from redbot.vendored.discord.ext import menus
 
 import customhelp.core.base_help as base_help

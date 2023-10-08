@@ -1,4 +1,4 @@
-from redbot.core.utils.chat_formatting import box
+from grief.core.utils.chat_formatting import box
 
 from ..abc import ThemesMeta
 from ..core.base_help import (

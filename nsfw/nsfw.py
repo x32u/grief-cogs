@@ -1,7 +1,7 @@
 import discord
 
-from redbot.core import commands
-from redbot.core.i18n import Translator, cog_i18n
+from grief.core import commands
+from grief.core.i18n import Translator, cog_i18n
 
 import contextlib
 

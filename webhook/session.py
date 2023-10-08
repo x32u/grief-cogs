@@ -25,7 +25,7 @@ SOFTWARE.
 from typing import Optional
 
 import discord
-from redbot.core.commands import Context
+from grief.core.commands import Context
 
 from .errors import InvalidWebhook
 

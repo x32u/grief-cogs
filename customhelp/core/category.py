@@ -3,7 +3,7 @@ from dataclasses import dataclass, asdict
 from typing import Optional
 
 import discord
-from redbot.core import commands
+from grief.core import commands
 
 from . import GLOBAL_CATEGORIES
 

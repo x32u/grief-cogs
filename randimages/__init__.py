@@ -1,4 +1,4 @@
-from redbot.core.bot import Red
+from grief.core.bot import Red
 from .randimages import RandImages
 
 __red_end_user_data_statement__ = (

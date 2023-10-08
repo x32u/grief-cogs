@@ -5,9 +5,9 @@ import logging
 from abc import ABC
 from typing import Coroutine, Literal
 
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.config import Config
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.config import Config
 
 from .reactroles import ReactRoles
 from .roles import Roles

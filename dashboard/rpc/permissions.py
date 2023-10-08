@@ -3,9 +3,9 @@ from html import escape
 
 import discord
 from redbot.cogs.permissions.converters import CogOrCommand, GuildUniqueObjectFinder, RuleType
-from redbot.core.bot import Red
-from redbot.core.commands import commands
-from redbot.core.utils import AsyncIter
+from grief.core.bot import Red
+from grief.core.commands import commands
+from grief.core.utils import AsyncIter
 
 from .utils import FakePermissionsContext, permcheck, rpccheck
 

@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Literal
 
 import discord
-from redbot.core import Config, checks, commands
+from grief.core import Config, checks, commands
 
 from .converters import Margs
 

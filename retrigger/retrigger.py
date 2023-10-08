@@ -7,14 +7,14 @@ from typing import Dict, Optional, Union
 
 import discord
 from discord.ext import tasks
-from redbot.core import Config, checks, commands, modlog
-from redbot.core.commands import TimedeltaConverter
-from redbot.core.i18n import Translator, cog_i18n
+from grief.core import Config, checks, commands, modlog
+from grief.core.commands import TimedeltaConverter
+from grief.core.i18n import Translator, cog_i18n
 
-# from redbot.core.utils import menus
-from redbot.core.utils.chat_formatting import humanize_list, pagify
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import ReactionPredicate
+# from grief.core.utils import menus
+from grief.core.utils.chat_formatting import humanize_list, pagify
+from grief.core.utils.menus import start_adding_reactions
+from grief.core.utils.predicates import ReactionPredicate
 
 from .converters import (
     ChannelUserRole,

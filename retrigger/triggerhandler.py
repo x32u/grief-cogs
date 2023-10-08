@@ -13,10 +13,10 @@ from typing import Any, Dict, List, Literal, Optional, Pattern, Tuple, cast
 import aiohttp
 import discord
 from redbot import VersionInfo, version_info
-from redbot.core import commands, modlog
-from redbot.core.data_manager import cog_data_path
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import escape, humanize_list
+from grief.core import commands, modlog
+from grief.core.data_manager import cog_data_path
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import escape, humanize_list
 
 from .abc import ReTriggerMixin
 from .converters import Trigger, TriggerResponse

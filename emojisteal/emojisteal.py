@@ -4,7 +4,7 @@ import aiohttp
 import discord
 from dataclasses import dataclass
 from itertools import zip_longest
-from redbot.core import commands, app_commands
+from grief.core import commands, app_commands
 from typing import Optional, Union, List
 
 IMAGE_TYPES = (".png", ".jpg", ".jpeg", ".gif", ".webp")

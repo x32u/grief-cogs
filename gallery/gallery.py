@@ -4,9 +4,9 @@ import re
 import typing
 
 import discord
-from redbot.core import Config, checks, commands
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import humanize_list
+from grief.core import Config, checks, commands
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import humanize_list
 
 
 class Gallery(commands.Cog):

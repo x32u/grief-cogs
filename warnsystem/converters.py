@@ -7,9 +7,9 @@ import logging
 from dateutil import parser
 from discord.ext.commands.converter import RoleConverter, MemberConverter
 
-from redbot.core.commands import BadArgument, Converter, Context
-from redbot.core.commands.converter import TimedeltaConverter
-from redbot.core.i18n import Translator
+from grief.core.commands import BadArgument, Converter, Context
+from grief.core.commands.converter import TimedeltaConverter
+from grief.core.i18n import Translator
 
 from .api import UnavailableMember
 

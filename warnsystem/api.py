@@ -12,13 +12,13 @@ from multiprocessing import TimeoutError
 from multiprocessing.pool import Pool
 from discord.asset import Asset
 
-from redbot.core import Config
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator
-from redbot.core.commands import BadArgument, MemberConverter
+from grief.core import Config
+from grief.core.bot import Red
+from grief.core.i18n import Translator
+from grief.core.commands import BadArgument, MemberConverter
 
 try:
-    from redbot.core.modlog import get_modlog_channel as get_red_modlog_channel
+    from grief.core.modlog import get_modlog_channel as get_red_modlog_channel
 except RuntimeError:
     pass  # running sphinx-build raises an error when importing this module
 

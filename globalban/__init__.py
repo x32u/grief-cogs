@@ -2,11 +2,11 @@ from logging import getLogger
 from typing import List, Optional, Union
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.utils import chat_formatting as chat
-from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.utils import chat_formatting as chat
+from grief.core.utils.menus import DEFAULT_CONTROLS, menu
+from grief.core.utils.predicates import MessagePredicate
 
 from .converters import ActionReason, MemberID
 

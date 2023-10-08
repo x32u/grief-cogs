@@ -1,6 +1,6 @@
 import discord
-from redbot.core.bot import Red
-from redbot.core.commands import commands
+from grief.core.bot import Red
+from grief.core.commands import commands
 
 from .utils import permcheck, rpccheck
 

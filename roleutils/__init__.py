@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 from .roleutils import RoleUtils
 

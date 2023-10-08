@@ -6,9 +6,9 @@ from typing import List, Optional, Union
 
 import aiohttp
 import discord
-from redbot.core import Config, commands
-from redbot.core.utils.chat_formatting import humanize_list, inline, pagify
-from redbot.core.utils.menus import DEFAULT_CONTROLS, close_menu, menu
+from grief.core import Config, commands
+from grief.core.utils.chat_formatting import humanize_list, inline, pagify
+from grief.core.utils.menus import DEFAULT_CONTROLS, close_menu, menu
 
 from .commands import help_formatted_group
 from .converters import (

@@ -5,8 +5,8 @@ import sqlite3
 from asyncio.events import AbstractEventLoop
 from typing import Optional
 
-from redbot.core.bot import Red
-from redbot.core.data_manager import cog_data_path
+from grief.core.bot import Red
+from grief.core.data_manager import cog_data_path
 
 # (comparisons from red config, mainly to make me feel like i didn't waste an evening)
 # (these are with the stattrack cog, this driver is also used in betteruptime)

@@ -1,6 +1,6 @@
 
 
-from redbot.core import commands
+from grief.core import commands
 
 DISC_DOC = "This must be in the format expected by [this Discord documentation](https://discord.com/developers/docs/resources/channel#embed-object)."
 

@@ -16,7 +16,7 @@ from string import Template
 from typing import List, Optional, Union
 
 import discord
-from redbot.core.config import Config, Group
+from grief.core.config import Config, Group
 
 
 class GuildData:

@@ -6,11 +6,11 @@ from typing import List, Optional, Pattern, Union, cast
 
 import discord
 from redbot import VersionInfo, version_info
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import humanize_list
-from redbot.core.utils.common_filters import filter_mass_mentions
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils.chat_formatting import humanize_list
+from grief.core.utils.common_filters import filter_mass_mentions
 
 RE_CTX: Pattern = re.compile(r"{([^}]+)\}")
 RE_POS: Pattern = re.compile(r"{((\d+)[^.}]*(\.[^:}]+)?[^}]*)\}")

@@ -2,7 +2,7 @@ from typing import Optional
 
 import aiohttp
 import discord
-from redbot.core import commands
+from grief.core import commands
 
 
 async def api_call(call_uri: str, returnObj: Optional[bool] = False):

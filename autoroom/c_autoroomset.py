@@ -4,10 +4,10 @@ from abc import ABC
 from typing import Optional
 
 import discord
-from redbot.core import checks, commands
-from redbot.core.utils.chat_formatting import error, info, warning
-from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import checks, commands
+from grief.core.utils.chat_formatting import error, info, warning
+from grief.core.utils.menus import DEFAULT_CONTROLS, menu
+from grief.core.utils.predicates import MessagePredicate
 
 from .abc import MixinMeta
 from .pcx_lib import SettingDisplay, checkmark

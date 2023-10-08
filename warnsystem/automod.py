@@ -1,13 +1,13 @@
 import discord
 import asyncio
 
-from redbot.core import commands
-from redbot.core import checks
-from redbot.core.i18n import Translator
-from redbot.core.utils import menus
-from redbot.core.utils.predicates import MessagePredicate, ReactionPredicate
-from redbot.core.utils.chat_formatting import pagify, box
-from redbot.core.commands.converter import TimedeltaConverter
+from grief.core import commands
+from grief.core import checks
+from grief.core.i18n import Translator
+from grief.core.utils import menus
+from grief.core.utils.predicates import MessagePredicate, ReactionPredicate
+from grief.core.utils.chat_formatting import pagify, box
+from grief.core.commands.converter import TimedeltaConverter
 
 from typing import Optional
 from datetime import timedelta

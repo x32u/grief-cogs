@@ -2,12 +2,12 @@ import logging
 import importlib.util
 import re
 
-from redbot.core.i18n import Translator
-from redbot.core.bot import Red
+from grief.core.i18n import Translator
+from grief.core.bot import Red
 from datetime import datetime, timedelta
 
 try:
-    from redbot.core.errors import CogLoadError
+    from grief.core.errors import CogLoadError
 except ImportError:
     CogLoadError = RuntimeError
 
@@ -28,7 +28,7 @@ log = logging.getLogger("red.laggron.warnsystem")
 async def _save_backup(config):
     import json
     from datetime import datetime
-    from redbot.core.data_manager import cog_data_path
+    from grief.core.data_manager import cog_data_path
 
     date = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
     path = cog_data_path(raw_name="WarnSystem") / f"settings-backup-{date}.json"

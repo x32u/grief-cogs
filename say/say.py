@@ -8,12 +8,12 @@ from discord import app_commands
 from typing import TYPE_CHECKING, Optional
 from laggron_utils import close_logger
 
-from redbot.core import checks, commands
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.tunnel import Tunnel
+from grief.core import checks, commands
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils.tunnel import Tunnel
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
+    from grief.core.bot import Red
 
 log = logging.getLogger("grief.say")
 _ = Translator("Say", __file__)

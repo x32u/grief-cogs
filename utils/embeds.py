@@ -4,7 +4,7 @@ from typing import Union
 import discord
 from fixcogsutils.dpy_future import TimestampStyle, get_markdown_timestamp
 from fixcogsutils.formatting import bool_emojify
-from redbot.core.utils import chat_formatting as chat
+from grief.core.utils import chat_formatting as chat
 
 from .common_variables import ACTIVITY_TYPES, APP_ICON_URL, NON_ESCAPABLE_CHARACTERS
 from .utils import _, find_app_by_name, get_twemoji

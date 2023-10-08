@@ -4,10 +4,10 @@ import datetime
 
 from discord.utils import get
 
-from redbot.core import Config, checks, commands
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import Config, checks, commands
+from grief.core.utils.predicates import MessagePredicate
 
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 
 class Application(commands.Cog):

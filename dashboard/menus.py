@@ -6,10 +6,10 @@ from typing import Any, Dict, Iterable, Optional
 
 import discord
 from aiohttp.web_request import Request
-from redbot.core import commands
-from redbot.core.utils.chat_formatting import box
-from redbot.core.utils.menus import start_adding_reactions
-from redbot.core.utils.predicates import ReactionPredicate
+from grief.core import commands
+from grief.core.utils.chat_formatting import box
+from grief.core.utils.menus import start_adding_reactions
+from grief.core.utils.predicates import ReactionPredicate
 from redbot.vendored.discord.ext import menus
 
 

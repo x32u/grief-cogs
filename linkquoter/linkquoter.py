@@ -28,7 +28,7 @@ from copy import deepcopy
 from typing import List, Optional, Tuple, Union
 
 import discord
-from redbot.core import Config, checks, commands
+from grief.core import Config, checks, commands
 
 from .converters import LinkToMessage
 

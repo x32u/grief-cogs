@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Dict, Optional, Union
 import discord
 
 if TYPE_CHECKING:
-    from redbot.core import Config, commands
-    from redbot.core.bot import Red
+    from grief.core import Config, commands
+    from grief.core.bot import Red
 
     from .converters import (
         ChannelUserRole,

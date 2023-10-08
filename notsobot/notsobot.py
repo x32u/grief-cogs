@@ -22,9 +22,9 @@ import wand.drawing
 from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageSequence
 from pyfiglet import figlet_format
 from red_commons.logging import getLogger
-from redbot.core import commands
-from redbot.core.data_manager import bundled_data_path, cog_data_path
-from redbot.core.utils.chat_formatting import pagify
+from grief.core import commands
+from grief.core.data_manager import bundled_data_path, cog_data_path
+from grief.core.utils.chat_formatting import pagify
 
 from .converter import ImageFinder
 from .vw import macintoshplus

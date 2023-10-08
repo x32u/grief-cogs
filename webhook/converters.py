@@ -23,7 +23,7 @@ SOFTWARE.
 """
 
 from discord import Webhook
-from redbot.core.commands import BadArgument, Context, Converter
+from grief.core.commands import BadArgument, Context, Converter
 
 from .errors import WebhookNotMatched
 

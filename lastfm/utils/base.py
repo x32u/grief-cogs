@@ -7,7 +7,7 @@ import arrow
 import discord
 import tabulate
 from bs4 import BeautifulSoup
-from redbot.core.utils.chat_formatting import box
+from grief.core.utils.chat_formatting import box
 
 from ..abc import *
 from ..exceptions import *

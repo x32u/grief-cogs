@@ -1,9 +1,9 @@
-from redbot.core import commands, checks, modlog, Config
+from grief.core import commands, checks, modlog, Config
 import discord
 from typing import Optional
 from datetime import datetime
 from discord.ext import tasks
-from redbot.core.i18n import Translator, cog_i18n
+from grief.core.i18n import Translator, cog_i18n
 import logging
 
 log = logging.getLogger("grief.nicknamer")

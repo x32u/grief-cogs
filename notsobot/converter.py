@@ -5,7 +5,7 @@ import discord
 import unidecode
 from discord.ext.commands.converter import Converter
 from discord.ext.commands.errors import BadArgument
-from redbot.core import commands
+from grief.core import commands
 
 IMAGE_LINKS: Pattern = re.compile(
     r"(https?:\/\/[^\"\'\s]*\.(?:png|jpg|jpeg|gif|png|svg)(\?size=[0-9]*)?)", flags=re.I

@@ -1,6 +1,6 @@
-from redbot.core import commands, checks
-from redbot.core.utils.chat_formatting import box, humanize_list, inline
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import commands, checks
+from grief.core.utils.chat_formatting import box, humanize_list, inline
+from grief.core.utils.predicates import MessagePredicate
 import discord
 
 from dashboard.abc.abc import MixinMeta

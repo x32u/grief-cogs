@@ -4,9 +4,9 @@ from typing import Tuple
 
 import discord
 from rapidfuzz import process
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.commands import BadArgument, RoleConverter
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.commands import BadArgument, RoleConverter
 from unidecode import unidecode
 
 

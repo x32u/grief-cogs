@@ -4,9 +4,9 @@ from datetime import timedelta
 from typing import Dict, Optional, Union
 
 import discord
-from redbot.core import Config, checks, commands
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import humanize_timedelta, pagify
+from grief.core import Config, checks, commands
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils.chat_formatting import humanize_timedelta, pagify
 
 from .converters import RealEmoji, StarboardExists
 from .events import StarboardEvents

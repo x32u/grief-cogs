@@ -8,11 +8,11 @@ import logging
 from typing import Any, Dict, Final, List, Literal, Optional
 
 import discord
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import humanize_list
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils.chat_formatting import humanize_list
+from grief.core.utils.predicates import MessagePredicate
 
 log: logging.Logger = logging.getLogger("red.seina.massunban")
 

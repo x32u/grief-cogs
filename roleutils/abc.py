@@ -1,8 +1,8 @@
 
 from abc import ABC, abstractmethod
 
-from redbot.core import Config
-from redbot.core.bot import Red
+from grief.core import Config
+from grief.core.bot import Red
 
 
 class MixinMeta(ABC):

@@ -7,10 +7,10 @@ from typing import Optional
 
 import aiohttp
 import discord
-from redbot.core import Config, commands
-from redbot.core.commands.converter import TimedeltaConverter
-from redbot.core.utils.chat_formatting import pagify
-from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
+from grief.core import Config, commands
+from grief.core.commands.converter import TimedeltaConverter
+from grief.core.utils.chat_formatting import pagify
+from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 
 from .converter import Args
 from .objects import Giveaway, GiveawayEnterError, GiveawayExecError

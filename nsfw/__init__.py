@@ -1,4 +1,4 @@
-from redbot.core.bot import Red
+from grief.core.bot import Red
 from .nsfw import Nsfw
 
 __red_end_user_data_statement__ = (

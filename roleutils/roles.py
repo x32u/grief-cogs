@@ -7,10 +7,10 @@ from colorsys import rgb_to_hsv
 from typing import List, Optional
 
 import discord
-from redbot.core import commands
-from redbot.core.utils.chat_formatting import humanize_number as hn
-from redbot.core.utils.chat_formatting import pagify, text_to_file
-from redbot.core.utils.mod import get_audit_reason
+from grief.core import commands
+from grief.core.utils.chat_formatting import humanize_number as hn
+from grief.core.utils.chat_formatting import pagify, text_to_file
+from grief.core.utils.mod import get_audit_reason
 from TagScriptEngine import Interpreter, LooseVariableGetterBlock, MemberAdapter
 
 from .abc import MixinMeta
@@ -26,7 +26,7 @@ import aiohttp
 import typing
 import emoji
 
-from redbot.core.utils.chat_formatting import box, pagify
+from grief.core.utils.chat_formatting import box, pagify
 
 try:
     from emoji import UNICODE_EMOJI_ENGLISH as EMOJI_DATA  # emoji<2.0.0

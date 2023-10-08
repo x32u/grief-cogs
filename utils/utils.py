@@ -1,5 +1,5 @@
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
 
 from .common_variables import TWEMOJI_URL
 

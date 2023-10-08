@@ -3,8 +3,8 @@ import logging
 import contextlib
 import re
 
-from redbot.core import Config
-from redbot.core.bot import Red
+from grief.core import Config
+from grief.core.bot import Red
 
 from typing import Mapping, Optional
 

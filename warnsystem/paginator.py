@@ -10,8 +10,8 @@ from discord.ext.commands import Paginator as CommandPaginator
 from redbot.vendored.discord.ext import menus
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
-    from redbot.core.commands import Context
+    from grief.core.bot import Red
+    from grief.core.commands import Context
 
 log = logging.getLogger("grief.paginator")
 _PageSource = TypeVar("_PageSource", bound=menus.PageSource)

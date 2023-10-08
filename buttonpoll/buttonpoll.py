@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, List, Literal, Optional
 
 import discord
 from discord.channel import TextChannel
-from redbot.core import Config, app_commands, commands
-from redbot.core.bot import Red
+from grief.core import Config, app_commands, commands
+from grief.core.bot import Red
 
 from .components.setup import SetupModal, StartSetupView
 from .poll import Poll

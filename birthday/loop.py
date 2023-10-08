@@ -4,8 +4,8 @@ import datetime
 from typing import Any, NoReturn
 
 import discord
-from redbot.core import commands
-from redbot.core.utils import AsyncIter
+from grief.core import commands
+from grief.core.utils import AsyncIter
 
 from .abc import MixinMeta
 from .utils import channel_perm_check, format_bday_message, role_perm_check

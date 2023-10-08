@@ -3,8 +3,8 @@ import importlib
 import json
 from pathlib import Path
 
-from redbot.core import VersionInfo
-from redbot.core.bot import Red
+from grief.core import VersionInfo
+from grief.core.bot import Red
 
 from . import vexutils
 from .cmdlog import CmdLog

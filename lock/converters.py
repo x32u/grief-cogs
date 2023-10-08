@@ -26,7 +26,7 @@ from typing import Optional, Union
 
 import discord
 from rapidfuzz import process
-from redbot.core import commands
+from grief.core import commands
 from unidecode import unidecode
 
 

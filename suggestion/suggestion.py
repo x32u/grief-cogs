@@ -2,10 +2,10 @@ import discord
 import datetime
 import typing
 
-from redbot.core import Config, checks, commands
-from redbot.core.utils.chat_formatting import humanize_list
+from grief.core import Config, checks, commands
+from grief.core.utils.chat_formatting import humanize_list
 
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 
 class Suggestion(commands.Cog):

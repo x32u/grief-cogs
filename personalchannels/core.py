@@ -7,14 +7,14 @@ from typing import Any, Dict, Final, List, Literal, Optional, Union
 
 import discord
 from discord.ext.commands._types import Check
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import box, humanize_list, pagify
-from redbot.core.utils.menus import DEFAULT_CONTROLS, menu
-from redbot.core.utils.mod import get_audit_reason
-from redbot.core.utils.predicates import MessagePredicate
-from redbot.core.utils.views import SimpleMenu
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import box, humanize_list, pagify
+from grief.core.utils.menus import DEFAULT_CONTROLS, menu
+from grief.core.utils.mod import get_audit_reason
+from grief.core.utils.predicates import MessagePredicate
+from grief.core.utils.views import SimpleMenu
 from tabulate import tabulate
 
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]

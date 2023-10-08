@@ -4,9 +4,9 @@ from contextlib import suppress
 from typing import Any, Optional, Union
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import humanize_timedelta
+from grief.core import Config, commands
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import humanize_timedelta
 
 from .c_autoroom import AutoRoomCommands
 from .c_autoroomset import AutoRoomSetCommands, channel_name_template

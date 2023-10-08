@@ -29,8 +29,8 @@ from typing import Dict, List, Optional, Union
 
 import discord
 import yaml
-from redbot.core import commands
-from redbot.core.utils import menus
+from grief.core import commands
+from grief.core.utils import menus
 
 PASTEBIN_RE = re.compile(r"(?:https?://(?:www\.)?)?pastebin\.com/(?:raw/)?([a-zA-Z0-9]+)")
 

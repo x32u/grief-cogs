@@ -6,11 +6,11 @@ from .say import Say
 
 from typing import TYPE_CHECKING
 from discord import app_commands
-from redbot.core.errors import CogLoadError
+from grief.core.errors import CogLoadError
 from laggron_utils import init_logger
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
+    from grief.core.bot import Red
 
 if not importlib.util.find_spec("laggron_utils"):
     raise CogLoadError(

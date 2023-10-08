@@ -4,8 +4,8 @@ from asyncio import Queue
 from typing import NoReturn, Optional
 
 import discord
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import box, pagify
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import box, pagify
 
 from cmdlog.objects import Log
 

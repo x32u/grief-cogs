@@ -4,9 +4,9 @@ import datetime
 
 import discord
 from dateutil.parser import ParserError, parse
-from redbot.core import Config
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import box, warning
+from grief.core import Config
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import box, warning
 
 from ..consts import MAX_BDAY_MSG_LEN
 from ..utils import format_bday_message

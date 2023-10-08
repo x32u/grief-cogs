@@ -3,9 +3,9 @@ from __future__ import annotations
 import asyncio
 
 import discord
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.config import Config
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.config import Config
 
 from .abc import CompositeMetaClass
 from .commands import BirthdayAdminCommands, BirthdayCommands

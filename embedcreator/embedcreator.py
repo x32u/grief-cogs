@@ -7,11 +7,11 @@ from copy import deepcopy
 from discord import Embed
 from typing import Any, Optional
 
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.commands import BadArgument, ColourConverter, Context
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.commands import BadArgument, ColourConverter, Context
 
-from redbot.core.utils.chat_formatting import bold, box, text_to_file
+from grief.core.utils.chat_formatting import bold, box, text_to_file
 
 JSON_EMOJI = discord.PartialEmoji(name="json", animated=False, id=1110250547254141049)
 

@@ -1,9 +1,9 @@
 import discord
-from redbot.core import commands
-from redbot.core import Config
-from redbot.core.data_manager import bundled_data_path
-from redbot.core import checks
-from redbot.core.i18n import Translator, cog_i18n, get_locale
+from grief.core import commands
+from grief.core import Config
+from grief.core.data_manager import bundled_data_path
+from grief.core import checks
+from grief.core.i18n import Translator, cog_i18n, get_locale
 import random
 import asyncio
 import json

@@ -4,7 +4,7 @@ import traceback
 from typing import Optional
 
 import discord
-from redbot.core.utils.chat_formatting import box, pagify
+from grief.core.utils.chat_formatting import box, pagify
 from rich.table import Table  # type:ignore
 
 from .chat import no_colour_rich_markup

@@ -1,7 +1,7 @@
 
 from typing import Optional
 
-from redbot.core.utils.chat_formatting import humanize_timedelta
+from grief.core.utils.chat_formatting import humanize_timedelta
 
 EMOJI_REGEX = r"<(?P<animated>a?):(?P<name>[a-zA-Z0-9_]{2,32}):(?P<id>[0-9]{18,22})>"
 LINK_REGEX = r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"

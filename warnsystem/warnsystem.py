@@ -9,11 +9,11 @@ from asyncio import TimeoutError as AsyncTimeoutError
 from abc import ABC
 from datetime import datetime, timedelta, timezone
 
-from redbot.core import commands, Config, checks
-from redbot.core.commands.converter import TimedeltaConverter
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils import predicates, menus, mod
-from redbot.core.utils.chat_formatting import pagify, text_to_file
+from grief.core import commands, Config, checks
+from grief.core.commands.converter import TimedeltaConverter
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils import predicates, menus, mod
+from grief.core.utils.chat_formatting import pagify, text_to_file
 
 from warnsystem.components import WarningsSelector
 
@@ -24,7 +24,7 @@ from .converters import AdvancedMemberSelect
 from .settings import SettingsMixin
 
 if TYPE_CHECKING:
-    from redbot.core.bot import Red
+    from grief.core.bot import Red
 
 log = logging.getLogger("grief.warnsystem")
 _ = Translator("WarnSystem", __file__)

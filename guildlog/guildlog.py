@@ -1,8 +1,8 @@
 import logging
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.utils.chat_formatting import box
+from grief.core import Config, commands
+from grief.core.utils.chat_formatting import box
 
 log = logging.getLogger("red.vrt.guildlog")
 

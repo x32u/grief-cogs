@@ -4,9 +4,9 @@ from collections import defaultdict
 from typing import Dict, Optional, Union
 
 import discord
-from redbot.core import Config, checks, commands
-from redbot.core.bot import Red
-from redbot.core.commands import Cog
+from grief.core import Config, checks, commands
+from grief.core.bot import Red
+from grief.core.commands import Cog
 
 # 10 minutes. Rate limit is 2 per 10, so 1 per 6 is safe.
 RATE_LIMIT_DELAY = 60 * 6  # If you're willing to risk rate limiting, you can decrease the delay

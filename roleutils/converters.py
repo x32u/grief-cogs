@@ -3,7 +3,7 @@ from typing import List, Tuple, Union
 
 import discord
 from rapidfuzz import process
-from redbot.core import commands
+from grief.core import commands
 from unidecode import unidecode
 
 from .utils import is_allowed_by_hierarchy, is_allowed_by_role_hierarchy

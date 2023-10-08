@@ -3,9 +3,9 @@ from io import BytesIO
 
 import discord
 from PIL import Image, ImageDraw, ImageFile, ImageFont
-from redbot.core import commands
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import escape
+from grief.core import commands
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import escape
 
 from .abc import MixinMeta
 from .exceptions import *

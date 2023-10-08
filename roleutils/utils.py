@@ -4,9 +4,9 @@ import re
 from typing import List, Optional, Tuple
 
 import discord
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.utils.chat_formatting import humanize_list
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.utils.chat_formatting import humanize_list
 
 
 async def is_allowed_by_hierarchy(bot: Red, mod: discord.Member, member: discord.Member) -> bool:

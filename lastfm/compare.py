@@ -4,8 +4,8 @@ from io import BytesIO
 import discord
 import tabulate
 from PIL import Image, ImageDraw, ImageFont
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_number
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import humanize_number
 
 from .abc import MixinMeta
 from .exceptions import *

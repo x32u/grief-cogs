@@ -5,9 +5,9 @@ import datetime
 
 from discord.utils import get, find
 
-from redbot.core import Config, checks, commands
+from grief.core import Config, checks, commands
 
-from redbot.core.bot import Red
+from grief.core.bot import Red
 
 
 class Counting(commands.Cog):

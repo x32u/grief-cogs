@@ -1,9 +1,9 @@
 import discord
 
-from redbot.core.bot import Red
-from redbot.core import Config, commands
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import bold, box, inline
+from grief.core.bot import Red
+from grief.core import Config, commands
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils.chat_formatting import bold, box, inline
 
 import json
 import asyncio

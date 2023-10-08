@@ -1,7 +1,7 @@
 import discord
 from discord.utils import get
-from redbot.core import commands
-from redbot.core.bot import Red
+from grief.core import commands
+from grief.core.bot import Red
 
 
 class Sdm(commands.Cog):

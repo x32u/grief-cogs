@@ -7,8 +7,8 @@ from typing import Dict, List, Optional, Union
 
 import discord
 from redbot import VersionInfo, version_info
-from redbot.core.bot import Red
-from redbot.core.utils import AsyncIter
+from grief.core.bot import Red
+from grief.core.utils import AsyncIter
 
 log = logging.getLogger("red.trusty-cogs.starboard")
 
