@@ -13,7 +13,7 @@ from collections import Counter
 from dataclasses import dataclass
 
 from colorama import Fore
-from redbot import __version__ as red_version
+from grief import __version__ as red_version
 from grief.core import data_manager
 from grief.core.utils.chat_formatting import box, humanize_list, pagify
 
