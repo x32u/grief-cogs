@@ -1,4 +1,4 @@
-from grief.core import errors  # isort:skip
+from grief.core.bot import errors  # isort:skip
 import importlib
 import sys
 
