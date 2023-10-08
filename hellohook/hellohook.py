@@ -1,5 +1,4 @@
 from grief.core import Config, commands, checks
-from grief.cogs.admin import admin
 import asyncio
 import discord
 from discord import Webhook, SyncWebhook, Embed
