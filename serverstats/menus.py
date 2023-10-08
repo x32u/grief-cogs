@@ -8,7 +8,7 @@ import discord
 from red_commons.logging import getLogger
 from redbot.core import commands
 from redbot.core.i18n import Translator
-from grief.vendored.discord.ext import menus
+from redbot.vendored.discord.ext import menus
 
 log = getLogger("red.Trusty-cogs.serverstats")
 
