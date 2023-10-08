@@ -1,6 +1,6 @@
 import discord
 from grief.core.utils import chat_formatting as chat
-from redbot.vendored.discord.ext import menus
+from grief.vendored.discord.ext import menus
 
 from .common_variables import KNOWN_CHANNEL_TYPES
 from .embeds import activity_embed, emoji_embed
