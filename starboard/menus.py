@@ -7,7 +7,7 @@ import discord
 # from discord.ext.commands.errors import BadArgument
 from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list, pagify
-from redbot.vendored.discord.ext import menus
+from grief.vendored.discord.ext import menus
 
 from .starboard_entry import StarboardEntry
 
