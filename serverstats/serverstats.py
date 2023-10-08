@@ -7,7 +7,7 @@ from typing import Dict, List, Literal, Optional, Tuple, Union, cast
 
 import aiohttp
 import discord
-from grief.core import VersionInfo, version_info
+from redbot import VersionInfo, version_info
 from grief.core import Config, checks, commands
 from grief.core.bot import Red
 from grief.core.i18n import Translator, cog_i18n
