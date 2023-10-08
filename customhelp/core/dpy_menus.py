@@ -6,7 +6,7 @@ from typing import Any, List, Optional, Union
 
 import discord
 from grief.core.bot import Red
-from redbot.vendored.discord.ext import menus
+from grief.vendored.discord.ext import menus
 
 import customhelp.core.base_help as base_help
 
