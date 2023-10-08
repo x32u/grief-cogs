@@ -232,3 +232,6 @@ class Counting(commands.Cog):
                     await message.channel.send(deleted)
         except (TypeError, ValueError):
             return
+
+    async def setup(bot):
+        await bot.add_cog(Counting(bot))
