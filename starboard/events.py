@@ -5,7 +5,7 @@ from typing import Dict, List, Literal, Union, cast
 
 import discord
 from discord.utils import snowflake_time
-from redbot import VersionInfo, version_info
+from grief import VersionInfo, version_info
 from grief.core import Config, commands
 from grief.core.bot import Red
 from grief.core.i18n import Translator, cog_i18n
