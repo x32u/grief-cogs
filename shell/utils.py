@@ -19,9 +19,9 @@ import re
 import sys
 from typing import Dict
 
-from redbot.core import commands
-from redbot.core.utils.chat_formatting import box, pagify
-from redbot.core.utils.menus import menu
+from grief.core import commands
+from grief.core.utils.chat_formatting import box, pagify
+from grief.core.utils.menus import menu
 
 from .errors import ProcessTerminatedEarly
 
