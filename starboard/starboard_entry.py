@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Optional, Union
 
 import discord
-from redbot import VersionInfo, version_info
+from grief import VersionInfo, version_info
 from grief.core.bot import Red
 from grief.core.utils import AsyncIter
 
