@@ -1,5 +1,5 @@
 from grief.core import Config, commands, checks
-from redbot.cogs.admin import admin
+from grief.cogs.admin import admin
 import asyncio
 import discord
 from discord import Webhook, SyncWebhook, Embed
