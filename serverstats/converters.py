@@ -6,8 +6,8 @@ import discord
 from discord.ext.commands.converter import IDConverter
 from discord.ext.commands.errors import BadArgument
 from rapidfuzz import process
-from grief.core import commands
-from grief.core.i18n import Translator
+from redbot.core import commands
+from redbot.core.i18n import Translator
 from unidecode import unidecode
 
 _ = Translator("ServerStats", __file__)
