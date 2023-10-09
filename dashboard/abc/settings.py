@@ -1,6 +1,6 @@
 from grief.core import commands, checks
 from grief.core.utils.chat_formatting import box, humanize_list, inline
-from redbot import __version__ as red_version
+from grief import __version__ as red_version
 from typing import Optional
 import discord
 import platform
