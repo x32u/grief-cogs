@@ -10,7 +10,7 @@ from grief.core import commands
 from grief.core.utils.chat_formatting import box
 from grief.core.utils.menus import start_adding_reactions
 from grief.core.utils.predicates import ReactionPredicate
-from redbot.vendored.discord.ext import menus
+from grief.vendored.discord.ext import menus
 
 
 class ClientMenu(menus.MenuPages, inherit_buttons=False):
