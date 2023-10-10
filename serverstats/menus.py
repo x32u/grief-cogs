@@ -5,12 +5,12 @@ from enum import Enum
 from typing import Any, List, Optional, Tuple, Union
 
 import discord
-from red_commons.logging import getLogger
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.vendored.discord.ext import menus
+from grief_commons.logging import getLogger
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.vendored.discord.ext import menus
 
-log = getLogger("red.Trusty-cogs.serverstats")
+log = getLogger("grief.serverstats")
 
 _ = Translator("serverstats", __file__)
 
