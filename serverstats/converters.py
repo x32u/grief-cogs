@@ -6,12 +6,12 @@ import discord
 from discord.ext.commands.converter import IDConverter
 from discord.ext.commands.errors import BadArgument
 from rapidfuzz import process
-from redbot.core import commands
-from redbot.core.i18n import Translator
+from grief.core import commands
+from grief.core.i18n import Translator
 from unidecode import unidecode
 
 _ = Translator("ServerStats", __file__)
-log = logging.getLogger("red.trusty-cogs.ServerStats")
+log = logging.getLogger("grief.ServerStats")
 
 
 class GuildConverter(discord.app_commands.Transformer):
