@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Any, List, Optional, Tuple, Union
 
 import discord
-from grief_commons.logging import getLogger
+from red_commons.logging import getLogger
 from grief.core import commands
 from grief.core.i18n import Translator
 from grief.vendored.discord.ext import menus
