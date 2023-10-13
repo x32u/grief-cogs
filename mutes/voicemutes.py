@@ -10,7 +10,7 @@ from grief.core.utils.chat_formatting import (
     pagify,
     format_perms_list,
 )
-from gried.core.utils.mod import get_audit_reason
+from grief.core.utils.mod import get_audit_reason
 
 from .converters import MuteTime
 
