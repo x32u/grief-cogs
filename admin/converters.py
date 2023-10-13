@@ -1,7 +1,7 @@
 import discord
-from redbot.core import commands
-from redbot.core.i18n import Translator
-from redbot.core.utils import AsyncIter
+from grief.core import commands
+from grief.core.i18n import Translator
+from grief.core.utils import AsyncIter
 
 _ = Translator("AdminConverters", __file__)
 
