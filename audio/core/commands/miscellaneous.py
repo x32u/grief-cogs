@@ -22,21 +22,6 @@ _ = Translator("Audio", Path(__file__))
 
 
 class MiscellaneousCommands(MixinMeta, metaclass=CompositeMetaClass):
-    @commands.command(name="sing")
-    @commands.guild_only()
-    @commands.bot_has_permissions(embed_links=True)
-    async def command_sing(self, ctx: commands.Context):
-        """Make Red sing one of her songs."""
-        ids = (
-            "zGTkAVsrfg8",
-            "cGMWL8cOeAU",
-            "vFrjMq4aL-g",
-            "WROI5WYBU_A",
-            "41tIUr_ex3g",
-            "f9O2Rjn1azc",
-        )
-        url = f"https://www.youtube.com/watch?v={random.choice(ids)}"
-        await ctx.invoke(self.command_play, query=url)
 
     @commands.command(name="audiostats")
     @commands.guild_only()
