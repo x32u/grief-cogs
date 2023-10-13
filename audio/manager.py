@@ -40,14 +40,14 @@ from .utils import (
     get_max_allocation_size,
     replace_p_with_prefix,
 )
-from ...core.utils import AsyncIter
+from grief.core.utils import AsyncIter
 
 if TYPE_CHECKING:
     from . import Audio
 
 
 _ = Translator("Audio", pathlib.Path(__file__))
-log = getLogger("red.Audio.manager")
+log = getLogger("grief.Audio.manager")
 
 _FAILED_TO_START: Final[Pattern] = re.compile(rb"Web server failed to start\. (.*)")
 
