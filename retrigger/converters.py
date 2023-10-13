@@ -6,7 +6,7 @@ from typing import Dict, List, Literal, Optional, Pattern, Tuple, Union
 import discord
 from discord.ext.commands.converter import Converter, IDConverter, RoleConverter
 from discord.ext.commands.errors import BadArgument
-from redbot import VersionInfo, version_info
+from grief import VersionInfo, version_info
 from grief.core import commands
 from grief.core.i18n import Translator
 from grief.core.utils.menus import start_adding_reactions
