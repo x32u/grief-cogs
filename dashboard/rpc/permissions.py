@@ -2,7 +2,6 @@ from typing import cast
 from html import escape
 
 import discord
-from grief.cogs.permissions.converters import CogOrCommand, GuildUniqueObjectFinder, RuleType
 from grief.core.bot import Red
 from grief.core.commands import commands
 from grief.core.utils import AsyncIter
