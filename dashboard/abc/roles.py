@@ -10,7 +10,7 @@ dashboard = MixinMeta.dashboard
 
 
 class DashboardRolesMixin(MixinMeta):
-    @checks.guildowner()
+    @checks.is_owner()
     @dashboard.group()
     async def roles(self, ctx: commands.Context):
         """Customize the roles that have permission to certain parts of the dashboard."""
