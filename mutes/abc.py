@@ -3,8 +3,8 @@ from typing import Optional, Dict, Union
 from datetime import datetime
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.bot import Red
+from grief.core import Config, commands
+from grief.core.bot import Red
 
 
 class MixinMeta(ABC):
