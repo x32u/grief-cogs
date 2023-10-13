@@ -19,7 +19,7 @@ class DashboardWebserverMixin(MixinMeta):
         """Group command for controlling settings related to webserver"""
         pass
 
-    @webserver.command(enabled=False)
+    @webserver.command(enabled=True)
     async def clients(self, ctx: commands.Context):
         """View connected RPC clients.  These could be dashboard or other processes.
 

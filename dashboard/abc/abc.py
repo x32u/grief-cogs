@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from grief.core import Config, commands
+from grief.core import Config, commands, checks
 from grief.core.bot import Red
 
 
@@ -12,3 +12,9 @@ class MixinMeta(ABC):
     def __init__(self, *_args):
         self.config: Config
         self.bot: Red
+
+    @checks.is_owner()
+    @commands.group(name="dashboard")
+    async def dashboard(self, ctx: commands.Context):
+        """Group command for controlling the web dashboard for Red."""
+        pass
