@@ -3,16 +3,16 @@ import logging
 from typing import Tuple, Union
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.i18n import Translator, cog_i18n
-from redbot.core.utils.chat_formatting import box
-from redbot.core.utils.mod import get_audit_reason
-from redbot.core.utils.predicates import MessagePredicate
+from grief.core import Config, commands
+from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils.chat_formatting import box
+from grief.core.utils.mod import get_audit_reason
+from grief.core.utils.predicates import MessagePredicate
 
 from .announcer import Announcer
 from .converters import SelfRole
 
-log = logging.getLogger("red.admin")
+log = logging.getLogger("grief.admin")
 
 T_ = Translator("Admin", __file__)
 
