@@ -1,8 +1,8 @@
+
 from grief.core import commands, checks
 
-
-@commands.group(name="dashboard")
 @checks.is_owner()
+@commands.group(name="dashboard")
 async def dashboard(self, ctx: commands.Context):
     """Group command for controlling the web dashboard for Red."""
     pass
