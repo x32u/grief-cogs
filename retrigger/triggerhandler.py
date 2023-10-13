@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Literal, Optional, Pattern, Tuple, cast
 
 import aiohttp
 import discord
-from redbot import VersionInfo, version_info
+from grief import VersionInfo, version_info
 from grief.core import commands, modlog
 from grief.core.data_manager import cog_data_path
 from grief.core.i18n import Translator
