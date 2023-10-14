@@ -1,4 +1,5 @@
-from redbot.core import errors  # isort:skip
+
+from grief.core import errors  # isort:skip
 import importlib
 import sys
 
@@ -33,8 +34,8 @@ del AAA3A_utils
 #         "The needed utils to run the cog has a lower version than the one supported by this version of the cog. Please execute the command `[p]pipinstall --upgrade git+https://github.com/AAA3A-AAA3A/AAA3A_utils.git`. A restart of the bot isn't necessary."
 #     )
 
-from redbot.core.bot import Red  # isort:skip
-from redbot.core.utils import get_end_user_data_statement
+from grief.core.bot import Red  # isort:skip
+from grief.core.utils import get_end_user_data_statement
 
 from .viewpermissions import ViewPermissions
 
