@@ -3,7 +3,7 @@ import typing  # isort:skip
 
 from dataclasses import dataclass
 
-from redbot.core.utils.chat_formatting import pagify
+from grief.core.utils.chat_formatting import pagify
 
 
 class SearchResults:
