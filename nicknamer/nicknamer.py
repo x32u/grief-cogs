@@ -352,7 +352,7 @@ class NickNamer(commands.Cog):
 
     @checks.admin()
     @commands.command()
-    async def nickpurge(self, ctx, are_you_sure: Optional[bool]):
+    async def nickpurge(self, ctx, *, are_you_sure: Optional[bool]):
         """Remove all nicknames in the server."""
         if are_you_sure:
             for member in ctx.guild.members:
@@ -365,9 +365,7 @@ class NickNamer(commands.Cog):
                     "This will remove the nicknames of all members. If you are sure you want to do this run:\n{command}"
                 ).format(command=f"``{ctx.clean_prefix}nickpurge yes``")
             )
-            except:
-                    pass
-        except discord.errors.Forbidden:
+       except: discord.errors.Forbidden:
             await ctx.send(
                 _("Missing permissions.")
             )
