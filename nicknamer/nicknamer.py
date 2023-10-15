@@ -366,7 +366,7 @@ class NickNamer(commands.Cog):
                 ).format(command=f"``{ctx.clean_prefix}nickpurge yes``")
             )
        except discord.Forbidden:
-                        errors[user_id] = _(
+                         errors[user_id] = _(
                             "Could not ban user with ID {user_id}: missing permissions."
                         ).format(user_id=user_id)
                         continue
