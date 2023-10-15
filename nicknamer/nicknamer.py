@@ -368,4 +368,6 @@ class NickNamer(commands.Cog):
             except:
                     pass
         except discord.errors.Forbidden:
-            await ctx.send(_("Missing permissions."))
+            await ctx.send(
+                _("Missing permissions.")
+            )
