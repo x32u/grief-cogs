@@ -31,12 +31,6 @@ class CustomPing(commands.Cog):
         self.config.register_global(**default_global)
         self.settings = {}
 
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad!"""
-        pre = super().format_help_for_context(ctx)
-        return f"{pre}\n\nAuthor: {self.__author__}\nCog Version: {self.__version__}\nDocs: {self.__docs__}"
-
     async def cog_load(self):
         self.settings = await self.config.all()
 
