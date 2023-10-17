@@ -91,7 +91,7 @@ class DataProtocol(asyncio.SubprocessProtocol):
 
 class NotSoBot(commands.Cog):
     """
-    Rewrite of many NotSoBot commands to work on RedBot V3
+    Rewrite of many NotSoBot commands to work on grief
     """
 
     __author__ = ["NotSoSuper", "TrustyJAID"]
