@@ -12,7 +12,7 @@ adventure_bank = None
 log = logging.getLogger("grief.userinfo")
 
 class Userinfo(commands.Cog):
-    """Userinfo."""
+    """Replace original Grief userinfo command with more details."""
 
     def __init__(self, bot):
         self.bot = bot
