@@ -16,7 +16,7 @@ from grief.core.utils.menus import menu, DEFAULT_CONTROLS
 
 
 class Reminder(commands.Cog):
-    """Setup reminders."""
+    """Never forget anything anymore."""
     
     TIME_AMNT_REGEX = re.compile("([1-9][0-9]*)([a-z]+)", re.IGNORECASE)
     TIME_QUANTITIES = collections.OrderedDict(
