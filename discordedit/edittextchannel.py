@@ -453,7 +453,7 @@ class EditTextChannel(Cog):
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
 
-    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(administrator=True)
     @commands.bot_has_permissions(manage_roles=True)
     @edittextchannel.command(name="overwrites", aliases=["permissions", "perms"])
     async def edittextchannel_overwrites(

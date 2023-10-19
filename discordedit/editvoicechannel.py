@@ -367,7 +367,7 @@ class EditVoiceChannel(Cog):
     @commands.guild_only()
     @commands.admin_or_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
-    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(administrator=True)
     @commands.bot_has_permissions(manage_roles=True)
     @editvoicechannel.command(name="overwrites", aliases=["permissions", "perms"])
     async def editvoicechannel_overwrites(

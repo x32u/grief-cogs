@@ -249,7 +249,7 @@ class DisboardReminder(commands.Cog):
         else:
             await ctx.send("I will no longer clean the bump channel.")
 
-    @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(administrator=True)
     @bumpreminder.command("lock")
     async def bumpreminder_lock(self, ctx, true_or_false: bool = None):
         """Toggle whether the bot should automatically lock/unlock the bump channel."""

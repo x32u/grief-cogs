@@ -38,7 +38,7 @@ class AwayFromKeyboard(RedCog):
         embed = discord.Embed()
         embed.color = 0x2F3136
         embed.description = "> You are now AFK."
-        await ctx.reply(embed=embed)
+        await ctx.reply(mention_author=False, embed=embed)
 
     @commands.Cog.listener()
     async def on_message_without_command(self, message: discord.Message):
