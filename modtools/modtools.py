@@ -606,8 +606,8 @@ class ModTools(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def invite(self, ctx):
         button1 = Button(label="Invite", url=f"https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=8&scope=bot%20applications.commands")
-        embed = discord.Embed(description=f"Use the button below to invite revine.", color=Colors.normal)
-        embed.set_author(name=f"Revine", icon_url=f"{Images.revine_pfp}", url=f"https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=8&scope=bot%20applications.commands")
+        embed = discord.Embed(description=f"Use the button below to invite revine.", color=0x313338)
+        embed.set_author(name=f"Revine", url=f"https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=8&scope=bot%20applications.commands")
         view = View()
         view.add_item(button1)
         await ctx.reply(embed=embed, view=view)
