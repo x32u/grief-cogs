@@ -106,6 +106,23 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/cuddle/cuddle29.gif",
                 "https://cdn.grief.cloud/roleplay/cuddle/cuddle30.gif",
             ],
+                "poke": [
+                "https://cdn.grief.cloud/roleplay/poke/poke1.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke2.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke3.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke4.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke5.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke6.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke7.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke8.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke9.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke10.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke11.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke12.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke13.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke14.gif",
+                "https://cdn.grief.cloud/roleplay/poke/poke15.gif",
+            ],
         }
         default_member = {
             "cuddle_s": 0,
@@ -191,25 +208,33 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).cuddle_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="poke")
+    @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def poke(self, ctx: commands.Context, user: discord.Member):
         """
         Poke a user.
         """
-        embed = await kawaiiembed(self, ctx, "poked", "poke", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
-        target = await self.config.custom("Target", ctx.author.id, user.id).poke_r()
+
+        images = await self.config.poke()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** just poked {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
+        target = await self.config.custom("Target", ctx.author.id, user.id).fuck_r()
         used = await self.config.user(ctx.author).poke_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total pokes: {used + 1} | {ctx.author.name} has poked {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).poke_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).poke_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).poke_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="kiss")
