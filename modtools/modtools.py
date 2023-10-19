@@ -592,7 +592,7 @@ class ModTools(commands.Cog):
     
     @commands.command(aliases=["cn", "changenick"])
     @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.has_permissions(administrator = True)
+    @commands.has_permissions(manage_nicknames = True)
     async def nick(self, ctx, member: discord.Member, nick = None):
         if nick == None:
             await member.edit(nick=nick)
@@ -605,9 +605,9 @@ class ModTools(commands.Cog):
         embed.set_footer(text="category: mod")
         await ctx.send(embed=embed)
 
-    @checks.mod()
-    @commands.command()
-    @checks.bot_has_permissions(manage_nicknames=True)
+    @commands.command(aliases=["fn"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(manage_nicknames = True)
     async def freezenick(self, ctx:commands.Context, user: discord.Member, nickname: str, reason: Optional[str] = "Nickname frozen.",):
         """Freeze a users nickname."""
         name_check = await self.config.guild(ctx.guild).frozen()
@@ -626,8 +626,9 @@ class ModTools(commands.Cog):
         except discord.errors.Forbidden:
             await ctx.send("Missing permissions.")
 
-    @checks.mod()
-    @commands.command()
+    @commands.command(aliases=["un"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(manage_nicknames = True)
     async def unfreezenick(self, ctx, user: discord.Member):
         """Unfreeze a user's nickname."""
         async with self.config.guild(ctx.guild).frozen() as frozen:
