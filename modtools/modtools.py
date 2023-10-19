@@ -597,6 +597,7 @@ class ModTools(commands.Cog):
         if nick == None:
             await member.edit(nick=nick)
             embed = discord.Embed(description=f"{member.mention} Nickname was set to **Default**", color=0x313338)
+            embed.set_footer(text="category: mod")
             await ctx.send(embed=embed)
             return 
         await member.edit(nick=nick)
