@@ -561,11 +561,3 @@ class PersonalRoles(commands.Cog):
                     await role.delete()
                 except:
                     pass
-
-    async def red_delete_data_for_user(
-        self,
-        *,
-        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
-        user_id: int,
-    ):
-        pass
