@@ -589,6 +589,7 @@ class ModTools(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(manage_nicknames = True)
     async def nick(self, ctx, member: discord.Member, nick = None):
+        """Change a user's nickname."""
         if nick == None:
             await member.edit(nick=nick)
             embed = discord.Embed(description=f"{member.mention} Nickname was set to **Default**", color=0x313338)
