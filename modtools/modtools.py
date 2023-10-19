@@ -38,11 +38,6 @@ class ModTools(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-    
-    def valid_nickname(self, nickname: str):
-        if len(nickname) <= 32:
-            return True
-        return False
 
     async def _Tools__error(self, ctx, error):
         if error.__cause__:
