@@ -611,14 +611,7 @@ class ModTools(commands.Cog):
     @checks.mod()
     @commands.command()
     @checks.bot_has_permissions(manage_nicknames=True)
-    async def freezenick(
-        self,
-        ctx,
-        user: discord.Member,
-        nickname: str,
-        *,
-        reason: Optional[str] = "Nickname frozen.",
-    ):
+    async def freezenick(self, ctx: commands.Context, user: discord.Member, nickname: str, reason: Optional[str] = "Nickname frozen.",):
         """Freeze a users nickname."""
         name_check = await self.config.guild(ctx.guild).frozen()
         for id in name_check:
