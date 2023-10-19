@@ -38,11 +38,6 @@ class ModTools(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-    
-    def valid_nickname(self, nickname: str=None):
-        if len(nickname) <= 32:
-            return True
-        return False
 
     async def _Tools__error(self, ctx, error):
         if error.__cause__:
@@ -593,7 +588,7 @@ class ModTools(commands.Cog):
     @checks.mod()
     @commands.command()
     @checks.bot_has_permissions(manage_nicknames=True)
-    async def nick(self, ctx, user: discord.Member, nickname: str=None):
+    async def nick(self, ctx, user: discord.Member, nickname: str):
         """Change a user's nickname."""
         await user.edit(nick=nickname)
         await ctx.tick()
