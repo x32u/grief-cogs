@@ -637,12 +637,6 @@ class ModTools(commands.Cog):
                     frozen.remove(e)
                     await ctx.tick()
 
-    @nick.error
-    async def nick_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            embed = discord.Embed(description=f"{ctx.author.mention}: You do not have permissions. [**`Manage Nicknames`**](https://discordapi.com/permissions.html#16)", colour=0x313338)
-            await ctx.send(embed=embed)
-
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if before.nick != after.nick:
