@@ -601,7 +601,7 @@ class ModTools(commands.Cog):
             return 
         await member.edit(nick=nick)
         embed = discord.Embed(description=f"{member.mention} Nickname was set to **{nick}**", color=0x313338)
-        embed.set_footer(text="category: misc・revine ©️ 2023")
+        embed.set_footer(text="category: mod")
         await ctx.send(embed=embed)
 
     @checks.mod()
