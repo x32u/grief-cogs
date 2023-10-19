@@ -123,6 +123,23 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/poke/poke14.gif",
                 "https://cdn.grief.cloud/roleplay/poke/poke15.gif",
             ],
+                "kiss": [
+                "https://cdn.grief.cloud/roleplay/kiss/kiss1.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss2.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss3.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss4.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss5.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss6.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss7.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss8.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss9.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss10.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss11.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss12.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss13.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss14.gif",
+                "https://cdn.grief.cloud/roleplay/kiss/kiss15.gif",
+            ],
         }
         default_member = {
             "cuddle_s": 0,
@@ -237,25 +254,33 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).poke_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="kiss")
+    @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def kiss(self, ctx: commands.Context, user: discord.Member):
         """
         Kiss a user.
         """
-        embed = await kawaiiembed(self, ctx, "just kissed", "kiss", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
-        target = await self.config.custom("Target", ctx.author.id, user.id).kiss_r()
+
+        images = await self.config.kiss()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** just kissed {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
+        target = await self.config.custom("Target", ctx.author.id, user.id).fuck_r()
         used = await self.config.user(ctx.author).kiss_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total kisses: {used + 1} | {ctx.author.name} has kissed {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).kiss_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).kiss_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).kiss_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="hug")
