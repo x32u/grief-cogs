@@ -595,7 +595,7 @@ class ModTools(commands.Cog):
     @checks.bot_has_permissions(manage_nicknames=True)
     async def nick(self, ctx, user: discord.Member, nickname: str=None):
         """Change a user's nickname."""
-        valid_nick_check = self.valid_nickname(nickname=nickname)
+        valid_nick_check = self.valid_nickname(nickname=str)
         if not valid_nick_check:
             return await ctx.send(
                 "That nickname is too long. Keep it under 32 characters, please."
