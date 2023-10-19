@@ -16,6 +16,7 @@ from grief.core.utils.common_filters import filter_invites
 from grief.core.utils.menus import menu, DEFAULT_CONTROLS, close_menu
 
 from .views import URLView
+from discord.ui import View, Button
 from grief.core.commands import GuildContext
 
 from .converter import FuzzyMember
@@ -600,6 +601,16 @@ class ModTools(commands.Cog):
         embed = discord.Embed(description=f"{member.mention} Nickname was set to **{nick}**", color=0x313338)
         embed.set_footer(text="category: mod")
         await ctx.send(embed=embed)
+    
+    @commands.command()
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def invite(self, ctx):
+        button1 = Button(label="Invite", url=f"https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=8&scope=bot%20applications.commands")
+        embed = discord.Embed(description=f"Use the button below to invite revine.", color=Colors.normal)
+        embed.set_author(name=f"Revine", icon_url=f"{Images.revine_pfp}", url=f"https://discord.com/api/oauth2/authorize?client_id={self.bot.user.id}&permissions=8&scope=bot%20applications.commands")
+        view = View()
+        view.add_item(button1)
+        await ctx.reply(embed=embed, view=view)
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
@@ -618,3 +629,5 @@ class ModTools(commands.Cog):
                                 for e in frozen:
                                     if e[0] == before.id:
                                         frozen.remove(e)
+
+                            
