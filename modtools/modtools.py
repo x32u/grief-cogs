@@ -605,38 +605,6 @@ class ModTools(commands.Cog):
         embed.set_footer(text="category: mod")
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["fn"])
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.has_permissions(manage_nicknames = True)
-    async def freezenick(self, ctx:commands.Context, user: discord.Member, nickname: str, reason: Optional[str] = "Nickname frozen.",):
-        """Freeze a users nickname."""
-        name_check = await self.config.guild(ctx.guild).frozen()
-        for id in name_check:
-            if user.id in id:
-                return await ctx.send("User is already frozen. Unfreeze them first.")
-        valid_nick_check = self.valid_nickname(nickname=nickname)
-        if not valid_nick_check:
-            return await ctx.send("That nickname is too long. Keep it under 32 characters, please")
-
-        try:
-            await user.edit(nick=nickname)
-            await ctx.tick()
-            async with self.config.guild(ctx.guild).frozen() as frozen:
-                frozen.append((user.id, nickname))
-        except discord.errors.Forbidden:
-            await ctx.send("Missing permissions.")
-
-    @commands.command(aliases=["un"])
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.has_permissions(manage_nicknames = True)
-    async def unfreezenick(self, ctx, user: discord.Member):
-        """Unfreeze a user's nickname."""
-        async with self.config.guild(ctx.guild).frozen() as frozen:
-            for e in frozen:
-                if user.id in e:
-                    frozen.remove(e)
-                    await ctx.tick()
-
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if before.nick != after.nick:
