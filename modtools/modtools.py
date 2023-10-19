@@ -600,8 +600,6 @@ class ModTools(commands.Cog):
             return await ctx.send(
                 "That nickname is too long. Keep it under 32 characters, please."
             )
-        if not reason:
-            reason = ("Nickname changed.")
         try:
             await user.edit(nick=nickname)
             await ctx.tick()
