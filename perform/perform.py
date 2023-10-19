@@ -73,6 +73,9 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/fuck/fuck10.gif",
                 "https://cdn.grief.cloud/roleplay/fuck/fuck11.gif",
             ],
+            "cuddle": [
+                "https://cdn.grief.cloud/roleplay/cuddle/cuddle1.gif",
+            ],
         }
         default_member = {
             "cuddle_s": 0,
@@ -130,24 +133,32 @@ class Perform(commands.Cog):
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command()
-    @commands.guild_only()
+    @commands.bot_has_permissions(embed_links=True)
     async def cuddle(self, ctx: commands.Context, user: discord.Member):
         """
         Cuddle a user.
         """
-        embed = await kawaiiembed(self, ctx, "cuddled", "cuddle", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
-        target = await self.config.custom("Target", ctx.author.id, user.id).cuddle_r()
-        used = await self.config.user(ctx.author).cuddle_s()
+
+        images = await self.config.cuddle()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** just cuddled {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
+        target = await self.config.custom("Target", ctx.author.id, user.id).fuck_r()
+        used = await self.config.user(ctx.author).fuck_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total cuddles: {used + 1} | {ctx.author.name} has cuddled {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).cuddle_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).cuddle_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).cuddle_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="poke")
