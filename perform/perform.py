@@ -331,7 +331,7 @@ class Perform(commands.Cog):
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).hug_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).kiss_r.set(target + 1)
+        await self.config.custom("Target", ctx.author.id, user.id).hug_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="pat")
