@@ -593,7 +593,7 @@ class ModTools(commands.Cog):
     @checks.mod()
     @commands.command()
     @checks.bot_has_permissions(manage_nicknames=True)
-    async def nick(self, ctx, user: discord.Member, nickname: str, *, reason: Optional[str]):
+    async def nick(self, ctx, user: discord.Member, nickname: str, reason: Optional[str]):
         """Forcibly change a user's nickname."""
         valid_nick_check = self.valid_nickname(nickname=nickname)
         if not valid_nick_check:
@@ -601,7 +601,7 @@ class ModTools(commands.Cog):
                 "That nickname is too long. Keep it under 32 characters, please."
             )
         if not reason:
-            reason = ("Nickname force-changed")
+            reason = ("Nickname changed.")
         try:
             await user.edit(nick=nickname)
             await ctx.tick()
@@ -611,7 +611,7 @@ class ModTools(commands.Cog):
     @checks.mod()
     @commands.command()
     @checks.bot_has_permissions(manage_nicknames=True)
-    async def freezenick(self, ctx: commands.Context, user: discord.Member, nickname: str, reason: Optional[str] = "Nickname frozen.",):
+    async def freezenick(self, ctx: commands.Context, user: discord.Member, nickname: str=None, reason: Optional[str] = "Nickname frozen.",):
         """Freeze a users nickname."""
         name_check = await self.config.guild(ctx.guild).frozen()
         for id in name_check:

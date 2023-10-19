@@ -33,7 +33,7 @@ try:
 except ImportError:
     from emoji import EMOJI_DATA  # emoji>=2.0.0
 
-log = logging.getLogger("red.phenom4n4n.roleutils")
+log = logging.getLogger("grief.roleutils")
 
 
 def targeter_cog(ctx: commands.Context):
@@ -70,13 +70,13 @@ class Roles(MixinMeta):
             and ctx.author.id not in ctx.bot.owner_ids
         ):
             raise commands.UserFeedbackCheckFailure(
-                _(
+                (
                     "I can not let you edit @{role.name} ({role.id}) because that role is higher than or equal to your highest role in the Discord hierarchy."
                 ).format(role=role),
             )
         if not ctx.me.top_role > role:
             raise commands.UserFeedbackCheckFailure(
-                _(
+                (
                     "I can not edit @{role.name} ({role.id}) because that role is higher than or equal to my highest role in the Discord hierarchy."
                 ).format(role=role),
             )
@@ -581,7 +581,7 @@ class Roles(MixinMeta):
                 embed.color = 0x313338
             else:
                 embed = None
-                content = f"{ctx.author.mention} " + _(
+                content = f"{ctx.author.mention} " + (
                     "Do you really want to delete the role {role.mention} ({role.id})?"
                 ).format(role=role)
             if not await CogsUtils.ConfirmationAsk(
