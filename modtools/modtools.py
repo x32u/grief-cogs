@@ -38,6 +38,11 @@ class ModTools(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+    
+    def valid_nickname(self, nickname: str):
+        if len(nickname) <= 32:
+            return True
+        return False
 
     async def _Tools__error(self, ctx, error):
         if error.__cause__:
@@ -585,18 +590,24 @@ class ModTools(commands.Cog):
         )
         return channels, category_channels
     
-    @checks.mod()
-    @commands.command()
-    @checks.bot_has_permissions(manage_nicknames=True)
-    async def nick(self, ctx, user: discord.Member, nickname: str=None):
-        """Change a user's nickname."""
-        await user.edit(nick=nickname)
-        await ctx.tick()
+    @commands.command(aliases=["cn", "changenick"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(administrator = True)
+    async def nick(self, ctx, member: discord.Member, nick = None):
+        if nick == None:
+            await member.edit(nick=nick)
+            embed = discord.Embed(description=f"{member.mention} Nickname was set to **Default**", color=0x313338)
+            await ctx.send(embed=embed)
+            return 
+        await member.edit(nick=nick)
+        embed = discord.Embed(description=f"{member.mention} Nickname was set to **{nick}**", color=0x313338)
+        embed.set_footer(text="category: misc・revine ©️ 2023")
+        await ctx.send(embed=embed)
 
     @checks.mod()
     @commands.command()
     @checks.bot_has_permissions(manage_nicknames=True)
-    async def freezenick(self, ctx: commands.Context, user: discord.Member, nickname: str=None, reason: Optional[str] = "Nickname frozen.",):
+    async def freezenick(self, ctx:commands.Context, user: discord.Member, nickname: str, reason: Optional[str] = "Nickname frozen.",):
         """Freeze a users nickname."""
         name_check = await self.config.guild(ctx.guild).frozen()
         for id in name_check:
