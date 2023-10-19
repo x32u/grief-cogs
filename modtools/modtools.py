@@ -593,7 +593,7 @@ class ModTools(commands.Cog):
     @checks.mod()
     @commands.command()
     @checks.bot_has_permissions(manage_nicknames=True)
-    async def nick(self, ctx, user: discord.Member, nickname: str=None, reason: Optional[str]):
+    async def nick(self, ctx, user: discord.Member, nickname: str=None):
         """Change a user's nickname."""
         valid_nick_check = self.valid_nickname(nickname=nickname)
         if not valid_nick_check:
