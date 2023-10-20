@@ -106,7 +106,7 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/cuddle/cuddle29.gif",
                 "https://cdn.grief.cloud/roleplay/cuddle/cuddle30.gif",
             ],
-                "poke": [
+            "poke": [
                 "https://cdn.grief.cloud/roleplay/poke/poke1.gif",
                 "https://cdn.grief.cloud/roleplay/poke/poke2.gif",
                 "https://cdn.grief.cloud/roleplay/poke/poke3.gif",
@@ -123,7 +123,7 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/poke/poke14.gif",
                 "https://cdn.grief.cloud/roleplay/poke/poke15.gif",
             ],
-                "kiss": [
+            "kiss": [
                 "https://cdn.grief.cloud/roleplay/kiss/kiss1.gif",
                 "https://cdn.grief.cloud/roleplay/kiss/kiss2.gif",
                 "https://cdn.grief.cloud/roleplay/kiss/kiss3.gif",
@@ -140,7 +140,7 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/kiss/kiss14.gif",
                 "https://cdn.grief.cloud/roleplay/kiss/kiss15.gif",
             ],
-                "hug": [
+            "hug": [
                 "https://cdn.grief.cloud/roleplay/hug/hug1.gif",
                 "https://cdn.grief.cloud/roleplay/hug/hug2.gif",
                 "https://cdn.grief.cloud/roleplay/hug/hug3.gif",
@@ -161,6 +161,28 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/hug/hug18.gif",
                 "https://cdn.grief.cloud/roleplay/hug/hug19.gif",
                 "https://cdn.grief.cloud/roleplay/hug/hug20.gif",
+            ],
+            "pat": [
+                "https://cdn.grief.cloud/roleplay/pat/pat1.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat2.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat3.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat4.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat5.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat6.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat7.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat8.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat9.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat10.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat11.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat12.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat13.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat14.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat15.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat16.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat17.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat18.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat19.gif",
+                "https://cdn.grief.cloud/roleplay/pat/pat20.gif",
             ],
         }
         default_member = {
@@ -334,16 +356,26 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).hug_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="pat")
+    @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def pat(self, ctx: commands.Context, user: discord.Member):
         """
-        Pats a user.
+        Pat a user.
         """
-        embed = await kawaiiembed(self, ctx, "just patted", "pat", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
-        target = await self.config.custom("Target", ctx.author.id, user.id).pat_r()
+
+        images = await self.config.pat()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** just patted {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
+        target = await self.config.custom("Target", ctx.author.id, user.id).hug_r()
         used = await self.config.user(ctx.author).pat_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total pats: {used + 1} | {ctx.author.name} has patted {user.name} {target + 1} times"
