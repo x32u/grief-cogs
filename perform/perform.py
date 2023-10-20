@@ -204,6 +204,24 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/tickle/tickle17.gif",
                 "https://cdn.grief.cloud/roleplay/tickle/tickle18.gif",
             ],
+            "lick": [
+                "https://cdn.grief.cloud/roleplay/lick/lick1.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick2.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick3.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick4.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick5.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick6.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick7.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick8.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick9.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick10.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick11.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick12.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick13.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick14.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick15.gif",
+                "https://cdn.grief.cloud/roleplay/lick/lick16.gif",
+            ],
         }
         default_member = {
             "cuddle_s": 0,
@@ -249,15 +267,6 @@ class Perform(commands.Cog):
         self.config.init_custom("Target", 2)
         self.config.register_custom("Target", **default_target)
         self.cache = {}
-
-    def cog_unload(self):
-        global hug
-        if hug:
-            try:
-                self.bot.remove_command("hug")
-            except Exception as e:
-                log.info(e)
-            self.bot.add_command(hug)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command()
@@ -434,15 +443,25 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).tickle_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="lick")
+    @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def lick(self, ctx: commands.Context, user: discord.Member):
         """
         Licks a user.
         """
-        embed = await kawaiiembed(self, ctx, "just licked", "lick", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
+
+        images = await self.config.lick()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** just licked {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
         target = await self.config.custom("Target", ctx.author.id, user.id).lick_r()
         used = await self.config.user(ctx.author).lick_s()
         embed.set_footer(
@@ -450,9 +469,7 @@ class Perform(commands.Cog):
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).lick_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).lick_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).lick_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="slap")
@@ -700,7 +717,4 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).fuck_r.set(target + 1)
 
 async def setup(bot):
-    global hug
-
-    hug = bot.remove_command("hug")
     await bot.add_cog(Perform(bot))
