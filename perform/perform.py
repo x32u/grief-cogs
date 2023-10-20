@@ -184,6 +184,28 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/pat/pat19.gif",
                 "https://cdn.grief.cloud/roleplay/pat/pat20.gif",
             ],
+            "tickle": [
+                "https://cdn.grief.cloud/roleplay/tickle/tickle1.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle2.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle3.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle4.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle5.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle6.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle7.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle8.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle9.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle10.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle11.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle12.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle13.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle14.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle15.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle16.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle17.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle18.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle19.gif",
+                "https://cdn.grief.cloud/roleplay/tickle/tickle20.gif",
+            ],
         }
         default_member = {
             "cuddle_s": 0,
@@ -385,25 +407,33 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).pat_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="tickle")
+    @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def tickle(self, ctx: commands.Context, user: discord.Member):
         """
-        Tickles a user.
+        Pat a user.
         """
-        embed = await kawaiiembed(self, ctx, "just tickled", "tickle", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
-        target = await self.config.custom("Target", ctx.author.id, user.id).tickle_r()
+
+        images = await self.config.tickle()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** just tickled {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
+        target = await self.config.custom("Target", ctx.author.id, user.id).hug_r()
         used = await self.config.user(ctx.author).tickle_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total tickles: {used + 1} | {ctx.author.name} has tickled {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).tickle_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).tickle_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).tickle_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="lick")
