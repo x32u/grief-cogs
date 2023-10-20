@@ -203,8 +203,6 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/tickle/tickle16.gif",
                 "https://cdn.grief.cloud/roleplay/tickle/tickle17.gif",
                 "https://cdn.grief.cloud/roleplay/tickle/tickle18.gif",
-                "https://cdn.grief.cloud/roleplay/tickle/tickle19.gif",
-                "https://cdn.grief.cloud/roleplay/tickle/tickle20.gif",
             ],
         }
         default_member = {
