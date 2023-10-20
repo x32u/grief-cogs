@@ -266,7 +266,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def cuddle(self, ctx: commands.Context, user: discord.Member):
         """
-        Cuddle a user.
+        Cuddles a user.
         """
 
         images = await self.config.cuddle()
@@ -295,7 +295,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def poke(self, ctx: commands.Context, user: discord.Member):
         """
-        Poke a user.
+        Pokes a user.
         """
 
         images = await self.config.poke()
@@ -353,7 +353,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def hug(self, ctx: commands.Context, user: discord.Member):
         """
-        Hug a user.
+        Hugs a user.
         """
 
         images = await self.config.hug()
@@ -382,7 +382,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def pat(self, ctx: commands.Context, user: discord.Member):
         """
-        Pat a user.
+        Pats a user.
         """
 
         images = await self.config.pat()
@@ -411,7 +411,7 @@ class Perform(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def tickle(self, ctx: commands.Context, user: discord.Member):
         """
-        Pat a user.
+        Tickles a user.
         """
 
         images = await self.config.tickle()
