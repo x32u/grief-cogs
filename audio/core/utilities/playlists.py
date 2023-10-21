@@ -716,7 +716,6 @@ class PlaylistUtilities(MixinMeta, metaclass=CompositeMetaClass):
             return
 
         playlist_data = dict()
-        playlist_data["name"] = "Aikaterna's curated tracks"
         playlist_data["tracks"] = tracks
 
         playlist = await PlaylistCompat23.from_json(
