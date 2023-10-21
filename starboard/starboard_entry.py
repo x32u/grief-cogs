@@ -10,7 +10,7 @@ from grief import VersionInfo, version_info
 from grief.core.bot import Red
 from grief.core.utils import AsyncIter
 
-log = logging.getLogger("red.trusty-cogs.starboard")
+log = logging.getLogger("grief.starboard")
 
 
 @dataclass
