@@ -121,7 +121,6 @@ class Audio(
             autoplaylist=dict(
                 enabled=True,
                 id=42069,
-                name="Aikaterna's curated tracks",
                 scope=PlaylistScope.GLOBAL.value,
             ),
             persist_queue=True,
