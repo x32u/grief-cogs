@@ -239,7 +239,7 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/slap/slap14.gif",
                 "https://cdn.grief.cloud/roleplay/slap/slap15.gif",
             ],
-            punch: [
+            "punch": [
                 "https://cdn.grief.cloud/roleplay/punch/punch1.gif",
                 "https://cdn.grief.cloud/roleplay/punch/punch2.gif",
                 "https://cdn.grief.cloud/roleplay/punch/punch3.gif",
