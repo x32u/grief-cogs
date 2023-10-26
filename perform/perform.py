@@ -7,7 +7,7 @@ import discord
 from grief.core import Config, commands
 from grief.core.bot import Red
 
-from .utils import kawaiiembed, send_embed
+from .utils import send_embed
 
 log = logging.getLogger("grief.roleplay")
 
@@ -238,6 +238,28 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/slap/slap13.gif",
                 "https://cdn.grief.cloud/roleplay/slap/slap14.gif",
                 "https://cdn.grief.cloud/roleplay/slap/slap15.gif",
+            ],
+            punch: [
+                "https://cdn.grief.cloud/roleplay/punch/punch1.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch2.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch3.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch4.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch5.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch6.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch7.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch8.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch9.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch10.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch11.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch12.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch13.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch14.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch15.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch16.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch17.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch18.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch19.gif",
+                "https://cdn.grief.cloud/roleplay/punch/punch20.gif",
             ],
         }
         default_member = {
