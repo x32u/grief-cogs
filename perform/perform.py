@@ -261,6 +261,18 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/punch/punch19.gif",
                 "https://cdn.grief.cloud/roleplay/punch/punch20.gif",
             ],
+            "highfive": [
+                "https://cdn.grief.cloud/roleplay/highfive/highfive1.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive2.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive3.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive4.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive5.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive6.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive7.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive8.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive9.gif",
+                "https://cdn.grief.cloud/roleplay/highfive/highfive10.gif",
+            ],
         }
         default_member = {
             "cuddle_s": 0,
