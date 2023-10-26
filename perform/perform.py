@@ -602,21 +602,32 @@ class Perform(commands.Cog):
         )
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="punch")
+    @commands.command(name="feed")
     @commands.bot_has_permissions(embed_links=True)
     async def punch(self, ctx: commands.Context, user: discord.Member):
         """
         Punch a user.
         """
-        embed = await kawaiiembed(self, ctx, "just punched", "punch", user)
-        if embed is False:
-            return await ctx.send("api is down")
-        target = await self.config.custom("Target", ctx.author.id, user.id).punch_r()
+
+        images = await self.config.punch()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** punches {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
+        target = await self.config.custom("Target", ctx.author.id, user.id).feed_r()
         used = await self.config.user(ctx.author).punch_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total punches: {used + 1} | {ctx.author.name} has punched {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
+        await self.config.user(ctx.author).punch_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).punch_r.set(
             target + 1
         )
