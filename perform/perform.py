@@ -633,15 +633,25 @@ class Perform(commands.Cog):
         )
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command()
-    @commands.guild_only()
+    @commands.command(name="punch")
+    @commands.bot_has_permissions(embed_links=True)
     async def highfive(self, ctx: commands.Context, user: discord.Member):
         """
         Highfive a user.
         """
-        embed = await kawaiiembed(self, ctx, "highfived", "highfive", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
+
+        images = await self.config.highfive()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** highfives {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
         target = await self.config.custom("Target", ctx.author.id, user.id).highfive_r()
         used = await self.config.user(ctx.author).highfive_s()
         embed.set_footer(
@@ -652,7 +662,6 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).highfive_r.set(
             target + 1
         )
-
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command()
     @commands.guild_only()
