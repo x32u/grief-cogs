@@ -238,12 +238,6 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/slap/slap13.gif",
                 "https://cdn.grief.cloud/roleplay/slap/slap14.gif",
                 "https://cdn.grief.cloud/roleplay/slap/slap15.gif",
-                "https://cdn.grief.cloud/roleplay/slap/slap16.gif",
-                "https://cdn.grief.cloud/roleplay/slap/slap17.gif",
-                "https://cdn.grief.cloud/roleplay/slap/slap18.gif",
-                "https://cdn.grief.cloud/roleplay/slap/slap19.gif",
-                "https://cdn.grief.cloud/roleplay/slap/slap20.gif",
-            
             ],
         }
         default_member = {
