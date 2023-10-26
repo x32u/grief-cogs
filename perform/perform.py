@@ -633,7 +633,7 @@ class Perform(commands.Cog):
         )
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="punch")
+    @commands.command(name="highfive")
     @commands.bot_has_permissions(embed_links=True)
     async def highfive(self, ctx: commands.Context, user: discord.Member):
         """
