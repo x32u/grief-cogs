@@ -602,7 +602,7 @@ class Perform(commands.Cog):
         )
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="feed")
+    @commands.command(name="punch")
     @commands.bot_has_permissions(embed_links=True)
     async def punch(self, ctx: commands.Context, user: discord.Member):
         """
