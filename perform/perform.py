@@ -222,6 +222,29 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/lick/lick15.gif",
                 "https://cdn.grief.cloud/roleplay/lick/lick16.gif",
             ],
+            "slap": [
+                "https://cdn.grief.cloud/roleplay/slap/slap1.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap2.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap3.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap4.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap5.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap6.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap7.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap8.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap9.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap10.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap11.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap12.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap13.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap14.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap15.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap16.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap17.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap18.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap19.gif",
+                "https://cdn.grief.cloud/roleplay/slap/slap20.gif",
+            
+            ],
         }
         default_member = {
             "cuddle_s": 0,
@@ -472,25 +495,33 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).lick_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="slap")
+    @commands.command()
     @commands.bot_has_permissions(embed_links=True)
     async def slap(self, ctx: commands.Context, user: discord.Member):
         """
         Slaps a user.
         """
-        embed = await kawaiiembed(self, ctx, "just slapped", "slap", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
+
+        images = await self.config.slap()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** just slapped {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
         target = await self.config.custom("Target", ctx.author.id, user.id).slap_r()
-        used = await self.config.user(ctx.author).slap_s()
+        used = await self.config.user(ctx.author).lick_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total slaps: {used + 1} | {ctx.author.name} has slapped {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).slap_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).slap_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).slap_r.set(target + 1)
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command(name="spank")
