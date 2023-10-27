@@ -7,7 +7,7 @@ import discord
 from grief.core import Config, commands
 from grief.core.bot import Red
 
-from .utils import send_embed, kawaiiembed
+from .utils import send_embed
 
 log = logging.getLogger("grief.roleplay")
 
@@ -272,6 +272,64 @@ class Perform(commands.Cog):
                 "https://cdn.grief.cloud/roleplay/highfive/highfive8.gif",
                 "https://cdn.grief.cloud/roleplay/highfive/highfive9.gif",
                 "https://cdn.grief.cloud/roleplay/highfive/highfive10.gif",
+            ],
+            "kill": [
+                "https://cdn.grief.cloud/roleplay/kill/kill1.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill2.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill3.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill4.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill5.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill6.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill7.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill8.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill9.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill10.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill11.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill12.gif",
+                "https://cdn.grief.cloud/roleplay/kill/kill13.gif",
+            ],
+            "yeet": [
+                "https://cdn.grief.cloud/roleplay/yeet/yeet1.gif",
+                "https://cdn.grief.cloud/roleplay/yeet/yeet2.gif",
+                "https://cdn.grief.cloud/roleplay/yeet/yeet3.gif",
+                "https://cdn.grief.cloud/roleplay/yeet/yeet4.gif",
+                "https://cdn.grief.cloud/roleplay/yeet/yeet5.gif",
+                "https://cdn.grief.cloud/roleplay/yeet/yeet6.gif",
+                "https://cdn.grief.cloud/roleplay/yeet/yeet7.gif",
+            ],
+            "bite": [
+                "https://cdn.grief.cloud/roleplay/bite/bite1.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite2.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite3.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite4.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite5.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite6.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite7.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite8.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite9.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite10.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite11.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite12.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite13.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite14.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite15.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite16.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite17.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite18.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite19.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite20.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite21.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite22.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite23.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite24.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite25.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite26.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite26.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite27.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite28.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite29.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite30.gif",
+                "https://cdn.grief.cloud/roleplay/bite/bite31.gif",
             ],
         }
         default_member = {
@@ -674,16 +732,27 @@ class Perform(commands.Cog):
         await self.config.custom("Target", ctx.author.id, user.id).highfive_r.set(
             target + 1
         )
+    
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command()
-    @commands.guild_only()
+    @commands.command(name="kill")
+    @commands.bot_has_permissions(embed_links=True)
     async def kill(self, ctx: commands.Context, user: discord.Member):
         """
         Kill a user.
         """
-        embed = await kawaiiembed(self, ctx, "killed", "kill", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
+
+        images = await self.config.kill()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** kills {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
         target = await self.config.custom("Target", ctx.author.id, user.id).kill_r()
         used = await self.config.user(ctx.author).kill_s()
         embed.set_footer(
@@ -696,19 +765,29 @@ class Perform(commands.Cog):
         )
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command()
-    @commands.guild_only()
+    @commands.command(name="kill")
+    @commands.bot_has_permissions(embed_links=True)
     async def bite(self, ctx: commands.Context, user: discord.Member):
         """
         Bite a user.
         """
-        embed = await kawaiiembed(self, ctx, "is biting", "bite", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
+
+        images = await self.config.bite()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** bites {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
         target = await self.config.custom("Target", ctx.author.id, user.id).bite_r()
         used = await self.config.user(ctx.author).bite_s()
         embed.set_footer(
-            text=f"{ctx.author.name}'s total bites: {used + 1} | {ctx.author.name} has bitten {user.name} {target + 1} times"
+            text=f"{ctx.author.name}'s total bites: {used + 1} | {ctx.author.name} has bit {user.name} {target + 1} times"
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).bite_s.set(used + 1)
@@ -717,16 +796,26 @@ class Perform(commands.Cog):
         )
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command()
-    @commands.guild_only()
+    @commands.command(name="kill")
+    @commands.bot_has_permissions(embed_links=True)
     async def yeet(self, ctx: commands.Context, user: discord.Member):
         """
-        Yeet someone.
+        Yeet a user.
         """
-        embed = await kawaiiembed(self, ctx, "yeeted", "yeet", user)
-        if not isinstance(embed, discord.Embed):
-            return await ctx.send(embed)
-        target = await self.config.custom("Target", ctx.author.id, user.id).yeet_r()
+
+        images = await self.config.yeet()
+
+        mn = len(images)
+        i = randint(0, mn - 1)
+
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"**{ctx.author.mention}** yeeted {f'**{str(user.mention)}**' if user else 'themselves'}!",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images[i])
+        target = await self.config.custom("Target", ctx.author.id, user.id).kill_r()
         used = await self.config.user(ctx.author).yeet_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total yeets: {used + 1} | {ctx.author.name} has yeeted {user.name} {target + 1} times"
