@@ -7,7 +7,7 @@ import discord
 from grief.core import Config, commands
 from grief.core.bot import Red
 
-from .utils import send_embed
+from .utils import send_embed, kawaiiembed
 
 log = logging.getLogger("grief.roleplay")
 
