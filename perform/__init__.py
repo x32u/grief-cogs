@@ -10,7 +10,7 @@ from grief.core.bot import Red
 log = logging.getLogger("grief.roleplay")
 
 
-class Perform(commands.Cog):
+class Roleplay(commands.Cog):
     """
     Perform different actions, like cuddle, poke etc.
     """
@@ -892,4 +892,4 @@ async def send_embed(
     await ctx.reply(embed=embed, mention_author=False)
 
 async def setup(bot):
-    await bot.add_cog(Perform(bot))
+    await bot.add_cog(Roleplay(bot))
