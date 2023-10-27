@@ -891,5 +891,5 @@ async def send_embed(
     ):
     await ctx.reply(embed=embed, mention_author=False)
 
-    async def setup(bot):
-        await bot.add_cog(Perform(bot))
+async def setup(bot):
+    await bot.add_cog(Perform(bot))
