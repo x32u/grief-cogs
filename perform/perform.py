@@ -765,7 +765,7 @@ class Perform(commands.Cog):
         )
 
     @commands.cooldown(1, 10, commands.BucketType.user)
-    @commands.command(name="kill")
+    @commands.command(name="bite")
     @commands.bot_has_permissions(embed_links=True)
     async def bite(self, ctx: commands.Context, user: discord.Member):
         """
