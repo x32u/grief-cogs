@@ -815,7 +815,7 @@ class Perform(commands.Cog):
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
         embed.set_image(url=images[i])
-        target = await self.config.custom("Target", ctx.author.id, user.id).kill_r()
+        target = await self.config.custom("Target", ctx.author.id, user.id).yeet_r()
         used = await self.config.user(ctx.author).yeet_s()
         embed.set_footer(
             text=f"{ctx.author.name}'s total yeets: {used + 1} | {ctx.author.name} has yeeted {user.name} {target + 1} times"
