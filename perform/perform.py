@@ -7,7 +7,7 @@ import discord
 from grief.core import Config, commands
 from grief.core.bot import Red
 
-from .utils import send_embed
+from .perform import send_embed
 
 log = logging.getLogger("grief.roleplay")
 
@@ -376,6 +376,7 @@ class Perform(commands.Cog):
         self.config.init_custom("Target", 2)
         self.config.register_custom("Target", **default_target)
         self.cache = {}
+        
 
     @commands.cooldown(1, 10, commands.BucketType.user)
     @commands.command()
@@ -884,5 +885,13 @@ class Perform(commands.Cog):
         await self.config.user(ctx.author).fuck_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).fuck_r.set(target + 1)
 
-async def setup(bot):
-    await bot.add_cog(Perform(bot))
+    async def send_embed(
+        self,
+        ctx: commands.Context,
+        embed: discord.Embed,
+        user: Optional[discord.Member] = None,
+    ):
+        await ctx.reply(embed=embed, mention_author=False)
+
+    async def setup(bot):
+        await bot.add_cog(Perform(bot))
