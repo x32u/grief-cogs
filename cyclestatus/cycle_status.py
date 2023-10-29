@@ -8,6 +8,10 @@ import re
 from datetime import datetime
 from itertools import cycle
 from typing import Any, Final, List, Dict, Optional, TYPE_CHECKING
+import json
+import pathlib
+
+from grief.core.bot import Red
 
 import discord
 from discord.ext import tasks
@@ -18,7 +22,7 @@ from grief.core.utils.predicates import MessagePredicate
 
 from .menus import Menu, Page, PositiveInt
 
-log = logging.getLogger("red.JojoCogs.cyclestatus")
+log = logging.getLogger("grief.cyclestatus")
 _config_structure = {
     "global": {
         "statuses": [],
@@ -344,3 +348,6 @@ class CycleStatus(commands.Cog):
             status += f" | {prefix}help"
         game = discord.Activity(type=await self.config.status_type(), name=status)
         await self.bot.change_presence(activity=game, status=await self.config.status_mode())
+
+async def setup(bot: Red):
+    await bot.add_cog(CycleStatus(bot))
