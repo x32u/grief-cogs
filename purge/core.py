@@ -27,10 +27,6 @@ log: logging.Logger = logging.getLogger("red.seina.purge")
 
 
 class Purge(commands.Cog):
-    __doc__ = CleanupCog.__doc__
-
-    __author__: Final[List[str]] = ["inthedark.org"]
-    __version__: Final[str] = "0.1.0"
 
     def __init__(self, bot: Red) -> None:
         super().__init__()
