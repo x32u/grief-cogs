@@ -362,10 +362,4 @@ except ImportError:
 
 
 async def setup(bot):
-    uinfo = Userinfo(bot)
-    if "Mod" not in bot.cogs:
-        raise CogLoadError("This cog requires the Mod cog to be loaded.")
-    global _old_userinfo
-    if _old_userinfo := bot.get_command("userinfo"):
-        bot.remove_command(_old_userinfo.name)
     await bot.add_cog(uinfo)
