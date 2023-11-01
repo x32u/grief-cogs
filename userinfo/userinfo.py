@@ -361,5 +361,6 @@ except ImportError:
     CogLoadError = RuntimeError
 
 
-async def setup(bot):
-    await bot.add_cog(Userinfo)
+ async def setup(bot):
+    cog = Userinfo(bot)
+    await bot.add_cog(cog)
