@@ -362,4 +362,4 @@ except ImportError:
 
 
 async def setup(bot):
-    await bot.add_cog(uinfo)
+    await bot.add_cog(Userinfo)
