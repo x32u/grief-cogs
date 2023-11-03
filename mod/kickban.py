@@ -923,7 +923,11 @@ class KickBanMixin(MixinMeta):
                     )
 
     @commands.command()
+    @commands.guild_only()
+    @commands.admin_or_permissions(manage_server=True)
+    @commands.command()
     async def cbanner(self, ctx: commands.Context, banner=None):
+        """Change the server banner."""
         if not ctx.author.guild_permissions.manage_guild:
          await ctx.reply("you need `manage_guild` permission to use this command")
          return 
@@ -933,7 +937,7 @@ class KickBanMixin(MixinMeta):
             return  
         if banner == None:
            if not ctx.message.attachments: 
-            await commands.Context
+            await ctx.send("No file or link attached.")
            else:
             icon = ctx.message.attachments[0].url
         
