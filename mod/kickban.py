@@ -956,16 +956,13 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.admin_or_permissions(administrator=True)
     async def csplash(self, ctx: commands.Context, splash=None):
-        if not ctx.author.guild_permissions.manage_guild:
-         await ctx.reply("you need `manage_guild` permission to use this command")
-         return 
         if ctx.guild.premium_subscription_count <  2:
             e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server does not have splash feature unlocked.")
             await ctx.reply(embed=e, mention_author=False)
             return  
         if splash == None:
            if not ctx.message.attachments: 
-            await ctx.send("You must attach a image or a link to set as the server invite splash.")
+            await ctx.send("you must attach a image or a link to set as the server invite splash.")
            else:
             splash = ctx.message.attachments[0].url
         
@@ -977,10 +974,10 @@ class KickBanMixin(MixinMeta):
                 img = BytesIO(await r.read())
                 bytes = img.getvalue()
                 await ctx.guild.edit(splash=bytes)
-                emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed the server invite splash.")
+                emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed the server invite splash to the attached image or link..")
                 await ctx.reply(embed=emb, mention_author=False)
                 return
            except Exception as e:
-            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} I was unable to change the server invite splash. {e}")
+            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} unable to change the server invite splash. {e}")
             await ctx.reply(embed=e, mention_author=False)
             return
