@@ -1021,8 +1021,7 @@ class KickBanMixin(MixinMeta):
         ctx: commands.Context,
         member_or_role: Union[discord.Member, discord.Role],
         time: TimedeltaConverter(
-            minimum=dateimt(year=0),
-            minimum=datetime(minutes=1),
+            minimum=datetime(year=0, minutes=1),
             maximum=datetime(days=28),
             default_unit="minutes",
             allowed_units=["minutes", "seconds", "hours", "days"],
