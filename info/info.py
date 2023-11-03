@@ -180,11 +180,14 @@ class Info(commands.Cog):
                 embed = discord.Embed(colour=discord.Colour.dark_theme(), title=name)
                 embed.description = self.IMAGE_HYPERLINK.format(img_url)
                 embed.set_image(url=img_url)
+                button1 = url=gld.discovery_splash
+                view = View()
+                view.add_item(button1)
                 embed_list.append(embed)
         if not embed_list:
             await ctx.send("This server doesn't have an discovery splash set.")
         if embed_list:
-            await SimpleMenu(embed_list).start(ctx) 
+            await ctx.reply(embed, view=view, mention_author=False)
 
     @commands.command(aliases=["bnr"])
     @commands.cooldown(1, 3, commands.BucketType.user)
