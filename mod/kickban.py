@@ -988,7 +988,7 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.admin_or_permissions(administrator=True)
     async def cicon(self, ctx: commands.Context, icon=None):
-        """Change the servers invite icon."""
+        """Change the servers icon."""
         if icon == None:
            if not ctx.message.attachments: 
             await ctx.send("you must attach a image or a link to set as the server icon.")
