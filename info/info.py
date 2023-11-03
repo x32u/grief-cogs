@@ -192,12 +192,12 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.banner == None:
-            em = discord.Embed(color=discord.Color.dark_theme, description=f"{member.mention} doesn't have a banner on the profile")
+            em = discord.Embed(color=0x313338, description=f"{member.mention} doesn't have a banner on the profile")
             await ctx.reply(embed=em, mention_author=False)
         else:
             banner_url = user.banner.url
             button1 = Button(label="Banner", url=banner_url)
-            e = discord.Embed(color=discord.Color.dark_theme)
+            e = discord.Embed(color=0x313338)
             e.set_author(name=f"{member.display_name}#{member.discriminator}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=banner_url)
             view = View()
