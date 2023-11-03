@@ -1,8 +1,4 @@
-"""
-Mozilla Public License Version 2.0
 
-Copyright (c) 2023-present japandotorg
-"""
 
 import asyncio
 import logging
@@ -11,11 +7,11 @@ from typing import Annotated, Any, Callable, Coroutine, Dict, Final, List, Optio
 
 import arrow
 import discord
-from redbot.cogs.cleanup.cleanup import Cleanup as CleanupCog
-from redbot.core import app_commands, commands, modlog
-from redbot.core.bot import Red
-from redbot.core.utils import mod
-from redbot.core.utils.chat_formatting import humanize_list, humanize_number
+from grief.cogs.cleanup.cleanup import Cleanup as CleanupCog
+from grief.core import app_commands, commands, modlog
+from grief.core.bot import Red
+from grief.core.utils import mod
+from grief.core.utils.chat_formatting import humanize_list, humanize_number
 
 from .converters import PurgeFlags, RawMessageIdsConverter, Snowflake
 from .utils import (

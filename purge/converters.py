@@ -1,13 +1,9 @@
-"""
-Mozilla Public License Version 2.0
 
-Copyright (c) 2023-present japandotorg
-"""
 
 from typing import Annotated, Literal, Optional
 
 import discord
-from redbot.core import commands
+from grief.core import commands
 
 
 # https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/utils/converters.py#L12
