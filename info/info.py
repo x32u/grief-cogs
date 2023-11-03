@@ -183,11 +183,14 @@ class Info(commands.Cog):
             bannernull.add_field(name="Roles: ` {} `".format(len(user.roles)-1), value=role_string, inline=True)
             bannernull.add_field(name="Misc:", value=f"[**` Avatar `**]({user.display_avatar})\n[**` Profile `**](https://discord.com/users/{user.id})", inline=True)
             bannernull.set_thumbnail(url=f"{user.avatar}")
+            banner_url= user.banner.url
             iconurl = Button(label="Icon", url=user.avatar.url)
             profileurl = Button(label="Profile", url=f"https://discord.com/users/{user.id}")
+            banner = Button(label="Banner", url=banner_url)
             view = View()
             view.add_item(iconurl)
             view.add_item(profileurl)
+            view.add_item(banner)
             await ctx.reply(embed=bannernull, view=view, mention_author=False)
 
     @commands.guild_only()
