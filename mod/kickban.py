@@ -932,11 +932,6 @@ class KickBanMixin(MixinMeta):
         if ctx.guild.premium_subscription_count <  7:
             e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server hasn't banners feature unlocked")
             await ctx.reply(embed=e, mention_author=False)
-            return  
-        if banner == None:
-           if not ctx.message.attachments: 
-            await ctx.send("You must attach a image or a link to set as the server banner.")
-           else:
             banner = ctx.message.attachments[0].url
         
         link = banner
