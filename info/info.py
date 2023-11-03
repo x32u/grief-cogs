@@ -103,7 +103,7 @@ class Info(commands.Cog):
         else:
             avatar_url = discord.Member.guild_avatar
             button1 = Button(label="server avatar", url=avatar_url)
-            e = discord.Embed(color=0x313338, url=user.avatar.url)
+            e = discord.Embed(color=0x313338, url=discord.Member.guild_avatar)
             e.set_author(name=f"{member.display_name}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=avatar_url)
             view = View()
