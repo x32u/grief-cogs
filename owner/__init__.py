@@ -29,5 +29,6 @@ class Owner(commands.Cog):
         await destination.send(message)
         await ctx.send(f"Sent message to {destination}.")
 
-    async def setup(bot):
-        await bot.add_cog(Owner(bot))
+async def setup(bot: Red) -> None:
+    cog = Owner(bot)
+    await discord.utils.maybe_coroutine(bot.add_cog, cog)
