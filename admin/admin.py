@@ -171,6 +171,25 @@ class Admin(commands.Cog):
                     guild_config.pop("announce_channel", None)
                     guild_config.pop("announce_ignore", None)
 
+    async def check_role(self, ctx: commands.Context, role: discord.Role) -> bool:
+        if (
+            not ctx.author.top_role > role
+            and ctx.author.id != ctx.guild.owner.id
+            and ctx.author.id not in ctx.bot.owner_ids
+        ):
+            raise commands.UserFeedbackCheckFailure(
+                _(
+                    "I can not let you edit @{role.name} ({role.id}) because that role is higher than or equal to your highest role in the Discord hierarchy."
+                ).format(role=role),
+            )
+        if not ctx.me.top_role > role:
+            raise commands.UserFeedbackCheckFailure(
+                _(
+                    "I can not edit @{role.name} ({role.id}) because that role is higher than or equal to my highest role in the Discord hierarchy."
+                ).format(role=role),
+            )
+        return True
+
     def cog_unload(self):
         try:
             self.__current_announcer.cancel()
