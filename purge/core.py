@@ -23,7 +23,7 @@ from .utils import (
     has_hybrid_permissions,
 )
 
-log: logging.Logger = logging.getLogger("red.seina.purge")
+log: logging.Logger = logging.getLogger("grief.purge")
 
 
 class Purge(commands.Cog):
@@ -66,11 +66,6 @@ class Purge(commands.Cog):
     def format_help_for_context(self, ctx: commands.Context) -> str:
         pre_processed = super().format_help_for_context(ctx) or ""
         n = "\n" if "\n\n" not in pre_processed else ""
-        text = [
-            f"{pre_processed}{n}",
-            f"Version: **{self.__version__}**",
-            f"Author: **{humanize_list(self.__author__)}**",
-        ]
         return "\n".join(text)
 
     async def _initialize(self) -> None:
