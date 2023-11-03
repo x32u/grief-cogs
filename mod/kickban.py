@@ -926,6 +926,9 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.admin_or_permissions(administrator=True)
     async def cbanner(self, ctx: commands.Context, banner=None):
+        if not ctx.author.guild_permissions.manage_guild:
+         await ctx.reply("you need `manage_guild` permission to use this command")
+         return 
         if ctx.guild.premium_subscription_count <  7:
             e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server hasn't banners feature unlocked")
             await ctx.reply(embed=e, mention_author=False)
