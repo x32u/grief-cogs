@@ -22,10 +22,6 @@ import aiohttp
 from io import BytesIO
 from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
-from typing import TypedDict
-from grief.cogs.mutes.converters import MuteTime
-from grief.core.utils import chat_formatting as cf
-
 
 
 log = logging.getLogger("grief.mod")
@@ -70,11 +66,6 @@ class KickBanMixin(MixinMeta):
                 return (await channel.create_invite(max_age=max_age)).url
             except discord.HTTPException:
                 return ""
-    
-    class RTDict(TypedDict):
-        duration: timedelta
-        reason: str
-
 
     @staticmethod
     async def _voice_perm_check(
@@ -1021,48 +1012,50 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=e, mention_author=False)
             return
            
-    
-    @commands.command(name="timeout")
+    @commands.command(aliases=["tt"])
     @commands.guild_only()
-    @commands.mod_or_permissions(moderate_members=True, mute_members=True)
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.admin_or_permissions(moderate_members=True)
     async def timeout(
         self,
         ctx: commands.Context,
-        user: discord.Member,
+        member_or_role: Union[discord.Member, discord.Role],
+        time: TimedeltaConverter(
+            minimum=datetime(minutes=1),
+            maximum=datetime(days=28),
+            default_unit="minutes",
+            allowed_units=["minutes", "seconds", "hours", "days"],
+        ) = None,
         *,
-        time_and_reason: RTDict = commands.param(converter=MuteTime, default={}),
+        reason: Optional[str] = None,
     ):
         """
-        Timeout a user.
-
-        `<user>` is a username, ID, or mention.
-        `[time_and_reason]` is the time to mute for and reason. Time is
-        any valid time length such as `30 minutes` or `2 days`.
-
-        Examples:
-        `[p]mute @member1 spam 5 hours`
-        `[p]mute @member1 3 days`"""
-        if not time_and_reason:
-            return await ctx.send_help()
-        if not time_and_reason.get("duration"):
-            return await ctx.send("You must specify a time to timeout the user.")
-        if user == ctx.me:
-            return await ctx.send("I can't timeout myself.")
-        if user == ctx.author:
-            return await ctx.send("You can't timeout yourself.")
-        if user.timed_out_until:
-            return await ctx.send("That user is already timed out.")
-        duration = time_and_reason.get("duration")
-        reason = time_and_reason.get("reason", None)
-        until = datetime.now(timezone.utc) + duration
-        time = " for {duration}".format(duration=cf.humanize_timedelta(timedelta=duration))
-        try:
-            await user.timeout(until, reason=reason)
-        except Exception:
-            logging.exception("Error while timing out user", exc_info=True)
+        Timeout users.
+        """
+        if not time:
+            time = datetime.timedelta(seconds=60)
+        timestamp = int(datetime.datetime.timestamp(utcnow() + time))
+        if isinstance(member_or_role, discord.Member):
+            if member_or_role.is_timed_out():
+                return await ctx.send("This user is already timed out.")
+            if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member_or_role):
+                return await ctx.send("You cannot timeout this user due to hierarchy.")
+            if ctx.channel.permissions_for(member_or_role).administrator:
+                return await ctx.send("You can't timeout an administrator.")
+            await self.timeout_user(ctx, member_or_role, time, reason)
             return await ctx.send(
-                "Something went wrong while timing out that user. Check your logs."
+                f"{member_or_role.mention} has been timed out till <t:{timestamp}:f>."
             )
+        if isinstance(member_or_role, discord.Role):
+            enabled = await self.config.guild(ctx.guild).role_enabled()
+            if not enabled:
+                return await ctx.send("Role (un)timeouts are not enabled.")
+            await ctx.send(
+                f"Timeing out {len(member_or_role.members)} members till <t:{timestamp}:f>."
+            )
+            failed = await self.timeout_role(ctx, member_or_role, time, reason)
+            if failed:
+                return await ctx.send(f"Failed to timeout {len(failed)} members.")
 
     @commands.command(aliases=["utt"])
     @commands.guild_only()
