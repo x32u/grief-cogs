@@ -1016,18 +1016,7 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.cooldown(1, 1, commands.BucketType.user)
     @commands.admin_or_permissions(moderate_members=True)
-    async def timeout(
-        self,
-        ctx: commands.Context,
-        member: discord.Member,
-        time: TimedeltaConverter(
-            maximum=datetime(year=1, month=1, day=28, minute=59, second=59),
-            default_unit="minutes",
-            allowed_units=["minutes", "hours", "days"],
-        ) = None,
-        *,
-        reason: Optional[str] = None,
-    ):
+    async def timeout(self, ctx: commands.Context, member: discord.Member, time: TimedeltaConverter(maximum=datetime(year=1, month=1, day=28, minute=59, second=59), default_unit="minutes", allowed_units=["minutes", "hours", "days"],) = None, *, reason: Optional[str] = None,):
         """
         Timeout users.
         """
@@ -1043,7 +1032,7 @@ class KickBanMixin(MixinMeta):
                 return await ctx.send("You can't timeout an administrator.")
             await self.timeout_user(ctx, member, time, reason)
             return await ctx.send(
-                f"{member.mention} has been timed out till <t:{timestamp}:f>."
+                f"{member.mention} has been timed out until <t:{timestamp}:f>."
             )
 
     @commands.command(aliases=["utt"])
