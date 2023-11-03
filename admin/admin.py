@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from typing import Tuple, Union
+from AAA3A_utils import Cog, CogsUtils, Menu
 
 import discord
 from grief.core import Config, commands
@@ -8,10 +9,12 @@ from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import box
 from grief.core.utils.mod import get_audit_reason
 from grief.core.utils.predicates import MessagePredicate
-
+import importlib
 from .announcer import Announcer
 from .converters import SelfRole
 import typing
+import sys
+import emoji
 
 try:
     from emoji import UNICODE_EMOJI_ENGLISH as EMOJI_DATA
@@ -350,16 +353,10 @@ class EmojiOrUrlConverter(commands.Converter):
             log.info(reason)
             await ctx.send(_("Done."))
 
-    @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @editrole.command(name="icon")
-    async def editrole_icon(
-        self, ctx: commands.Context, role: discord.Role, display_icon: typing.Optional[EmojiOrUrlConverter] = None
-    ) -> None:
+    async def edit_role_icon(
+        self, ctx: commands.Context, role: discord.Role, display_icon: typing.Optional[EmojiOrUrlConverter] = None) -> None:
         """Edit role display icon.
-
-        `display_icon` can a Unicode emoji, a custom emoji or an url. You can also upload an attachment.
         """
         if "ROLE_ICONS" not in ctx.guild.features:
             raise commands.UserFeedbackCheckFailure(_("This server doesn't have `ROLE_ICONS` feature. This server needs more boosts to perform this action."))
