@@ -216,7 +216,7 @@ class Mod(
             await ctx.send(msg)
             return
         except (discord.HTTPException, TypeError):
-            log.exception("Something went wrong while fetching the ban list!", exc_info=True)
+            await ctx.send("Something went wrong while fetching the ban list!", exc_info=True)
             return
 
         bancount: int = len(banlist)
