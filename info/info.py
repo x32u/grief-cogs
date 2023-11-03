@@ -186,22 +186,23 @@ class Info(commands.Cog):
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
 
-    @commands.command()
-    async def banner(self, ctx: commands.Context, user: discord.User = None):
-        """Get someone's banner."""
-        
-        if user is None:
-            user = ctx.author
-        user = await self.bot.fetch_user(user.id)
-        banner=user.banner
-        if not banner:
-            await ctx.reply("Member doesn't have a banner set.")
-
-        embed = discord.Embed(colour=discord.Colour.dark_theme())
-        embed.title = f"{user.display_name}'s banner"
-        embed.set_image(url=banner)
-        embed.set_footer(text=f"User ID: {user.id}")
-        await ctx.reply(embed=embed, mention_author=False)
+    @commands.command(aliases=["bnr"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def banner(self, ctx: commands.Context, *, member: discord.User = None):
+        if member == None:member = ctx.author
+        user = await self.bot.fetch_user(member.id)
+        if user.banner == None:
+            em = discord.Embed(color=discord.Color.dark_theme, description=f"{member.mention} doesn't have a banner on the profile")
+            await ctx.reply(embed=em, mention_author=False)
+        else:
+            banner_url = user.banner.url
+            button1 = Button(label="Banner", url=banner_url)
+            e = discord.Embed(color=discord.Color.dark_theme)
+            e.set_author(name=f"{member.display_name}#{member.discriminator}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
+            e.set_image(url=banner_url)
+            view = View()
+            view.add_item(button1)
+            await ctx.reply(embed=e, view=view, mention_author=False)
 
     @commands.guild_only()
     @commands.command()
@@ -1091,28 +1092,3 @@ class Info(commands.Cog):
         embed.set_thumbnail(url=avatar)
 
         return await ctx.reply(embed=embed)
-    
-    @commands.command()
-    async def inviteinfo(self, ctx: commands.Context, code: str): 
-        invite_code = code
-        data = DISCORD_API_LINK + invite_code
-        name = data["guild"]["name"]
-        id = data['guild']['id']
-        description = data["guild"]["description"]
-        boosts = data["guild"]["premium_subscription_count"]
-        features = ', '.join(f for f in data["guild"]["features"])
-        avatar = f"https://cdn.discordapp.com/icons/{data['guild']['id']}/{data['guild']['icon']}.{'gif' if 'a_' in data['guild']['icon'] else 'png'}?size=1024"
-        banner = f"https://cdn.discordapp.com/banners/{data['guild']['id']}/{data['guild']['banner']}.{'gif' if 'a_' in data['guild']['banner'] else 'png'}?size=1024"
-        splash = f"https://cdn.discordapp.com/splashes/{data['guild']['id']}/{data['guild']['splash']}.png?size=1024"
-        embed = Embed(color=self.bot.color, title=f"invite info for {code}", url="https://discord.gg/{}".format(code), description=f"**{description}**")
-        embed.set_author(icon_url=avatar, name=f"{name} ({id})")
-        embed.set_thumbnail(url=avatar)
-        embed.add_field(name="nsfw", value="no" if data["guild"]["nsfw"] is False else "true")
-        embed.add_field(name="server", value=name)
-        embed.add_field(name="boosts", value="<:boosts:978686077365800970> {}".format(boosts))
-        embed.add_field(name="features", value="```{}```".format(features), inline=False)
-        view = View()
-        view.add_item(Button(label="icon", url=avatar))
-        view.add_item(Button(label="banner", url=banner))
-        view.add_item(Button(label="splash", url=splash))
-        await ctx.reply(embed=embed, view=view)
