@@ -5,7 +5,7 @@ from typing import List
 from grief.core.bot import Red
 from grief.core.errors import CogLoadError
 
-from .core import Purge
+from .core import Cleanup
 
 conflicting_cogs: List[str] = ["Cleanup"]
 
