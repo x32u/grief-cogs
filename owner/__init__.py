@@ -65,17 +65,6 @@ class Owner(commands.Cog):
         else:
             color = discord.Colour.dark_theme()
 
-        if not self.settings["host_latency"]:
-            e.title = "Pong!"
-
-        e.color = color
-        try:
-            await message.edit(embed=e)
-        except discord.NotFound:
-            return
-        if not self.settings["host_latency"]:
-            return
-
         executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
         loop = asyncio.get_event_loop()
         try:
