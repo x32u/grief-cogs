@@ -175,10 +175,10 @@ class Info(commands.Cog):
             em = discord.Embed(color=0x313338, description=f"{member.mention} doesn't have a banner on their profile")
             await ctx.reply(embed=em, mention_author=False)
         else:
-            banner_url = ctx.guild.splash
-            button1 = Button(label="Banner", url=ctx.guild.splash.url)
+            invsplash_url = ctx.guild.splash
+            button1 = Button(label="invite splash", url=ctx.guild.splash.url)
             e = discord.Embed(color=0x313338)
-            e.set_image(url=banner_url)
+            e.set_image(url=invsplash_url)
             view = View()
             view.add_item(button1)
             await ctx.reply(embed=e, view=view, mention_author=False)
