@@ -16,7 +16,7 @@ from .converters import PurgeFlags, RawMessageIdsConverter, Snowflake
 from .utils import (
     CUSTOM_EMOJI_RE,
     LINKS_RE,
-    _cleanup,
+    _purge,
     _create_case,
     get_message_from_reference,
     get_messages_for_deletion,
@@ -85,7 +85,7 @@ class Purge(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     @has_hybrid_permissions(manage_messages=True, read_message_history=True)
     @app_commands.describe(number="The number of messages you want to delete.")
-    @commands.hybrid_group(name="purge", aliases=["clean", "cleanup"], invoke_without_command=True)
+    @commands.hybrid_group(name="purge", aliases=["clean", "purge"], invoke_without_command=True)
     async def _purge(
         self,
         ctx: commands.GuildContext,
@@ -108,7 +108,7 @@ class Purge(commands.Cog):
             def check(message: discord.Message) -> bool:
                 return message.created_at > arrow.utcnow().shift(days=-14).datetime
 
-            await _cleanup(ctx, number, check)
+            await _purge(ctx, number, check)
 
     @_purge.command(name="embeds", aliases=["embed"])  # type: ignore
     async def _embeds(self, ctx: commands.GuildContext, number: commands.Range[int, 1, 2000]):
@@ -122,7 +122,7 @@ class Purge(commands.Cog):
         - `[p]purge embeds 10`
         - `[p]purge embeds 2000`
         """
-        await _cleanup(ctx, number, lambda e: len(e.embeds))
+        await _purge(ctx, number, lambda e: len(e.embeds))
 
     @_purge.command(name="regex")  # type: ignore
     async def _regex(
@@ -150,7 +150,7 @@ class Purge(commands.Cog):
             )
             return ret
 
-        await _cleanup(ctx, number, check)
+        await _purge(ctx, number, check)
 
     @_purge.command(name="files", aliases=["file"])  # type: ignore
     async def _files(self, ctx: commands.GuildContext, number: commands.Range[int, 1, 2000]):
@@ -164,7 +164,7 @@ class Purge(commands.Cog):
         - `[p]purge files 10`
         - `[p]purge files 2000`
         """
-        await _cleanup(ctx, number, lambda e: len(e.attachments))
+        await _purge(ctx, number, lambda e: len(e.attachments))
 
     @_purge.command(name="images", aliases=["image"])  # type: ignore
     async def _images(self, ctx: commands.GuildContext, number: commands.Range[int, 1, 2000]):
@@ -178,7 +178,7 @@ class Purge(commands.Cog):
         - `[p]purge images 10`
         - `[p]purge images 2000`
         """
-        await _cleanup(ctx, number, lambda e: len(e.embeds) or len(e.attachments))
+        await _purge(ctx, number, lambda e: len(e.embeds) or len(e.attachments))
 
     @_purge.command(name="user", aliases=["member"])  # type: ignore
     async def _user(
@@ -198,7 +198,7 @@ class Purge(commands.Cog):
         - `[p]purge user @member`
         - `[p]purge user @member 2000`
         """
-        await _cleanup(ctx, number, lambda e: e.author == member)
+        await _purge(ctx, number, lambda e: e.author == member)
 
     @_purge.command(name="contains", aliases=["contain"])  # type: ignore
     async def _contains(self, ctx: commands.GuildContext, *, text: str):
@@ -220,7 +220,7 @@ class Purge(commands.Cog):
                 allowed_mentions=discord.AllowedMentions(replied_user=False),
             )
         else:
-            await _cleanup(ctx, 100, lambda e: text in e.content)
+            await _purge(ctx, 100, lambda e: text in e.content)
 
     @_purge.command(name="bot", aliases=["bots"])  # type: ignore
     async def _bot(
@@ -247,7 +247,7 @@ class Purge(commands.Cog):
                 or (prefix and message.content.startswith(prefix))
             ) and message.created_at > arrow.utcnow().shift(days=-14).datetime
 
-        await _cleanup(ctx, number, predicate)
+        await _purge(ctx, number, predicate)
 
     @_purge.command(name="emoji", aliases=["emojis"])  # type: ignore
     async def _emoji(
@@ -272,7 +272,7 @@ class Purge(commands.Cog):
                 and message.created_at > arrow.utcnow().shift(days=-14).datetime
             )
 
-        await _cleanup(ctx, number, predicate)
+        await _purge(ctx, number, predicate)
 
     # https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py#L1829
     @_purge.command(name="reactions", aliases=["reaction"])  # type: ignore
@@ -319,7 +319,7 @@ class Purge(commands.Cog):
         - `[p]purge self 10`
         - `[p]purge self 2000`
         """
-        await _cleanup(ctx, number, lambda e: e.author == ctx.author)
+        await _purge(ctx, number, lambda e: e.author == ctx.author)
 
     @_purge.command(name="mine")  # type: ignore
     async def _mine(
@@ -337,7 +337,7 @@ class Purge(commands.Cog):
         - `[p]purge mine 10`
         - `[p]purge mine 2000`
         """
-        await _cleanup(ctx, number, lambda e: e.author == ctx.guild.me)
+        await _purge(ctx, number, lambda e: e.author == ctx.guild.me)
 
     @_purge.command(name="links", aliases=["link"])  # type: ignore
     async def _links(
@@ -355,7 +355,7 @@ class Purge(commands.Cog):
         - `[p]purge links 10`
         - `[p]purge links 2000`
         """
-        await _cleanup(ctx, number, lambda m: LINKS_RE.search(m.content))
+        await _purge(ctx, number, lambda m: LINKS_RE.search(m.content))
 
     @_purge.command(name="after")  # type: ignore
     async def _after(
@@ -370,10 +370,10 @@ class Purge(commands.Cog):
         To get a message id, enable developer mode in Discord's
         settings, 'appearance' tab. Then right click a message
         and copy its id.
-        Replying to a message will cleanup all messages after it.
+        Replying to a message will purge all messages after it.
 
         **Arguments:**
-        - `<message_id>` The id of the message to cleanup after. This message won't be deleted.
+        - `<message_id>` The id of the message to purge after. This message won't be deleted.
         - `<delete_pinned>` Whether to delete pinned messages or not. Defaults to False
         """
         after: Optional[discord.Message] = None
@@ -441,11 +441,11 @@ class Purge(commands.Cog):
         To get a message id, enable developer mode in Discord's
         settings, 'appearance' tab. Then right click a message
         and copy its id.
-        Replying to a message will cleanup all messages before it.
+        Replying to a message will purge all messages before it.
 
         **Arguments:**
-        - `<message_id>` The id of the message to cleanup before. This message won't be deleted.
-        - `<number>` The max number of messages to cleanup. Must be a positive integer.
+        - `<message_id>` The id of the message to purge before. This message won't be deleted.
+        - `<number>` The max number of messages to purge. Must be a positive integer.
         - `<delete_pinned>` Whether to delete pinned messages or not. Defaults to False
         """
         before: Optional[discord.Message] = None
@@ -514,12 +514,12 @@ class Purge(commands.Cog):
         The first message ID should be the older message and the second one the newer.
 
         **Arguments:**
-        - `<one>` The id of the message to cleanup after. This message won't be deleted.
-        - `<two>` The id of the message to cleanup before. This message won't be deleted.
+        - `<one>` The id of the message to purge after. This message won't be deleted.
+        - `<two>` The id of the message to purge before. This message won't be deleted.
         - `<delete_pinned>` Whether to delete pinned messages or not. Defaults to False.
 
         **Example:**
-        - `[p]cleanup between 123456789123456789 987654321987654321`
+        - `[p]purge between 123456789123456789 987654321987654321`
         """
         try:
             message_one: Optional[discord.Message] = await ctx.channel.fetch_message(one)  # type: ignore
@@ -692,4 +692,4 @@ class Purge(commands.Cog):
         before: Optional[Annotated[int, Snowflake]] = flags.before if flags.before else None
         after: Optional[Annotated[int, Snowflake]] = flags.after if flags.after else None
 
-        await _cleanup(ctx, number, predicate, before=before, after=after)
+        await _purge(ctx, number, predicate, before=before, after=after)

@@ -13,7 +13,7 @@ from grief.core.utils.chat_formatting import humanize_number
 T = TypeVar("T")
 
 __all__: Tuple[str, ...] = (
-    "_cleanup",
+    "_purge",
     "_create_case",
     "_check_permissions",
     "has_hybrid_permissions",
@@ -56,7 +56,7 @@ async def _create_case(
     return case
 
 
-async def _cleanup(
+async def _purge(
     ctx: commands.GuildContext,
     limit: Optional[int],
     predicate: Callable[[discord.Message], Any],
