@@ -926,16 +926,13 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.admin_or_permissions(administrator=True)
     async def cbanner(self, ctx: commands.Context, banner=None):
-        if not ctx.author.guild_permissions.manage_guild:
-         await ctx.reply("you need `manage_guild` permission to use this command")
-         return 
         if ctx.guild.premium_subscription_count <  7:
-            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server hasn't banners feature unlocked")
+            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server has not unlocked server banner yet.")
             await ctx.reply(embed=e, mention_author=False)
             return  
         if banner == None:
            if not ctx.message.attachments: 
-            await ctx.send('lol')
+            await ctx.send('you must attach either a link or a image to change the server banner.')
            else:
             banner = ctx.message.attachments[0].url
         
@@ -947,11 +944,11 @@ class KickBanMixin(MixinMeta):
                 img = BytesIO(await r.read())
                 bytes = img.getvalue()
                 await ctx.guild.edit(banner=bytes)
-                emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed server's banner to")
+                emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed the server banner to the attached image or link.")
                 await ctx.reply(embed=emb, mention_author=False)
                 return
            except Exception as e:
-            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} unable to change server's banner {e}")
+            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} unable to change the server banner. {e}")
             await ctx.reply(embed=e, mention_author=False)
             return    
            
