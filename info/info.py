@@ -170,9 +170,8 @@ class Info(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def invitesplash(self, ctx: commands.Context):
         """Grab a servers discovery splash."""
-        if member == None:member = ctx.author
         if discord.Guild.discovery_splash == None:
-            em = discord.Embed(color=0x313338, description=f"{member.mention} doesn't have a banner on their profile")
+            em = discord.Embed(color=0x313338, description=f"This server doesn't have a invite splash set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
             invsplash_url = ctx.guild.splash
