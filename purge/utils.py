@@ -13,7 +13,6 @@ from grief.core.utils.chat_formatting import humanize_number
 T = TypeVar("T")
 
 __all__: Tuple[str, ...] = (
-    "_cleanup",
     "_create_case",
     "_check_permissions",
     "has_hybrid_permissions",
