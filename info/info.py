@@ -121,7 +121,7 @@ class Info(commands.Cog):
         avatar = Button(label="server icon", url=f"{ctx.guild.icon.url}")
         view = View()
         view.add_item(avatar)
-        await ctx.send(embed=e, view=view)
+        await ctx.reply(embed=e, view=view, mention_author=False)
 
     @commands.command(aliases=["sbanner", "sb", "sbnr"])
     @commands.cooldown(1, 3, commands.BucketType.user)
