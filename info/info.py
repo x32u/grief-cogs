@@ -166,9 +166,9 @@ class Info(commands.Cog):
             await SimpleMenu(embed_list).start(ctx) 
 
 
-    @commands.command(aliases=["dsplash"])
+    @commands.command(aliases=["invsplash, isplash"])
     @commands.cooldown(1, 3, commands.BucketType.user)
-    async def discoverysplash(self, ctx: commands.Context):
+    async def invitesplash(self, ctx: commands.Context):
         """Grab a servers discovery splash."""
         if member == None:member = ctx.author
         if discord.Guild.discovery_splash == None:
