@@ -19,6 +19,8 @@ from grief.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
 import aiohttp
+from io import BytesIO
+
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
@@ -920,34 +922,34 @@ class KickBanMixin(MixinMeta):
                         ).format(invite_link=invite)
                     )
 
-    @commands.bot_has_permissions(manage_guild=True)
-    async def set_banner(self, ctx, link: str = None):
-
-        if not ctx.message.attachments and not link:
-            return await ctx.send("tf do u want the banner to be :joy:")
-        if not link:
-            if ctx.message.attachments:
-                link = ctx.message.attachments
-
-        await ctx.guild.edit(banner=await utils.file(link))
-        return await ctx.send(":thumbsup:")
-    
-        
     @commands.command()
-    async def appinfo(self, ctx, id: int):
-        try:
-            response = await self.bot.session.get(f"https://discord.com/api/applications/{id}/rpc")
-            res = await response.json()
-        except:
-            return await ctx.reply("Invalid application id")
-
-        avatar = f"https://cdn.discordapp.com/avatars/{res['id']}/{res['icon']}.png?size=1024"
-
-        embed = discord.Embed(color=self.bot.color, title=res["name"], description=res["description"] or "No description for this application found")
-        embed.add_field(
-            name="general",
-            value=f"**id**: {res['id']}\n**name**: {res['name']}\n**bot public**: {res['bot_public']}\n**bot require code grant**: {res['bot_require_code_grant']}",
-        )
-        embed.set_thumbnail(url=avatar)
-
-        return await ctx.reply(embed=embed)
+    async def cbanner(self, ctx: commands.Context, icon=None):
+        if not ctx.author.guild_permissions.manage_guild:
+         await ctx.reply("you need `manage_guild` permission to use this command")
+         return 
+        if ctx.guild.premium_subscription_count <  7:
+            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server hasn't banners feature unlocked")
+            await ctx.reply(embed=e, mention_author=False)
+            return  
+        if icon == None:
+           if not ctx.message.attachments: 
+            await ctx.send("No file or link attached.)")
+           else:
+            icon = ctx.message.attachments[0].url
+        
+        link = icon
+        async with aiohttp.ClientSession() as ses: 
+          async with ses.get(link) as r:
+           try:
+            if r.status in range (200, 299):
+                img = BytesIO(await r.read())
+                bytes = img.getvalue()
+                await ctx.guild.edit(banner=bytes)
+                emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed server's banner to")
+                emb.set_image(url=link)
+                await ctx.reply(embed=emb, mention_author=False)
+                return
+           except Exception as e:
+            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} unable to change server's banner {e}")
+            await ctx.reply(embed=e, mention_author=False)
+            return   
