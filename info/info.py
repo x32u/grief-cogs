@@ -84,6 +84,7 @@ class Info(commands.Cog):
             avatar_url = user.avatar.url
             button1 = Button(label="Avatar", url=avatar_url)
             e = discord.Embed(color=0x313338, url=user.avatar.url)
+            e.set_author(name=f"{member.display_name}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=avatar_url)
             view = View()
             view.add_item(button1)
