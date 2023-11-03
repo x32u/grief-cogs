@@ -478,5 +478,6 @@ class Alias(commands.Cog):
         if alias:
             await self.call_alias(message, prefix, alias)
 
-    async def setup(bot: Red) -> None:
-        await bot.add_cog(Alias(bot))
+async def setup(bot: Red) -> None:
+    cog = Alias(bot)
+    await discord.utils.maybe_coroutine(bot.add_cog, cog)
