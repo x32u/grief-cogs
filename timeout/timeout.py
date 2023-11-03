@@ -5,9 +5,9 @@ from typing import List, Literal, Optional, Union
 import discord
 import humanize
 from discord.utils import utcnow
-from redbot.core import Config, commands, modlog
-from redbot.core.bot import Red
-from redbot.core.commands.converter import TimedeltaConverter
+from grief.core import Config, commands, modlog
+from grief.core.bot import Red
+from grief.core.commands.converter import TimedeltaConverter
 
 from .exceptions import TimeoutException
 
