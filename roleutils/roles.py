@@ -729,6 +729,8 @@ class Roles(MixinMeta):
                 display_icon=display_icon,
                 reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
             )
+            await ctx.tick()
+        
         except discord.HTTPException as e:
             raise commands.UserFeedbackCheckFailure(
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
