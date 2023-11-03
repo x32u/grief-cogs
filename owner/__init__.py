@@ -16,15 +16,6 @@ from discord.utils import get
 
 class Owner(commands.Cog):
 
-    async def red_delete_data_for_user(self, **kwargs):
-        """
-        Nothing to delete.
-        """
-        return
-
-    def __init__(self, bot: Red):
-        self.bot = bot
-
     @commands.command()
     @commands.is_owner()
     async def dm(self, ctx, user: discord.User, *, message: str):
