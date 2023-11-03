@@ -923,17 +923,17 @@ class KickBanMixin(MixinMeta):
                     )
 
     @commands.command()
-    async def cbanner(self, ctx: commands.Context, icon=None):
+    async def cbanner(self, ctx: commands.Context, banner=None):
         if not ctx.author.guild_permissions.manage_guild:
          await ctx.reply("you need `manage_guild` permission to use this command")
          return 
         if ctx.guild.premium_subscription_count <  7:
-            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server doesn't have banners feature unlocked")
+            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server doesn't have banners feature unlocked.")
             await ctx.reply(embed=e, mention_author=False)
             return  
-        if icon == None:
+        if banner == None:
            if not ctx.message.attachments: 
-            await ctx.send("No file or link attached.)")
+            await ctx.send("No file or link attached.")
            else:
             icon = ctx.message.attachments[0].url
         
