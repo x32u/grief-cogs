@@ -1019,7 +1019,7 @@ class KickBanMixin(MixinMeta):
     async def timeout(
         self,
         ctx: commands.Context,
-        member_or_role: Union[discord.Member, discord.Role],
+        member: discord.Member,
         time: TimedeltaConverter(
             maximum=datetime(year=1, month=1, day=28, minute=59, second=59),
             default_unit="minutes",
@@ -1034,25 +1034,25 @@ class KickBanMixin(MixinMeta):
         if not time:
             time = datetime.timedelta(seconds=60)
         timestamp = int(datetime.datetime.timestamp(utcnow() + time))
-        if isinstance(member_or_role, discord.Member):
-            if member_or_role.is_timed_out():
+        if isinstance(member, discord.Member):
+            if member.is_timed_out():
                 return await ctx.send("This user is already timed out.")
-            if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member_or_role):
+            if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member):
                 return await ctx.send("You cannot timeout this user due to hierarchy.")
-            if ctx.channel.permissions_for(member_or_role).administrator:
+            if ctx.channel.permissions_for(member).administrator:
                 return await ctx.send("You can't timeout an administrator.")
-            await self.timeout_user(ctx, member_or_role, time, reason)
+            await self.timeout_user(ctx, member, time, reason)
             return await ctx.send(
-                f"{member_or_role.mention} has been timed out till <t:{timestamp}:f>."
+                f"{member.mention} has been timed out till <t:{timestamp}:f>."
             )
-        if isinstance(member_or_role, discord.Role):
+        if isinstance(member, discord.Role):
             enabled = await self.config.guild(ctx.guild).role_enabled()
             if not enabled:
                 return await ctx.send("Role (un)timeouts are not enabled.")
             await ctx.send(
-                f"Timeing out {len(member_or_role.members)} members till <t:{timestamp}:f>."
+                f"Timeing out {len(member.members)} members till <t:{timestamp}:f>."
             )
-            failed = await self.timeout_role(ctx, member_or_role, time, reason)
+            failed = await self.timeout_role(ctx, member, time, reason)
             if failed:
                 return await ctx.send(f"Failed to timeout {len(failed)} members.")
 
