@@ -933,28 +933,22 @@ class KickBanMixin(MixinMeta):
         return await ctx.send(":thumbsup:")
     
         
-        
     @commands.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
-    async def ssicon(self, ctx, *, link=None):
-     if link == None:
-      return 
+    async def appinfo(self, ctx, id: int):
+        try:
+            response = await self.bot.session.get(f"https://discord.com/api/applications/{id}/rpc")
+            res = await response.json()
+        except:
+            return await ctx.reply("Invalid application id")
 
-     invite_code = link
-     async with aiohttp.ClientSession() as cs:
-      async with cs.get(DISCORD_API_LINK + invite_code) as r:
-       data = await r.json()
+        avatar = f"https://cdn.discordapp.com/avatars/{res['id']}/{res['icon']}.png?size=1024"
 
-     try: 
-      format = ""
-      if "a_" in data["guild"]["icon"]:
-        format = ".gif"
-      else:
-        format = ".png"
-          
-      embed = discord.Embed(color=self.bot.color, title=data["guild"]["name"] + "'s icon")
-      embed.set_image(url="https://cdn.discordapp.com/icons/" + data["guild"]["id"] + "/" + data["guild"]["icon"] + f"{format}?size=1024")
-      await embed(self, ctx, None, embed, None, None, None)
-     except:
-      e = discord.Embed(color=self.bot.color, description=f"{ctx.author.mention}: Couldn't get **" + data["guild"]["name"] + "'s** icon")
-      await embed(self, ctx, None, e, None, None, None)
+        embed = discord.Embed(color=self.bot.color, title=res["name"], description=res["description"] or "No description for this application found")
+        embed.add_field(
+            name="general",
+            value=f"**id**: {res['id']}\n**name**: {res['name']}\n**bot public**: {res['bot_public']}\n**bot require code grant**: {res['bot_require_code_grant']}",
+        )
+        embed.set_thumbnail(url=avatar)
+
+        return await ctx.reply(embed=embed)
