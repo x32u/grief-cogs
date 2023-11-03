@@ -1045,16 +1045,6 @@ class KickBanMixin(MixinMeta):
             return await ctx.send(
                 f"{member.mention} has been timed out till <t:{timestamp}:f>."
             )
-        if isinstance(member, discord.Role):
-            enabled = await self.config.guild(ctx.guild).role_enabled()
-            if not enabled:
-                return await ctx.send("Role (un)timeouts are not enabled.")
-            await ctx.send(
-                f"Timeing out {len(member.members)} members till <t:{timestamp}:f>."
-            )
-            failed = await self.timeout_role(ctx, member, time, reason)
-            if failed:
-                return await ctx.send(f"Failed to timeout {len(failed)} members.")
 
     @commands.command(aliases=["utt"])
     @commands.guild_only()
