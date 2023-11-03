@@ -84,6 +84,47 @@ _ = T_
 
 
 @cog_i18n(_)
+class EmojiOrUrlConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str):
+        try:
+            return await discord.ext.commands.converter.CONVERTER_MAPPING[discord.Emoji]().convert(
+                ctx, argument
+            )
+        except commands.BadArgument:
+            pass
+        if argument.startswith("<") and argument.endswith(">"):
+            argument = argument[1:-1]
+        return argument
+
+
+class PositionConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> int:
+        try:
+            position = int(argument)
+        except ValueError:
+            raise commands.BadArgument(_("The position must be an integer."))
+        max_guild_roles_position = len(ctx.guild.roles)
+        if position <= 0 or position >= max_guild_roles_position + 1:
+            raise commands.BadArgument(
+                _(
+                    "The indicated position must be between 1 and {max_guild_roles_position}."
+                ).format(max_guild_roles_position=max_guild_roles_position)
+            )
+        _list = list(range(max_guild_roles_position - 1))
+        _list.reverse()
+        position = _list[position - 1]
+        return position + 1
+
+
+class PermissionConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> str:
+        permissions = [
+            key for key, value in dict(discord.Permissions.all_channel()).items() if value
+        ]
+        if argument not in permissions:
+            raise commands.BadArgument(_("This permission is invalid."))
+        return argument
+
 class Admin(commands.Cog):
     """A collection of server administration utilities."""
 
@@ -100,18 +141,6 @@ class Admin(commands.Cog):
         )
 
         self.__current_announcer = None
-
-class EmojiOrUrlConverter(commands.Converter):
-    async def convert(self, ctx: commands.Context, argument: str):
-        try:
-            return await discord.ext.commands.converter.CONVERTER_MAPPING[discord.Emoji]().convert(
-                ctx, argument
-            )
-        except commands.BadArgument:
-            pass
-        if argument.startswith("<") and argument.endswith(">"):
-            argument = argument[1:-1]
-        return argument
     
     async def cog_load(self) -> None:
         await self.handle_migrations()
