@@ -935,8 +935,8 @@ class KickBanMixin(MixinMeta):
             banner = ctx.message.attachments[0].url
         
         link = banner
-        async with aiohttp.ClientSession() as ses: 
-          async with ses.get(link) as r:
+        async with aiohttp.ClientSession() as str: 
+          async with str.get(link) as r:
            try:
             if r.status in range (200, 299):
                 img = BytesIO(await r.read())
