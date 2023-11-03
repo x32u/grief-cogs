@@ -4,7 +4,7 @@ from grief.core import commands
 from grief.core.bot import Red
 
 
-class Sdm(commands.Cog):
+class Owner(commands.Cog):
 
     async def red_delete_data_for_user(self, **kwargs):
         """
