@@ -33,8 +33,61 @@ try:
 except ImportError:
     from emoji import EMOJI_DATA  # emoji>=2.0.0
 
+
 log = logging.getLogger("grief.roleutils")
 
+_ = lambda s: s
+
+GENERIC_FORBIDDEN = _(
+    "I attempted to do something that Discord denied me permissions for."
+    " Your command failed to successfully complete."
+)
+
+HIERARCHY_ISSUE_ADD = _(
+    "I can not give {role.name} to {member.display_name}"
+    " because that role is higher than or equal to my highest role"
+    " in the Discord hierarchy."
+)
+
+HIERARCHY_ISSUE_REMOVE = _(
+    "I can not remove {role.name} from {member.display_name}"
+    " because that role is higher than or equal to my highest role"
+    " in the Discord hierarchy."
+)
+
+ROLE_HIERARCHY_ISSUE = _(
+    "I can not edit {role.name}"
+    " because that role is higher than my or equal to highest role"
+    " in the Discord hierarchy."
+)
+
+USER_HIERARCHY_ISSUE_ADD = _(
+    "I can not let you give {role.name} to {member.display_name}"
+    " because that role is higher than or equal to your highest role"
+    " in the Discord hierarchy."
+)
+
+USER_HIERARCHY_ISSUE_REMOVE = _(
+    "I can not let you remove {role.name} from {member.display_name}"
+    " because that role is higher than or equal to your highest role"
+    " in the Discord hierarchy."
+)
+
+ROLE_USER_HIERARCHY_ISSUE = _(
+    "I can not let you edit {role.name}"
+    " because that role is higher than or equal to your highest role"
+    " in the Discord hierarchy."
+)
+
+NEED_MANAGE_ROLES = _('I need the "Manage Roles" permission to do that.')
+
+RUNNING_ANNOUNCEMENT = _(
+    "I am already announcing something. If you would like to make a"
+    " different announcement please use `{prefix}announce cancel`"
+    " first."
+)
+
+ERROR_MESSAGE = _("I attempted to do something that Discord denied me permissions for. Your command failed to successfully complete.\n{error}")
 
 def targeter_cog(ctx: commands.Context):
     cog = ctx.bot.get_cog("Targeter")
@@ -49,6 +102,47 @@ def chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i : i + n]
 
+
+class EmojiOrUrlConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str):
+        try:
+            return await discord.ext.commands.converter.CONVERTER_MAPPING[discord.Emoji]().convert(
+                ctx, argument
+            )
+        except commands.BadArgument:
+            pass
+        if argument.startswith("<") and argument.endswith(">"):
+            argument = argument[1:-1]
+        return argument
+
+
+class PositionConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> int:
+        try:
+            position = int(argument)
+        except ValueError:
+            raise commands.BadArgument(_("The position must be an integer."))
+        max_guild_roles_position = len(ctx.guild.roles)
+        if position <= 0 or position >= max_guild_roles_position + 1:
+            raise commands.BadArgument(
+                _(
+                    "The indicated position must be between 1 and {max_guild_roles_position}."
+                ).format(max_guild_roles_position=max_guild_roles_position)
+            )
+        _list = list(range(max_guild_roles_position - 1))
+        _list.reverse()
+        position = _list[position - 1]
+        return position + 1
+
+
+class PermissionConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> str:
+        permissions = [
+            key for key, value in dict(discord.Permissions.all_channel()).items() if value
+        ]
+        if argument not in permissions:
+            raise commands.BadArgument(_("This permission is invalid."))
+        return argument
 
 class Roles(MixinMeta):
     """
@@ -598,3 +692,44 @@ class Roles(MixinMeta):
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
             
+    @role.command(name="icon")
+    async def edit_role_icon(
+        self, ctx: commands.Context, role: discord.Role, display_icon: typing.Optional[EmojiOrUrlConverter] = None) -> None:
+        """Edit role display icon.
+        """
+        if "ROLE_ICONS" not in ctx.guild.features:
+            raise commands.UserFeedbackCheckFailure(_("This server doesn't have `ROLE_ICONS` feature. This server needs more boosts to perform this action."))
+        await self.check_role(ctx, role)
+        if len(ctx.message.attachments) > 0:
+            display_icon = await ctx.message.attachments[0].read()  # Read an optional attachment.
+        elif display_icon is not None:
+            if isinstance(display_icon, discord.Emoji):
+                # emoji_url = f"https://cdn.discordapp.com/emojis/{display_icon.id}.png"
+                # async with aiohttp.ClientSession() as session:
+                #     async with session.get(emoji_url) as r:
+                #         display_icon = await r.read()  # Get emoji data.
+                display_icon = await display_icon.read()
+            elif display_icon.strip("\N{VARIATION SELECTOR-16}") in EMOJI_DATA:
+                display_icon = display_icon
+            else:
+                url = display_icon
+                async with aiohttp.ClientSession() as session:
+                    try:
+                        async with session.get(url) as r:
+                            display_icon = await r.read()  # Get URL data.
+                    except aiohttp.InvalidURL:
+                        return await ctx.send("That URL is invalid.")
+                    except aiohttp.ClientError:
+                        return await ctx.send("Something went wrong while trying to get the image.")
+        else:
+            await ctx.send_help()  # Send the command help if no attachment, no Unicode/custom emoji and no URL.
+            return
+        try:
+            await role.edit(
+                display_icon=display_icon,
+                reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
+            )
+        except discord.HTTPException as e:
+            raise commands.UserFeedbackCheckFailure(
+                _(ERROR_MESSAGE).format(error=box(e, lang="py"))
+            )
