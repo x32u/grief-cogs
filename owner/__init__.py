@@ -2,6 +2,7 @@ import discord
 from discord.utils import get
 from grief.core import commands
 from grief.core.bot import Red
+import time
 
 
 class Owner(commands.Cog):
