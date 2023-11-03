@@ -17,5 +17,5 @@ async def setup(bot: Red) -> None:
                 f"This cog conflicts with {cog_name} and both cannot be loaded at the same time."
             )
 
-    cog = Purge(bot)
+    cog = Cleanup(bot)
     await bot.add_cog(cog)

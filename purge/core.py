@@ -63,11 +63,6 @@ class Purge(commands.Cog):
         task.add_done_callback(self._task_done_callback)
         return task
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        pre_processed = super().format_help_for_context(ctx) or ""
-        n = "\n" if "\n\n" not in pre_processed else ""
-        return "\n".join(text)
-
     async def _initialize(self) -> None:
         await self.bot.wait_until_red_ready()
         await self._register_casetype()
