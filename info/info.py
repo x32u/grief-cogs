@@ -90,7 +90,6 @@ class Info(commands.Cog):
     @commands.command(aliases=["sav"])
     async def serveravatar(self, ctx: commands.Context, user: discord.Member = None):
         """Get someone's server avatar (if they have one)."""
-        
         if user is None:
             user = ctx.author
         gld_avatar = user.guild_avatar
@@ -105,29 +104,26 @@ class Info(commands.Cog):
             embed.set_footer(text=f"User ID: {user.id}")
             await ctx.reply(embed=embed, mention_author=False)
     
-    @commands.command(aliases=["sicon"])
-    async def icon(self, ctx: commands.Context):
-        """Get the server's icon."""
-        
-        gld: discord.Guild = ctx.guild
-        img_dict = {
-            "Server Icon": gld.icon.url if gld.icon else None,
-        }
-        embed_list = []
-        for name, img_url in img_dict.items():
-            if img_url:
-                embed = discord.Embed(colour=discord.Colour.dark_theme(), title=name)
-                embed.description = self.IMAGE_HYPERLINK.format(img_url)
-                embed.set_image(url=img_url)
-                embed_list.append(embed)
-        if not embed_list:
-            await ctx.send("This server doesn't have a icon set.")
-        if embed_list:
-            await SimpleMenu(embed_list).start(ctx) 
+    @commands.command(aliases=["sicon", "si", "sico", "savi"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def servericon(self, ctx):
+        """Fetch the server icon."""
+        if ctx.guild.icon is None:
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon", color=0x313338)
+            await ctx.reply(embed=embed)
+            return
+        e = discord.Embed(color=0x313338)
+        e.set_author(name=f"{ctx.guild.name}'s server icon", icon_url=f"{ctx.guild.icon.url}")
+        e.set_image(url=f"{ctx.guild.icon.url}")
+        avatar = Button(label="server icon", url=f"{ctx.guild.icon.url}")
+        view = View()
+        view.add_item(avatar)
+        await ctx.send(embed=e, view=view)
 
     @commands.command(aliases=["sbanner", "sb", "sbnr"])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def serverbanner(self, ctx):
+        """Fetch the server banner."""
         if ctx.guild.banner is None:
             embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner", color=0x313338)
             await ctx.reply(embed=embed)
@@ -139,14 +135,11 @@ class Info(commands.Cog):
         view = View()
         view.add_item(button)
         await ctx.send(view=view, embed=e)
-        
-
-
 
     @commands.command(aliases=["invsplash, isplash"])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def invitesplash(self, ctx: commands.Context):
-        """Grab a servers discovery splash."""
+        """Grab a servers invite splash."""
         if discord.Guild.discovery_splash == None:
             em = discord.Embed(color=0x313338, description=f"This server doesn't have a invite splash set.")
             await ctx.reply(embed=em, mention_author=False)
@@ -162,7 +155,7 @@ class Info(commands.Cog):
     @commands.command(aliases=["bnr"])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def banner(self, ctx: commands.Context, *, member: discord.User = None):
-        """Grab a users banner."""
+        """Fetch a users banner."""
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.banner == None:
@@ -176,6 +169,26 @@ class Info(commands.Cog):
             view = View()
             view.add_item(button1)
             await ctx.reply(embed=e, view=view, mention_author=False)
+
+    @commands.command(aliases=['ui', 'uinfo'])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def userinfo(self, ctx: commands.Context, *, user:discord.Member = None):
+        if user == None:user = ctx.author
+        if len(user.roles) > 1:role_string = ' '.join([r.mention for r in user.roles][1:])
+        date_format = "%a, %d %b %Y %I:%M %p"
+        userbanner = user.banner
+        if user.banner == None:
+            bannernull = discord.Embed(description=f"**Created:** {user.created_at.strftime(date_format)}\n**Joined:** {user.joined_at.strftime(date_format)}", colour=0x313338)
+            bannernull.set_author(name=f"{user.display_name}#{user.discriminator}", url=f"https://discord.com/users/{user.id}", icon_url=f"{user.display_avatar}")
+            bannernull.add_field(name="Roles: ` {} `".format(len(user.roles)-1), value=role_string, inline=True)
+            bannernull.add_field(name="Misc:", value=f"[**` Avatar `**]({user.display_avatar})\n[**` Profile `**](https://discord.com/users/{user.id})", inline=True)
+            bannernull.set_thumbnail(url=f"{user.avatar}")
+            iconurl = Button(label="Icon", url=user.avatar.url)
+            profileurl = Button(label="Profile", url=f"https://discord.com/users/{user.id}")
+            view = View()
+            view.add_item(iconurl)
+            view.add_item(profileurl)
+            await ctx.reply(embed=bannernull, view=view, mention_author=False)
 
     @commands.guild_only()
     @commands.command()
