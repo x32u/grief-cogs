@@ -79,11 +79,30 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.avatar == None:
-            em = discord.Embed(color=0x313338,description=f"{member.mention}")
+            em = discord.Embed(color=0x313338,description=f"{member.mention} doesn't have a pfp set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
             avatar_url = user.avatar.url
             button1 = Button(label="avatar", url=avatar_url)
+            e = discord.Embed(color=0x313338, url=user.avatar.url)
+            e.set_author(name=f"{member.display_name}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
+            e.set_image(url=avatar_url)
+            view = View()
+            view.add_item(button1)
+            await ctx.reply(embed=e, view=view, mention_author=False)
+
+    @commands.command(aliases=["ssav", "spfp"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def savatar(self, ctx: commands.Context, *,member: discord.User = None):
+        """Fetch someone's pfp."""
+        if member == None:member = ctx.author
+        user = await self.bot.fetch_user(member.id)
+        if user.avatar == None:
+            em = discord.Embed(color=0x313338,description=f"{member.mention} doesn't have a server pfp set.")
+            await ctx.reply(embed=em, mention_author=False)
+        else:
+            avatar_url = discord.Member.guild_avatar
+            button1 = Button(label="server avatar", url=avatar_url)
             e = discord.Embed(color=0x313338, url=user.avatar.url)
             e.set_author(name=f"{member.display_name}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=avatar_url)
