@@ -925,7 +925,6 @@ class KickBanMixin(MixinMeta):
     @commands.command()
     @commands.guild_only()
     @commands.admin_or_permissions(administrator=True)
-    @commands.command()
     async def cbanner(self, ctx: commands.Context, banner=None):
         """Change the server banner."""
         if not ctx.author.guild_permissions.manage_guild:
