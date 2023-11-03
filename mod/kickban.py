@@ -1021,7 +1021,7 @@ class KickBanMixin(MixinMeta):
         Timeout users.
         """
         if not time:
-            time = datetime.timedelta(seconds=60)
+            time = datetime.timedelta(seconds=59)
         timestamp = int(datetime.datetime.timestamp(utcnow() + time))
         if isinstance(member, discord.Member):
             if member.is_timed_out():
@@ -1031,9 +1031,7 @@ class KickBanMixin(MixinMeta):
             if ctx.channel.permissions_for(member).administrator:
                 return await ctx.send("You can't timeout an administrator.")
             await self.timeout_user(ctx, member, time, reason)
-            return await ctx.send(
-                f"{member.mention} has been timed out until <t:{timestamp}:f>."
-            )
+            return await ctx.send(f"{member.mention} has been timed out until <t:{timestamp}:f>.")
 
     @commands.command(aliases=["utt"])
     @commands.guild_only()
