@@ -1023,6 +1023,7 @@ class KickBanMixin(MixinMeta):
         time: TimedeltaConverter(
             minimum=datetime(minutes=1),
             maximum=datetime(days=28),
+            maximum=datetime(year=0),
             default_unit="minutes",
             allowed_units=["minutes", "seconds", "hours", "days"],
         ) = None,
