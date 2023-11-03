@@ -4,6 +4,7 @@ import re
 from abc import ABC
 from collections import defaultdict
 from typing import Literal
+import discord
 
 from grief.core import Config, commands
 from grief.core.bot import Red
@@ -197,3 +198,20 @@ class Mod(
             )
             await self.config.guild_from_id(guild_id).delete_delay.clear()
         await ctx.send(_("Delete delay settings restored."))
+
+
+    @commands.command(aliases=["cn", "changenick"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(manage_nicknames = True)
+    async def nick(self, ctx, member: discord.Member, nick = None):
+        """Change a user's nickname."""
+        if nick == None:
+            await member.edit(nick=nick)
+            embed = discord.Embed(description=f"{member.mention} Nickname was set to **Default**", color=0x313338)
+            embed.set_footer(text="category: mod")
+            await ctx.send(embed=embed)
+            return 
+        await member.edit(nick=nick)
+        embed = discord.Embed(description=f"{member.mention} Nickname was set to **{nick}**", color=0x313338)
+        embed.set_footer(text="category: mod")
+        await ctx.send(embed=embed)
