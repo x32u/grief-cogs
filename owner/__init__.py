@@ -7,9 +7,11 @@ import re
 import discord
 import speedtest
 import random
-from discord.utils import get
-from grief.core import commands
+import colorama
 from grief.core.bot import Red
+from grief.core import Config, commands
+from grief.core.utils.chat_formatting import humanize_list
+from discord.utils import get
 
 
 class Owner(commands.Cog):
