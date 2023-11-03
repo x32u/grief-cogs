@@ -12,6 +12,9 @@ import itertools
 import logging
 import re
 
+from discord.ui import Button, View
+from discord.ext import tasks
+
 from contextlib import suppress as sps
 from tabulate import tabulate
 from typing import Optional
@@ -52,6 +55,8 @@ from grief.core.utils.chat_formatting import (
     humanize_number,
     humanize_timedelta,
 )
+
+DISCORD_API_LINK = "https://discord.com/api/invite/"
 
 class Info(commands.Cog):
     """Suite of tools to grab banners, icons, etc."""
@@ -1085,3 +1090,28 @@ class Info(commands.Cog):
         embed.set_thumbnail(url=avatar)
 
         return await ctx.reply(embed=embed)
+    
+    @commands.command(description="show information abt an invite", help="utility", usage="[invite code]", aliases=["ii"])
+    async def inviteinfo(self, ctx: Context, code: str): 
+        invite_code = code
+        data = await self.bot.session.json(DISCORD_API_LINK + invite_code, proxy=self.bot.proxy_url, ssl=False)
+        name = data["guild"]["name"]
+        id = data['guild']['id']
+        description = data["guild"]["description"]
+        boosts = data["guild"]["premium_subscription_count"]
+        features = ', '.join(f for f in data["guild"]["features"])
+        avatar = f"https://cdn.discordapp.com/icons/{data['guild']['id']}/{data['guild']['icon']}.{'gif' if 'a_' in data['guild']['icon'] else 'png'}?size=1024"
+        banner = f"https://cdn.discordapp.com/banners/{data['guild']['id']}/{data['guild']['banner']}.{'gif' if 'a_' in data['guild']['banner'] else 'png'}?size=1024"
+        splash = f"https://cdn.discordapp.com/splashes/{data['guild']['id']}/{data['guild']['splash']}.png?size=1024"
+        embed = Embed(color=self.bot.color, title=f"invite info for {code}", url="https://discord.gg/{}".format(code), description=f"**{description}**")
+        embed.set_author(icon_url=avatar, name=f"{name} ({id})")
+        embed.set_thumbnail(url=avatar)
+        embed.add_field(name="nsfw", value="no" if data["guild"]["nsfw"] is False else "true")
+        embed.add_field(name="server", value=name)
+        embed.add_field(name="boosts", value="<:boosts:978686077365800970> {}".format(boosts))
+        embed.add_field(name="features", value="```{}```".format(features), inline=False)
+        view = View()
+        view.add_item(Button(label="icon", url=avatar))
+        view.add_item(Button(label="banner", url=banner))
+        view.add_item(Button(label="splash", url=splash))
+        await ctx.reply(embed=embed, view=view)
