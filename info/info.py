@@ -75,6 +75,7 @@ class Info(commands.Cog):
     @commands.command(aliases=["av", "pfp"])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def avatar(self, ctx: commands.Context, *,member: discord.User = None):
+        """Fetch someone's pfp."""
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.avatar == None:
@@ -92,7 +93,7 @@ class Info(commands.Cog):
 
     @commands.command(aliases=["sav"])
     async def serveravatar(self, ctx: commands.Context, user: discord.Member = None):
-        """Get someone's server avatar (if they have one)."""
+        """Get someone's server pfp (if they have one)."""
         if user is None:
             user = ctx.author
         gld_avatar = user.guild_avatar
@@ -142,7 +143,7 @@ class Info(commands.Cog):
     @commands.command(aliases=["invsplash, isplash"])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def invitesplash(self, ctx: commands.Context):
-        """Grab a servers invite splash."""
+        """Fetch a servers invite splash."""
         if discord.Guild.discovery_splash == None:
             em = discord.Embed(color=0x313338, description=f"This server doesn't have a invite splash set.")
             await ctx.reply(embed=em, mention_author=False)
@@ -176,6 +177,7 @@ class Info(commands.Cog):
     @commands.command(aliases=['ui', 'uinfo'])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def userinfo(self, ctx: commands.Context, *, user:discord.Member = None):
+        """Grab information on a user."""
         if user == None:user = ctx.author
         if len(user.roles) > 1:role_string = ' '.join([r.mention for r in user.roles][1:])
         date_format = "%a, %d %b %Y %I:%M %p"
