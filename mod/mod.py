@@ -20,7 +20,6 @@ from .settings import ModSettings
 
 from grief.core.utils.predicates import MessagePredicate
 from typing import Any, Dict, Final, List, Literal, Optional
-import log
 
 _ = T_ = Translator("Mod", __file__)
 
