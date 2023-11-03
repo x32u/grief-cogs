@@ -14,6 +14,7 @@ import re
 
 from discord.ui import Button, View
 from discord.ext import tasks
+from discord import Embed, File, TextChannel, Member, User, Role 
 
 from contextlib import suppress as sps
 from tabulate import tabulate
