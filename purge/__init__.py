@@ -2,8 +2,8 @@
 
 from typing import List
 
-from redbot.core.bot import Red
-from redbot.core.errors import CogLoadError
+from grief.core.bot import Red
+from grief.core.errors import CogLoadError
 
 from .core import Purge
 
