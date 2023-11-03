@@ -930,27 +930,28 @@ class KickBanMixin(MixinMeta):
             e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server hasn't banners feature unlocked")
             await ctx.reply(embed=e, mention_author=False)
             return  
-        if banner == None:
+        if icon == None:
            if not ctx.message.attachments: 
-            await ctx.send("You must attach a image or a link to set as the server banner.")
+            await ctx.send(self, ctx, "guildedit" + " " + ctx.command.name)
            else:
-            banner = ctx.message.attachments[0].url
+            icon = ctx.message.attachments[0].url
         
-        link = banner
-        async with aiohttp() as ses: 
+        link = icon
+        async with aiohttp.ClientSession() as ses: 
           async with ses.get(link) as r:
            try:
             if r.status in range (200, 299):
                 img = BytesIO(await r.read())
                 bytes = img.getvalue()
                 await ctx.guild.edit(banner=bytes)
-                emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed the server banner.")
+                emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed server's banner to")
+                emb.set_image(url=link)
                 await ctx.reply(embed=emb, mention_author=False)
                 return
            except Exception as e:
-            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} i'm unable to change the server banner. {e}")
+            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} unable to change server's banner {e}")
             await ctx.reply(embed=e, mention_author=False)
-            return   
+            return    
            
     @commands.command()
     @commands.guild_only()
