@@ -168,14 +168,14 @@ class Info(commands.Cog):
 
     @commands.command(aliases=["dsplash"])
     @commands.cooldown(1, 3, commands.BucketType.user)
-    async def discoverysplash(self, ctx: commands.Context, *, member: discord.User = None):
+    async def discoverysplash(self, ctx: commands.Context, *, guild: discord.Guild = None):
         """Grab a servers discovery splash."""
         if member == None:member = ctx.author
         if discord.Guild.discovery_splash == None:
-            em = discord.Embed(color=0x313338, description=f"{member.mention} doesn't have a banner on their profile")
+            em = discord.Embed(color=0x313338, description=f"{discord.Guild} doesn't have a banner on their profile")
             await ctx.reply(embed=em, mention_author=False)
         else:
-            banner_url = discord.Guild.discovery_splash.url
+            banner_url = discord.Guild.discovery_splash
             button1 = Button(label="Banner", url=banner_url)
             e = discord.Embed(color=0x313338)
             e.set_image(url=banner_url)
