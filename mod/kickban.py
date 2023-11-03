@@ -934,7 +934,7 @@ class KickBanMixin(MixinMeta):
             e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server doesn't have banners feature unlocked.")
             await ctx.reply(embed=e, mention_author=False)
             return  
-        if banner == None:banner = ctx.commands.Context
+        if banner == None:banner = ctx.send("You must either supply a link or a image to set as the server banner.")
         else:
             icon = ctx.message.attachments[0].url
         link = icon
