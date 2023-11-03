@@ -934,7 +934,6 @@ class KickBanMixin(MixinMeta):
     
         
     @commands.command()
-    @commands.cooldown(1, 3, commands.BucketType.user)
     async def appinfo(self, ctx, id: int):
         try:
             response = await self.bot.session.get(f"https://discord.com/api/applications/{id}/rpc")
