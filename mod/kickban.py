@@ -924,7 +924,7 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_server=True)
+    @commands.admin_or_permissions(administrator=True)
     @commands.command()
     async def cbanner(self, ctx: commands.Context, banner=None):
         """Change the server banner."""
@@ -940,7 +940,6 @@ class KickBanMixin(MixinMeta):
             await ctx.send("No file or link attached.")
            else:
             icon = ctx.message.attachments[0].url
-        
         link = icon
         async with aiohttp.ClientSession() as ses: 
           async with ses.get(link) as r:
