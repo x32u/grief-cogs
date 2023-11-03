@@ -97,7 +97,7 @@ class Info(commands.Cog):
         """Fetch someone's pfp."""
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
-        if user.avatar == None:
+        if discord.Member.guild_avatar == None:
             em = discord.Embed(color=0x313338,description=f"{member.mention} doesn't have a server pfp set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
