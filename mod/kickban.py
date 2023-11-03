@@ -18,9 +18,12 @@ from grief.core.utils.chat_formatting import (
 from grief.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
+import aiohttp
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
+
+DISCORD_API_LINK = "https://discord.com/api/invite/"
 
 
 class KickBanMixin(MixinMeta):
@@ -916,3 +919,42 @@ class KickBanMixin(MixinMeta):
                             "an invite. Here's the link so you can try: {invite_link}"
                         ).format(invite_link=invite)
                     )
+
+    @commands.bot_has_permissions(manage_guild=True)
+    async def set_banner(self, ctx, link: str = None):
+
+        if not ctx.message.attachments and not link:
+            return await ctx.send("tf do u want the banner to be :joy:")
+        if not link:
+            if ctx.message.attachments:
+                link = ctx.message.attachments
+
+        await ctx.guild.edit(banner=await utils.file(link))
+        return await ctx.send(":thumbsup:")
+    
+        
+        
+    @commands.command()
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def ssicon(self, ctx, *, link=None):
+     if link == None:
+      return 
+
+     invite_code = link
+     async with aiohttp.ClientSession() as cs:
+      async with cs.get(DISCORD_API_LINK + invite_code) as r:
+       data = await r.json()
+
+     try: 
+      format = ""
+      if "a_" in data["guild"]["icon"]:
+        format = ".gif"
+      else:
+        format = ".png"
+          
+      embed = discord.Embed(color=self.bot.color, title=data["guild"]["name"] + "'s icon")
+      embed.set_image(url="https://cdn.discordapp.com/icons/" + data["guild"]["id"] + "/" + data["guild"]["icon"] + f"{format}?size=1024")
+      await embed(self, ctx, None, embed, None, None, None)
+     except:
+      e = discord.Embed(color=self.bot.color, description=f"{ctx.author.mention}: Couldn't get **" + data["guild"]["name"] + "'s** icon")
+      await embed(self, ctx, None, e, None, None, None)
