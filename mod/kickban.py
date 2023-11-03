@@ -933,13 +933,13 @@ class KickBanMixin(MixinMeta):
             e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server hasn't banners feature unlocked")
             await ctx.reply(embed=e, mention_author=False)
             return  
-        if icon == None:
+        if banner == None:
            if not ctx.message.attachments: 
             await ctx.send(self, ctx, "guildedit" + " " + ctx.command.name)
            else:
-            icon = ctx.message.attachments[0].url
+            banner = ctx.message.attachments[0].url
         
-        link = icon
+        link = banner
         async with aiohttp.ClientSession() as ses: 
           async with ses.get(link) as r:
            try:
