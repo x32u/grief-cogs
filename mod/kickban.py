@@ -933,7 +933,7 @@ class KickBanMixin(MixinMeta):
             return  
         if banner == None:
            if not ctx.message.attachments: 
-            await ctx.send("No file or link attached.")
+            await commands.Context
            else:
             icon = ctx.message.attachments[0].url
         
