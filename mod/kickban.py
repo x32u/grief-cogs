@@ -20,12 +20,12 @@ from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
 import aiohttp
 from io import BytesIO
+from grief.core.commands.converter import TimedeltaConverter
+from discord.utils import utcnow
 
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
-
-DISCORD_API_LINK = "https://discord.com/api/invite/"
 
 
 class KickBanMixin(MixinMeta):
@@ -1011,3 +1011,80 @@ class KickBanMixin(MixinMeta):
             e = discord.Embed(color=0x313338, description=f"{ctx.author.mention} unable to change server icon {e}")
             await ctx.reply(embed=e, mention_author=False)
             return
+           
+    @commands.command(aliases=["tt"])
+    @commands.guild_only()
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.admin_or_permissions(moderate_members=True)
+    async def timeout(
+        self,
+        ctx: commands.Context,
+        member_or_role: Union[discord.Member, discord.Role],
+        time: TimedeltaConverter(
+            minimum=datetime.timedelta(minutes=1),
+            maximum=datetime.timedelta(days=28),
+            default_unit="minutes",
+            allowed_units=["minutes", "seconds", "hours", "days"],
+        ) = None,
+        *,
+        reason: Optional[str] = None,
+    ):
+        """
+        Timeout users.
+        """
+        if not time:
+            time = datetime.timedelta(seconds=60)
+        timestamp = int(datetime.datetime.timestamp(utcnow() + time))
+        if isinstance(member_or_role, discord.Member):
+            if member_or_role.is_timed_out():
+                return await ctx.send("This user is already timed out.")
+            if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member_or_role):
+                return await ctx.send("You cannot timeout this user due to hierarchy.")
+            if ctx.channel.permissions_for(member_or_role).administrator:
+                return await ctx.send("You can't timeout an administrator.")
+            await self.timeout_user(ctx, member_or_role, time, reason)
+            return await ctx.send(
+                f"{member_or_role.mention} has been timed out till <t:{timestamp}:f>."
+            )
+        if isinstance(member_or_role, discord.Role):
+            enabled = await self.config.guild(ctx.guild).role_enabled()
+            if not enabled:
+                return await ctx.send("Role (un)timeouts are not enabled.")
+            await ctx.send(
+                f"Timeing out {len(member_or_role.members)} members till <t:{timestamp}:f>."
+            )
+            failed = await self.timeout_role(ctx, member_or_role, time, reason)
+            if failed:
+                return await ctx.send(f"Failed to timeout {len(failed)} members.")
+
+    @commands.command(aliases=["utt"])
+    @commands.guild_only()
+    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.admin_or_permissions(moderate_members=True)
+    async def untimeout(
+        self,
+        ctx: commands.Context,
+        member_or_role: Union[discord.Member, discord.Role],
+        *,
+        reason: Optional[str] = None,
+    ):
+        """
+        Untimeout users.
+        """
+        if isinstance(member_or_role, discord.Member):
+            if not member_or_role.is_timed_out():
+                return await ctx.send("This user is not timed out.")
+            await self.timeout_user(ctx, member_or_role, None, reason)
+            return await ctx.send(f"Removed timeout from {member_or_role.mention}")
+        if isinstance(member_or_role, discord.Role):
+            enabled = await self.config.guild(ctx.guild).role_enabled()
+            if not enabled:
+                return await ctx.send("Role (un)timeouts are not enabled.")
+            await ctx.send(
+                f"Removing timeout from {len(member_or_role.members)} members."
+            )
+            members = list(member_or_role.members)
+            for member in members:
+                if member.is_timed_out():
+                    await self.timeout_user(ctx, member, None, reason)
+            return await ctx.send(f"Removed timeout from {len(members)} members.")
