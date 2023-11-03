@@ -16,6 +16,9 @@ from discord.utils import get
 
 class Owner(commands.Cog):
 
+    def __init__(self, bot: Red):
+        self.bot = bot
+
     @commands.command()
     @commands.is_owner()
     async def dm(self, ctx, user: discord.User, *, message: str):
