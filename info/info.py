@@ -125,45 +125,22 @@ class Info(commands.Cog):
         if embed_list:
             await SimpleMenu(embed_list).start(ctx) 
 
-    @commands.command()
-    async def sbanner(self, ctx: commands.Context):
-        """Get the server's banner."""
+    @commands.command(aliases=["sbanner", "sb", "sbnr"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def serverbanner(self, ctx):
+        if ctx.guild.banner is None:
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner", color=0x313338)
+            await ctx.reply(embed=embed)
+            return
+        e = discord.Embed(color=0x313338)
+        e.set_author(name=f"{ctx.guild.name}'s server banner", icon_url=f"{ctx.guild.icon.url}")
+        e.set_image(url=f"{ctx.guild.banner.url}")
+        button = Button(label="server banner", url=f"{ctx.guild.banner.url}")
+        view = View()
+        view.add_item(button)
+        await ctx.send(view=view, embed=e)
         
-        gld: discord.Guild = ctx.guild
-        img_dict = {
-            "Server Banner": gld.banner.url if gld.banner else None,
-        }
-        embed_list = []
-        for name, img_url in img_dict.items():
-            if img_url:
-                embed = discord.Embed(colour=discord.Colour.dark_theme(), title=name)
-                embed.description = self.IMAGE_HYPERLINK.format(img_url)
-                embed.set_image(url=img_url)
-                embed_list.append(embed)
-        if not embed_list:
-            await ctx.send("This server doesn't have a banner set.")
-        if embed_list:
-            await SimpleMenu(embed_list).start(ctx) 
-        
-    @commands.command()
-    async def invsplash(self, ctx: commands.Context):
-        """Get the server's invite splash."""
-        
-        gld: discord.Guild = ctx.guild
-        img_dict = {
-            "Server Invite Splash": gld.splash.url if gld.splash else None,
-        }
-        embed_list = []
-        for name, img_url in img_dict.items():
-            if img_url:
-                embed = discord.Embed(colour=discord.Colour.dark_theme(), title=name)
-                embed.description = self.IMAGE_HYPERLINK.format(img_url)
-                embed.set_image(url=img_url)
-                embed_list.append(embed)
-        if not embed_list:
-            await ctx.send("This server doesn't have a invite splash set.")
-        if embed_list:
-            await SimpleMenu(embed_list).start(ctx) 
+
 
 
     @commands.command(aliases=["invsplash, isplash"])
@@ -193,7 +170,7 @@ class Info(commands.Cog):
             await ctx.reply(embed=em, mention_author=False)
         else:
             banner_url = user.banner.url
-            button1 = Button(label="Banner", url=banner_url)
+            button1 = Button(label="banner", url=banner_url)
             e = discord.Embed(color=0x313338)
             e.set_image(url=banner_url)
             view = View()
