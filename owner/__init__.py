@@ -39,8 +39,9 @@ class Owner(commands.Cog):
         await destination.send(message)
         await ctx.send(f"Sent message to {destination}.")
 
+    @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(2, 5, commands.BucketType.user)
-    @commands.command(invoke_without_command=True)
+    @commands.group(invoke_without_command=True)
     async def ping(self, ctx):
         """View bot latency."""
         start = time.monotonic()
@@ -48,7 +49,9 @@ class Owner(commands.Cog):
         message = await ctx.send("Pinging...", reference=ref)
         end = time.monotonic()
         totalPing = round((end - start) * 1000, 2)
-        e = discord.Embed(title="Pinging..", description=f"Overall Latency: {totalPing}ms")
+        e = discord.Embed(
+            title="Pinging..", description=f"`{'Overall Latency':<16}`:{totalPing}ms"
+        )
         await asyncio.sleep(0.25)
         try:
             await message.edit(content=None, embed=e)
@@ -56,16 +59,18 @@ class Owner(commands.Cog):
             return
 
         botPing = round(self.bot.latency * 1000, 2)
-        e.description = e.description + f"\nDiscord WebSocket Latency: {botPing}ms"
+        e.description = e.description + f"\n`{'Discord WS':<16}`:{botPing}ms"
         await asyncio.sleep(0.25)
 
         averagePing = (botPing + totalPing) / 2
         if averagePing >= 1000:
-            color = discord.Colour.dark_theme()
+            color = discord.Colour.red()
         elif averagePing >= 200:
-            color = discord.Colour.dark_theme()
+            color = discord.Colour.orange()
         else:
-            color = discord.Colour.dark_theme()
+            color = discord.Colour.green()
+
+        e.color = color
 
         executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
         loop = asyncio.get_event_loop()
@@ -74,7 +79,6 @@ class Owner(commands.Cog):
             await loop.run_in_executor(executor, s.get_servers)
             await loop.run_in_executor(executor, s.get_best_server)
         except Exception as exc:
-            log.exception("An exception occured while fetching host latency.", exc_info=exc)
             host_latency = "`Failed`"
         else:
             result = s.results.dict()
@@ -82,12 +86,12 @@ class Owner(commands.Cog):
             host_latency = f"{host_latency}ms"
 
         e.title = "Pong!"
-        e.description = e.description + f"\nHost Latency: {host_latency}"
+        e.description = e.description + f"\n`{'Host Latency':<16}`:{host_latency}"
         await asyncio.sleep(0.25)
         try:
             await message.edit(embed=e)
         except discord.NotFound:
-            return    
+            return 
 
 async def setup(bot: Red) -> None:
     cog = Owner(bot)
