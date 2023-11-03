@@ -935,9 +935,8 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=e, mention_author=False)
             return  
         if banner == None:
-           if not ctx.message.attachments: 
-            await ctx.send("No file or link attached.")
-           else:
+           await ctx.commands.Context
+        else:
             icon = ctx.message.attachments[0].url
         link = icon
         async with aiohttp.ClientSession() as ses: 
