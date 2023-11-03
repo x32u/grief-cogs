@@ -22,6 +22,7 @@ import aiohttp
 from io import BytesIO
 from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
+import humanize
 
 
 log = logging.getLogger("grief.mod")
@@ -282,6 +283,15 @@ class KickBanMixin(MixinMeta):
                     guild_tempbans.remove(uid)
                     changed = True
         return changed
+    
+    async def timeout_user(
+        self,
+        ctx: commands.Context,
+        member: discord.Member,
+        time: Optional[datetime.timedelta],
+        reason: Optional[str] = None,
+    ) -> None:
+        await member.timeout(time, reason=reason)
 
     @commands.command()
     @commands.guild_only()
