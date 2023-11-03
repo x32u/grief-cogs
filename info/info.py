@@ -1066,3 +1066,22 @@ class Info(commands.Cog):
             data.set_footer(text=joined_on)
 
         await ctx.send(embed=data)
+
+
+    @commands.command()
+    async def appinfo(self, ctx, id: int):
+        try:
+            res = self.bot.session.get(f"https://discord.com/api/applications/{id}/rpc")
+        except:
+            return await ctx.reply("Invalid application id")
+
+        avatar = f"https://cdn.discordapp.com/avatars/{res['id']}/{res['icon']}.png?size=1024"
+
+        embed = discord.Embed(color=self.bot.color, title=res["name"], description=res["description"] or "No description for this application found")
+        embed.add_field(
+            name="general",
+            value=f"**id**: {res['id']}\n**name**: {res['name']}\n**bot public**: {res['bot_public']}\n**bot require code grant**: {res['bot_require_code_grant']}",
+        )
+        embed.set_thumbnail(url=avatar)
+
+        return await ctx.reply(embed=embed)

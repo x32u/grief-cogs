@@ -288,42 +288,6 @@ class Admin(commands.Cog):
                 )
             )
 
-    @commands.command()
-    @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
-    async def addrole(
-        self,
-        ctx: commands.Context,
-        rolename: discord.Role,
-        *,
-        user: discord.Member = commands.Author,
-    ):
-        """
-        Add a role to a user.
-
-        Use double quotes if the role contains spaces.
-        If user is left blank it defaults to the author of the command.
-        """
-        await self._addrole(ctx, user, rolename)
-
-    @commands.command()
-    @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
-    async def removerole(
-        self,
-        ctx: commands.Context,
-        rolename: discord.Role,
-        *,
-        user: discord.Member = commands.Author,
-    ):
-        """
-        Remove a role from a user.
-
-        Use double quotes if the role contains spaces.
-        If user is left blank it defaults to the author of the command.
-        """
-        await self._removerole(ctx, user, rolename)
-
     @commands.group()
     @commands.guild_only()
     @commands.admin_or_permissions(manage_roles=True)
@@ -400,48 +364,6 @@ class Admin(commands.Cog):
         else:
             log.info(reason)
             await ctx.send(_("Done."))
-
-    @editrole.command(name="icon")
-    async def edit_role_icon(
-        self, ctx: commands.Context, role: discord.Role, display_icon: typing.Optional[EmojiOrUrlConverter] = None) -> None:
-        """Edit role display icon.
-        """
-        if "ROLE_ICONS" not in ctx.guild.features:
-            raise commands.UserFeedbackCheckFailure(_("This server doesn't have `ROLE_ICONS` feature. This server needs more boosts to perform this action."))
-        await self.check_role(ctx, role)
-        if len(ctx.message.attachments) > 0:
-            display_icon = await ctx.message.attachments[0].read()  # Read an optional attachment.
-        elif display_icon is not None:
-            if isinstance(display_icon, discord.Emoji):
-                # emoji_url = f"https://cdn.discordapp.com/emojis/{display_icon.id}.png"
-                # async with aiohttp.ClientSession() as session:
-                #     async with session.get(emoji_url) as r:
-                #         display_icon = await r.read()  # Get emoji data.
-                display_icon = await display_icon.read()
-            elif display_icon.strip("\N{VARIATION SELECTOR-16}") in EMOJI_DATA:
-                display_icon = display_icon
-            else:
-                url = display_icon
-                async with aiohttp.ClientSession() as session:
-                    try:
-                        async with session.get(url) as r:
-                            display_icon = await r.read()  # Get URL data.
-                    except aiohttp.InvalidURL:
-                        return await ctx.send("That URL is invalid.")
-                    except aiohttp.ClientError:
-                        return await ctx.send("Something went wrong while trying to get the image.")
-        else:
-            await ctx.send_help()  # Send the command help if no attachment, no Unicode/custom emoji and no URL.
-            return
-        try:
-            await role.edit(
-                display_icon=display_icon,
-                reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
-            )
-        except discord.HTTPException as e:
-            raise commands.UserFeedbackCheckFailure(
-                _(ERROR_MESSAGE).format(error=box(e, lang="py"))
-            )
 
     @commands.group(invoke_without_command=True)
     @commands.is_owner()
