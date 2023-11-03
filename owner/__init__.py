@@ -37,7 +37,7 @@ class Owner(commands.Cog):
                 "Invalid ID or user not found. You can only send messages to people I share a server with.",
             )
         await destination.send(message)
-        await ctx.send(f"Sent message to {destination}.")
+        await ctx.tick()
 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(2, 5, commands.BucketType.user)
