@@ -935,7 +935,7 @@ class KickBanMixin(MixinMeta):
             return  
         if banner == None:
            if not ctx.message.attachments: 
-            await ctx.send(self, ctx, "guildedit" + " " + ctx.command.name)
+            await ctx.send('lol')
            else:
             banner = ctx.message.attachments[0].url
         
