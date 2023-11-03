@@ -198,7 +198,6 @@ class Info(commands.Cog):
             banner_url = user.banner.url
             button1 = Button(label="Banner", url=banner_url)
             e = discord.Embed(color=0x313338)
-            e.set_author(name=f"{member.display_name}#{member.discriminator}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=banner_url)
             view = View()
             view.add_item(button1)
