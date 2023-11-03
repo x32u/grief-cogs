@@ -926,18 +926,20 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.admin_or_permissions(administrator=True)
     async def cbanner(self, ctx: commands.Context, banner=None):
-        """Change the server banner."""
         if not ctx.author.guild_permissions.manage_guild:
          await ctx.reply("you need `manage_guild` permission to use this command")
          return 
         if ctx.guild.premium_subscription_count <  7:
-            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server doesn't have banners feature unlocked.")
+            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server hasn't banners feature unlocked")
             await ctx.reply(embed=e, mention_author=False)
             return  
-        if banner == None:banner = ctx.send("You must either supply a link or a image to set as the server banner.")
-        else:
-            icon = ctx.message.attachments[0].url
-        link = icon
+        if banner == None:
+           if not ctx.message.attachments: 
+            await ctx.send("You must attach a image or a link to set as the server banner.")
+           else:
+            banner = ctx.message.attachments[0].url
+        
+        link = banner
         async with aiohttp.ClientSession() as ses: 
           async with ses.get(link) as r:
            try:
@@ -949,6 +951,6 @@ class KickBanMixin(MixinMeta):
                 await ctx.reply(embed=emb, mention_author=False)
                 return
            except Exception as e:
-            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} unable to change server banner. {e}")
+            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} i'm unable to change the server banner. {e}")
             await ctx.reply(embed=e, mention_author=False)
             return   
