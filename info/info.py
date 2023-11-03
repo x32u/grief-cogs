@@ -168,7 +168,7 @@ class Info(commands.Cog):
 
     @commands.command(aliases=["dsplash"])
     @commands.cooldown(1, 3, commands.BucketType.user)
-    async def discoverysplash(self, ctx: commands.Context, *, member: discord.User = None):
+    async def discoverysplash(self, ctx: commands.Context):
         """Grab a servers discovery splash."""
         if member == None:member = ctx.author
         if discord.Guild.discovery_splash == None:
