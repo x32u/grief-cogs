@@ -82,7 +82,7 @@ class Info(commands.Cog):
             await ctx.reply(embed=em, mention_author=False)
         else:
             avatar_url = user.avatar.url
-            button1 = Button(label="Avatar", url=avatar_url)
+            button1 = Button(label="avatar", url=avatar_url)
             e = discord.Embed(color=0x313338, url=user.avatar.url)
             e.set_author(name=f"{member.display_name}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=avatar_url)
@@ -137,7 +137,7 @@ class Info(commands.Cog):
         button = Button(label="server banner", url=f"{ctx.guild.banner.url}")
         view = View()
         view.add_item(button)
-        await ctx.send(view=view, embed=e)
+        await ctx.reply(view=view, embed=e, mention_author=False)
 
     @commands.command(aliases=["invsplash, isplash"])
     @commands.cooldown(1, 3, commands.BucketType.user)
