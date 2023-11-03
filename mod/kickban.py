@@ -948,7 +948,6 @@ class KickBanMixin(MixinMeta):
                 bytes = img.getvalue()
                 await ctx.guild.edit(banner=bytes)
                 emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed server's banner to")
-                emb.set_image(url=link)
                 await ctx.reply(embed=emb, mention_author=False)
                 return
            except Exception as e:
