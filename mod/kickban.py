@@ -645,7 +645,7 @@ class KickBanMixin(MixinMeta):
 
         if author == member:
             await ctx.send(
-                __("You cannot ban yourself.")
+                ("You cannot ban yourself.")
             )
             return
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, member):
