@@ -180,7 +180,7 @@ class Info(commands.Cog):
                 embed = discord.Embed(colour=discord.Colour.dark_theme(), title=name)
                 embed.description = self.IMAGE_HYPERLINK.format(img_url)
                 embed.set_image(url=img_url)
-                button1 = gld.discovery_splash
+                button1 = discord.Guild.discovery_splash
                 view = View()
                 view.add_item(button1)
                 embed_list.append(embed)
