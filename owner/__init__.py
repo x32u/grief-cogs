@@ -50,7 +50,7 @@ class Owner(commands.Cog):
         end = time.monotonic()
         totalPing = round((end - start) * 1000, 2)
         e = discord.Embed(
-            title="Pinging..", description=f"`{'Overall Latency':<16}`:{totalPing}ms"
+            title="Pinging..", description=f"{'Overall Latency':<16}:{totalPing}ms"
         )
         await asyncio.sleep(0.25)
         try:
@@ -59,16 +59,16 @@ class Owner(commands.Cog):
             return
 
         botPing = round(self.bot.latency * 1000, 2)
-        e.description = e.description + f"\n`{'Discord WS':<16}`:{botPing}ms"
+        e.description = e.description + f"\n{'Discord WS':<16}:{botPing}ms"
         await asyncio.sleep(0.25)
 
         averagePing = (botPing + totalPing) / 2
         if averagePing >= 1000:
-            color = discord.Colour.red()
+            color = discord.Colour.dark_theme()
         elif averagePing >= 200:
-            color = discord.Colour.orange()
+            color = discord.Colour.dark_theme()
         else:
-            color = discord.Colour.green()
+            color = discord.Colour.dark_theme()
 
         e.color = color
 
@@ -86,7 +86,7 @@ class Owner(commands.Cog):
             host_latency = f"{host_latency}ms"
 
         e.title = "Pong!"
-        e.description = e.description + f"\n`{'Host Latency':<16}`:{host_latency}"
+        e.description = e.description + f"\n{'Host Latency':<16}:{host_latency}"
         await asyncio.sleep(0.25)
         try:
             await message.edit(embed=e)
