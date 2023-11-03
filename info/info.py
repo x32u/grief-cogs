@@ -184,7 +184,7 @@ class Info(commands.Cog):
             bannernull.set_thumbnail(url=f"{user.avatar}")
             iconurl = Button(label="icon", url=user.avatar.url)
             profileurl = Button(label="profile", url=f"https://discord.com/users/{user.id}")
-            banner = Button(label="banner", url=user.banner_url)
+            banner = Button(label="banner", url = user.banner.url)
             view = View()
             view.add_item(iconurl)
             view.add_item(profileurl)
