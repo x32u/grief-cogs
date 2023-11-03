@@ -1094,7 +1094,7 @@ class Info(commands.Cog):
     @commands.command()
     async def inviteinfo(self, ctx: commands.Context, code: str): 
         invite_code = code
-        data = await self.bot.session.json(DISCORD_API_LINK + invite_code, proxy=self.bot.proxy_url, ssl=False)
+        data = await self.bot.session.json(DISCORD_API_LINK + invite_code)
         name = data["guild"]["name"]
         id = data['guild']['id']
         description = data["guild"]["description"]
