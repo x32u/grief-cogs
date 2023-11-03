@@ -1091,8 +1091,8 @@ class Info(commands.Cog):
 
         return await ctx.reply(embed=embed)
     
-    @commands.command(description="show information abt an invite", help="utility", usage="[invite code]", aliases=["ii"])
-    async def inviteinfo(self, ctx: Context, code: str): 
+    @commands.command()
+    async def inviteinfo(self, ctx: commands.Context, code: str): 
         invite_code = code
         data = await self.bot.session.json(DISCORD_API_LINK + invite_code, proxy=self.bot.proxy_url, ssl=False)
         name = data["guild"]["name"]
