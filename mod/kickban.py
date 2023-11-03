@@ -1030,7 +1030,7 @@ class KickBanMixin(MixinMeta):
                 return await ctx.send("You cannot timeout this user due to hierarchy.")
             if ctx.channel.permissions_for(member).administrator:
                 return await ctx.send("You can't timeout an administrator.")
-            await self.timeout_user(ctx, member, time, reason)
+            await discord.Member.timeout(ctx, member, time, reason)
             return await ctx.send(f"{member.mention} has been timed out until <t:{timestamp}:f>.")
 
     @commands.command(aliases=["utt"])
