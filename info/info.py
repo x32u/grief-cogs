@@ -166,28 +166,22 @@ class Info(commands.Cog):
             await SimpleMenu(embed_list).start(ctx) 
 
 
-    @commands.command()
-    async def dsplash(self, ctx: commands.Context):
-        """Get the server's discovery splash."""
-        
-        gld: discord.Guild = ctx.guild
-        img_dict = {
-            "Server Discovery Splash": gld.discovery_splash.url if gld.discovery_splash else None,
-        }
-        embed_list = []
-        for name, img_url in img_dict.items():
-            if img_url:
-                embed = discord.Embed(colour=discord.Colour.dark_theme(), title=name)
-                embed.description = self.IMAGE_HYPERLINK.format(img_url)
-                embed.set_image(url=img_url)
-                button1 = Button(label="Splash", url=discord.Guild.splash.url)
-                view = View()
-                view.add_item(button1)
-                embed_list.append(embed)
-        if not embed_list:
-            await ctx.send("This server doesn't have an discovery splash set.")
-        if embed_list:
-            await ctx.reply(embed, view=view, mention_author=False)
+    @commands.command(aliases=["dsplash"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def discoverysplash(self, ctx: commands.Context, *, member: discord.User = None):
+        """Grab a servers discovery splash."""
+        if member == None:member = ctx.author
+        if discord.Guild.discovery_splash == None:
+            em = discord.Embed(color=0x313338, description=f"{member.mention} doesn't have a banner on their profile")
+            await ctx.reply(embed=em, mention_author=False)
+        else:
+            banner_url = discord.Guild.discovery_splash.url
+            button1 = Button(label="Banner", url=banner_url)
+            e = discord.Embed(color=0x313338)
+            e.set_image(url=banner_url)
+            view = View()
+            view.add_item(button1)
+            await ctx.reply(embed=e, view=view, mention_author=False)
 
     @commands.command(aliases=["bnr"])
     @commands.cooldown(1, 3, commands.BucketType.user)
