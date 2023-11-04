@@ -186,7 +186,7 @@ class Info(commands.Cog):
             bannernull.set_author(name=f"{user.display_name}", url=f"https://discord.com/users/{user.id}", icon_url=f"{user.display_avatar}")
             bannernull.add_field(name="Roles: {}".format(len(user.roles)-1), value=role_string, inline=True)
             bannernull.set_thumbnail(url=f"{user.avatar}")
-            banner_url = user.banner.url
+            banner_url = user.banner
             bannernull.set_image(url=banner_url)
             iconurl = Button(label="icon", url=user.avatar.url)
             profileurl = Button(label="profile", url=f"https://discord.com/users/{user.id}")
