@@ -185,7 +185,7 @@ class Info(commands.Cog):
             bannernull = discord.Embed(description=f"**Created:** {user.created_at.strftime(date_format)}\n**Joined:** {user.joined_at.strftime(date_format)}", colour=0x313338)
             bannernull.set_author(name=f"{user.display_name}#{user.discriminator}", url=f"https://discord.com/users/{user.id}", icon_url=f"{user.display_avatar}")
             bannernull.add_field(name="Roles: {} ".format(len(user.roles)-1), value=role_string, inline=True)
-            bannernull.add_field(name="Misc:", value=f"[**avatar**]({user.display_avatar})\n[**profile**](https://discord.com/users/{user.id})\n[**banner**]({user.banner})", inline=True)
+            bannernull.add_field(name="Misc:", value=f"[**avatar**]({user.display_avatar})\n[**profile**](https://discord.com/users/{user.id})\n[**banner**]({user.banner.url})", inline=True)
             bannernull.set_thumbnail(url=f"{user.avatar}")
             iconurl = Button(label="icon", url=user.avatar.url)
             profileurl = Button(label="profile", url=f"https://discord.com/users/{user.id}")
