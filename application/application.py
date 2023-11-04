@@ -156,7 +156,6 @@ class Application(commands.Cog):
     @commands.has_permissions(administrator=True)
     @commands.group(autohelp=True, aliases=["setapply", "applicationset"])
     @commands.guild_only()
-    @checks.bot_has_permissions(manage_channels=True, manage_roles=True)
     async def applyset(self, ctx: commands.Context):
         """Various Application settings"""
 
