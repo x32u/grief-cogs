@@ -188,6 +188,7 @@ class Alias(commands.Cog):
         await menu(ctx, alias_list)
 
     @commands.group()
+    @commands.has_permissions(manage_guild=True)
     async def alias(self, ctx: commands.Context):
         """Manage command aliases."""
         pass
