@@ -190,7 +190,7 @@ class Info(commands.Cog):
             bannernull.set_thumbnail(url=f"{user.avatar}")
             
             
-            banner_url = (label="banner", url=user.banner.url)
+            banner_url = Button(label="banner", url=user.banner.url)
             icon_url = Button(label="icon", url=user.avatar.url)
             profile_url = Button(label="profile", url=f"https://discord.com/users/{user.id}")
             view = View()
