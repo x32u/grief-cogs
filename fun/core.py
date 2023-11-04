@@ -15,16 +15,9 @@ from .constants import REDDIT_BASEURL, IMGUR_LINKS, GOOD_EXTENSIONS
 
 _ = Translator("Image", __file__)
 
-# TODO Needs a good rewrite and simplification.
-# TODO Implement the possibility to use my API as an option untoggled by default.
-
 
 @cog_i18n(_)
 class Core(commands.Cog):
-
-    async def red_delete_data_for_user(self, **kwargs):
-        """Nothing to delete."""
-        return
 
     def __init__(self, bot: Red):
         self.bot = bot
