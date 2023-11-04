@@ -1066,15 +1066,3 @@ class Info(commands.Cog):
             data.set_footer(text=joined_on)
 
         await ctx.send(embed=data)
-
-    @commands.command()
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    async def uwu(self, ctx: commands.Context, *, message):
-      """Uwuify a message."""
-      if message == None:
-            embed = discord.Embed(description=f"{ctx.author.mention} what do you want me to uwuify?", color = 0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
-      else:
-            uwu = uwuipy()
-            uwu_message = uwu.uwuify(message)
-            await ctx.reply(uwu_message, mention_author=False)
