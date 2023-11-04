@@ -178,7 +178,8 @@ class Info(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def userinfo(self, ctx: commands.Context, *, user:discord.Member = None):
         """Grab information on a user."""
-        if user == None:user = ctx.author
+        if member == None:member = ctx.author
+        user = await self.bot.fetch_user(member.id)
         if len(user.roles) > 1:role_string = ' '.join([r.mention for r in user.roles][1:])
         date_format = "%a, %d %b %Y %I:%M %p"
         if user.banner == None:
@@ -187,7 +188,6 @@ class Info(commands.Cog):
             bannernull.add_field(name="Roles: {}".format(len(user.roles)-1), value=role_string, inline=True)
             bannernull.set_thumbnail(url=f"{user.avatar}")
             banner_url = user.banner
-            bannernull.set_image(url=banner_url)
             iconurl = Button(label="icon", url=user.avatar.url)
             profileurl = Button(label="profile", url=f"https://discord.com/users/{user.id}")
             view = View()
