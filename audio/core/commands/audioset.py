@@ -31,12 +31,12 @@ _ = Translator("Audio", Path(__file__))
 
 class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
     @commands.group(name="audioset")
-    @commands.bot_has_permissions(embed_links=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset(self, ctx: commands.Context):
         """Music configuration options."""
 
     @command_audioset.group(name="restrictions")
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_perms(self, ctx: commands.Context):
         """Manages the keyword whitelist and blacklist."""
 
