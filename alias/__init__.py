@@ -197,8 +197,9 @@ class Alias(commands.Cog):
         """Manage global aliases."""
         pass
 
-    @commands.mod_or_permissions(manage_guild=True)
     @alias.command(name="add")
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(manage_guild=True)
     @commands.guild_only()
     async def _add_alias(self, ctx: commands.Context, alias_name: str, *, command):
         """Add an alias for a command."""
@@ -315,7 +316,7 @@ class Alias(commands.Cog):
             )
         )
 
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @alias.command(name="edit")
     @commands.guild_only()
     async def _edit_alias(self, ctx: commands.Context, alias_name: str, *, command):
@@ -407,7 +408,7 @@ class Alias(commands.Cog):
         else:
             await ctx.send(_("There is no alias with the name `{name}`").format(name=alias_name))
 
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @alias.command(name="delete", aliases=["del", "remove"])
     @commands.guild_only()
     async def _del_alias(self, ctx: commands.Context, alias_name: str):

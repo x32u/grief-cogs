@@ -378,7 +378,6 @@ class Roleplay(commands.Cog):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
-
     async def cuddle(self, ctx: commands.Context, user: discord.Member):
         """
         Cuddles a user.
