@@ -929,7 +929,7 @@ class KickBanMixin(MixinMeta):
     async def cbanner(self, ctx: commands.Context, banner=None):
         """Change the servers banner."""
         if ctx.guild.premium_subscription_count <  7:
-            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server does not have server banner feature unlocked.")
+            e = discord.Embed(color=0x313338, description=f"{ctx.author.mention} this server does not have server banner feature unlocked.")
             await ctx.reply(embed=e, mention_author=False)
             return  
         if banner == None:
@@ -960,7 +960,7 @@ class KickBanMixin(MixinMeta):
     async def csplash(self, ctx: commands.Context, splash=None):
         """Change the servers invite splash."""
         if ctx.guild.premium_subscription_count <  2:
-            e = discord.Embed(color=0xffff00, description=f"{ctx.author.mention} this server does not have splash feature unlocked.")
+            e = discord.Embed(color=0x313338, description=f"{ctx.author.mention} this server does not have splash feature unlocked.")
             await ctx.reply(embed=e, mention_author=False)
             return  
         if splash == None:
