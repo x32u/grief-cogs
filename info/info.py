@@ -12,6 +12,7 @@ import itertools
 import logging
 import re
 import timeago
+import uwuipy
 
 from discord.ui import Button, View
 from discord.ext import tasks
@@ -1066,26 +1067,13 @@ class Info(commands.Cog):
 
         await ctx.send(embed=data)
 
-    @commands.command(aliases = ['bl', 'boosters'])
-    async def boosterlist(self, ctx):
-        try:
-            embeds = []
-            x = ""
-            page = 1
-            num = 0
-            boosters = 0
-            for booster in ctx.guild.premium_subscribers[::-1]:
-                num += 1
-                boosters += 1
-                x += f"`{num}` {booster.mention} boosted **{timeago.format(booster.premium_since, datetime.datetime.now().astimezone())}**\n"
-                if boosters == 10:
-                    embeds.append(discord.Embed(color = 0x2f3136, title = f"{ctx.guild.name}'s boosters", description = x).set_author(name=ctx.author.name, icon_url = ctx.author.display_avatar).set_footer(text=f"{page}/{int(len(ctx.guild.premium_subscribers)/10)+1 if len(ctx.guild.premium_subscribers)/10 > int(len(ctx.guild.premium_subscribers)/10) and int(len(ctx.guild.premium_subscribers)/10) < int(len(ctx.guild.premium_subscribers)/10)+1 else int(len(ctx.guild.premium_subscribers)/10)} ({len(ctx.guild.premium_subscribers)} entries)"))
-                    page += 1
-                    x = ""
-                    boosters = 0
-            if len(ctx.guild.premium_subscribers) < 1:
-                await ctx.reply("No boosters in this guild")
-            else:
-                embeds.append(discord.Embed(color = 0x2f3136, title = f"{ctx.guild.name}'s boosters", description = x).set_author(name=ctx.author.name, icon_url = ctx.author.display_avatar).set_footer(text=f"{page}/{int(len(ctx.guild.premium_subscribers)/10)+1 if len(ctx.guild.premium_subscribers)/10 > int(len(ctx.guild.premium_subscribers)/10) and int(len(ctx.guild.premium_subscribers)/10) < int(len(ctx.guild.premium_subscribers)/10)+1 else int(len(ctx.guild.premium_subscribers)/10)} ({len(ctx.guild.premium_subscribers)} entries)"))
-        except Exception as e:
-            print(e)
+    @commands.command(description="fun")
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def uwu(self, ctx, *, message):
+      if message == None:
+            embed = discord.Embed(description=f"{ctx.author.mention} what do you want me to uwuify?", color = 0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
+      else:
+            uwu = uwuipy()
+            uwu_message = uwu.uwuify(message)
+            await ctx.reply(uwu_message, mention_author=False)
