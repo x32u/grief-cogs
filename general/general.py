@@ -87,11 +87,6 @@ def __init__(self, bot: Red):
     ]
     _ = T_
 
-    def __init__(self, bot: Red) -> None:
-        super().__init__()
-        self.bot = bot
-        self.stopwatches = {}
-
     @commands.command(usage="<first> <second> [others...]")
     async def choose(self, ctx, *choices):
         """Choose between multiple options.
