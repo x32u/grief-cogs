@@ -286,8 +286,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.bot_has_permissions(kick_members=True)
-    @commands.admin_or_permissions(kick_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(kick_members=True)
     async def kick(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """
         Kick a user.
@@ -354,8 +354,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.bot_has_permissions(ban_members=True)
-    @commands.admin_or_permissions(ban_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(ban_members=True)
     async def ban(
         self,
         ctx: commands.Context,
@@ -380,8 +380,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command(aliases=["hackban"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
-    @commands.bot_has_permissions(ban_members=True)
-    @commands.admin_or_permissions(ban_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(ban_members=True)
     async def massban(
         self,
         ctx: commands.Context,
@@ -554,8 +554,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.bot_has_permissions(ban_members=True)
-    @commands.admin_or_permissions(ban_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(ban_members=True)
     async def tempban(
         self,
         ctx: commands.Context,
@@ -642,8 +642,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.bot_has_permissions(ban_members=True)
-    @commands.admin_or_permissions(ban_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(ban_members=True)
     async def softban(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """Kick a user and delete 1 day's worth of their messages."""
         guild = ctx.guild
@@ -720,8 +720,8 @@ class KickBanMixin(MixinMeta):
             await ctx.tick()
 
     @commands.command()
-    @commands.guild_only()
-    @commands.mod_or_permissions(move_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(move_members=True)
     async def voicekick(
         self, ctx: commands.Context, member: discord.Member, *, reason: str = None
     ):
@@ -768,7 +768,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.admin_or_permissions(mute_members=True, deafen_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(mute_members=True, deafen_members=True)
     async def voiceunban(
         self, ctx: commands.Context, member: discord.Member, *, reason: str = None
     ):
@@ -811,7 +812,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.admin_or_permissions(mute_members=True, deafen_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(mute_members=True, deafen_members=True)
     async def voiceban(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """Ban a user from speaking and listening in the server's voice channels."""
         user_voice_state: discord.VoiceState = member.voice
@@ -852,8 +854,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.bot_has_permissions(ban_members=True)
-    @commands.admin_or_permissions(ban_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(ban_members=True)
     async def unban(
         self, ctx: commands.Context, user_id: RawUserIdConverter, *, reason: str = None
     ):
@@ -925,7 +927,8 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.admin_or_permissions(administrator=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(administrator=True)
     async def cbanner(self, ctx: commands.Context, banner=None):
         """Change the servers banner."""
         if ctx.guild.premium_subscription_count <  7:
@@ -956,7 +959,8 @@ class KickBanMixin(MixinMeta):
            
     @commands.command()
     @commands.guild_only()
-    @commands.admin_or_permissions(administrator=True)
+    @commands.cooldown(1, 5, commands.BucketType.guild)
+    @commands.has_permissions(administrator=True)
     async def csplash(self, ctx: commands.Context, splash=None):
         """Change the servers invite splash."""
         if ctx.guild.premium_subscription_count <  2:
@@ -987,7 +991,8 @@ class KickBanMixin(MixinMeta):
            
     @commands.command()
     @commands.guild_only()
-    @commands.admin_or_permissions(administrator=True)
+    @commands.cooldown(1, 5, commands.BucketType.guild)
+    @commands.has_permissions(administrator=True)
     async def cicon(self, ctx: commands.Context, icon=None):
         """Change the servers icon."""
         if icon == None:
