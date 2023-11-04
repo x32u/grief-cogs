@@ -192,8 +192,6 @@ class Info(commands.Cog):
             view = View()
             view.add_item(iconurl)
             view.add_item(profileurl)
-            if member == None:member = ctx.author
-            await self.bot.fetch_user(member.id)
             await ctx.reply(embed=bannernull, view=view, mention_author=False)
 
     @commands.guild_only()
