@@ -178,21 +178,24 @@ class Info(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def userinfo(self, ctx: commands.Context, *, user:discord.Member = None):
         """Grab information on a user."""
-        user = await self.bot.fetch_user(member.id)
-        if member == None:member = ctx.author
+        if user == None:user = ctx.author,
         if len(user.roles) > 1:role_string = ' '.join([r.mention for r in user.roles][1:])
         date_format = "%a, %d %b %Y %I:%M %p"
+        
+        
         if user.banner == None:
             bannernull = discord.Embed(description=f"**Created:** {user.created_at.strftime(date_format)}\n**Joined:** {user.joined_at.strftime(date_format)}", colour=0x313338)
             bannernull.set_author(name=f"{user.display_name}", url=f"https://discord.com/users/{user.id}", icon_url=f"{user.display_avatar}")
             bannernull.add_field(name="Roles: {}".format(len(user.roles)-1), value=role_string, inline=True)
             bannernull.set_thumbnail(url=f"{user.avatar}")
-            banner_url = user.banner
-            iconurl = Button(label="icon", url=user.avatar.url)
-            profileurl = Button(label="profile", url=f"https://discord.com/users/{user.id}")
+            
+            
+            banner_url = (label="banner", url=user.banner.url)
+            icon_url = Button(label="icon", url=user.avatar.url)
+            profile_url = Button(label="profile", url=f"https://discord.com/users/{user.id}")
             view = View()
-            view.add_item(iconurl)
-            view.add_item(profileurl)
+            view.add_item(icon_url)
+            view.add_item(profile_url)
             view.add_item(banner_url)
             await ctx.reply(embed=bannernull, view=view, mention_author=False)
 
