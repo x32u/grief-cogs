@@ -352,7 +352,7 @@ class KickBanMixin(MixinMeta):
             )
             await ctx.tick()
 
-    @commands.command(autohelp=True, aliases=["ban"])
+    @commands.command(autohelp=True, aliases=["b"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
