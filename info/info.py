@@ -176,9 +176,10 @@ class Info(commands.Cog):
 
     @commands.command(aliases=['ui', 'uinfo'])
     @commands.cooldown(1, 3, commands.BucketType.user)
-    async def userinfo(self, ctx: commands.Context, *, user:discord.Member = None):
+    async def userinfo(self, ctx: commands.Context, *, user:discord.User = None):
         """Grab information on a user."""
-        if user == None:user = ctx.author
+        if member == None:member = ctx.author
+        user = await self.bot.fetch_user(member.id)
         if len(user.roles) > 1:role_string = ' '.join([r.mention for r in user.roles][1:])
         date_format = "%a, %d %b %Y %I:%M %p"
         if user.banner == None:
