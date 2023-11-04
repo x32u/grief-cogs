@@ -7,6 +7,7 @@ import urllib.parse
 import aiohttp
 import discord
 from grief.core import commands
+from grief.core import Config as RedDB
 from grief.core.bot import Red
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.menus import menu
@@ -21,11 +22,17 @@ from typing import Any, Dict, Optional
 
 _ = T_ = Translator("General", __file__)
 
+DEFAULT_USER: Dict[str, Any] = {
+    "afk": False,
+    "reason": None,
+    "timestamp": None,
+}
 
 class RPS(Enum):
     rock = "\N{MOYAI}"
     paper = "\N{PAGE FACING UP}"
     scissors = "\N{BLACK SCISSORS}\N{VARIATION SELECTOR-16}"
+
 
 
 class RPSParser:
@@ -41,12 +48,18 @@ class RPSParser:
             self.choice = None
 
 
+
 MAX_ROLL: Final[int] = 2**64 - 1
 
 
 @cog_i18n(_)
 class General(commands.Cog):
     """General commands."""
+
+    def __init__(self, bot: Red):
+        self.bot: Red = bot
+        self.db: RedDB = RedDB.get_conf(self, identifier=126875360, force_registration=True)
+        self.db.register_user(**DEFAULT_USER)
 
     global _
     _ = lambda s: s
