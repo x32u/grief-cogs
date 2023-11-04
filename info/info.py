@@ -12,7 +12,7 @@ import itertools
 import logging
 import re
 import timeago
-import uwuipy
+from uwuipy import uwuipy
 
 from discord.ui import Button, View
 from discord.ext import tasks
