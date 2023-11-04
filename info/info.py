@@ -180,6 +180,7 @@ class Info(commands.Cog):
         """Grab information on a user."""
         if user == None:user = ctx.author
         if len(user.roles) > 1:role_string = ' '.join([r.mention for r in user.roles][1:])
+        user = await self.bot.fetch_user(user.id)
         date_format = "%a, %d %b %Y %I:%M %p"
         if user.banner == None:
             bannernull = discord.Embed(description=f"**Created:** {user.created_at.strftime(date_format)}\n**Joined:** {user.joined_at.strftime(date_format)}", colour=0x313338)
