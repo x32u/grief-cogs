@@ -11,7 +11,7 @@ log = logging.getLogger("grief.joinping")
 
 guild_defaults = {
     "ping_channels": [],
-    "delete_after": 2,
+    "delete_after": 5,
     "ping_message": "{member.mention}",
 }
 
@@ -82,8 +82,8 @@ class JoinPing(commands.Cog):
     @jpset.command(name="deleteafter", aliases=["da"])
     async def jpset_da(self, ctx, seconds: int):
         """Set the time in seconds after which the ping message will be deleted."""
-        if seconds < 0:
-            return await ctx.send("The time must be a positive integer.")
+        if seconds < 5:
+            return await ctx.send("The time must be above 5 seconds.")
         await self.config.guild(ctx.guild).delete_after.set(seconds)
         await self._build_cache()
         await ctx.send(f"The ping message will be deleted after {seconds} seconds.")
