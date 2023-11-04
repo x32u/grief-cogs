@@ -12,6 +12,7 @@ import itertools
 import logging
 import re
 import timeago
+import button_paginator as pg
 
 from discord.ui import Button, View
 from discord.ext import tasks
