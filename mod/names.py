@@ -31,8 +31,8 @@ class ModInfo(MixinMeta):
 
     @commands.command()
     @commands.guild_only()
-    @commands.bot_has_permissions(manage_nicknames=True)
-    @commands.admin_or_permissions(manage_nicknames=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(manage_nicknames=True)
     async def rename(self, ctx: commands.Context, member: discord.Member, *, nickname: str = ""):
         """Change a member's nickname.
 
