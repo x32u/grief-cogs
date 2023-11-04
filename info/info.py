@@ -189,12 +189,9 @@ class Info(commands.Cog):
             bannernull.set_thumbnail(url=f"{user.avatar}")
             iconurl = Button(label="icon", url=user.avatar.url)
             profileurl = Button(label="profile", url=f"https://discord.com/users/{user.id}")
-            banner_url = user.banner.url
-            bannerurl = Button(label="banner", url=banner_url)
             view = View()
             view.add_item(iconurl)
             view.add_item(profileurl)
-            view.add_item(bannerurl)
             await ctx.reply(embed=bannernull, view=view, mention_author=False)
 
     @commands.guild_only()
