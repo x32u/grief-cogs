@@ -43,9 +43,8 @@ class Application(commands.Cog):
         return
 
     @commands.max_concurrency(1, commands.BucketType.member, wait=True)
-    @commands.command()
     @commands.guild_only()
-    @checks.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     async def apply(self, ctx: commands.Context):
         """Apply to be a staff member."""
         if not await self.config.guild(ctx.guild).channel_id():
@@ -154,7 +153,7 @@ class Application(commands.Cog):
             "Your application has been sent to the Admins, thank you!"
         )
 
-    @checks.admin_or_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     @commands.group(autohelp=True, aliases=["setapply", "applicationset"])
     @commands.guild_only()
     @checks.bot_has_permissions(manage_channels=True, manage_roles=True)
@@ -290,7 +289,6 @@ class Application(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @checks.bot_has_permissions(manage_roles=True)
     async def accept(self, ctx: commands.Context, target: discord.Member):
         """Accept a staff applicant.
 
@@ -352,7 +350,6 @@ class Application(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @checks.bot_has_permissions(manage_roles=True)
     async def deny(self, ctx: commands.Context, target: discord.Member):
         """Deny a staff applicant.
 
