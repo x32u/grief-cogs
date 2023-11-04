@@ -97,8 +97,6 @@ class StringToEmbed(commands.Converter[discord.Embed]):
 
     def get_content(self, data: dict, *, content: str = None) -> Optional[str]:
         content = data.pop("content", content)
-        if content is not None and not self.allow_content:
-            raise commands.BadArgument("The `content` field is not supported for this command.")
         return content
 
     async def create_embed(
