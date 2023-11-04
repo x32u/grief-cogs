@@ -17,7 +17,9 @@ class ModSettings(MixinMeta):
     """
 
     @commands.group()
-    @commands.guildowner_or_permissions(administrator=True)
+    @commands.guild_only()
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(administrator=True)
     async def modset(self, ctx: commands.Context):
         """Manage server administration settings."""
 

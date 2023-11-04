@@ -204,7 +204,8 @@ class Mod(
 
     @commands.command()
     @commands.guild_only()
-    @commands.guildowner()
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(administrator=True)
     async def massunban(self, ctx: commands.Context, *, ban_reason: Optional[str] = None):
         """
         Mass unban everyone, or specific people.
