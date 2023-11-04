@@ -12,7 +12,6 @@ import itertools
 import logging
 import re
 import timeago
-import button_paginator as pg
 
 from discord.ui import Button, View
 from discord.ext import tasks
@@ -1088,9 +1087,5 @@ class Info(commands.Cog):
                 await ctx.reply("No boosters in this guild")
             else:
                 embeds.append(discord.Embed(color = 0x2f3136, title = f"{ctx.guild.name}'s boosters", description = x).set_author(name=ctx.author.name, icon_url = ctx.author.display_avatar).set_footer(text=f"{page}/{int(len(ctx.guild.premium_subscribers)/10)+1 if len(ctx.guild.premium_subscribers)/10 > int(len(ctx.guild.premium_subscribers)/10) and int(len(ctx.guild.premium_subscribers)/10) < int(len(ctx.guild.premium_subscribers)/10)+1 else int(len(ctx.guild.premium_subscribers)/10)} ({len(ctx.guild.premium_subscribers)} entries)"))
-                paginator = pg.Paginator(self.bot, embeds, ctx, invoker=ctx.author.id)
-                paginator.add_button('prev')
-                paginator.add_button('next')
-                await paginator.start()
         except Exception as e:
             print(e)
