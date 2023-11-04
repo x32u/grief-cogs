@@ -180,10 +180,9 @@ class Info(commands.Cog):
         """Grab information on a user."""
         if user == None:user = ctx.author
         if len(user.roles) > 1:role_string = ' '.join([r.mention for r in user.roles][1:])
-        user = await self.bot.fetch_user(user.id)
         date_format = "%a, %d %b %Y %I:%M %p"
         if user.banner == None:
-            bannernull = discord.Embed(description=f"**Created:** {user.created_at.strftime(date_format)}\n**Joined:** {user.joined_at.strftime(date_format)}", colour=0x313338)
+            bannernull = discord.Embed(title="Dates", description=f"**Created:** {user.created_at.strftime(date_format)}\n**Joined:** {user.joined_at.strftime(date_format)}", colour=0x313338)
             bannernull.set_author(name=f"{user.display_name}", url=f"https://discord.com/users/{user.id}", icon_url=f"{user.display_avatar}")
             bannernull.add_field(name="Roles: {}".format(len(user.roles)-1), value=role_string, inline=True)
             bannernull.set_thumbnail(url=f"{user.avatar}")
