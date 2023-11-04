@@ -54,8 +54,8 @@ MAX_ROLL: Final[int] = 2**64 - 1
 
 
 @cog_i18n(_)
-class General(commands.Cog):
-    """General commands."""
+class Fun(commands.Cog):
+    """Fun commands."""
 
     global _
     _ = lambda s: s
