@@ -352,20 +352,12 @@ class KickBanMixin(MixinMeta):
             )
             await ctx.tick()
 
-    @commands.command()
+    @commands.command(autohelp=True, aliases=["ban"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
-    async def ban(
-        self,
-        ctx: commands.Context,
-        user: Union[discord.Member, RawUserIdConverter],
-        days: Optional[int] = None,
-        *,
-        reason: str = None,
-    ):
-        """Ban a user from this server and optionally delete days of messages.
-        """
+    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
+        """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
         if days is None:
             days = await self.config.guild(guild).default_days()
