@@ -156,13 +156,13 @@ class Vanity(commands.Cog):
         """Vanity roles for grief."""
         ...
 
-    @vanity.command()
+    @vanity.command(usage="<user_ids...> [days] [reason]")
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
         """Toggle vanity checker for current server on/off. Do not use "/"."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
-        #if "VANITY_URL" in ctx.guild.features:
-        self.vanity_cache[ctx.guild.id] = vanity
+        if "VANITY_URL" in ctx.guild.features:
+            self.vanity_cache[ctx.guild.id] = vanity
         await ctx.send(
             f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}."
         )
