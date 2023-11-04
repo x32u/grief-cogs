@@ -21,6 +21,7 @@ from grief.core.utils.chat_formatting import (
 )
 from typing import Any, Dict, Optional
 from . import constants as sub
+from .core import Core
 
 
 _ = T_ = Translator("General", __file__)
