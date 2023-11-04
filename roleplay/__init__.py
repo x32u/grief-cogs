@@ -376,7 +376,7 @@ class Roleplay(commands.Cog):
         self.cache = {}
         
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
 
     async def cuddle(self, ctx: commands.Context, user: discord.Member):
@@ -405,7 +405,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).cuddle_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).cuddle_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
     async def poke(self, ctx: commands.Context, user: discord.Member):
         """
@@ -433,7 +433,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).poke_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).poke_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
     async def kiss(self, ctx: commands.Context, user: discord.Member):
         """
@@ -461,7 +461,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).kiss_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).kiss_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
     async def hug(self, ctx: commands.Context, user: discord.Member):
         """
@@ -489,7 +489,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).hug_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).hug_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
     async def pat(self, ctx: commands.Context, user: discord.Member):
         """
@@ -517,7 +517,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).pat_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).pat_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
     async def tickle(self, ctx: commands.Context, user: discord.Member):
         """
@@ -545,7 +545,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).tickle_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).tickle_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
     async def lick(self, ctx: commands.Context, user: discord.Member):
         """
@@ -573,7 +573,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).lick_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).lick_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
     async def slap(self, ctx: commands.Context, user: discord.Member):
         """
@@ -601,7 +601,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).slap_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).slap_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="spank")
     async def spank(self, ctx: commands.Context, user: discord.Member):
         """
@@ -631,7 +631,7 @@ class Roleplay(commands.Cog):
             target + 1
         )
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="feed")
     async def feed(self, ctx: commands.Context, user: discord.Member):
         """
@@ -661,7 +661,7 @@ class Roleplay(commands.Cog):
             target + 1
         )
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="punch")
     async def punch(self, ctx: commands.Context, user: discord.Member):
         """
@@ -691,7 +691,7 @@ class Roleplay(commands.Cog):
             target + 1
         )
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="highfive")
     async def highfive(self, ctx: commands.Context, user: discord.Member):
         """
@@ -721,7 +721,7 @@ class Roleplay(commands.Cog):
             target + 1
         )
     
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="kill")
     async def kill(self, ctx: commands.Context, user: discord.Member):
         """
@@ -751,7 +751,7 @@ class Roleplay(commands.Cog):
             target + 1
         )
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bite")
     async def bite(self, ctx: commands.Context, user: discord.Member):
         """
@@ -781,7 +781,7 @@ class Roleplay(commands.Cog):
             target + 1
         )
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="yeet")
     async def yeet(self, ctx: commands.Context, user: discord.Member):
         """
@@ -811,7 +811,7 @@ class Roleplay(commands.Cog):
             target + 1
         )
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="nutkick", aliases=["kicknuts"])
     async def kicknuts(self, ctx: commands.Context, user: discord.Member):
         """
@@ -839,7 +839,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).nut_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).nut_r.set(target + 1)
 
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
     async def fuck(self, ctx: commands.Context, user: discord.Member):
         """
