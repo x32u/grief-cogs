@@ -20,13 +20,6 @@ class Hellohook(commands.Cog):
             "leaveWebhook": "",
             "leaveMessage": {},
             "inviteList": {},
-            # {
-            #   "id": {
-            #     uses: int,
-            #     channel: str, // webhook url
-            #     message: {} // discohook json
-            #   }
-            # }
             "oldInviteList": {}
         }
         self.config.register_guild(**default_guild)
@@ -49,16 +42,16 @@ class Hellohook(commands.Cog):
         greetMessageStr = str(json.dumps(greetMessage))
         if "{user.avatar}" in greetMessageStr:
             greetMessageStr = greetMessageStr.replace("{user.avatar}", str(userObj.display_avatar.url))
-        if "https://&&USERMENTION&&" in greetMessageStr:
-            greetMessageStr = greetMessageStr.replace("https://&&USERMENTION&&", str(userObj.mention))
-        if "https://&&USERNAME&&" in greetMessageStr:
-            greetMessageStr = greetMessageStr.replace("https://&&USERNAME&&", str(userObj.name))
-        if "https://&&USERNAME1234&&" in greetMessageStr:
-            greetMessageStr = greetMessageStr.replace("https://&&USERNAME1234&&", str(userObj.name))
-        if "https://&&SERVERCOUNT&&" in greetMessageStr:
-            greetMessageStr = greetMessageStr.replace("https://&&SERVERCOUNT&&", str(userObj.guild.member_count))
-        if "https://&&SERVERCOUNTORD&&" in greetMessageStr:
-            greetMessageStr = greetMessageStr.replace("https://&&SERVERCOUNTORD&&", str(self.ordinalize_num(userObj.guild.member_count)))
+        if "{user.mention}" in greetMessageStr:
+            greetMessageStr = greetMessageStr.replace("{user.mention}", str(userObj.mention))
+        if "{user.name}" in greetMessageStr:
+            greetMessageStr = greetMessageStr.replace("{user.name}", str(userObj.name))
+        if "{user.discrim}" in greetMessageStr:
+            greetMessageStr = greetMessageStr.replace("{user.discrim}", str(userObj.name))
+        if "{server.count}" in greetMessageStr:
+            greetMessageStr = greetMessageStr.replace("{server.count}", str(userObj.guild.member_count))
+        if "{server.countord}" in greetMessageStr:
+            greetMessageStr = greetMessageStr.replace("{server.countord}", str(self.ordinalize_num(userObj.guild.member_count)))
         greetMessageJson = json.loads(str(greetMessageStr))
         # Patch fix: send() got an unexpected keyword argument 'attachments'
         if "attachments" in greetMessageJson:
