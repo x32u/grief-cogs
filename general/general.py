@@ -28,6 +28,11 @@ DEFAULT_USER: Dict[str, Any] = {
     "timestamp": None,
 }
 
+def __init__(self, bot: Red):
+        self.bot: Red = bot
+        self.db: RedDB = RedDB.get_conf(self, identifier=126875360, force_registration=True)
+        self.db.register_user(**DEFAULT_USER)
+
 class RPS(Enum):
     rock = "\N{MOYAI}"
     paper = "\N{PAGE FACING UP}"
@@ -56,11 +61,6 @@ MAX_ROLL: Final[int] = 2**64 - 1
 class General(commands.Cog):
     """General commands."""
 
-def __init__(self, bot: Red):
-    self.bot: Red = bot
-    self.db: RedDB = RedDB.get_conf(self, identifier=126875360, force_registration=True)
-    self.db.register_user(**DEFAULT_USER)
-
     global _
     _ = lambda s: s
     ball = [
@@ -86,6 +86,15 @@ def __init__(self, bot: Red):
         _("Very doubtful"),
     ]
     _ = T_
+
+    def __init__(self, bot: Red) -> None:
+        super().__init__()
+        self.bot = bot
+        self.stopwatches = {}
+
+    async def red_delete_data_for_user(self, **kwargs):
+        """Nothing to delete"""
+        return
 
     @commands.command(usage="<first> <second> [others...]")
     async def choose(self, ctx, *choices):
