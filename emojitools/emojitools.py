@@ -82,7 +82,7 @@ class EmojiTools(commands.Cog):
             name="Creation (UTC)",
             value=f"{str(emoji.created_at)[:19]}"
         )
-            if ctx.guild.me.guild_permissions.manage_expressions:
+        if ctx.guild.me.guild_permissions.manage_expressions:
             with contextlib.suppress(discord.HTTPException):
                 e: discord.Emoji = await ctx.guild.fetch_emoji(emoji.id)
                 embed.add_field(
