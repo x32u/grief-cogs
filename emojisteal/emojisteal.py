@@ -158,7 +158,7 @@ class EmojiSteal(commands.Cog):
     # context menu added in __init__
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_expressions=True)
-    @app_commands.checks.bot_has_permissions(manage_expresions=True)
+    @app_commands.checks.bot_has_permissions(manage_expressions=True)
     async def steal_upload_app_command(self, ctx: discord.Interaction, message: discord.Message):
         if message.stickers:
             emojis = message.stickers
