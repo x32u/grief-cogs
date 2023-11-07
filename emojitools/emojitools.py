@@ -42,7 +42,7 @@ class EmojiTools(commands.Cog):
             raise commands.UserFeedbackCheckFailure(f"Invalid emoji: {emoji}")
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_emojis=True)
+    @commands.admin_or_permissions(manage_expressions=True)
     @commands.group(name="emojitools")
     async def _emojitools(self, ctx: commands.Context):
         """
@@ -82,7 +82,7 @@ class EmojiTools(commands.Cog):
             name="Creation (UTC)",
             value=f"{str(emoji.created_at)[:19]}"
         )
-        if ctx.guild.me.guild_permissions.manage_emojis:
+            if ctx.guild.me.guild_permissions.manage_expressions:
             with contextlib.suppress(discord.HTTPException):
                 e: discord.Emoji = await ctx.guild.fetch_emoji(emoji.id)
                 embed.add_field(
@@ -203,7 +203,7 @@ class EmojiTools(commands.Cog):
         except discord.HTTPException:
             return await ctx.send(FILE_SIZE)
 
-    @commands.bot_has_permissions(manage_emojis=True)
+    @commands.bot_has_permissions(manage_expressions=True)
     @_emojitools.group(name="delete", aliases=["remove"])
     async def _delete(self, ctx: commands.Context):
         """Delete Server Custom Emojis"""
@@ -237,7 +237,7 @@ class EmojiTools(commands.Cog):
 
         return await ctx.send(f"All {counter} custom emojis have been removed from this server.")
 
-    @commands.bot_has_permissions(manage_emojis=True)
+    @commands.bot_has_permissions(manage_expressions=True)
     @_emojitools.group(name="add")
     async def _add(self, ctx: commands.Context):
         """Add Custom Emojis to Server"""
@@ -354,7 +354,7 @@ class EmojiTools(commands.Cog):
         return await ctx.send(f"{len(added_emojis)} emojis were added to this server: {' '.join([str(e) for e in added_emojis])}")
 
     @commands.cooldown(rate=1, per=15)
-    @commands.admin_or_permissions(manage_emojis=True)
+    @commands.admin_or_permissions(manage_expressions=True)
     @_add.command(name="fromimage")
     async def _add_from_image(self, ctx: commands.Context, name: str = None):
         """
@@ -444,7 +444,7 @@ class EmojiTools(commands.Cog):
 
         return await ctx.send(f"{len(added_emojis)} emojis were added to this server: {' '.join([str(e) for e in added_emojis])}")
 
-    @commands.bot_has_permissions(manage_emojis=True)
+    @commands.bot_has_permissions(manage_expressions=True)
     @_emojitools.group(name="edit")
     async def _edit(self, ctx: commands.Context):
         """Edit Custom Emojis in the Server"""
