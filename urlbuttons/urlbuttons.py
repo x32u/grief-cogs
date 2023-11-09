@@ -89,7 +89,7 @@ class UrlButtons(Cog):
 
     @commands.guild_only()
     @commands.has_guild_permissions(manage_messages=True)
-    @commands.hybrid_group()
+    @commands.hybrid_group(autohelp=True)
     async def urlbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use UrlButtons."""
         pass
