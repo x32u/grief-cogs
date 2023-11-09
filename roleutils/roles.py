@@ -255,7 +255,6 @@ class Roles(MixinMeta):
         await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command("color", aliases=["colour"])
     async def role_color(
         self, ctx: commands.Context, role: StrictRole(check_integrated=False), color: discord.Color
@@ -265,7 +264,6 @@ class Roles(MixinMeta):
         await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command("hoist")
     async def role_hoist(
         self,
@@ -280,7 +278,6 @@ class Roles(MixinMeta):
         await ctx.send(f"**{role}** is {now} hoisted.", embed=await self.get_info(role))
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command("name")
     async def role_name(
         self, ctx: commands.Context, role: StrictRole(check_integrated=False), *, name: str
@@ -291,7 +288,6 @@ class Roles(MixinMeta):
         await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command("add")
     async def role_add(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Add a role to a member."""
@@ -305,7 +301,6 @@ class Roles(MixinMeta):
         await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command("remove")
     async def role_remove(
         self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole
@@ -321,7 +316,6 @@ class Roles(MixinMeta):
         await ctx.tick()
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command(require_var_positional=True)
     async def addmulti(self, ctx: commands.Context, role: StrictRole, *members: TouchableMember):
         """Add a role to multiple members."""
@@ -342,7 +336,6 @@ class Roles(MixinMeta):
         await ctx.send("\n".join(msg))
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command(require_var_positional=True)
     async def removemulti(
         self, ctx: commands.Context, role: StrictRole, *members: TouchableMember
@@ -365,7 +358,6 @@ class Roles(MixinMeta):
         await ctx.send("\n".join(msg))
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @commands.group(invoke_without_command=True, require_var_positional=True)
     async def multirole(self, ctx: commands.Context, member: TouchableMember, *roles: StrictRole):
         """Add multiple roles to a member."""
@@ -394,7 +386,6 @@ class Roles(MixinMeta):
         await ctx.send("\n".join(msg))
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @multirole.command("remove", require_var_positional=True)
     async def multirole_remove(
         self, ctx: commands.Context, member: TouchableMember, *roles: StrictRole
@@ -425,14 +416,12 @@ class Roles(MixinMeta):
         await ctx.send("\n".join(msg))
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def all(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all members of the server."""
         await self.super_massrole(ctx, ctx.guild.members, role)
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command(aliases=["removeall"])
     async def rall(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all members of the server."""
@@ -442,7 +431,6 @@ class Roles(MixinMeta):
         )
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def humans(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all humans."""
@@ -454,7 +442,6 @@ class Roles(MixinMeta):
         )
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def rhumans(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all humans."""
@@ -467,7 +454,6 @@ class Roles(MixinMeta):
         )
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def bots(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all bots."""
@@ -479,7 +465,6 @@ class Roles(MixinMeta):
         )
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def rbots(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all bots."""
@@ -492,7 +477,6 @@ class Roles(MixinMeta):
         )
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command("in")
     async def role_in(
         self, ctx: commands.Context, target_role: FuzzyRole, *, add_role: StrictRole
@@ -506,7 +490,6 @@ class Roles(MixinMeta):
         )
 
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.command("rin")
     async def role_rin(
         self, ctx: commands.Context, target_role: FuzzyRole, *, remove_role: StrictRole
@@ -522,7 +505,6 @@ class Roles(MixinMeta):
 
     @commands.check(targeter_cog)
     @commands.has_guild_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
     @role.group()
     async def target(self, ctx: commands.Context):
         """
