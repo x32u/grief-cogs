@@ -176,9 +176,9 @@ class Roles(MixinMeta):
             )
         return True
 
-    @commands.group()
-    @commands.has_guild_permissions(manage_roles=True)
     @commands.guild_only()
+    @commands.has_guild_permissions(manage_roles=True)
+    @commands.group(invoke_without_command=True)
     async def role(
         self, ctx: commands.Context, member: TouchableMember(False), *, role: StrictRole(False)
     ):
@@ -201,7 +201,6 @@ class Roles(MixinMeta):
         else:
             await ctx.send_help()
 
-    @commands.bot_has_permissions(embed_links=True)
     @role.command("info")
     async def role_info(self, ctx: commands.Context, *, role: FuzzyRole):
         """Get information about a role."""
@@ -236,7 +235,6 @@ class Roles(MixinMeta):
         output = self.interpreter.process(formatting, {"member": MemberAdapter(member)})
         return output.body
 
-    @commands.bot_has_permissions(manage_roles=True)
     @commands.has_guild_permissions(manage_roles=True)
     @role.command("create")
     async def role_create(
