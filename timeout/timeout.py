@@ -39,7 +39,7 @@ class Timeout(commands.Cog):
 
     @commands.command(aliases=["tt"])
     @commands.guild_only()
-    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(moderate_members=True)
     async def timeout(self, ctx: commands.Context, member: discord.Member, time: TimedeltaConverter(minimum=datetime.timedelta(minutes=1), maximum=datetime.timedelta(days=28), default_unit="minutes", allowed_units=["minutes", "seconds", "hours", "days"],) = None, *, reason: Optional[str] = None,):
         """
@@ -73,7 +73,7 @@ class Timeout(commands.Cog):
 
     @commands.command(aliases=["utt"])
     @commands.guild_only()
-    @commands.cooldown(1, 1, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(moderate_members=True)
     async def untimeout(self, ctx: commands.Context, member: discord.Member, *, reason: Optional[str] = None,):
         """
