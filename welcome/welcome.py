@@ -71,12 +71,6 @@ class Welcome(Events, commands.Cog):
         self.joined = {}
         self.today_count = {"now": datetime.now(timezone.utc)}
         self.group_welcome.start()
-        
-    async def red_delete_data_for_user(self, **kwargs):
-        """
-        Nothing to delete
-        """
-        return
 
     @discord.ext.tasks.loop(seconds=300)
     async def group_welcome(self) -> None:

@@ -1,4 +1,7 @@
-﻿from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
+﻿
+from cogsutils import CogsUtils, Menu  
+from menus import Menu
+
 from grief.core import commands, Config  # isort:skip
 from grief.core.bot import Red  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
@@ -11,7 +14,7 @@ _ = Translator("UrlButtons", __file__)
 
 
 @cog_i18n(_)
-class UrlButtons(Cog):
+class UrlButtons:
     """Setup buttons to place on embeds/messages sent by grief that will send them to a website."""
 
     def __init__(self, bot: Red) -> None:
