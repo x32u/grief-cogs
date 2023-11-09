@@ -168,25 +168,3 @@ class settings(Cog):
             for permission in permissions
             if not getattr(channel.permissions_for(channel.guild.me), permission)
         ]
-
-    @configuration.command(aliases=["buttonembed"])
-    async def embedbutton(self, ctx: commands.Context,profile: ProfileConverter, where: typing.Literal["title", "description", "image", "placeholderdropdown"], *, text: typing.Optional[str] = None,):
-        """Set the settings for the button embed."""
-        if text is None:
-            if where == "title":
-                await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "title")
-            elif where == "description":
-                await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "description")
-            elif where == "image":
-                await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "image")
-            elif where == "placeholderdropdown":
-                await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "placeholder_dropdown")
-                return
-            if where == "title":
-                await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "title", value=text)
-            elif where == "description":
-                await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "description", value=text)
-            elif where == "image":
-                await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "image", value=text)
-            elif where == "placeholderdropdown":
-                await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "placeholder_dropdown", value=text)
