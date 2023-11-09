@@ -22,10 +22,6 @@ log = logging.getLogger("grief.webhook")
 class Webhook(commands.Cog):
     """Webhook utility commands."""
 
-    __author__ = "PhenoM4n4n"
-
-    __version__ = "1.3.0"
-
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(
@@ -70,11 +66,11 @@ class Webhook(commands.Cog):
 
     @commands.guild_only()
     @commands.group()
+    @commands.has_permissions(manage_webhooks=True)
     async def webhook(self, ctx):
         """Webhook related commands."""
 
-    @commands.bot_has_permissions(manage_webhooks=True)
-    @commands.admin_or_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("create")
     async def webhook_create(
         self,
@@ -94,7 +90,7 @@ class Webhook(commands.Cog):
         await channel.create_webhook(name=webhook_name, reason=creation_reason)
         await ctx.tick()
 
-    @commands.admin_or_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("send")
     async def webhook_send(
         self, ctx: commands.Context, webhook_link: WebhookLinkConverter, *, message: str
@@ -109,7 +105,7 @@ class Webhook(commands.Cog):
             content=message,
         )
 
-    @commands.bot_has_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("say")
     async def webhook_say(self, ctx: commands.Context, *, message: str):
         """
@@ -126,8 +122,7 @@ class Webhook(commands.Cog):
             username=ctx.author.display_name,
         )
 
-    @commands.admin_or_permissions(manage_webhooks=True)
-    @commands.bot_has_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("sudo")
     async def webhook_sudo(self, ctx: commands.Context, member: discord.Member, *, message: str):
         """
@@ -144,8 +139,7 @@ class Webhook(commands.Cog):
             username=member.display_name,
         )
 
-    @commands.admin_or_permissions(manage_webhooks=True, manage_guild=True)
-    @commands.bot_has_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("loudsudo", hidden=True)
     async def webhook_loudsudo(
         self, ctx: commands.Context, member: discord.Member, *, message: str
@@ -164,8 +158,7 @@ class Webhook(commands.Cog):
             allowed_mentions=USER_MENTIONS,
         )
 
-    @commands.admin_or_permissions(manage_webhooks=True, manage_guild=True)
-    @commands.bot_has_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("clyde", hidden=True)
     async def webhook_clyde(self, ctx: commands.Context, *, message: str):
         """
@@ -185,7 +178,6 @@ class Webhook(commands.Cog):
 
     @commands.max_concurrency(1, commands.BucketType.guild)
     @commands.has_permissions(manage_webhooks=True)
-    @commands.bot_has_permissions(manage_webhooks=True)
     @webhook.command("clear")
     async def webhook_clear(self, ctx):
         """
@@ -226,7 +218,7 @@ class Webhook(commands.Cog):
         except discord.NotFound:
             await ctx.send(f"{count} webhooks deleted.")
 
-    @commands.mod_or_permissions(ban_members=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("permissions", aliases=["perms"])
     async def webhook_permissions(self, ctx: commands.Context):
         """Show all members in the server that have Manage Webhook permissions."""
@@ -244,8 +236,6 @@ class Webhook(commands.Cog):
                     for member in filter(lambda m: m not in total_members, role.members):
                         total_members.add(member)
                         member_string = f"{member} ({member.id})"
-                        if member.bot:
-                            member_string = f"[{member_string}](https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO 'This user is a bot')"
                         members.append(member_string)
                     if members:
                         lines.append(humanize_list(members))
@@ -270,7 +260,7 @@ class Webhook(commands.Cog):
         await menu(ctx, embeds, controls)
 
     @commands.max_concurrency(1, commands.BucketType.channel)
-    @commands.admin_or_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.group("session", invoke_without_command=True)
     async def webhook_session(self, ctx: commands.Context, webhook_link: WebhookLinkConverter):
         """Initiate a session within this channel sending messages to a specified webhook link."""
@@ -313,7 +303,7 @@ class Webhook(commands.Cog):
         )
 
     @commands.cooldown(5, 10, commands.BucketType.guild)
-    @commands.admin_or_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("edit")
     async def webhook_edit(self, ctx: commands.Context, message: discord.Message, *, content: str):
         """
