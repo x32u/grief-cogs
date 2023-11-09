@@ -88,8 +88,7 @@ class UrlButtons(Cog):
         await self.config.guild(message.guild).url_buttons.set(config)
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_messages=True)
-    @commands.bot_has_permissions(embed_links=True)
+    @commands.has_guild_permissions(manage_messages=True)
     @commands.hybrid_group()
     async def urlbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use UrlButtons."""
