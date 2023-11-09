@@ -5,7 +5,7 @@ from random import choice as rand_choice
 from typing import List, Optional, Pattern, Union, cast
 
 import discord
-from redbot import VersionInfo, version_info
+from grief import VersionInfo, version_info
 from grief.core import Config, commands
 from grief.core.bot import Red
 from grief.core.i18n import Translator, cog_i18n
