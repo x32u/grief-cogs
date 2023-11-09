@@ -66,7 +66,6 @@ class Suggestion(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @checks.bot_has_permissions(add_reactions=True)
     async def suggest(self, ctx: commands.Context, *, suggestion: str):
         """Suggest something."""
         suggest_id = await self.config.guild(ctx.guild).suggest_id()
@@ -132,11 +131,10 @@ class Suggestion(commands.Cog):
             )
         except discord.Forbidden:
             pass
-
-    @checks.admin()
+        
     @commands.command()
     @commands.guild_only()
-    @checks.bot_has_permissions(manage_messages=True)
+    @commands.has_guild_permissions(manage_messages=True)
     async def approve(
         self,
         ctx: commands.Context,
@@ -146,10 +144,9 @@ class Suggestion(commands.Cog):
         """Approve a suggestion."""
         await self._finish_suggestion(ctx, suggestion_id, is_global, True, None)
 
-    @checks.admin()
     @commands.command()
     @commands.guild_only()
-    @checks.bot_has_permissions(manage_messages=True)
+    @commands.has_guild_permissions(manage_messages=True)
     async def reject(
         self,
         ctx: commands.Context,
@@ -161,10 +158,9 @@ class Suggestion(commands.Cog):
         """Reject a suggestion. Reason is optional."""
         await self._finish_suggestion(ctx, suggestion_id, is_global, False, reason)
 
-    @checks.admin()
     @commands.command()
     @commands.guild_only()
-    @checks.bot_has_permissions(manage_messages=True)
+    @commands.has_guild_permissions(manage_messages=True)
     async def addreason(
         self,
         ctx: commands.Context,
@@ -210,9 +206,9 @@ class Suggestion(commands.Cog):
         await self.config.custom("SUGGESTION", server, suggestion_id).rtext.set(reason)
         await ctx.tick()
 
-    @checks.admin()
     @commands.command()
     @commands.guild_only()
+    @commands.has_guild_permissions(manage_messages=True)
     async def showsuggestion(
         self,
         ctx: commands.Context,
@@ -225,10 +221,7 @@ class Suggestion(commands.Cog):
         )
         await ctx.send(content=content, embed=embed)
 
-    @checks.admin()
-    @checks.bot_has_permissions(
-        manage_channels=True, add_reactions=True, manage_messages=True
-    )
+    @commands.has_guild_permissions(manage_guild=True)
     @commands.group(autohelp=True, aliases=["suggestion"])
     @commands.guild_only()
     async def suggestset(self, ctx: commands.Context):
