@@ -86,8 +86,7 @@ class UrlButtons(Cog):
         await self.config.guild(message.guild).url_buttons.set(config)
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_messages=True)
-    @commands.bot_has_permissions(embed_links=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.hybrid_group()
     async def urlbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use UrlButtons."""
@@ -161,10 +160,7 @@ class UrlButtons(Cog):
         message: discord.Message,
         url_buttons: commands.Greedy[EmojiUrlConverter],
     ) -> None:
-        """Add a url-button for a message.
-
-        ```[p]urlbuttons bulk <message> :red_circle:|<https://github.com/Cog-Creators/Red-DiscordBot> :smiley:|<https://github.com/Cog-Creators/Red-SmileyBot> :green_circle:|<https://github.com/Cog-Creators/Green-DiscordBot>```
-        """
+        """Add a url-button for a message."""
         if message.author != ctx.me:
             raise commands.UserFeedbackCheckFailure(
                 _("I have to be the author of the message for the url-button to work.")
@@ -298,7 +294,7 @@ class UrlButtons(Cog):
             embeds.append(embed)
         await Menu(pages=embeds).start(ctx)
 
-    @urlbuttons.command(hidden=True)
+    @urlbuttons.command(hidden=False)
     async def purge(self, ctx: commands.Context) -> None:
         """Clear all url-buttons for a guild."""
         await self.config.guild(ctx.guild).url_buttons.clear()
