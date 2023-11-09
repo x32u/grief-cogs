@@ -1,5 +1,5 @@
 ﻿
-from cogsutils import CogsUtils, Menu  
+import CogsUtils
 from menus import Menu
 
 from grief.core import commands, Config  # isort:skip
