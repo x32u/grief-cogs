@@ -1,7 +1,6 @@
 ﻿
-import CogsUtils
-from menus import Menu
 
+from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
 from grief.core import commands, Config  # isort:skip
 from grief.core.bot import Red  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
@@ -14,7 +13,7 @@ _ = Translator("UrlButtons", __file__)
 
 
 @cog_i18n(_)
-class UrlButtons:
+class UrlButtons(Cog):
     """Setup buttons to place on embeds/messages sent by grief that will send them to a website."""
 
     def __init__(self, bot: Red) -> None:
@@ -89,7 +88,8 @@ class UrlButtons:
         await self.config.guild(message.guild).url_buttons.set(config)
 
     @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
+    @commands.admin_or_permissions(manage_messages=True)
+    @commands.bot_has_permissions(embed_links=True)
     @commands.hybrid_group()
     async def urlbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use UrlButtons."""
@@ -163,7 +163,10 @@ class UrlButtons:
         message: discord.Message,
         url_buttons: commands.Greedy[EmojiUrlConverter],
     ) -> None:
-        """Add a url-button for a message."""
+        """Add a url-button for a message.
+
+        ```[p]urlbuttons bulk <message> :red_circle:|<https://github.com/Cog-Creators/Red-DiscordBot> :smiley:|<https://github.com/Cog-Creators/Red-SmileyBot> :green_circle:|<https://github.com/Cog-Creators/Green-DiscordBot>```
+        """
         if message.author != ctx.me:
             raise commands.UserFeedbackCheckFailure(
                 _("I have to be the author of the message for the url-button to work.")
@@ -259,7 +262,6 @@ class UrlButtons:
     @commands.bot_has_permissions(embed_links=True)
     @urlbuttons.command()
     async def list(self, ctx: commands.Context, message: discord.Message = None) -> None:
-        """List all the url buttons on the server."""
         url_buttons = await self.config.guild(ctx.guild).url_buttons()
         for url_button in url_buttons:
             url_buttons[url_button]["message"] = url_button
@@ -298,9 +300,9 @@ class UrlButtons:
             embeds.append(embed)
         await Menu(pages=embeds).start(ctx)
 
-    @urlbuttons.command(hidden=False)
+    @urlbuttons.command(hidden=True)
     async def purge(self, ctx: commands.Context) -> None:
-        """Clear all url-buttons for the server."""
+        """Clear all url-buttons for a guild."""
         await self.config.guild(ctx.guild).url_buttons.clear()
         await ctx.send(_("All url-buttons purged."))
 
