@@ -256,6 +256,7 @@ class UrlButtons(Cog):
     @commands.bot_has_permissions(embed_links=True)
     @urlbuttons.command()
     async def list(self, ctx: commands.Context, message: discord.Message = None) -> None:
+        """List all the url buttons on the server."""
         url_buttons = await self.config.guild(ctx.guild).url_buttons()
         for url_button in url_buttons:
             url_buttons[url_button]["message"] = url_button
@@ -296,7 +297,7 @@ class UrlButtons(Cog):
 
     @urlbuttons.command(hidden=False)
     async def purge(self, ctx: commands.Context) -> None:
-        """Clear all url-buttons for a guild."""
+        """Clear all url-buttons for the server."""
         await self.config.guild(ctx.guild).url_buttons.clear()
         await ctx.send(_("All url-buttons purged."))
 
