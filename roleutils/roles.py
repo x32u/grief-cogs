@@ -632,6 +632,7 @@ class Roles(MixinMeta):
         return f"**{hn(length)}** member{s}"
 
     @role.command("uniquemembers", aliases=["um"], require_var_positional=True)
+    @commands.has_guild_permissions(manage_roles=True)
     async def role_uniquemembers(self, ctx: commands.Context, *roles: FuzzyRole):
         """
         View the total unique members between multiple roles.
@@ -658,6 +659,7 @@ class Roles(MixinMeta):
 
         
     @role.command(name="delete")
+    @commands.has_guild_permissions(manage_roles=True)
     async def role_delete(
         self,
         ctx: commands.Context,
@@ -693,6 +695,7 @@ class Roles(MixinMeta):
             )
             
     @role.command(name="icon")
+    @commands.has_guild_permissions(manage_roles=True)
     async def edit_role_icon(
         self, ctx: commands.Context, role: discord.Role, display_icon: typing.Optional[EmojiOrUrlConverter] = None) -> None:
         """Edit role display icon.
