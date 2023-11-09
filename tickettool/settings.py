@@ -24,7 +24,6 @@ class settings(Cog):
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(administrator=True, manage_guild=True)
-    @commands.hybrid_group(name="settickettool", aliases=["tickettoolset"])
     async def configuration(self, ctx: commands.Context) -> None:
         """Configure TicketTool for your server."""
         pass
