@@ -29,6 +29,20 @@ class Timeout(commands.Cog):
         pre_processed = super().format_help_for_context(ctx)
         return f"{pre_processed}"
 
+    async def red_delete_data_for_user(
+        self, *, requester: RequestType, user_id: int
+    ) -> None:
+        # TODO: Replace this with the proper end user data removal handling.
+        super().red_delete_data_for_user(requester=requester, user_id=user_id)
+
+    async def timeout_user(
+        self,
+        ctx: commands.Context,
+        member: discord.Member,
+        time: Optional[datetime.timedelta],
+        reason: Optional[str] = None,) -> None:
+        await member.timeout(time, reason=reason)
+
     @commands.command(aliases=["tt"])
     @commands.guild_only()
     @commands.cooldown(1, 1, commands.BucketType.user)
