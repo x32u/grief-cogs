@@ -122,7 +122,7 @@ class CommandsButtons(Cog):
         await self.config.guild(message.guild).commands_buttons.set(config)
 
     @commands.guild_only()
-    @commands.is_owner()
+    @commands.has_guild_permissions(manage_messages=True)
     @commands.hybrid_group()
     async def commandsbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use CommandsButtons."""
