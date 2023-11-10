@@ -88,7 +88,7 @@ class Purge(commands.Cog):
 
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
-    @commands.group(invoke_without_command=True)
+    @commands.hybrid_group()
     async def _purge(
         self,
         ctx: commands.GuildContext,
@@ -98,18 +98,7 @@ class Purge(commands.Cog):
         ] = None,
     ):
         """
-        Removes messages that meet a criteria.
-
-        Messages older than 14 days cannot be deleted.
-
-        **Arguments:**
-        - `<number`: The number of messages you want to delete.
-        - `<channel>`: The channel you want to delete messages in. (Defaults to current channel)
-
-        **Example:**
-        - `[p]purge 10`
-        - `[p] purge 2000`
-        """
+        Removes messages that meet a criteria."""
         if ctx.invoked_subcommand is None:
 
             def check(message: discord.Message) -> bool:
