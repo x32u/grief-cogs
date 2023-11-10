@@ -63,7 +63,7 @@ class NitroRole(commands.Cog):
         return data
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.group()
     async def nitrorole(self, ctx: GuildContext) -> None:
         """Settings for NitroRole cog."""
