@@ -631,7 +631,7 @@ class EmbedCreator(commands.Cog):
     
     @commands.command(aliases=["ecreate"])
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     async def embedcreate(
         self, ctx: commands.Context, embed_message: Optional[discord.Message] = None
     ):
