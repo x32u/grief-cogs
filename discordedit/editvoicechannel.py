@@ -70,7 +70,7 @@ class EditVoiceChannel(Cog):
         return True
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @commands.hybrid_group(aliases=["editvoiceroom"])
     async def editvoicechannel(self, ctx: commands.Context) -> None:
@@ -98,7 +98,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @commands.bot_has_permissions(embed_links=True)
     @editvoicechannel.command(name="list")
@@ -124,7 +124,7 @@ class EditVoiceChannel(Cog):
         await Menu(pages=embeds).start(ctx)
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="clone")
     async def editvoicechannel_clone(
@@ -143,7 +143,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="invite")
     async def editvoicechannel_invite(
@@ -179,7 +179,7 @@ class EditVoiceChannel(Cog):
             await ctx.send(invite.url)
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="name")
     async def editvoicechannel_name(
@@ -198,7 +198,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="bitrate")
     async def editvoicechannel_bitrate(
@@ -226,7 +226,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="nsfw")
     async def editvoicechannel_nsfw(
@@ -247,7 +247,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="userlimit")
     async def editvoicechannel_user_limit(
@@ -272,7 +272,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="position")
     async def editvoicechannel_position(
@@ -295,7 +295,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="syncpermissions")
     async def editvoicechannel_sync_permissions(
@@ -316,7 +316,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="category")
     async def editvoicechannel_category(
@@ -338,7 +338,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="videoqualitymode")
     async def editvoicechannel_video_quality_mode(
@@ -365,7 +365,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @commands.has_permissions(administrator=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -466,7 +466,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @editvoicechannel.command(name="delete")
     async def editvoicechannel_delete(

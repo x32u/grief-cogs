@@ -88,14 +88,14 @@ class EditThread(Cog):
         return True
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     @commands.hybrid_group()
     async def editthread(self, ctx: commands.Context) -> None:
         """Commands for edit a text channel."""
         pass
 
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editthread.command(name="create")
     async def editthread_create(
         self,
@@ -147,8 +147,7 @@ class EditThread(Cog):
         await Menu(pages=embeds).start(ctx)
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="name")
     async def editthread_name(
         self, ctx: commands.Context, thread: typing.Optional[discord.Thread], name: str
@@ -172,8 +171,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="archived")
     async def editthread_archived(
         self, ctx: commands.Context, thread: typing.Optional[discord.Thread], archived: bool = None
@@ -198,8 +196,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="locked")
     async def editthread_locked(
         self, ctx: commands.Context, thread: typing.Optional[discord.Thread], locked: bool = None
@@ -225,8 +222,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="pinned")
     async def editthread_pinned(
         self, ctx: commands.Context, thread: typing.Optional[discord.Thread], pinned: bool
@@ -250,8 +246,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="invitable")
     async def editthread_invitable(
         self, ctx: commands.Context, thread: typing.Optional[discord.Thread], invitable: bool = None
@@ -277,8 +272,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="autoarchiveduration")
     async def editthread_auto_archive_duration(
         self,
@@ -305,8 +299,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="slowmodedelay")
     async def editthread_slowmode_delay(
         self, ctx: commands.Context, thread: typing.Optional[discord.Thread], slowmode_delay: TimedeltaConverter
@@ -330,8 +323,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="appliedtags")
     async def editthread_applied_tags(
         self,
@@ -364,8 +356,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="adduser", aliases=["addmember"])
     async def editthread_add_user(
         self, ctx: commands.Context, thread: typing.Optional[discord.Thread], member: discord.Member
@@ -388,8 +379,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="removeuser", aliases=["removemember"])
     async def editthread_remove_user(
         self, ctx: commands.Context, thread: typing.Optional[discord.Thread], member: discord.Member
@@ -410,8 +400,7 @@ class EditThread(Cog):
             )
 
     @commands.guild_only()
-    @commands.admin_or_can_manage_channel(allow_thread_owner=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(allow_thread_owner=True, manage_channels=True)
     @editthread.command(name="delete")
     async def editthread_delete(
         self,
