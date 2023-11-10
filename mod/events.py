@@ -159,7 +159,6 @@ class Events(MixinMeta):
         if not deleted:
             await self.check_mention_spam(message)
 
-
     @staticmethod
     def _update_past_names(name: str, name_list: List[Optional[str]]) -> None:
         while None in name_list:  # clean out null entries from a bug
