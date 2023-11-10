@@ -111,6 +111,7 @@ class JoinPing(commands.Cog):
     async def jpset_channels(self, ctx):
         """
         Set the channels where the pings will be sent on member join."""
+        return await ctx.send_help()
 
     @jpset_channels.command(name="remove", aliases=["r"])
     async def jpsetchan_remove(self, ctx, *channels: discord.TextChannel):
