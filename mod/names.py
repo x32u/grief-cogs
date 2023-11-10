@@ -172,43 +172,31 @@ class ModInfo(MixinMeta):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
-    async def userinfo(self, ctx, *, member: discord.Member = None):
+    async def userinfo(self, ctx, *, user: discord.Member = None):
         """Show information about a member.
-
-        This includes fields for status, discord join date, server
-        join date, voice state and previous usernames/global display names/nicknames.
-
-        If the member has no roles, previous usernames, global display names, or server nicknames,
-        these fields will be omitted.
         """
+        mod = self.bot.get_cog("Mod")
         author = ctx.author
         guild = ctx.guild
 
-        if not member:
-            member = author
+        if not user:
+            user = author
 
-        #  A special case for a special someone :^)
-        special_date = datetime.datetime(2016, 1, 10, 6, 8, 4, 443000, datetime.timezone.utc)
-        is_special = member.id == 96130341705637888 and guild.id == 133049272517001216
+        roles = user.roles[-1:0:-1]
+        usernames, display_names, nicks = await mod.get_names(user)
 
-        roles = member.roles[-1:0:-1]
-        usernames, display_names, nicks = await self.get_names(member)
-
-        if is_special:
-            joined_at = special_date
-        else:
-            joined_at = member.joined_at
-        voice_state = member.voice
+        joined_at = user.joined_at
+        voice_state = user.voice
         member_number = (
-            sorted(guild.members, key=lambda m: m.joined_at or ctx.message.created_at).index(
-                member
+            sorted(guild.user, key=lambda m: m.joined_at or ctx.message.created_at).index(
+                user
             )
             + 1
         )
 
         created_on = (
-            f"{discord.utils.format_dt(member.created_at)}\n"
-            f"{discord.utils.format_dt(member.created_at, 'R')}"
+            f"{discord.utils.format_dt(user.created_at)}\n"
+            f"{discord.utils.format_dt(user.created_at, 'R')}"
         )
         if joined_at is not None:
             joined_on = (
@@ -218,18 +206,18 @@ class ModInfo(MixinMeta):
         else:
             joined_on = _("Unknown")
 
-        if any(a.type is discord.ActivityType.streaming for a in member.activities):
+        if any(a.type is discord.ActivityType.streaming for a in user.activities):
             statusemoji = "\N{LARGE PURPLE CIRCLE}"
-        elif member.status.name == "online":
+        elif user.status.name == "online":
             statusemoji = "\N{LARGE GREEN CIRCLE}"
-        elif member.status.name == "offline":
+        elif user.status.name == "offline":
             statusemoji = "\N{MEDIUM WHITE CIRCLE}\N{VARIATION SELECTOR-16}"
-        elif member.status.name == "dnd":
+        elif user.status.name == "dnd":
             statusemoji = "\N{LARGE RED CIRCLE}"
-        elif member.status.name == "idle":
+        elif user.status.name == "idle":
             statusemoji = "\N{LARGE ORANGE CIRCLE}"
-        activity = _("Chilling in {} status").format(member.status)
-        status_string = self.get_status_string(member)
+        activity = _("Chilling in {} status").format(user.status)
+        status_string = self.get_status_string(user)
 
         if roles:
             role_str = ", ".join([x.mention for x in roles])
@@ -266,7 +254,7 @@ class ModInfo(MixinMeta):
         else:
             role_str = None
 
-        data = discord.Embed(description=status_string or activity, colour=member.colour)
+        data = discord.Embed(description=status_string or activity, colour=0x313338)
 
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
@@ -291,22 +279,23 @@ class ModInfo(MixinMeta):
                 value="{0.mention} ID: {0.id}".format(voice_state.channel),
                 inline=False,
             )
-        data.set_footer(text=_("Member #{} | User ID: {}").format(member_number, member.id))
+        data.set_footer(text=_("Member #{} | User ID: {}").format(member_number, user.id))
 
-        name = str(member)
-        name = " ~ ".join((name, member.nick)) if member.nick else name
+        name = str(user)
+        name = " ~ ".join((name, user.nick)) if user.nick else name
         name = filter_invites(name)
 
-        avatar = member.display_avatar.replace(static_format="png")
+        avatar = user.display_avatar.replace(static_format="png")
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
 
         await ctx.send(embed=data)
 
     @commands.command()
-    async def names(self, ctx: commands.Context, *, member: discord.Member):
+    async def names(self, ctx: commands.Context, *, user: discord.Member):
         """Show previous usernames, global display names, and server nicknames of a member."""
-        usernames, display_names, nicks = await self.get_names(member)
+        mod = self.bot.get_cog("Mod")
+        usernames, display_names, nicks = await mod.get_names(user)
         parts = []
         for header, names in (
             (_("Past 20 usernames:"), usernames),
