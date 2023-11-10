@@ -186,7 +186,6 @@ class Info(commands.Cog):
             member = author
 
         roles = member.roles[-1:0:-1]
-        usernames, display_names, nicks = await self.get_names(member)
 
         joined_at = member.joined_at
         voice_state = member.voice
@@ -265,22 +264,11 @@ class Info(commands.Cog):
             data.add_field(
                 name=_("Roles") if len(roles) > 1 else _("Role"), value=role_str, inline=False
             )
-        for single_form, plural_form, names in (
-            (_("Previous Username"), _("Previous Usernames"), usernames),
-            (_("Previous Global Display Name"), _("Previous Global Display Names"), display_names),
-            (_("Previous Server Nickname"), _("Previous Server Nicknames"), nicks),
-        ):
-            if names:
-                data.add_field(
-                    name=plural_form if len(names) > 1 else single_form,
-                    value=filter_invites(", ".join(names)),
-                    inline=False,
-                )
         if voice_state and voice_state.channel:
-            data.add_field(
-                name=_("Current voice channel"),
-                value="{0.mention} ID: {0.id}".format(voice_state.channel),
-                inline=False,
+                data.add_field(
+                    name=_("Current voice channel"),
+                    value="{0.mention} ID: {0.id}".format(voice_state.channel),
+                    inline=False,
             )
         data.set_footer(text=_("Member #{} | User ID: {}").format(member_number, member.id))
 
