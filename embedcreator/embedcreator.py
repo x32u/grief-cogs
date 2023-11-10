@@ -620,7 +620,8 @@ class EmbedEditorView(discord.ui.View):
 
 
 class EmbedCreator(commands.Cog):
-    """Create embeds using buttons, modals and dropdowns.\n Required Permissions: Manage Messages."""
+    """Create embeds using buttons, modals and dropdowns.
+    Required Permissions: Manage Messages."""
 
     def __init__(self, bot: Red):
         self.bot = bot
