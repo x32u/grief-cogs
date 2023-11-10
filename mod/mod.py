@@ -272,7 +272,13 @@ class Mod(
 
         await ctx.send(_("Done. Unbanned {unban_count} users.").format(unban_count=unban_count))
 
-    @commands.command()
+    @commands.group(aliases=["aph", "autopub"])
+    @commands.guild_only()
+    @commands.admin_or_permissions(manage_guild=True)
+    async def autopublisher(self, ctx: commands.Context) -> None:
+        """Manage AutoPublisher setting."""
+
+    @autopublisher.command()
     @commands.bot_has_permissions(manage_messages=True, view_channel=True)
     async def toggle(self, ctx: commands.Context):
         """Toggle AutoPublisher enable or disable.
