@@ -141,8 +141,7 @@ class Webhook(Cog):
         return True
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_webhooks=True)
-    @commands.bot_has_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @commands.hybrid_group(aliases=["webhooks"])
     async def webhook(self, ctx: commands.Context) -> None:
         """Various webhook commands to create and send messages along webhooks."""
@@ -275,7 +274,7 @@ class Webhook(Cog):
         except discord.HTTPException as error:
             await self.webhook_error(ctx, "Webhook Sending Error", error)
 
-    @commands.admin_or_permissions(manage_webhooks=True, manage_guild=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command(name="clyde", hidden=True)
     async def webhook_clyde(
         self,
@@ -305,7 +304,7 @@ class Webhook(Cog):
         except discord.HTTPException as error:
             await self.webhook_error(ctx, "Webhook Sending Error", error)
 
-    @commands.mod_or_permissions(ban_members=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("permissions", aliases=["perms"])
     async def webhook_permissions(self, ctx: commands.Context) -> None:
         """Show all members in the server that have the permission `manage_webhooks`."""
@@ -322,8 +321,6 @@ class Webhook(Cog):
                 for member in filter(lambda m: m not in total_members, role.members):
                     total_members.add(member)
                     member_string = f"{member.display_name} ({member.id})"
-                    if member.bot:
-                        member_string = f"[{member_string}](https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO 'This user is a bot')"
                     members.append(member_string)
                 if members:
                     lines.append(humanize_list(members))
@@ -345,7 +342,7 @@ class Webhook(Cog):
 
         await Menu(pages=embeds).start(ctx)
 
-    @commands.admin_or_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command(name="edit")
     async def webhook_edit(self, ctx: commands.Context, message: discord.Message, *, content: str = None) -> None:
         """Edit a message sent by a webhook.
@@ -377,8 +374,7 @@ class Webhook(Cog):
         except discord.HTTPException as error:
             await self.webhook_error(ctx, "Webhook Editing Error", error)
 
-    @commands.guildowner_or_permissions(administrator=True)
-    @commands.bot_has_guild_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command(name="clear")
     async def webhook_clear(self, ctx: commands.Context, confirmation: bool = False):
         """Delete all webhooks in this server."""
