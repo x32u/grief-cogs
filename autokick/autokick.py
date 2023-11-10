@@ -10,6 +10,7 @@ from grief.core.utils.predicates import ReactionPredicate
 
 
 class AutoKick(commands.Cog):
+    """Instead of banning, have grief automatically kick certain users on join."""
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
@@ -26,8 +27,7 @@ class AutoKick(commands.Cog):
         self.config.register_guild(**default_guild)
 
     @commands.group(name="autokickset", aliases=["aks"])
-    @commands.bot_has_permissions(kick_members=True)
-    @commands.admin_or_permissions(kick_members=True)
+    @commands.has_permissions(kick_members=True)
     @commands.guild_only()
     async def autokickset(self, ctx):
         """
