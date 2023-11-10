@@ -25,7 +25,6 @@ class ModInfo(MixinMeta):
     async def get_names(self, member: discord.Member) -> Tuple[List[str], List[str], List[str]]:
         user_data = await self.config.user(member).all()
         usernames, display_names = user_data["past_names"]
-        nicks = await self.config.member(member).past_nicks()
         usernames = list(map(escape_spoilers_and_mass_mentions, filter(None, usernames)))
         display_names = list(map(escape_spoilers_and_mass_mentions, filter(None, display_names)))
         nicks = list(map(escape_spoilers_and_mass_mentions, filter(None, nicks)))
@@ -295,11 +294,10 @@ class ModInfo(MixinMeta):
     @commands.command()
     async def names(self, ctx: commands.Context, *, member: discord.Member):
         """Show previous usernames, global display names, and server nicknames of a member."""
-        usernames, display_names, nicks = await self.get_names(member)
+        usernames, nicks = await self.get_names(member)
         parts = []
         for header, names in (
             (_("Past 20 usernames:"), usernames),
-            (_("Past 20 global display names:\n"), display_names),
             (_("Past 20 server nicknames:\n"), nicks),
         ):
             if names:
