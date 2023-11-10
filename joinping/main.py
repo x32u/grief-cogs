@@ -75,7 +75,8 @@ class JoinPing(commands.Cog):
         This is hidden as to not abuse the pings.
         """
         if not self.cache.get(ctx.guild.id):
-            return await ctx.send("You haven't set up the join ping yet ._.")
+            embed = discord.Embed(description=f"You have not added any channels to joinping.", colour=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
         await self.on_member_join(ctx.author)
 
@@ -130,15 +131,9 @@ class JoinPing(commands.Cog):
 
         await self.config.guild(ctx.guild).ping_channels.set(cached_chans)
         await self._build_cache()
-        await ctx.send(
-            f"The channel to ping in have been removed. There are currently {len(cached_chans)} channels."
-            + (
-                f"Following channels were not present in the list: {humanize_list([f'<#{chan}>' for chan in not_present])}"
-                if not_present
-                else ""
-            )
-        )
-
+        embed = discord.Embed(description=f"The channel to ping in has been removed. There are currently {len(cached_chans)} channels.", colour=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
+    
     @jpset_channels.command(name="add", aliases=["a"])
     async def jpsetchan_add(self, ctx, *channels: discord.TextChannel):
         """
