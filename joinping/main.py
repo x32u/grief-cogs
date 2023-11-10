@@ -86,8 +86,7 @@ class JoinPing(commands.Cog):
             return await ctx.send("The time must be above 5 seconds.")
         await self.config.guild(ctx.guild).delete_after.set(seconds)
         await self._build_cache()
-        embed = discord.Embed(description=f"The ping message will now be deleted after {seconds} seconds.", colour=0x313338)
-        await ctx.reply(embed=embed, mention_author=False)
+        await ctx.send(f"The ping message will be deleted after {seconds} seconds.")
 
     @jpset.command(name="message", aliases=["m"])
     async def jpset_msg(self, ctx, *, message: str):
@@ -106,8 +105,7 @@ class JoinPing(commands.Cog):
         """
         await self.config.guild(ctx.guild).ping_message.set(message)
         await self._build_cache()
-        embed = discord.Embed(description=f"The ping message has been set to:\n{message}.", colour=0x313338)
-        await ctx.reply(embed=embed, mention_author=False)
+        await ctx.send(f"The ping message has been set to:\n{message}")
 
     @jpset.group(name="channel", aliases=["c", "channels"], invoke_without_command=True)
     async def jpset_channels(self, ctx):
@@ -150,8 +148,14 @@ class JoinPing(commands.Cog):
         cached_chans += channels
         await self.config.guild(ctx.guild).ping_channels.set(cached_chans)
         await self._build_cache()
-        embed = discord.Embed(description=f"The channel to ping in has been added.", colour=0x313338)
-        await ctx.reply(embed=embed, mention_author=False)
+        await ctx.send(
+            f"The channel to ping in have been added. There are currently {len(cached_chans)} channels.\n"
+            + (
+                f"The following channels were already present: {humanize_list([f'<#{chan}>' for chan in al_present])}"
+                if al_present
+                else ""
+            )
+        )
 
     @jpset.command(name="show", aliases=["showsettings", "settings", "setting"])
     async def jpset_show(self, ctx):
