@@ -792,7 +792,7 @@ class Info(commands.Cog):
         em.set_thumbnail(
             url=f"https://xenforo.com/community/rgba.php?r={role.colour.r}&g={role.color.g}&b={role.color.b}&a=255"
         )
-        await ctx.send(embed=em)
+        await ctx.reply(embed=em, mention_author=False)
 
     @commands.command(aliases=["cperms"])
     @commands.guild_only()
@@ -1043,4 +1043,4 @@ class Info(commands.Cog):
                 data.set_image(url=guild.banner)
             data.set_footer(text=joined_on)
 
-        await ctx.send(embed=data)
+        await ctx.reply(embed=data, mention_author=False)
