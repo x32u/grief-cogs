@@ -284,7 +284,7 @@ class CommandsButtons(Cog):
         else:
             view = self.get_buttons(config, message)
             await message.edit(view=view)
-        self.cogsutils.views.append(view)
+        self.views.append(view)
         await self.config.guild(ctx.guild).commands_buttons.set(config)
 
     @commandsbuttons.command()
