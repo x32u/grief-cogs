@@ -1,4 +1,6 @@
-﻿from AAA3A_utils import Cog, CogsUtils  # isort:skip
+﻿
+
+from AAA3A_utils import Cog, CogsUtils  # isort:skip
 from grief.core import commands, Config  # isort:skip
 from grief.core.bot import Red  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
@@ -33,8 +35,6 @@ class CommandsButtons(Cog):
             "commands_buttons": {},
         }
         self.config.register_guild(**self.commands_buttons_guild)
-
-        self.cogsutils: CogsUtils = CogsUtils(cog=self)
 
         self.cache: typing.List[commands.Context] = []
 
