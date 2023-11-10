@@ -90,7 +90,7 @@ class UrlButtons(Cog):
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(manage_messages=True)
-    @commands.group(name="urlbuttons", aliases=["tickettoolset"])
+    @commands.group(name="urlbuttons", aliases=["ub"])
     async def urlbuttons():
         """Group of commands to use UrlButtons."""
         pass
