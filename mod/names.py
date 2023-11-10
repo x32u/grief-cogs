@@ -2,6 +2,7 @@ import datetime
 from typing import List, Tuple, cast
 
 import discord
+import colorama
 from grief.core import commands, i18n
 from grief.core.utils.chat_formatting import bold, pagify
 from grief.core.utils.common_filters import (
@@ -259,7 +260,7 @@ class ModInfo(MixinMeta):
         else:
             role_str = None
 
-        data = discord.Embed(description=status_string or activity, colour=member.colour)
+        data = discord.Embed(description=status_string or activity, colour=0x313338)
 
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
