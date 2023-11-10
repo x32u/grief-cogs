@@ -158,7 +158,7 @@ class Hellohook(commands.Cog):
 
     @commands.guild_only()
     @commands.group()
-    @checks.admin_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def hellohook(self, ctx: commands.Context):
         """Hellohook settings
 
@@ -335,7 +335,7 @@ class Hellohook(commands.Cog):
         await ctx.message.add_reaction("✅")
 
     @hellohook.group(name="invite", aliases=["inv", "invites"])
-    @checks.admin_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def hhinv(self, ctx: commands.Context):
         """Send custom Hellohook welcomes based on invite URLs (beta)
 
