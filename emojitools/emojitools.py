@@ -42,7 +42,7 @@ class EmojiTools(commands.Cog):
             raise commands.UserFeedbackCheckFailure(f"Invalid emoji: {emoji}")
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_expressions=True)
+    @commands.has_permissions(manage_expressions=True)
     @commands.group(name="emojitools")
     async def _emojitools(self, ctx: commands.Context):
         """
@@ -95,7 +95,7 @@ class EmojiTools(commands.Cog):
         )
         return await ctx.send(embed=embed)
 
-    @commands.admin_or_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     @_emojitools.group(name="save")
     async def _save(self, ctx: commands.Context):
         """
@@ -354,7 +354,7 @@ class EmojiTools(commands.Cog):
         return await ctx.send(f"{len(added_emojis)} emojis were added to this server: {' '.join([str(e) for e in added_emojis])}")
 
     @commands.cooldown(rate=1, per=15)
-    @commands.admin_or_permissions(manage_expressions=True)
+    @commands.has_permissions(manage_expressions=True)
     @_add.command(name="fromimage")
     async def _add_from_image(self, ctx: commands.Context, name: str = None):
         """
@@ -394,7 +394,7 @@ class EmojiTools(commands.Cog):
         return await ctx.send(f"{new} has been added to this server!")
 
     @commands.cooldown(rate=1, per=60)
-    @commands.admin_or_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     @_add.command(name="fromzip")
     async def _add_from_zip(self, ctx: commands.Context):
         """
