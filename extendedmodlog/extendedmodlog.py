@@ -134,7 +134,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
         # save the data back to config incase we had some deleted channels
         await ctx.maybe_send_embed(msg)
 
-    @checks.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.group(name="modlog", aliases=["modlogtoggle", "modlogs"])
     @commands.guild_only()
     async def _modlog(self, ctx: commands.Context) -> None:
