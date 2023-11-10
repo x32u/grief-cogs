@@ -1,924 +1,584 @@
 
-
-import io
-import json
-from typing import List, Optional, Union
+from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
+from grief.core import commands, Config  # isort:skip
+from grief.core.i18n import Translator, cog_i18n  # isort:skip
+from grief.core.bot import Red  # isort:skip
+import discord  # isort:skip
+import typing  # isort:skip
 
 import aiohttp
-import discord
-from grief.core import Config, commands
-from grief.core.utils.chat_formatting import humanize_list, inline, pagify
-from grief.core.utils.menus import DEFAULT_CONTROLS, close_menu, menu
+import json
 
-from .commands import help_formatted_group
-from .converters import (
-    GlobalStoredEmbedConverter,
-    ListStringToEmbed,
-    MessageableChannel,
-    MyMessageConverter,
-    PastebinConverter,
-    PastebinListConverter,
-    StoredEmbedConverter,
-    StringToEmbed,
-)
-from .errors import (
-    EmbedConversionError,
-    EmbedFileError,
-    EmbedLimitReached,
-    EmbedNotFound,
-    EmbedUtilsException,
-)
+from grief.core.utils.chat_formatting import text_to_file, pagify
 
-YAML_CONVERTER = StringToEmbed(conversion_type="yaml")
-YAML_CONTENT_CONVERTER = StringToEmbed(conversion_type="yaml", content=True)
+from .converters import StringToEmbed, ListStringToEmbed, PastebinConverter, PastebinListConverter, MessageableConverter, MyMessageConverter, MessageableOrMessageConverter, StrConverter
+
+_ = Translator("EmbedUtils", __file__)
+
+YAML_CONVERTER = StringToEmbed(conversion_type="yaml", content=False)
+YAML_CONTENT_CONVERTER = StringToEmbed(conversion_type="yaml")
 YAML_LIST_CONVERTER = ListStringToEmbed(conversion_type="yaml")
-JSON_CONVERTER = StringToEmbed()
-JSON_CONTENT_CONVERTER = StringToEmbed(content=True)
+JSON_CONVERTER = StringToEmbed(content=False)
+JSON_CONTENT_CONVERTER = StringToEmbed()
 JSON_LIST_CONVERTER = ListStringToEmbed()
-PASTEBIN_CONVERTER = PastebinConverter(conversion_type="yaml")
-PASTEBIN_CONTENT_CONVERTER = PastebinConverter(conversion_type="yaml", content=True)
-PASTEBIN_LIST_CONVERTER = PastebinListConverter(conversion_type="yaml")
+PASTEBIN_CONVERTER = PastebinConverter(conversion_type="json", content=False)
+PASTEBIN_CONTENT_CONVERTER = PastebinConverter(conversion_type="json")
+PASTEBIN_LIST_CONVERTER = PastebinListConverter(conversion_type="json")
 
 
-def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
-    cog = ctx.bot.get_cog("Webhook")
-    if (
-        ctx.channel.permissions_for(ctx.me).manage_webhooks
-        and cog
-        and cog.__author__ == "PhenoM4n4n"
-    ):
-        return cog
-    return False
+@cog_i18n(_)
+class EmbedUtils(Cog):
+    """Create, send, and store embeds."""
 
+    def __init__(self, bot: Red) -> None:
+        super().__init__(bot=bot)
+        self.__authors__: typing.List[str] = ["PhenoM4n4n", "AAA3A"]
 
-class EmbedUtils(commands.Cog):
-    """Create embeds for your server."""
-
-    EMBED_LIMIT = 50
-    GLOBAL_EMBED_LIMIT = 100
-
-    def __init__(self, bot):
-        self.bot = bot
-        self.config = Config.get_conf(
+        self.config: Config = Config.get_conf(
             self,
-            identifier=43248937299564234735284,
+            identifier=205192943327321000143939875896557571750,
             force_registration=True,
         )
-        default_global = {"embeds": {}}
-        default_guild = {"embeds": {}}
-        self.config.register_global(**default_global)
-        self.config.register_guild(**default_guild)
-        self.session = aiohttp.ClientSession()
+        self.embedutils_global: typing.Dict[str, typing.Dict[str, typing.Any]] = {
+            "stored_embeds": {}
+        }
+        self.embedutils_guild: typing.Dict[str, typing.Dict[str, typing.Any]] = {
+            "stored_embeds": {}
+        }
+        self.config.register_global(**self.embedutils_global)
+        self.config.register_guild(**self.embedutils_guild)
 
-    async def cog_unload(self):
-        await self.session.close()
+        self._session: aiohttp.ClientSession = None
 
-    async def red_delete_data_for_user(self, *, requester: str, user_id: int):
-        guilds_data = await self.config.all_guilds()
-        for guild_id, data in guilds_data.items():
-            guild = self.bot.get_guild(guild_id)
-            if guild and data["embeds"]:
-                for name, embed in data["embeds"].items():
-                    if user_id == embed["author"]:
-                        async with self.config.guild(guild).embeds() as e:
-                            del e[name]
-        global_data = await self.config.all()
-        if global_data["embeds"]:
-            for name, embed in global_data["embeds"].items():
-                if user_id == embed["author"]:
-                    async with self.config.embeds() as e:
-                        del e[name]
+    async def cog_load(self) -> None:
+        await super().cog_load()
+        self._session: aiohttp.ClientSession = aiohttp.ClientSession()
 
-    async def get_embed_from_message(self, message: discord.Message, index: int = 0):
-        embeds = message.embeds
-        if not embeds:
-            raise EmbedNotFound("That message has no embeds.")
-        index = max(min(index, len(embeds)), 0)
-        embed = message.embeds[index]
-        if embed.type == "rich":
-            return embed
-        raise EmbedNotFound("That is not a rich embed.")
-
-    async def get_file_from_message(
-        self, ctx: commands.Context, *, file_types=("json", "txt", "yaml")
-    ) -> str:
-        if not ctx.message.attachments:
-            raise EmbedFileError(
-                f"Run `{ctx.clean_prefix}{ctx.command.qualified_name}` again, but this time "
-                "attach an embed file."
-            )
-        attachment = ctx.message.attachments[0]
-        if not any(attachment.filename.endswith("." + ft) for ft in file_types):
-            file_names = humanize_list([inline(ft) for ft in file_types])
-            raise EmbedFileError(
-                f"Invalid file type. The file name must end with one of {file_names}."
-            )
-
-        content = await attachment.read()
-        try:
-            data = content.decode("utf-8")
-        except UnicodeDecodeError as exc:
-            raise EmbedFileError("Failed to read embed file contents.") from exc
-        return data
-
-    async def send_embed(
-        self,
-        ctx: commands.Context,
-        channel: Optional[discord.TextChannel],
-        embed: discord.Embed,
-    ):
-        if channel and channel != ctx.channel:
-            await channel.send(embed=embed)
-        await ctx.tick()
-
-    async def send_multiple_embeds(
-        self,
-        ctx: commands.Context,
-        channel: Optional[discord.TextChannel],
-        embeds: List[discord.Embed],
-    ):
-        channel = channel or ctx.channel
-        try:
-            await channel.send(embeds=embeds)
-        except discord.HTTPException as error:
-            raise EmbedConversionError("Embed Send Error", error) from error
+    async def cog_unload(self) -> None:
+        if self._session is not None:
+            await self._session.close()
+        await super().cog_unload()
 
     @commands.guild_only()
-    @commands.has_permissions(embed_links=True, manage_messages=True)
-    @help_formatted_group(invoke_without_command=True)
+    @commands.mod_or_permissions(manage_messages=True)
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.hybrid_group(invoke_without_command=True, aliases=["embedutils"])
     async def embed(
         self,
-        ctx,
-        channel: Optional[MessageableChannel],
-        color: Optional[discord.Color],
+        ctx: commands.Context,
+        channel_or_message: typing.Optional[MessageableOrMessageConverter],
+        color: typing.Optional[discord.Color],
         title: str,
         *,
         description: str,
-    ):
-        """
-        Post a simple embed.
+    ) -> None:
+        """Post a simple embed with a color, a title and a description.
 
-        Put the title in quotes if it is multiple words.
+        Put the title in quotes if it contains spaces.
+        If you provide a message, it will be edited.
         """
-        channel = channel or ctx.channel
         color = color or await ctx.embed_color()
-        e = discord.Embed(color=color, title=title, description=description)
-        await channel.send(embed=e)
+        embed: discord.Embed = discord.Embed(color=color, title=title, description=description)
+        try:
+            if not isinstance(channel_or_message, discord.Message):
+                channel = channel_or_message or ctx.channel
+                await channel.send(embed=embed)
+            else:
+                await channel_or_message.edit(embed=embed)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
 
-    @embed.command("json", aliases=["fromjson", "fromdata"], add_example_info=True)
+    @embed.command(name="json", aliases=["fromjson", "fromdata"])
     async def embed_json(
         self,
         ctx: commands.Context,
-        channel: Optional[MessageableChannel] = None,
+        channel_or_message: typing.Optional[MessageableOrMessageConverter] = None,
         *,
-        data: JSON_LIST_CONVERTER,
+        data: JSON_LIST_CONVERTER = None,
     ):
-        """
-        Post embeds from valid JSON.
-        """
-        await self.send_multiple_embeds(ctx, channel, data)
+        """Post embeds from valid JSON.
 
-    @embed.command("yaml", aliases=["fromyaml"], add_example_info=True, info_type="yaml")
+        This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
+        Here's an example: [**this example**](https://gist.github.com/AAA3A-AAA3A/3c9772b34a8ebc09b3b10018185f4cd4).
+        You can use an [**embeds creator**](https://embedutils.com/) to get a JSON payload.
+
+        If you provide a message, it will be edited.
+        You can use an attachment and the command `[p]embed yamlfile` will be invoked automatically.
+        """
+        if data is None:
+            return await self.embed_fromfile(ctx, channel_or_message=channel_or_message)
+        try:
+            if not isinstance(channel_or_message, discord.Message):
+                channel = channel_or_message or ctx.channel
+                await channel.send(**data, allowed_mentions=discord.AllowedMentions(everyone=True, users=True, roles=True) if ctx.permissions.mention_everyone else discord.utils.MISSING)
+            else:
+                await channel_or_message.edit(**data)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
+
+    @embed.command(name="yaml", aliases=["fromyaml"])
     async def embed_yaml(
         self,
         ctx: commands.Context,
-        channel: Optional[MessageableChannel] = None,
+        channel_or_message: typing.Optional[MessageableOrMessageConverter] = None,
         *,
-        data: YAML_LIST_CONVERTER,
+        data: YAML_LIST_CONVERTER = None,
     ):
-        """
-        Post embeds from valid YAML.
-        """
-        await self.send_embed(ctx, channel, data)
+        """Post embeds from valid YAML.
 
-    @embed.command("pastebin", aliases=["frompaste"], add_example_info=True, info_type="pastebin")
+        This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
+        Here's an example: [**this example**](https://gist.github.com/AAA3A-AAA3A/3c9772b34a8ebc09b3b10018185f4cd4).
+
+        If you provide a message, it will be edited.
+        You can use an attachment and the command `[p]embed yamlfile` will be invoked automatically.
+        """
+        if data is None:
+            return await self.embed_yamlfile(ctx, channel_or_message=channel_or_message)
+        try:
+            if not isinstance(channel_or_message, discord.Message):
+                channel = channel_or_message or ctx.channel
+                await channel.send(**data, allowed_mentions=discord.AllowedMentions(everyone=True, users=True, roles=True) if ctx.permissions.mention_everyone else discord.utils.MISSING)
+            else:
+                await channel_or_message.edit(**data)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
+
+    @embed.command(name="fromfile", aliases=["jsonfile", "fromjsonfile", "fromdatafile"])
+    async def embed_fromfile(self, ctx: commands.Context, channel_or_message: MessageableOrMessageConverter = None):
+        """Post an embed from a valid JSON file (upload it).
+
+        This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
+        Here's an example: [**this example**](https://gist.github.com/AAA3A-AAA3A/3c9772b34a8ebc09b3b10018185f4cd4).
+        You can use an [**embeds creator**](https://embedutils.com/) to get a JSON payload.
+
+        If you provide a message, it will be edited.
+        """
+        if not ctx.message.attachments or ctx.message.attachments[
+            0
+        ].filename.split(".")[-1] not in ("json", "txt"):
+            raise commands.UserInputError()
+        try:
+            argument = (await ctx.message.attachments[0].read()).decode(encoding="utf-8")
+        except UnicodeDecodeError:
+            raise commands.UserFeedbackCheckFailure(_("Unreadable attachment with `utf-8`."))
+        data = await JSON_LIST_CONVERTER.convert(ctx, argument=argument)
+        try:
+            if not isinstance(channel_or_message, discord.Message):
+                channel = channel_or_message or ctx.channel
+                await channel.send(**data, allowed_mentions=discord.AllowedMentions(everyone=True, users=True, roles=True) if ctx.permissions.mention_everyone else discord.utils.MISSING)
+            else:
+                await channel_or_message.edit(**data)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
+
+    @embed.command(name="yamlfile", aliases=["fromyamlfile"])
+    async def embed_yamlfile(self, ctx: commands.Context, channel_or_message: MessageableOrMessageConverter = None):
+        """Post an embed from a valid YAML file (upload it).
+
+        If you provide a message, it will be edited.
+        """
+        if not ctx.message.attachments or ctx.message.attachments[
+            0
+        ].filename.split(".")[-1] not in ("yaml", "txt"):
+            raise commands.UserInputError()
+        try:
+            argument = (await ctx.message.attachments[0].read()).decode(encoding="utf-8")
+        except UnicodeDecodeError:
+            raise commands.UserFeedbackCheckFailure(_("Unreadable attachment with `utf-8`."))
+        data = await YAML_LIST_CONVERTER.convert(ctx, argument=argument)
+        try:
+            if not isinstance(channel_or_message, discord.Message):
+                channel = channel_or_message or ctx.channel
+                await channel.send(**data, allowed_mentions=discord.AllowedMentions(everyone=True, users=True, roles=True) if ctx.permissions.mention_everyone else discord.utils.MISSING)
+            else:
+                await channel_or_message.edit(**data)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
+
+    @embed.command(name="pastebin", aliases=["frompastebin", "gist", "fromgist", "hastebin", "fromhastebin"])
     async def embed_pastebin(
         self,
         ctx: commands.Context,
-        channel: Optional[MessageableChannel] = None,
+        channel_or_message: typing.Optional[MessageableOrMessageConverter] = None,
         *,
         data: PASTEBIN_LIST_CONVERTER,
     ):
-        """
-        Post embeds from a pastebin link containing valid JSON or YAML.
-        """
-        await self.send_multiple_embeds(ctx, channel, data)
+        """ Post embeds from a GitHub/Gist/Pastebin/Hastebin link containing valid JSON.
 
-    @embed.command(
-        "fromfile",
-        aliases=["fromjsonfile", "fromdatafile"],
-        add_example_info=True,
-    )
-    async def embed_fromfile(self, ctx: commands.Context, channel: MessageableChannel = None):
-        """
-        Post an embed from a valid JSON file.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("json", "txt"))
-        embed = await JSON_CONTENT_CONVERTER.convert(ctx, data)
-        await self.send_embed(ctx, channel, embed)
+        This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
+        Here's an example: [**this example**](https://gist.github.com/AAA3A-AAA3A/3c9772b34a8ebc09b3b10018185f4cd4).
 
-    @embed.command(
-        "yamlfile",
-        aliases=["fromyamlfile"],
-        add_example_info=True,
-        info_type="yaml",
-    )
-    async def embed_yamlfile(self, ctx: commands.Context, channel: MessageableChannel = None):
+        If you provide a message, it will be edited.
         """
-        Post an embed from a valid YAML file.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("yaml", "txt"))
-        embed = await YAML_CONTENT_CONVERTER.convert(ctx, data)
-        await self.send_embed(ctx, channel, embed)
+        try:
+            if not isinstance(channel_or_message, discord.Message):
+                channel = channel_or_message or ctx.channel
+                await channel.send(**data, allowed_mentions=discord.AllowedMentions(everyone=True, users=True, roles=True) if ctx.permissions.mention_everyone else discord.utils.MISSING)
+            else:
+                await channel_or_message.edit(**data)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
 
-    @embed.command(
-        "message",
-        aliases=["frommsg", "frommessage"],
-        add_example_info=True,
-        info_type="index",
-    )
+    @embed.command(name="message", aliases=["frommessage", "frommsg"])
     async def embed_message(
         self,
-        ctx,
+        ctx: commands.Context,
+        channel_or_message: typing.Optional[MessageableOrMessageConverter],
         message: discord.Message,
-        index: Optional[int] = 0,
-        channel: MessageableChannel = None,
+        index: typing.Optional[int] = None,
+        include_content: typing.Optional[bool] = False,
     ):
+        """Post embed(s) from an existing message.
+
+        The message must have at least one embed.
+        You can specify an index (starting by 0) if you want to send only one of the embeds.
+        You can include the content of the message already sent.
+
+        If you provide a message, it will be edited.
         """
-        Post an embed from a message.
-        """
-        embed = await self.get_embed_from_message(message, index)
-        channel = channel or ctx.channel
-        await channel.send(embed=embed)
-        await ctx.tick()
+        data = {}
+        if not message.embeds:
+            raise commands.UserInputError()
+        if index is None:
+            data["embeds"] = message.embeds.copy()
+        else:
+            try:
+                data["embeds"] = [message.embeds[index]]
+            except IndexError:
+                raise commands.UserInputError
+        if include_content:
+            data["content"] = message.content
+        try:
+            if not isinstance(channel_or_message, discord.Message):
+                channel = channel_or_message or ctx.channel
+                await channel.send(**data, allowed_mentions=discord.AllowedMentions(everyone=True, users=True, roles=True) if ctx.permissions.mention_everyone else discord.utils.MISSING)
+            else:
+                await channel_or_message.edit(**data)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
 
     @commands.bot_has_permissions(attach_files=True)
-    @embed.command("download", add_example_info=True, info_type="index")
+    @embed.command(name="download")
     async def embed_download(
-        self, ctx: commands.Context, message: discord.Message, index: int = 0
-    ):
-        """
-        Download a JSON file for a message's embed.
-        """
-        embed = await self.get_embed_from_message(message, index)
-        data = embed.to_dict()
-        data = json.dumps(data, indent=4)
-        fp = io.BytesIO(bytes(data, "utf-8"))
-        await ctx.send(file=discord.File(fp, "embed.json"))
-
-    @embed.group(
-        "post",
-        aliases=["view", "drop", "show"],
-        invoke_without_command=True,
-        require_var_positional=True,
-    )
-    async def embed_post(
         self,
         ctx: commands.Context,
-        channel: Optional[MessageableChannel],
-        *embed_names: StoredEmbedConverter,
+        message: discord.Message,
+        index: typing.Optional[int] = None,
+        include_content: typing.Optional[bool] = False,
     ):
-        """Post stored embeds."""
-        channel = channel or ctx.channel
-        embeds = [discord.Embed.from_dict(data["embed"]) for data in embed_names]
-        await channel.send(embeds=embeds)
-        async with self.config.guild(ctx.guild).embeds() as stored_embeds:
-            for name in map(lambda e: e["name"], embed_names):
-                stored_embeds[name]["uses"] += 1
+        """Download a JSON file for a message's embed(s).
 
-    @embed_post.command("global")
-    async def embed_post_global(
-        self,
-        ctx: commands.Context,
-        channel: Optional[MessageableChannel],
-        *embed_names: StoredEmbedConverter,
-    ):
-        """Post global stored embeds."""
-        channel = channel or ctx.channel
-        embeds = [discord.Embed.from_dict(data["embed"]) for data in embed_names]
-        await channel.send(embeds=embeds)
-        async with self.config.embeds() as stored_embeds:
-            for name in map(lambda e: e["name"], embed_names):
-                stored_embeds[name]["uses"] += 1
+        The message must have at least one embed.
+        You can specify an index (starting by 0) if you want to include only one of the embeds.
+        You can include the content of the message already sent.
+        """
+        data = {}
+        if not message.embeds:
+            raise commands.UserInputError()
+        if index is None:
+            data["embeds"] = [embed.to_dict() for embed in message.embeds.copy()]
+        else:
+            try:
+                data["embeds"] = [message.embeds[index].to_dict()]
+            except IndexError:
+                raise commands.UserInputError
+        if include_content:
+            data["content"] = message.content
+        await ctx.send(file=text_to_file(text=json.dumps(data, indent=4), filename="embed.json"))
 
-    @embed.command("info")
-    async def embed_info(self, ctx: commands.Context, name: StoredEmbedConverter):
-        """Get info about an embed that is stored on this server."""
-        description = [
-            f"Author: <@!{name['author']}>",
-            f"Uses: {name['uses']}",
-            f"Length: {len(name['embed'])}",
-        ]
-        e = discord.Embed(title=f"`{name['name']}` Info", description="\n".join(description))
-        e.set_author(name=ctx.bot.user.name, icon_url=ctx.bot.user.display_avatar.url)
-        await ctx.send(embed=e)
-
-    @commands.has_permissions(manage_messages=True)
-    @embed.group("edit", invoke_without_command=True)
+    @commands.mod_or_permissions(manage_messages=True)
+    @embed.command(name="edit", usage="<message> <json|yaml|jsonfile|yamlfile|pastebin|message> [data]")
     async def embed_edit(
         self,
         ctx: commands.Context,
         message: MyMessageConverter,
-        color: Optional[discord.Color],
-        title: str,
+        conversion_type: typing.Literal["json", "fromjson", "fromdata", "yaml", "fromyaml", "fromfile", "jsonfile", "fromjsonfile", "fromdatafile", "yamlfile", "fromyamlfile", "gist", "pastebin", "hastebin", "message", "frommessage", "frommsg"],
         *,
-        description: str,
+        data: str = None,
     ):
-        """
-        Edit a message sent by [botname]'s embeds.
-        """
-        color = color or await ctx.embed_color()
-        e = discord.Embed(color=color, title=title, description=description)
-        await message.edit(embed=e)
-        await ctx.tick()
+        """Edit a message sent by [botname].
 
-    @embed_edit.command("json", aliases=["fromjson", "fromdata"], add_example_info=True)
-    async def embed_edit_json(
-        self, ctx: commands.Context, message: MyMessageConverter, *, data: JSON_CONVERTER
-    ):
+        It would be better to use the `message` parameter of all the other commands.
         """
-        Edit a message's embed using valid JSON.
-        """
-        await message.edit(embed=data)
-        await ctx.tick()
-
-    @embed_edit.command("yaml", aliases=["fromyaml"])
-    async def embed_edit_yaml(
-        self,
-        ctx: commands.Context,
-        message: MyMessageConverter,
-        *,
-        data: YAML_CONVERTER,
-    ):
-        """
-        Edit a message's embed using valid YAML.
-        """
-        await message.edit(embed=data)
-        await ctx.tick()
-
-    @embed_edit.command(
-        "pastebin", aliases=["frompaste"], add_example_info=True, info_type="pastebin"
-    )
-    async def embed_edit_pastebin(
-        self,
-        ctx: commands.Context,
-        message: MyMessageConverter,
-        *,
-        data: PASTEBIN_CONVERTER,
-    ):
-        """
-        Edit a message's embed using a pastebin link which contains valid JSON or YAML.
-        """
-        await message.edit(embed=data)
-        await ctx.tick()
-
-    @embed_edit.command(
-        "fromfile",
-        aliases=["fromjsonfile", "fromdatafile"],
-        add_example_info=True,
-    )
-    async def embed_edit_fromfile(self, ctx: commands.Context, message: MyMessageConverter):
-        """
-        Edit a message's embed using a valid JSON file.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("json", "txt"))
-        e = await JSON_CONVERTER.convert(ctx, data)
-        await message.edit(embed=e)
-        await ctx.tick()
-
-    @embed_edit.command(
-        "yamlfile",
-        aliases=["fromyamlfile"],
-        add_example_info=True,
-        info_type="yaml",
-    )
-    async def embed_edit_yamlfile(self, ctx: commands.Context, message: MyMessageConverter):
-        """
-        Edit a message's embed using a valid YAML file.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("yaml", "txt"))
-        e = await YAML_CONVERTER.convert(ctx, data)
-        await message.edit(embed=e)
-        await ctx.tick()
-
-    @embed_edit.command(
-        "message",
-        aliases=["frommsg", "frommessage"],
-        add_example_info=True,
-        info_type="index",
-    )
-    async def embed_edit_message(
-        self,
-        ctx: commands.Context,
-        source: discord.Message,
-        target: MyMessageConverter,
-        index: int = 0,
-    ):
-        """
-        Edit a message's embed using another message's embed.
-        """
-        embed = await self.get_embed_from_message(source, index)
-        await target.edit(embed=embed)
-        await ctx.tick()
-
-    @embed_edit.group("store", aliases=["stored"], invoke_without_command=True)
-    async def embed_edit_store(
-        self, ctx: commands.Context, message: MyMessageConverter, name: StoredEmbedConverter
-    ):
-        """
-        Edit a message's embed using an embed that's stored on this server.
-        """
-        embed = discord.Embed.from_dict(name["embed"])
-        await message.edit(embed=embed)
-        await ctx.tick()
-        async with self.config.guild(ctx.guild).embeds() as a:
-            a[name["name"]]["uses"] += 1
-
-    @embed_edit_store.command("global")
-    async def embed_edit_store_global(
-        self, ctx: commands.Context, message: MyMessageConverter, name: GlobalStoredEmbedConverter
-    ):
-        """
-        Edit a message's embed using an embed that's stored globally.
-        """
-        embed = discord.Embed.from_dict(name["embed"])
-        await message.edit(embed=embed)
-        await ctx.tick()
-        async with self.config.embeds() as a:
-            a[name["name"]]["uses"] += 1
+        if conversion_type in ("json", "fromjson", "fromdata"):
+            if data is None:
+                raise commands.UserInputError()
+            data = await JSON_LIST_CONVERTER.convert(ctx, argument=data)
+        elif conversion_type in ("yaml", "fromyaml"):
+            if data is None:
+                raise commands.UserInputError()
+            data = await YAML_LIST_CONVERTER.convert(ctx, argument=data)
+        elif conversion_type in ("fromfile", "jsonfile", "fromjsonfile", "fromdatafile"):
+            if not ctx.message.attachments or ctx.message.attachments[
+                0
+            ].filename.split(".")[-1] not in ("json", "txt"):
+                raise commands.UserInputError()
+            try:
+                argument = (await ctx.message.attachments[0].read()).decode(encoding="utf-8")
+            except UnicodeDecodeError:
+                raise commands.UserFeedbackCheckFailure(_("Unreadable attachment with `utf-8`."))
+            data = await JSON_LIST_CONVERTER.convert(ctx, argument=argument)
+        elif conversion_type in ("yamlfile", "fromyamlfile"):
+            if not ctx.message.attachments or ctx.message.attachments[
+                0
+            ].filename.split(".")[-1] not in ("yaml", "txt"):
+                raise commands.UserInputError()
+            try:
+                argument = (await ctx.message.attachments[0].read()).decode(encoding="utf-8")
+            except UnicodeDecodeError:
+                raise commands.UserFeedbackCheckFailure(_("Unreadable attachment with `utf-8`."))
+            data = await YAML_LIST_CONVERTER.convert(ctx, argument=argument)
+        elif conversion_type in ("gist", "pastebin", "hastebin"):
+            if data is None:
+                raise commands.UserInputError()
+            data = await PASTEBIN_LIST_CONVERTER.convert(ctx, argument=data)
+        elif conversion_type in ("message", "frommessage", "frommsg"):
+            if data is None:
+                raise commands.UserInputError()
+            message = await commands.MessageConverter().convert(ctx, argument=data)
+            if not message.embeds:
+                raise commands.UserInputError()
+            data = {"embeds": [embed.to_dict() for embed in message.embeds]}
+        try:
+            await message.edit(**data)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
 
     @commands.mod_or_permissions(manage_guild=True)
-    @embed.group("store")
-    async def embed_store(self, ctx):
-        """Store embeds for server use."""
-
-    @embed_store.command("remove", aliases=["delete", "rm", "del"])
-    async def embed_store_remove(self, ctx: commands.Context, name: str):
-        """Remove a stored embed on this server."""
-        try:
-            async with self.config.guild(ctx.guild).embeds() as a:
-                del a[name]
-            await ctx.send("Embed deleted.")
-        except KeyError:
-            await ctx.send("This is not a stored embed.")
-
-    @embed_store.command("download")
-    async def embed_store_download(self, ctx: commands.Context, embed: StoredEmbedConverter):
-        """Download a JSON file for a stored embed."""
-        data = json.dumps(embed["embed"], indent=4)
-        fp = io.BytesIO(bytes(data, "utf-8"))
-        await ctx.send(file=discord.File(fp, "embed.json"))
-
-    @embed_store.command("list")
-    async def embed_store_list(self, ctx: commands.Context):
-        """View stored embeds."""
-        embeds = await self.config.guild(ctx.guild).embeds()
-        if not embeds:
-            return await ctx.send("There are no stored embeds on this server.")
-
-        description = "\n".join(map(inline, sorted(embeds)))
-        color = await self.bot.get_embed_colour(ctx)
-        e = discord.Embed(color=color, title="Stored Embeds")
-        e.set_author(name=ctx.guild, icon_url=ctx.guild.icon.url)
-
-        if len(description) > 2048:
-            embeds = []
-            pages = list(pagify(description, page_length=1024))
-            for index, page in enumerate(pages, start=1):
-                embed = e.copy()
-                embed.description = page
-                embed.set_footer(text=f"{index}/{len(pages)}")
-                embeds.append(embed)
-            await menu(ctx, embeds, DEFAULT_CONTROLS)
-        else:
-            e.description = description
-            controls = {"❌": close_menu}
-            await menu(ctx, [e], controls)
-
-    @embed_store.command("simple")
-    async def embed_store_simple(
-        self,
-        ctx,
-        name: str,
-        color: Optional[discord.Color],
-        title: str,
-        *,
-        description: str,
-    ):
-        """Store a simple embed on this server.
-
-        Put the title in quotes if it is multiple words."""
-        if not color:
-            color = await self.bot.get_embed_color(ctx)
-        e = discord.Embed(color=color, title=title, description=description)
-        await ctx.send(embed=e)
-        await self.store_embed(ctx, name, e)
-        await ctx.tick()
-
-    @embed_store.command("json", aliases=["fromjson", "fromdata"], add_example_info=True)
-    async def embed_store_json(self, ctx: commands.Context, name: str, *, data: JSON_CONVERTER):
-        """
-        Store an embed from valid JSON on this server.
-        """
-        await self.store_embed(ctx, name, data)
-        await ctx.tick()
-
-    @embed_store.command("yaml", aliases=["fromyaml"], add_example_info=True, info_type="yaml")
-    async def embed_store_yaml(self, ctx, name: str, *, data: YAML_CONVERTER):
-        """
-        Store an embed from valid YAML on this server.
-        """
-        await self.store_embed(ctx, name, data)
-        await ctx.tick()
-
-    @embed_store.command(
-        "pastebin", aliases=["frompaste"], add_example_info=True, info_type="pastebin"
-    )
-    async def embed_store_pastebin(self, ctx, name: str, *, data: PASTEBIN_CONVERTER):
-        """
-        Store an embed from valid JSON or YAML from a pastebin link on this server.
-        """
-        await self.store_embed(ctx, name, data)
-        await ctx.tick()
-
-    @embed_store.command(
-        "fromfile",
-        aliases=["fromjsonfile", "fromdatafile"],
-        add_example_info=True,
-    )
-    async def embed_store_fromfile(self, ctx: commands.Context, name: str):
-        """
-        Store an embed from a valid JSON file on this server.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("json", "txt"))
-        e = await JSON_CONVERTER.convert(ctx, data)
-        await self.store_embed(ctx, name, e)
-        await ctx.tick()
-
-    @embed_store.command(
-        "yamlfile",
-        aliases=["fromyamlfile"],
-        add_example_info=True,
-        info_type="yaml",
-    )
-    async def embed_store_yamlfile(self, ctx: commands.Context, name: str):
-        """
-        Store an embed from a valid YAML file on this server.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("yaml", "txt"))
-        e = await YAML_CONVERTER.convert(ctx, data)
-        await self.store_embed(ctx, name, e)
-        await ctx.tick()
-
-    @embed_store.command(
-        "message",
-        aliases=["frommsg", "frommessage"],
-        add_example_info=True,
-        info_type="index",
-    )
-    async def embed_store_message(
-        self, ctx: commands.Context, name: str, message: discord.Message, index: int = 0
-    ):
-        """
-        Store an embed from a message on this server.
-        """
-        embed = await self.get_embed_from_message(message, index)
-        await ctx.send(embed=embed)
-        await self.store_embed(ctx, name, embed)
-
-    @commands.is_owner()
-    @embed.group("global")
-    async def global_store(self, ctx: commands.Context):
-        """Store embeds for global use."""
-        if ctx.subcommand_passed:
-            return
-        await self.global_list(ctx)
-
-    @global_store.command("remove", aliases=["delete", "rm", "del"])
-    async def global_remove(self, ctx: commands.Context, name: str):
-        """Remove a global embed."""
-        try:
-            async with self.config.embeds() as a:
-                del a[name]
-            await ctx.send("Embed deleted.")
-        except KeyError:
-            await ctx.send("This is not a stored embed.")
-
-    @global_store.command("list")
-    async def global_list(self, ctx):
-        """View global embeds."""
-        embeds = await self.config.embeds()
-        if not embeds:
-            return await ctx.send("There are no stored global embeds.")
-
-        description = "\n".join(map(inline, sorted(embeds)))
-        color = await ctx.embed_color()
-        e = discord.Embed(color=color, title="Stored Embeds", description=description)
-        e.set_author(name=ctx.bot.user.name, icon_url=ctx.bot.user.display_avatar.url)
-        await ctx.send(embed=e)
-
-    @global_store.command("simple")
-    async def global_store_simple(
-        self,
-        ctx,
-        name: str,
-        locked: bool,
-        color: Optional[discord.Color],
-        title: str,
-        *,
-        description: str,
-    ):
-        """Store a simple embed globally.
-
-        Put the title in quotes if it is multiple words.
-        The `locked` argument specifies whether the embed should be locked to owners only."""
-        if not color:
-            color = await self.bot.get_embed_color(ctx)
-        e = discord.Embed(color=color, title=title, description=description)
-        await ctx.send(embed=e)
-        await self.global_store_embed(ctx, name, e, locked)
-        await ctx.tick()
-
-    @global_store.command("json", aliases=["fromjson", "fromdata"], add_example_info=True)
-    async def global_store_json(
-        self, ctx: commands.Context, name: str, locked: bool, *, data: JSON_CONVERTER
-    ):
-        """Store an embed from valid JSON globally.
-
-        The `locked` argument specifies whether the embed should be locked to owners only."""
-        await self.global_store_embed(ctx, name, data, locked)
-        await ctx.tick()
-
-    @global_store.command(
-        "pastebin", aliases=["frompaste"], add_example_info=True, info_type="pastebin"
-    )
-    async def global_store_pastebin(
-        self, ctx, name: str, locked: bool, *, data: PASTEBIN_CONVERTER
-    ):
-        """Store an embed from valid JSON or YAML globally using a pastebin link.
-
-        The `locked` argument specifies whether the embed should be locked to owners only."""
-        await self.global_store_embed(ctx, name, data, locked)
-        await ctx.tick()
-
-    @global_store.command(
-        "fromfile",
-        aliases=["fromjsonfile", "fromdatafile"],
-        add_example_info=True,
-    )
-    async def global_store_fromfile(self, ctx: commands.Context, name: str, locked: bool):
-        """
-        Store an embed from a valid JSON file globally.
-
-        The `locked` argument specifies whether the embed should be locked to owners only.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("json", "txt"))
-        e = await JSON_CONVERTER.convert(ctx, data)
-        await self.global_store_embed(ctx, name, e, locked)
-        await ctx.tick()
-
-    @global_store.command(
-        "yamlfile",
-        aliases=["fromyamlfile"],
-        add_example_info=True,
-        info_type="yaml",
-    )
-    async def global_store_yamlfile(self, ctx: commands.Context, name: str, locked: bool):
-        """
-        Store an embed from a valid YAML file globally.
-
-        The `locked` argument specifies whether the embed should be locked to owners only.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("yaml", "txt"))
-        e = await YAML_CONVERTER.convert(ctx, data)
-        await self.global_store_embed(ctx, name, e, locked)
-        await ctx.tick()
-
-    @global_store.command(
-        "message",
-        aliases=["frommsg", "frommessage"],
-        add_example_info=True,
-        info_type="index",
-    )
-    async def global_store_message(
+    @embed.command(name="store", aliases=["storeembed"], usage="[global_level=False] [locked=False] <name> <json|yaml|jsonfile|yamlfile|pastebin|message> [data]")
+    async def embed_store(
         self,
         ctx: commands.Context,
+        global_level: typing.Optional[bool],
+        locked: typing.Optional[bool],
         name: str,
-        message: discord.Message,
-        locked: bool,
-        index: int = 0,
+        conversion_type: typing.Literal["json", "fromjson", "fromdata", "yaml", "fromyaml", "fromfile", "jsonfile", "fromjsonfile", "fromdatafile", "yamlfile", "fromyamlfile", "gist", "pastebin", "hastebin", "message", "frommessage", "frommsg"],
+        *,
+        data: str = None,
     ):
-        """
-        Store an embed from a message globally.
+        """Store an embed.
 
-        The `locked` argument specifies whether the embed should be locked to owners only.
+        Put the name in quotes if it is multiple words.
+        The `locked` argument specifies whether the embed should be locked to mod and superior only (guild level) or bot owners only (global level).
         """
-        embed = await self.get_embed_from_message(message, index)
-        await ctx.send(embed=embed)
-        await self.global_store_embed(ctx, name, embed, locked)
+        if global_level is None:
+            global_level = False
+        elif global_level and ctx.author.id not in ctx.bot.owner_ids:
+            raise commands.UserFeedbackCheckFailure(_("You can't manage global stored embeds."))
+        if locked is None:
+            locked = False
 
-    @global_store.command("info")
-    async def global_info(self, ctx: commands.Context, name: GlobalStoredEmbedConverter):
-        """Get info about an embed that is stored globally."""
+        if conversion_type in ("json", "fromjson", "fromdata"):
+            if data is None:
+                raise commands.UserInputError()
+            data = await JSON_CONVERTER.convert(ctx, argument=data)
+        elif conversion_type in ("yaml", "fromyaml"):
+            if data is None:
+                raise commands.UserInputError()
+            data = await YAML_CONVERTER.convert(ctx, argument=data)
+        elif conversion_type in ("fromfile", "jsonfile", "fromjsonfile", "fromdatafile"):
+            if not ctx.message.attachments or ctx.message.attachments[
+                0
+            ].filename.split(".")[-1] not in ("json", "txt"):
+                raise commands.UserInputError()
+            try:
+                argument = (await ctx.message.attachments[0].read()).decode(encoding="utf-8")
+            except UnicodeDecodeError:
+                raise commands.UserFeedbackCheckFailure(_("Unreadable attachment with `utf-8`."))
+            data = await JSON_CONVERTER.convert(ctx, argument=argument)
+        elif conversion_type in ("yamlfile", "fromyamlfile"):
+            if not ctx.message.attachments or ctx.message.attachments[
+                0
+            ].filename.split(".")[-1] not in ("yaml", "txt"):
+                raise commands.UserInputError()
+            try:
+                argument = (await ctx.message.attachments[0].read()).decode(encoding="utf-8")
+            except UnicodeDecodeError:
+                raise commands.UserFeedbackCheckFailure(_("Unreadable attachment with `utf-8`."))
+            data = await YAML_CONVERTER.convert(ctx, argument=argument)
+        elif conversion_type in ("gist", "pastebin", "hastebin"):
+            if data is None:
+                raise commands.UserInputError()
+            data = await PASTEBIN_CONVERTER.convert(ctx, argument=data)
+        elif conversion_type in ("message", "frommessage", "frommsg"):
+            if data is None:
+                raise commands.UserInputError()
+            message = await commands.MessageConverter().convert(ctx, argument=data)
+            if not message.embeds:
+                raise commands.UserInputError()
+            data = {"embed": message.embeds[0].to_dict()}
+        embed = data["embed"]
+        try:
+            await ctx.channel.send(embed=embed)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
+
+        async with (self.config if global_level else self.config.guild(ctx.guild)).stored_embeds() as stored_embeds:
+            total_embeds = set(stored_embeds)
+            total_embeds.add(name)
+            # If the user provides a name that's already used as an embed, it won't increment the embed count, which is why total embeds is converted to a set to calculate length to prevent duplicate names.
+            embed_limit = 100
+            if not global_level and len(total_embeds) > embed_limit:
+                raise commands.UserFeedbackCheckFailure(
+                    _(
+                        "This server has reached the embed limit of {embed_limit}. You must remove an embed with `{ctx.clean_prefix}embed unstore` before you can add a new one."
+                    ).format(embed_limit=embed_limit, ctx=ctx)
+                )
+            stored_embeds[name] = {"author": ctx.author.id, "embed": embed.to_dict(), "locked": locked, "uses": 0}
+
+    @commands.mod_or_permissions(manage_guild=True)
+    @embed.command(name="unstore", aliases=["unstoreembed"], usage="[global_level=False] <name>")
+    async def embed_unstore(
+        self,
+        ctx: commands.Context,
+        global_level: typing.Optional[bool],
+        name: str,
+    ):
+        """Remove a stored embed."""
+        if global_level is None:
+            global_level = False
+        elif global_level and ctx.author.id not in ctx.bot.owner_ids:
+            raise commands.UserFeedbackCheckFailure(_("You can't manage global stored embeds."))
+        async with (self.config if global_level else self.config.guild(ctx.guild)).stored_embeds() as stored_embeds:
+            if name not in stored_embeds:
+                raise commands.UserFeedbackCheckFailure(_("This is not a stored embed at this level."))
+            del stored_embeds[name]
+
+    @commands.mod_or_permissions(manage_guild=True)
+    @embed.command(name="list", aliases=["liststored", "liststoredembeds"], usage="[global_level=False]")
+    async def embed_list(self, ctx: commands.Context, global_level: typing.Optional[bool]):
+        """Get info about a stored embed."""
+        if global_level is None:
+            global_level = False
+        elif global_level and ctx.author.id not in ctx.bot.owner_ids:
+            raise commands.UserFeedbackCheckFailure(_("You can't manage global stored embeds."))
+        stored_embeds = await (self.config if global_level else self.config.guild(ctx.guild)).stored_embeds()
+        if not stored_embeds:
+            raise commands.UserFeedbackCheckFailure(
+                _("No stored embeds is configured at this level.")
+            )
+        description = "\n".join(f"- `{name}`" for name in stored_embeds)
+        embed: discord.Embed = discord.Embed(
+            title=(_("Global ") if global_level else "") + _("Stored Embeds"),
+            color=await ctx.embed_color()
+        )
+        embed.set_author(name=ctx.me.display_name, icon_url=ctx.me.display_avatar)
+        embeds = []
+        for page in pagify(description):
+            e = embed.copy()
+            e.description = page
+            embeds.append(e)
+        await Menu(pages=embeds).start(ctx)
+
+    @commands.mod_or_permissions(manage_guild=True)
+    @embed.command(name="info", aliases=["infostored", "infostoredembed"], usage="[global_level=False] <name>")
+    async def embed_info(self, ctx: commands.Context, global_level: typing.Optional[bool], name: str):
+        """Get info about a stored embed."""
+        if global_level is None:
+            global_level = False
+        elif global_level and ctx.author.id not in ctx.bot.owner_ids:
+            raise commands.UserFeedbackCheckFailure(_("You can't manage global stored embeds."))
+        stored_embeds = await (self.config if global_level else self.config.guild(ctx.guild)).stored_embeds()
+        if name not in stored_embeds:
+            raise commands.UserFeedbackCheckFailure(_("This is not a stored embed at this level."))
+        stored_embed = stored_embeds[name]
         description = [
-            f"Author: <@!{name['author']}>",
-            f"Uses: {name['uses']}",
-            f"Length: {len(name['embed'])}",
-            f"Locked: {name['locked']}",
+            f"• **Author:** <@{stored_embed['author']}> ({stored_embed['author']})",
+            f"• **Uses:** {stored_embed['uses']}",
+            f"• **Length:** {len(stored_embed['embed'])}",
+            f"• **Locked:** {stored_embed['locked']}",
         ]
-        e = discord.Embed(title=f"`{name['name']}` Info", description="\n".join(description))
-        e.set_author(name=ctx.bot.user.name, icon_url=ctx.bot.user.display_avatar.url)
-        await ctx.send(embed=e)
+        embed: discord.Embed = discord.Embed(
+            title=f"Info about `{name}`",
+            description="\n".join(description),
+            color=await ctx.embed_color()
+        )
+        embed.set_author(name=ctx.me.display_name, icon_url=ctx.me.display_avatar)
+        await ctx.send(embed=embed, allowed_mentions=discord.AllowedMentions(users=False))
 
-    @global_store.command("lock")
-    async def global_lock(self, ctx: commands.Context, name: str, true_or_false: bool = None):
-        """Lock/unlock a global embed."""
-        data = await self.config.embeds()
-        try:
-            embed = data[name]
-        except KeyError:
-            await ctx.send("This is not a stored embed.")
-            return
-        target_state = true_or_false if true_or_false is not None else not embed["locked"]
-        async with self.config.embeds() as a:
-            a[name]["locked"] = target_state
-        if target_state:
-            await ctx.send(f"`{name}` is now locked to owners only.")
-        else:
-            await ctx.send(f"`{name}` is now accessible to all users.")
+    @commands.mod_or_permissions(manage_guild=True)
+    @embed.command(name="downloadstored", aliases=["downloadstoredembed"], usage="[global_level=False] <name>")
+    async def embed_download_stored(self, ctx: commands.Context, global_level: typing.Optional[bool], name: str):
+        """Download a JSON file for a stored embed."""
+        if global_level is None:
+            global_level = False
+        elif global_level and ctx.author.id not in ctx.bot.owner_ids:
+            raise commands.UserFeedbackCheckFailure(_("You can't manage global stored embeds."))
+        stored_embeds = await (self.config if global_level else self.config.guild(ctx.guild)).stored_embeds()
+        if name not in stored_embeds:
+            raise commands.UserFeedbackCheckFailure(_("This is not a stored embed at this level."))
+        stored_embed = stored_embeds[name]
+        await ctx.send(file=text_to_file(text=json.dumps({"embed": stored_embed["embed"]}, indent=4), filename="embed.json"))
 
-    async def webhook_send(self, ctx: commands.Context, **kwargs):
-        cog = self.bot.get_cog("Webhook")
+    @embed.command(name="poststored", aliases=["poststoredembed", "post"], usage="[channel_or_message=<CurrentChannel>] [global_level=False] <names>")
+    async def embed_post_stored(
+        self,
+        ctx: commands.Context,
+        channel_or_message: typing.Optional[MessageableOrMessageConverter],
+        global_level: typing.Optional[bool],
+        names: commands.Greedy[StrConverter]
+    ):
+        """Post stored embeds."""
+        if global_level is None:
+            global_level = False
+        elif global_level and ctx.author.id not in ctx.bot.owner_ids:
+            raise commands.UserFeedbackCheckFailure(_("You can't manage global stored embeds."))
+        async with (self.config if global_level else self.config.guild(ctx.guild)).stored_embeds() as stored_embeds:
+            embeds = []
+            for name in names:
+                if (
+                    name not in stored_embeds
+                    or (global_level and stored_embeds[name]["locked"] and ctx.author.id not in ctx.bot.owner_ids)
+                    or (not global_level and stored_embeds[name]["locked"] and await ctx.bot.is_mod(ctx.author))
+                ):
+                    raise commands.UserFeedbackCheckFailure(_("`{name}` is not a stored embed at this level.").format(name=name))
+                embeds.append(discord.Embed.from_dict(stored_embeds[name]["embed"]))
+                stored_embeds[name]["uses"] += 1
         try:
-            await cog.send_to_channel(
-                ctx.channel,
-                ctx.me,
-                ctx.author,
-                ctx=ctx,
-                **kwargs,
+            if not isinstance(channel_or_message, discord.Message):
+                channel = channel_or_message or ctx.channel
+                await channel.send(embeds=embeds)
+            else:
+                await channel_or_message.edit(embeds=embeds)
+        except discord.HTTPException as error:
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
+
+    @commands.mod_or_permissions(manage_webhooks=True)
+    @commands.bot_has_permissions(manage_webhooks=True)
+    @embed.command(name="postwebhook", aliases=["webhook"], usage="[channel_or_message=<CurrentChannel>] <username> <avatar_url> [global_level=False] <names>")
+    async def embed_post_webhook(
+        self,
+        ctx: commands.Context,
+        channel: typing.Optional[MessageableConverter],
+        username: commands.Range[str, 1, 80],
+        avatar_url: str,
+        global_level: typing.Optional[bool],
+        names: commands.Greedy[StrConverter]
+    ):
+        """Post stored embeds with a webhook."""
+        if global_level is None:
+            global_level = False
+        elif global_level and ctx.author.id not in ctx.bot.owner_ids:
+            raise commands.UserFeedbackCheckFailure(_("You can't manage global stored embeds."))
+        async with (self.config if global_level else self.config.guild(ctx.guild)).stored_embeds() as stored_embeds:
+            embeds = []
+            for name in names:
+                if (
+                    name not in stored_embeds
+                    or (global_level and stored_embeds[name]["locked"] and ctx.author.id not in ctx.bot.owner_ids)
+                    or (not global_level and stored_embeds[name]["locked"] and await ctx.bot.is_mod(ctx.author))
+                ):
+                    raise commands.UserFeedbackCheckFailure(_("`{name}` is not a stored embed at this level.").format(name=name))
+                embeds.append(discord.Embed.from_dict(stored_embeds[name]["embed"]))
+                stored_embeds[name]["uses"] += 1
+        try:
+            channel = channel or ctx.channel
+            hook: discord.Webhook = await CogsUtils.get_hook(bot=self.bot, channel=channel)
+            await hook.send(
+                embeds=embeds,
+                username=username,
+                avatar_url=avatar_url,
+                wait=True,
             )
         except discord.HTTPException as error:
-            raise EmbedConversionError("Embed Send Error", error) from error
-
-    @commands.check(webhook_check)
-    @commands.has_permissions(manage_webhooks=True)
-    @embed.group(invoke_without_command=True, require_var_positional=True)
-    async def webhook(self, ctx: commands.Context, *embeds: StoredEmbedConverter):
-        """Send embeds through webhooks.
-
-        Running this command with stored embed names will send up to 10 embeds through a webhook.
-        """
-        await self.webhook_send(
-            ctx, embeds=[discord.Embed.from_dict(e["embed"]) for e in embeds[:10]]
-        )
-
-    @webhook.command("global", require_var_positional=True)
-    async def webhook_global(self, ctx: commands.Context, *embeds: GlobalStoredEmbedConverter):
-        """Send global embeds through webhooks.
-
-        Running this command with global stored embed names will send up to 10 embeds through a webhook.
-        """
-        await self.webhook_send(
-            ctx, embeds=[discord.Embed.from_dict(e["embed"]) for e in embeds[:10]]
-        )
-
-    @webhook.command("json", aliases=["fromjson", "fromdata"], add_example_info=True)
-    async def webhook_json(self, ctx: commands.Context, *, embeds: JSON_LIST_CONVERTER):
-        """
-        Send embeds through webhooks using JSON.
-        """
-        await self.webhook_send(ctx, embeds=embeds[:10])
-
-    @webhook.command("yaml", aliases=["fromyaml"], add_example_info=True, info_type="yaml")
-    async def webhook_yaml(
-        self,
-        ctx: commands.Context,
-        *,
-        embeds: YAML_LIST_CONVERTER,
-    ):
-        """
-        Send embeds through webhooks using YAML.
-        """
-        await self.webhook_send(ctx, embeds=embeds[:10])
-
-    @webhook.command(
-        "pastebin", aliases=["frompaste"], add_example_info=True, info_type="pastebin"
-    )
-    async def webhook_pastebin(
-        self,
-        ctx: commands.Context,
-        *,
-        embeds: PASTEBIN_LIST_CONVERTER,
-    ):
-        """
-        Send embeds through webhooks using a pastebin link with valid YAML or JSON.
-        """
-        await self.webhook_send(ctx, embeds=embeds[:10])
-
-    @webhook.command("message", aliases=["frommsg", "frommessage"])
-    async def webhook_message(
-        self, ctx: commands.Context, message: discord.Message, index: int = 0
-    ):
-        """
-        Send embeds through webhooks.
-        """
-        embed = await self.get_embed_from_message(message, index)
-        await self.webhook_send(ctx, embed=embed)
-
-    @webhook.command(
-        "fromfile",
-        aliases=["fromjsonfile", "fromdatafile"],
-        add_example_info=True,
-    )
-    async def webhook_fromfile(self, ctx: commands.Context):
-        """
-        Send embeds through webhooks, using JSON files.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("json", "txt"))
-        embeds = await JSON_LIST_CONVERTER.convert(ctx, data)
-        await self.webhook_send(ctx, embeds=embeds[:10])
-
-    @webhook.command(
-        "yamlfile",
-        aliases=["fromyamlfile"],
-        add_example_info=True,
-        info_type="yaml",
-    )
-    async def webhook_yamlfile(self, ctx: commands.Context):
-        """
-        Send embeds through webhooks, using JSON files.
-        """
-        data = await self.get_file_from_message(ctx, file_types=("yaml", "txt"))
-        embeds = await YAML_LIST_CONVERTER.convert(ctx, data)
-        await self.webhook_send(ctx, embeds=embeds[:10])
-
-    async def store_embed(self, ctx: commands.Context, name: str, embed: discord.Embed):
-        embed = embed.to_dict()
-        async with self.config.guild(ctx.guild).embeds() as embeds:
-            total_embeds = set(embeds)
-            total_embeds.add(name)
-            # if the user provides a name that's already used as an embed, it won't increment
-            # the embed count, which is why total embeds is converted to a set to calculate length
-            # to prevent duplicate names
-            if len(total_embeds) > self.EMBED_LIMIT:
-                raise EmbedLimitReached(
-                    f"This server has reached the embed limit of {self.EMBED_LIMIT}. You must "
-                    f"remove an embed with `{ctx.clean_prefix}embed store remove` before you can "
-                    "add a new one."
-                )
-            embeds[name] = {"author": ctx.author.id, "uses": 0, "embed": embed, "name": name}
-        await ctx.send(f"Embed stored under the name `{name}`.")
-
-    async def get_stored_embed(self, ctx: commands.Context, name: str):
-        data = await self.config.guild(ctx.guild).embeds()
-        try:
-            data = data[name]
-            embed = data["embed"]
-        except KeyError:
-            await ctx.send("This is not a stored embed.")
-            return
-        embed = discord.Embed.from_dict(embed)
-        return embed, data["author"], data["uses"]
-
-    async def global_store_embed(
-        self, ctx: commands.Context, name: str, embed: discord.Embed, locked: bool
-    ):
-        embed = embed.to_dict()
-        async with self.config.embeds() as embeds:
-            total_embeds = set(embeds)
-            total_embeds.add(name)
-            if len(total_embeds) > self.GLOBAL_EMBED_LIMIT:
-                raise EmbedLimitReached(
-                    f"You have reached the global embed limit of {self.GLOBAL_EMBED_LIMIT}. You must "
-                    f"remove an embed with `{ctx.clean_prefix}embed global remove` before you can "
-                    "add a new one."
-                )
-            embeds[name] = {"author": ctx.author.id, "uses": 0, "locked": locked, "embed": embed}
-        await ctx.send(f"Global embed stored under the name `{name}`.")
-
-    async def get_global_stored_embed(self, ctx: commands.Context, name: str):
-        data = await self.config.embeds()
-        try:
-            data = data[name]
-            embed = data["embed"]
-            if data["locked"] is True and not await self.bot.is_owner(ctx.author):
-                await ctx.send("This is not a stored embed.")
-                return
-        except KeyError:
-            await ctx.send("This is not a stored embed.")
-            return
-        embed = discord.Embed.from_dict(embed)
-        return embed, data["author"], data["uses"], data["locked"]
-
-    async def cog_command_error(self, ctx: commands.Context, error: Exception):
-        if isinstance(error, commands.CommandInvokeError):
-            exc = error.original
-            if isinstance(exc, EmbedConversionError):
-                await StringToEmbed.embed_convert_error(ctx, exc.error_type, exc.error)
-            elif isinstance(exc, EmbedUtilsException):
-                ref = ctx.message.to_reference(fail_if_not_exists=False)
-                await ctx.send(exc, reference=ref)
-            else:
-                self.bot.dispatch("command_error", ctx, error, unhandled_by_cog=True)
-        else:
-            self.bot.dispatch("command_error", ctx, error, unhandled_by_cog=True)
+            return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
