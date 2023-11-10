@@ -232,7 +232,7 @@ class LinkQuoter(commands.Cog):
             embed = await self.message_to_embed(message_link, invoke_guild=ctx.guild)
             await ctx.send(embed=embed)
 
-    @commands.has_permissions(manage_guild=True)
+    @commands.admin_or_permissions(manage_guild=True)
     @commands.guild_only()
     @commands.group()
     async def linkquoteset(self, ctx: commands.Context):
@@ -304,6 +304,7 @@ class LinkQuoter(commands.Cog):
             await ctx.send("This server is no longer opted in to cross-server quoting.")
 
     @commands.check(webhook_check)
+    @checks.bot_has_permissions(manage_webhooks=True)
     @linkquoteset.command(name="webhook")
     async def linkquoteset_webhook(self, ctx, true_or_false: bool = None):
         """
