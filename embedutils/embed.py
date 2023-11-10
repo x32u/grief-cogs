@@ -144,8 +144,7 @@ class EmbedUtils(commands.Cog):
             raise EmbedConversionError("Embed Send Error", error) from error
 
     @commands.guild_only()
-    @commands.mod_or_permissions(embed_links=True)
-    @commands.bot_has_permissions(embed_links=True)
+    @commands.has_permissions(embed_links=True, manage_messages=True)
     @help_formatted_group(invoke_without_command=True)
     async def embed(
         self,
@@ -314,7 +313,7 @@ class EmbedUtils(commands.Cog):
         e.set_author(name=ctx.bot.user.name, icon_url=ctx.bot.user.display_avatar.url)
         await ctx.send(embed=e)
 
-    @commands.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @embed.group("edit", invoke_without_command=True)
     async def embed_edit(
         self,
@@ -762,8 +761,7 @@ class EmbedUtils(commands.Cog):
             raise EmbedConversionError("Embed Send Error", error) from error
 
     @commands.check(webhook_check)
-    @commands.admin_or_permissions(manage_webhooks=True)
-    @commands.bot_has_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @embed.group(invoke_without_command=True, require_var_positional=True)
     async def webhook(self, ctx: commands.Context, *embeds: StoredEmbedConverter):
         """Send embeds through webhooks.
