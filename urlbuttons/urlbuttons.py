@@ -258,6 +258,7 @@ class UrlButtons(Cog):
         await self.config.guild(ctx.guild).url_buttons.set(config)
         await ctx.send(_("Url-buttons cleared for this message."))
 
+    @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(embed_links=True)
     @urlbuttons.command()
     async def list(self, ctx: commands.Context, message: discord.Message = None) -> None:
