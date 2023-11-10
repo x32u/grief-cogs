@@ -86,7 +86,8 @@ class JoinPing(commands.Cog):
             return await ctx.send("The time must be above 5 seconds.")
         await self.config.guild(ctx.guild).delete_after.set(seconds)
         await self._build_cache()
-        await ctx.send(f"The ping message will be deleted after {seconds} seconds.")
+        embed = discord.Embed(description=f"The ping message will be deleted after {seconds} seconds.", colour=0x313338)
+        await ctx.send(embed=embed, mention_author=False)
 
     @jpset.command(name="message", aliases=["m"])
     async def jpset_msg(self, ctx, *, message: str):
