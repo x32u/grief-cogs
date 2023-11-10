@@ -14,19 +14,6 @@ log = logging.getLogger("grief.linkquoter")
 COOLDOWN = (3, 10, commands.BucketType.channel)
 
 
-def webhook_check(ctx: commands.Context) -> Union[bool, commands.Cog]:
-    if not ctx.channel.permissions_for(ctx.me).manage_webhooks:
-        raise commands.UserFeedbackCheckFailure(
-            "I need the **Manage Webhooks** permission for webhook quoting."
-        )
-    cog = ctx.bot.get_cog("Webhook")
-    if cog and cog.__author__ == "PhenoM4n4n":
-        return cog
-    raise commands.UserFeedbackCheckFailure(
-        "The Webhook cog by PhenoM4n4n must be loaded for webhook quoting."
-    )
-
-
 class LinkQuoter(commands.Cog):
     """
     Quote Discord message links.
@@ -214,12 +201,11 @@ class LinkQuoter(commands.Cog):
             message_link = ref.resolved or await ctx.guild.get_channel(
                 ref.channel_id
             ).fetch_message(ref.message_id)
-        cog = webhook_check(ctx)
-        if (await self.config.guild(ctx.guild).webhooks()) and cog:
+        if (await self.config.guild(ctx.guild).webhooks()):
             embed = await self.message_to_embed(
                 message_link, invoke_guild=ctx.guild, author_field=False
             )
-            await cog.send_to_channel(
+            await ctx.send_to_channel(
                 ctx.channel,
                 ctx.me,
                 ctx.author,
@@ -305,7 +291,7 @@ class LinkQuoter(commands.Cog):
         else:
             await ctx.send("This server is no longer opted in to cross-server quoting.")
 
-    @commands.check(webhook_check)
+    @commands.check()
     @checks.bot_has_permissions(manage_webhooks=True)
     @linkquoteset.command(name="webhook")
     async def linkquoteset_webhook(self, ctx, true_or_false: bool = None):
@@ -375,19 +361,14 @@ class LinkQuoter(commands.Cog):
         if not await self.bot.message_eligible_as_command(message):
             return
 
-        try:
-            cog = webhook_check(ctx)
-        except commands.CheckFailure:
-            cog = False
-
         data = await self.config.guild(ctx.guild).all()
         tasks = []
-        if cog and data["webhooks"] and channel.type == discord.ChannelType.text:
+        if data["webhooks"] and channel.type == discord.ChannelType.text:
             embed = await self.message_to_embed(
                 quoted_message, invoke_guild=ctx.guild, author_field=False
             )
             tasks.append(
-                cog.send_to_channel(
+                ctx.send_to_channel(
                     ctx.channel,
                     ctx.me,
                     ctx.author,
