@@ -1,4 +1,5 @@
 import datetime
+import coloarama
 from typing import List, Tuple, cast
 
 import discord
@@ -265,7 +266,7 @@ class ModInfo(MixinMeta):
         else:
             role_str = None
 
-        data = discord.Embed(description=status_string or activity, colour=member.colour)
+        data = discord.Embed(description=status_string or activity, colour=0x313338)
 
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
