@@ -267,7 +267,7 @@ class Info(commands.Cog):
 				f'{status[m]} Mobile\n'
 				f'{status[w]} Web'
 			),
-			color=await ctx.embed_color()
+			color=0xEEEFF1
 		)
         if discord.version_info.major == 1:
             embed.set_thumbnail(url=member.avatar_url)
@@ -449,7 +449,7 @@ class Info(commands.Cog):
         if ctx.channel.permissions_for(ctx.guild.me).embed_links:
             embed = discord.Embed(
                 description=f"{user.mention} joined this guild on {joined_on}.",
-                color=await ctx.embed_colour(),
+                color=0xEEEFF1,
             )
             await ctx.send(embed=embed)
         else:
@@ -491,7 +491,7 @@ class Info(commands.Cog):
             for page in cf.pagify(rolelist, shorten_by=1400):
                 embed = discord.Embed(
                     description=f"**Total roles:** {len(ctx.guild.roles)}\n\n{page}",
-                    colour=await ctx.embed_colour(),
+                    colour=0xEEEFF1,
                 )
                 embed_list.append(embed)
         else:
@@ -543,7 +543,7 @@ class Info(commands.Cog):
             )
 
             embed: discord.Embed = discord.Embed(
-                color=await ctx.embed_color(),
+                color=0xEEEFF1,
                 timestamp=messages[0].created_at,
                 description=f"[First message in]({messages[0].jump_url}) {chan}",
             )
@@ -942,7 +942,7 @@ class Info(commands.Cog):
 
             data = discord.Embed(
                 description=(f"{guild.description}\n\n" if guild.description else "") + created_at,
-                colour=await ctx.embed_colour(),
+                colour=0xEEEFF1,
             )
             data.set_author(
                 name=guild.name,
