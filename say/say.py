@@ -82,7 +82,7 @@ class Say(commands.Cog):
             log.error("Failed to send message.", exc_info=True)
 
     @commands.command(name="say")
-    @checks.admin_or_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, manage_guild=True)
     async def _say(
         self, ctx: commands.Context, channel: Optional[discord.TextChannel], *, text: str = ""
     ):
@@ -101,7 +101,7 @@ class Say(commands.Cog):
         await self.say(ctx, channel, text, files)
 
     @commands.command(name="sayad")
-    @checks.admin_or_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, manage_guild=True)
     async def _sayautodelete(
         self,
         ctx: commands.Context,
@@ -118,7 +118,7 @@ class Say(commands.Cog):
         await self.say(ctx, channel, text, files, delete=delete_delay)
 
     @commands.command(name="sayd", aliases=["sd"])
-    @checks.admin_or_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, manage_guild=True)
     async def _saydelete(
         self, ctx: commands.Context, channel: Optional[discord.TextChannel], *, text: str = ""
     ):
@@ -143,7 +143,7 @@ class Say(commands.Cog):
         await self.say(ctx, channel, text, files)
 
     @commands.command(name="saym", aliases=["sm"])
-    @checks.admin_or_permissions(administrator=True)
+    @commands.has_permissions(administrator=True, manage_guild=True)
     async def _saymention(
         self, ctx: commands.Context, channel: Optional[discord.TextChannel], *, text: str = ""
     ):
