@@ -447,6 +447,7 @@ class RolesButtons(Cog):
     @commands.bot_has_permissions(embed_links=True)
     @rolesbuttons.command()
     async def list(self, ctx: commands.Context, message: discord.Message = None) -> None:
+        """List all roles buttons on the server."""
         roles_buttons = await self.config.guild(ctx.guild).roles_buttons()
         for role_button in roles_buttons:
             roles_buttons[role_button]["message"] = role_button
@@ -491,7 +492,7 @@ class RolesButtons(Cog):
             embeds.append(embed)
         await Menu(pages=embeds).start(ctx)
 
-    @rolesbuttons.command(hidden=True)
+    @rolesbuttons.command()
     async def purge(self, ctx: commands.Context) -> None:
         """Clear all roles-buttons for a guild."""
         await self.config.guild(ctx.guild).roles_buttons.clear()
