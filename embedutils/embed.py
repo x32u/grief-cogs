@@ -28,7 +28,7 @@ PASTEBIN_LIST_CONVERTER = PastebinListConverter(conversion_type="json")
 
 @cog_i18n(_)
 class EmbedUtils(Cog):
-    """Create, send, and store embeds."""
+    """Create, send, and store embeds.\n Use https://embeds.grief.cloud \n Required Permissions: Manage Messages."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)
