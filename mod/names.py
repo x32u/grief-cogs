@@ -21,6 +21,7 @@ class ModInfo(MixinMeta):
     """
     Commands regarding names, userinfo, etc.
     """
+    
     async def get_names(self, member: discord.Member) -> Tuple[List[str], List[str], List[str]]:
         user_data = await self.config.user(member).all()
         usernames, display_names = user_data["past_names"], user_data["past_display_names"]
