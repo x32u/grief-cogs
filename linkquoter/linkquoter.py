@@ -232,13 +232,13 @@ class LinkQuoter(commands.Cog):
             embed = await self.message_to_embed(message_link, invoke_guild=ctx.guild)
             await ctx.send(embed=embed)
 
-    @commands.admin_or_permissions(manage_guild=True)
-    @commands.guild_only()
     @commands.group()
-    async def linkquoteset(self, ctx: commands.Context):
-        """Manage LinkQuoter settings."""
-        pass
-
+    @commands.has_permissions(manage_guild=True)
+    @commands.guild_only()
+    async def linkquoteset(self, ctx: commands.Context) -> None:
+        """
+        Commands for managing the starboard
+        """
     @linkquoteset.command(name="auto")
     async def linkquoteset_auto(self, ctx, true_or_false: bool = None):
         """
