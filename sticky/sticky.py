@@ -34,8 +34,8 @@ class Sticky(commands.Cog):
         self.locked_channels = set()
         self._channel_cvs: Dict[discord.TextChannel, asyncio.Condition] = {}
 
-    @checks.mod_or_permissions(manage_messages=True)
     @commands.guild_only()
+    @commands.has_permissions(manage_messages=True)
     @commands.group(invoke_without_command=True)
     async def sticky(self, ctx: commands.Context, *, content: str):
         """Sticky a message to this channel."""
@@ -57,7 +57,7 @@ class Sticky(commands.Cog):
 
             settings_dict["last"] = msg.id
 
-    @checks.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.guild_only()
     @sticky.command(name="existing")
     async def sticky_existing(
@@ -98,7 +98,7 @@ class Sticky(commands.Cog):
 
             settings_dict["last"] = msg.id
 
-    @checks.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.guild_only()
     @sticky.command(name="toggleheader")
     async def sticky_toggleheader(self, ctx: commands.Context, true_or_false: bool):
@@ -109,7 +109,7 @@ class Sticky(commands.Cog):
         await self.conf.channel(ctx.channel).header_enabled.set(true_or_false)
         await ctx.tick()
 
-    @checks.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.guild_only()
     @commands.command()
     async def unsticky(self, ctx: commands.Context, force: bool = False):
