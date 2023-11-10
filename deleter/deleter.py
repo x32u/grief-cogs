@@ -70,7 +70,7 @@ class Deleter(commands.Cog):
 
     @commands.group()
     @commands.guild_only()
-    @checks.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_channels=True)
     async def deleter(self, ctx):
         """Group command for commands dealing with auto-timed deletion.
 
