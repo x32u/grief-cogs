@@ -8,13 +8,11 @@ import typing  # isort:skip
 
 from AAA3A_utils.settings import CustomMessageConverter
 
-from .dashboard_integration import DashboardIntegration
-
-_ = Translator("ClearChannel", __file__)
+_ = Translator("Nuke", __file__)
 
 
 @cog_i18n(_)
-class ClearChannel(Cog, DashboardIntegration):
+class Nuke(Cog):
     """
     Delete the channel and recreate it.
     """
