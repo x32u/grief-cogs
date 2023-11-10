@@ -89,7 +89,6 @@ class EditThread(Cog):
 
     @commands.guild_only()
     @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
     @commands.hybrid_group()
     async def editthread(self, ctx: commands.Context) -> None:
         """Commands for edit a text channel."""
@@ -123,7 +122,6 @@ class EditThread(Cog):
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
 
-    @commands.bot_has_permissions(embed_links=True)
     @editthread.command(name="list")
     async def editthread_list(
         self,
