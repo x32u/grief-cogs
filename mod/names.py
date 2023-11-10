@@ -169,7 +169,7 @@ class ModInfo(MixinMeta):
             string += f"{status_string}\n"
         return string
 
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
     async def userinfo(self, ctx, *, user: discord.Member = None):
