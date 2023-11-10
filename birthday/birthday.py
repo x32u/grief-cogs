@@ -24,13 +24,8 @@ class Birthday(
     metaclass=CompositeMetaClass,
 ):
     """
-    Birthdays
-
-    Set yours and get a message and role on your birthday!
+    Set your birthday and get a message and role on your birthday.
     """
-
-    __version__ = "1.2.2"
-    __author__ = "@vexingvexed"
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
