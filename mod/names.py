@@ -24,7 +24,7 @@ class ModInfo(MixinMeta):
 
     async def get_names(self, member: discord.Member) -> Tuple[List[str], List[str], List[str]]:
         user_data = await self.config.user(member).all()
-        usernames, display_names = user_data["past_names"], user_data["past_names"]
+        usernames, display_names = user_data["past_names"]
         nicks = await self.config.member(member).past_nicks()
         usernames = list(map(escape_spoilers_and_mass_mentions, filter(None, usernames)))
         display_names = list(map(escape_spoilers_and_mass_mentions, filter(None, display_names)))
@@ -299,7 +299,6 @@ class ModInfo(MixinMeta):
         parts = []
         for header, names in (
             (_("Past 20 usernames:"), usernames),
-            (_("Past 20 global display names:"), display_names),
             (_("Past 20 server nicknames:"), nicks),
         ):
             if names:
