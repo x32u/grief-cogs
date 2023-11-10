@@ -14,6 +14,7 @@ from grief.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
 from .events import Events
+from typing import List, Optional
 
 _ = i18n.Translator("Mod", __file__)
 
@@ -192,10 +193,9 @@ class ModInfo(MixinMeta):
 
     @staticmethod
     def _update_past_names(name: str, name_list: List[Optional[str]]) -> None:
-        while None in name_list:  # clean out null entries from a bug
+        while None in name_list:
             name_list.remove(None)
         if name in name_list:
-            # Ensure order is maintained without duplicates occurring
             name_list.remove(name)
         name_list.append(name)
         while len(name_list) > 20:
