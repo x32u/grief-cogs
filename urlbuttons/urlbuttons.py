@@ -1,20 +1,30 @@
-﻿
-
-from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
+﻿from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
 from grief.core import commands, Config  # isort:skip
 from grief.core.bot import Red  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
-from .converters import UrlConverter, Emoji, EmojiUrlConverter
+from grief.core.utils.chat_formatting import pagify
+
+from .converters import Emoji, EmojiUrlConverter, UrlConverter
 
 _ = Translator("UrlButtons", __file__)
 
 
+class MyMessageConverter(commands.MessageConverter):
+    async def convert(self, ctx: commands.Context, argument: str) -> discord.Message:
+        message = await super().convert(ctx, argument=argument)
+        if message.author != ctx.me:
+            raise commands.UserFeedbackCheckFailure(
+                _("I have to be the author of the message. You can use EmbedUtils by AAA3A to send one.")
+            )
+        return message
+
+
 @cog_i18n(_)
 class UrlButtons(Cog):
-    """Setup buttons to place on embeds/messages sent by grief that will send them to a website."""
+    """A cog to have url-buttons!"""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)
@@ -88,29 +98,23 @@ class UrlButtons(Cog):
         await self.config.guild(message.guild).url_buttons.set(config)
 
     @commands.guild_only()
-    @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(manage_messages=True)
-    @commands.group(name="urlbuttons", aliases=["ub"])
-    async def urlbuttons():
+    @commands.hybrid_group()
+    async def urlbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use UrlButtons."""
         pass
 
-    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command(aliases=["+"])
     async def add(
         self,
         ctx: commands.Context,
-        message: discord.Message,
+        message: MyMessageConverter,
         url: UrlConverter,
         emoji: typing.Optional[Emoji],
         *,
         text_button: typing.Optional[commands.Range[str, 1, 100]] = None,
     ) -> None:
         """Add a url-button for a message."""
-        if message.author != ctx.me:
-            raise commands.UserFeedbackCheckFailure(
-                _("I have to be the author of the message for the url-button to work.")
-            )
         channel_permissions = message.channel.permissions_for(ctx.me)
         if (
             not channel_permissions.view_channel
@@ -125,7 +129,9 @@ class UrlButtons(Cog):
         if not url.startswith("http"):
             raise commands.UserFeedbackCheckFailure(_("Url must start with `https` or `http`."))
         if emoji is None and text_button is None:
-            raise commands.UserFeedbackCheckFailure(_("You have to specify at least an emoji or a label."))
+            raise commands.UserFeedbackCheckFailure(
+                _("You have to specify at least an emoji or a label.")
+            )
         if emoji is not None and ctx.interaction is None and ctx.bot_permissions.add_reactions:
             try:
                 await ctx.message.add_reaction(emoji)
@@ -157,19 +163,17 @@ class UrlButtons(Cog):
         await self.config.guild(ctx.guild).url_buttons.set(config)
         await self.list.callback(self, ctx, message=message)
 
-    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command()
     async def bulk(
         self,
         ctx: commands.Context,
-        message: discord.Message,
+        message: MyMessageConverter,
         url_buttons: commands.Greedy[EmojiUrlConverter],
     ) -> None:
-        """Add a url-button for a message."""
-        if message.author != ctx.me:
-            raise commands.UserFeedbackCheckFailure(
-                _("I have to be the author of the message for the url-button to work.")
-            )
+        """Add a url-button for a message.
+
+        ```[p]urlbuttons bulk <message> :red_circle:|<https://github.com/Cog-Creators/Red-DiscordBot> :smiley:|<https://github.com/Cog-Creators/Red-SmileyBot> :green_circle:|<https://github.com/Cog-Creators/Green-DiscordBot>```
+        """
         if len(url_buttons) == 0:
             raise commands.UserFeedbackCheckFailure(
                 _("You have not specified any valid url-button.")
@@ -209,14 +213,14 @@ class UrlButtons(Cog):
         await self.config.guild(ctx.guild).url_buttons.set(config)
         await self.list.callback(self, ctx, message=message)
 
-    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command(aliases=["-"])
-    async def remove(self, ctx: commands.Context, message: discord.Message, config_identifier: str) -> None:
-        """Remove a url-button for a message."""
-        if message.author != ctx.me:
-            raise commands.UserFeedbackCheckFailure(
-                _("I have to be the author of the message for the role-button to work.")
-            )
+    async def remove(
+        self, ctx: commands.Context, message: MyMessageConverter, config_identifier: str
+    ) -> None:
+        """Remove a url-button for a message.
+
+        Use `[p]urlbuttons list <message>` to find the config identifier.
+        """
         config = await self.config.guild(ctx.guild).url_buttons.all()
         if f"{message.channel.id}-{message.id}" not in config:
             raise commands.UserFeedbackCheckFailure(
@@ -234,16 +238,14 @@ class UrlButtons(Cog):
             view = self.get_buttons(config, message)
             await message.edit(view=view)
         await self.config.guild(ctx.guild).url_buttons.set(config)
-        await self.list.callback(self, ctx, message=message)
+        if f"{message.channel.id}-{message.id}" in config:
+            await self.list.callback(self, ctx, message=message)
+        else:
+            await ctx.send(_("Url-buttons cleared for this message."))
 
-    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command()
-    async def clear(self, ctx: commands.Context, message: discord.Message) -> None:
+    async def clear(self, ctx: commands.Context, message: MyMessageConverter) -> None:
         """Clear all url-buttons for a message."""
-        if message.author != ctx.me:
-            raise commands.UserFeedbackCheckFailure(
-                _("I have to be the author of the message for the url-button to work.")
-            )
         config = await self.config.guild(ctx.guild).url_buttons.all()
         if f"{message.channel.id}-{message.id}" not in config:
             raise commands.UserFeedbackCheckFailure(
@@ -259,8 +261,8 @@ class UrlButtons(Cog):
 
     @commands.has_permissions(manage_messages=True)
     @urlbuttons.command()
-    async def list(self, ctx: commands.Context, message: discord.Message = None) -> None:
-        """List all url buttons on the server."""
+    async def list(self, ctx: commands.Context, message: MyMessageConverter = None) -> None:
+        """List all url-buttons of this server or display the settings for a specific one."""
         url_buttons = await self.config.guild(ctx.guild).url_buttons()
         for url_button in url_buttons:
             url_buttons[url_button]["message"] = url_button
@@ -275,38 +277,46 @@ class UrlButtons(Cog):
             _url_buttons = [url_buttons[f"{message.channel.id}-{message.id}"]]
         if not _url_buttons:
             raise commands.UserFeedbackCheckFailure(_("No url-buttons in this server."))
-        lists = []
-        while _url_buttons != []:
-            li = _url_buttons[:5]
-            _url_buttons = _url_buttons[5:]
-            lists.append(li)
+        embed: discord.Embed = discord.Embed(
+            title=_("URL Buttons"),
+            description=_("There is {len_url_buttons} url buttons in this server.").format(
+                len_url_buttons=len(url_buttons)
+            ),
+            color=await ctx.embed_color(),
+        )
+        embed.set_author(name=ctx.guild.name, icon_url=ctx.guild.icon)
         embeds = []
-        for li in lists:
-            embed: discord.Embed = discord.Embed(
-                title=_("URL Buttons"),
-                description=_("There is {len_url_buttons} URL buttons in this server.").format(
-                    len_url_buttons=len(url_buttons)
-                ),
-                color=await ctx.embed_color(),
-            )
-            embed.set_author(name=ctx.guild.name, icon_url=ctx.guild.icon)
+        for li in discord.utils.as_chunks(_url_buttons, max_size=5):
+            e = embed.copy()
             for url_button in li:
-                value = _("Message Jump Link: {message_jump_link}\n").format(message_jump_link=f"https://discord.com/channels/{ctx.guild.id}/{url_button['message'].replace('-', '/')}")
-                value += "\n".join([f"• `{config_identifier}` - Emoji {ctx.bot.get_emoji(int(data['emoji'])) if data['emoji'].isdigit() else data['emoji']} - Label `{data['text_button']}` - URL `{data['url']}`" for config_identifier, data in url_button.items() if config_identifier != "message"])
-                embed.add_field(
-                    name="\u200B", value=value, inline=False
+                value = _("Message Jump Link: {message_jump_link}\n").format(
+                    message_jump_link=f"https://discord.com/channels/{ctx.guild.id}/{url_button['message'].replace('-', '/')}"
                 )
-            embeds.append(embed)
+                value += "\n".join(
+                    [
+                        f"• `{config_identifier}` - Emoji {(ctx.bot.get_emoji(int(data['emoji'])) if data['emoji'].isdigit() else data['emoji']) if data['emoji'] is not None else '`None`'} - Label `{data['text_button']}` - URL `{data['url']}`"
+                        for config_identifier, data in url_button.items()
+                        if config_identifier != "message"
+                    ]
+                )
+                for page in pagify(value, page_length=1024):
+                    e.add_field(
+                        name="\u200B",
+                        value=page,
+                        inline=False,
+                    )
+            embeds.append(e)
         await Menu(pages=embeds).start(ctx)
 
     @urlbuttons.command()
-    @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx: commands.Context) -> None:
         """Clear all url-buttons for a guild."""
         await self.config.guild(ctx.guild).url_buttons.clear()
         await ctx.send(_("All url-buttons purged."))
 
-    def get_buttons(self, config: typing.Dict, message: typing.Union[discord.Message, str]) -> discord.ui.View:
+    def get_buttons(
+        self, config: typing.Dict, message: typing.Union[discord.Message, str]
+    ) -> discord.ui.View:
         message = (
             f"{message.channel.id}-{message.id}"
             if isinstance(message, discord.Message)
