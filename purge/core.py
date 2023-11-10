@@ -24,7 +24,7 @@ from .utils import (
     has_hybrid_permissions,
 )
 
-log: logging.Logger = logging.getLogger("red.seina.purge")
+log: logging.Logger = logging.getLogger("grief.purge")
 
 
 class Purge(commands.Cog):
@@ -87,10 +87,8 @@ class Purge(commands.Cog):
         await super().cog_unload()
 
     @commands.guild_only()
-    @commands.bot_has_permissions(manage_messages=True)
-    @has_hybrid_permissions(manage_messages=True, read_message_history=True)
-    @app_commands.describe(number="The number of messages you want to delete.")
-    @commands.hybrid_group(name="purge", aliases=["clean", "cleanup"], invoke_without_command=True)
+    @commands.has_permissions(manage_messages=True)
+    @commands.group(invoke_without_command=True)
     async def _purge(
         self,
         ctx: commands.GuildContext,
