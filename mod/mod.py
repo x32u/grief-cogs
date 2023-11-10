@@ -19,6 +19,7 @@ from .kickban import KickBanMixin
 from .names import ModInfo
 from .slowmode import Slowmode
 from .settings import ModSettings
+from grief.core.utils.chat_formatting import box, humanize_list
 
 from grief.core.utils.predicates import MessagePredicate
 from typing import Any, Dict, Final, List, Literal, Optional
@@ -354,3 +355,99 @@ class Mod(
         )
         toggle = await self.config.guild(ctx.guild).toggle()
         await ctx.send(f"AutoPublisher has been {'enabled' if toggle else 'disabled'}.")
+
+    @commands.bot_has_permissions(embed_links=True)
+    @app_commands.describe(
+        add_or_remove="Add or remove channels for your guild.",
+        channels="The channels to add or remove.",
+    )
+    @autopublisher.command(
+        aliases=["ignorechannels"], usage="<add_or_remove> <channels>"
+    )
+    async def ignore(
+        self,
+        ctx: commands.Context,
+        add_or_remove: Literal["add", "remove"],
+        channels: commands.Greedy[discord.TextChannel] = None,
+    ) -> None:
+        """Add or remove channels for your guild.
+
+        `<add_or_remove>` should be either `add` to add channels or `remove` to remove channels.
+
+        **Example:**
+        - `[p]autopublisher ignore add #news`
+        - `[p]autopublisher ignore remove #news`
+
+        **Note:**
+        - You can add or remove multiple channels at once.
+        - You can also use channel ID instead of mentioning the channel.
+        """
+        if channels is None:
+            await ctx.send("`Channels` is a required argument.")
+            return
+
+        async with self.config.guild(ctx.guild).ignored_channels() as c:
+            for channel in channels:
+                if channel.is_news():  # add check for news channel
+                    if add_or_remove.lower() == "add":
+                        if not channel.id in c:
+                            c.append(channel.id)
+
+                    elif add_or_remove.lower() == "remove":
+                        if channel.id in c:
+                            c.remove(channel.id)
+
+        news_channels = [
+            channel for channel in channels if channel.is_news()
+        ]  # filter news channels
+        ids = len(news_channels)
+        embed = discord.Embed(
+            title="Success!",
+            description=f"{'added' if add_or_remove.lower() == 'add' else 'removed'} {ids} {'channel' if ids == 1 else 'channels'}.",
+            color=0xE91E63,
+        )
+        embed.add_field(
+            name=f"{'channel:' if ids == 1 else 'channels:'}",
+            value=humanize_list([channel.mention for channel in news_channels]),
+        )  # This needs menus to be able to show all channels if there are more than 25 channels.
+        await ctx.send(embed=embed)
+
+    @commands.bot_has_permissions(embed_links=True)
+    @autopublisher.command(aliases=["view"])
+    async def settings(self, ctx: commands.Context) -> None:
+        """Show AutoPublisher setting."""
+        data = await self.config.guild(ctx.guild).all()
+        toggle = data["toggle"]
+        channels = data["ignored_channels"]
+        ignored_channels: List[str] = []
+        for channel in channels:
+            channel = ctx.guild.get_channel(channel)
+            ignored_channels.append(channel.mention)
+        embed = discord.Embed(
+            title="AutoPublisher Setting",
+            description="""
+            **Toggle:** {toggle}
+            **Ignored Channels:** {ignored_channels}
+            """.format(
+                toggle=toggle,
+                ignored_channels=humanize_list(ignored_channels)
+                if ignored_channels
+                else "None",
+            ),
+            color=await ctx.embed_color(),
+        )
+        await ctx.send(embed=embed)
+
+    @autopublisher.command()
+    async def reset(self, ctx: commands.Context) -> None:
+        """Reset AutoPublisher setting."""
+        view = ConfirmView(ctx.author, disable_buttons=True)
+        view.message = await ctx.send(
+            "Are you sure you want to reset AutoPublisher setting?", view=view
+        )
+        await view.wait()
+        if view.result:
+            await self.config.guild(ctx.guild).clear()
+            await ctx.send("AutoPublisher setting has been reset.")
+        else:
+            await ctx.send("AutoPublisher setting reset has been cancelled.")
