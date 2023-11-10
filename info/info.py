@@ -79,12 +79,12 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.avatar == None:
-            em = discord.Embed(color=0x313338,description=f"{member.mention} doesn't have a pfp set.")
+            em = discord.Embed(color=0xEEEFF1,description=f"{member.mention} doesn't have a pfp set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
             avatar_url = user.avatar.url
             button1 = Button(label="avatar", url=avatar_url)
-            e = discord.Embed(color=0x313338, url=user.avatar.url)
+            e = discord.Embed(color=0xEEEFF1, url=user.avatar.url)
             e.set_author(name=f"{member.display_name}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=avatar_url)
             view = View()
@@ -113,10 +113,10 @@ class Info(commands.Cog):
     async def servericon(self, ctx):
         """Fetch the server icon."""
         if ctx.guild.icon is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon", color=0xEEEFF1)
             await ctx.reply(embed=embed)
             return
-        e = discord.Embed(color=0x313338)
+        e = discord.Embed(color=0xEEEFF1)
         e.set_author(name=f"{ctx.guild.name}'s server icon", icon_url=f"{ctx.guild.icon.url}")
         e.set_image(url=f"{ctx.guild.icon.url}")
         avatar = Button(label="server icon", url=f"{ctx.guild.icon.url}")
@@ -129,10 +129,10 @@ class Info(commands.Cog):
     async def serverbanner(self, ctx):
         """Fetch the server banner."""
         if ctx.guild.banner is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner", color=0xEEEFF1)
             await ctx.reply(embed=embed)
             return
-        e = discord.Embed(color=0x313338)
+        e = discord.Embed(color=0xEEEFF1)
         e.set_author(name=f"{ctx.guild.name}'s server banner", icon_url=f"{ctx.guild.icon.url}")
         e.set_image(url=f"{ctx.guild.banner.url}")
         button = Button(label="server banner", url=f"{ctx.guild.banner.url}")
@@ -145,12 +145,12 @@ class Info(commands.Cog):
     async def invitesplash(self, ctx: commands.Context):
         """Fetch a servers invite splash."""
         if discord.Guild.discovery_splash == None:
-            em = discord.Embed(color=0x313338, description=f"This server doesn't have a invite splash set.")
+            em = discord.Embed(color=0xEEEFF1, description=f"This server doesn't have a invite splash set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
             invsplash_url = ctx.guild.splash
             button1 = Button(label="invite splash", url=ctx.guild.splash.url)
-            e = discord.Embed(color=0x313338)
+            e = discord.Embed(color=0xEEEFF1)
             e.set_image(url=invsplash_url)
             view = View()
             view.add_item(button1)
@@ -163,12 +163,12 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.banner == None:
-            em = discord.Embed(color=0x313338, description=f"{member.mention} doesn't have a banner on their profile")
+            em = discord.Embed(color=0xEEEFF1, description=f"{member.mention} doesn't have a banner on their profile")
             await ctx.reply(embed=em, mention_author=False)
         else:
             banner_url = user.banner.url
             button1 = Button(label="banner", url=banner_url)
-            e = discord.Embed(color=0x313338)
+            e = discord.Embed(color=0xEEEFF1)
             e.set_image(url=banner_url)
             view = View()
             view.add_item(button1)
@@ -766,7 +766,7 @@ class Info(commands.Cog):
         """Get info about role"""
         em = discord.Embed(
             title=chat.escape(role.name, formatting=True),
-            color= 0x313338,
+            color= 0xEEEFF1,
         )
         em.add_field(name=_("ID"), value=role.id)
         em.add_field(
