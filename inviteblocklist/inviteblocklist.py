@@ -211,7 +211,7 @@ class InviteBlocklist(commands.Cog):
             return
 
     @commands.group(name="inviteblock", aliases=["ibl", "inviteblocklist"])
-    @commands.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     async def invite_block(self, ctx: commands.Context):
         """
         Settings for managing invite link blocking
@@ -244,7 +244,7 @@ class InviteBlocklist(commands.Cog):
     ##########################################################################################
 
     @invite_block.command()
-    @commands.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     async def blockall(self, ctx: commands.Context, set_to: bool):
         """
         Automatically remove all invites regardless of their destination
