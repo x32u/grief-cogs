@@ -188,7 +188,7 @@ class ModInfo(MixinMeta):
         joined_at = user.joined_at
         voice_state = user.voice
         member_number = (
-            sorted(guild.user, key=lambda m: m.joined_at or ctx.message.created_at).index(
+            sorted(guild.member, key=lambda m: m.joined_at or ctx.message.created_at).index(
                 user
             )
             + 1
