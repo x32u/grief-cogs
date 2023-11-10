@@ -295,7 +295,7 @@ class ModInfo(MixinMeta):
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
 
-        await ctx.send(embed=data)
+        await ctx.reply(embed=data, mention_author=False)
 
     @commands.command(hidden=True)
     async def names(self, ctx: commands.Context, *, user: discord.Member):
