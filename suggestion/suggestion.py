@@ -222,8 +222,8 @@ class Suggestion(commands.Cog):
         await ctx.send(content=content, embed=embed)
 
     @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    @commands.group(invoke_without_command=True)
+    @commands.has_permissions(manage_messages=True)
+    @commands.group(autohelp=True, invoke_without_command=True)
     async def suggestset(self, ctx: commands.Context):
         """Various Suggestion settings."""
 
