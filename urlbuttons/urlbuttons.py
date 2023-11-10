@@ -299,6 +299,7 @@ class UrlButtons(Cog):
         await Menu(pages=embeds).start(ctx)
 
     @urlbuttons.command(hidden=False)
+    @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx: commands.Context) -> None:
         """Clear all url-buttons for a guild."""
         await self.config.guild(ctx.guild).url_buttons.clear()
