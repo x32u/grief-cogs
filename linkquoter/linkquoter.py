@@ -171,7 +171,7 @@ class LinkQuoter(Cog):
             embed = discord.Embed(
                 description=f">>> {message.content}" if message.content.strip() else None,
                 timestamp=message.created_at,
-                color=message.author.color,
+                color=0x313338,
             )
 
         if author_field:
