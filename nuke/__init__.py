@@ -6,9 +6,7 @@ import AAA3A_utils
 from grief.core.bot import Red  # isort:skip
 from grief.core.utils import get_end_user_data_statement
 
-from .clearchannel import ClearChannel
-
-__red_end_user_data_statement__ = get_end_user_data_statement(file=__file__)
+from .nuke import nuke
 
 
 async def setup(bot: Red) -> None:
