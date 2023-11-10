@@ -177,8 +177,8 @@ class Roles(MixinMeta):
         return True
 
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_roles=True)
-    @commands.group(invoke_without_command=True)
+    @commands.has_permissions(manage_roles=True)
+    @commands.hybrid_group()
     async def role(
         self, ctx: commands.Context, member: TouchableMember(False), *, role: StrictRole(False)
     ):
