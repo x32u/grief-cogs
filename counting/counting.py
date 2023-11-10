@@ -34,7 +34,7 @@ class Counting(commands.Cog):
             if user_id == await self.config.guild(guild).last():
                 await self.config.guild(guild).last.clear()
                 
-    @checks.admin()
+    @commands.has_permissions(manage_channels=True)
     @checks.bot_has_permissions(manage_channels=True, manage_messages=True)
     @commands.group(autohelp=True, aliases=["counting"])
     @commands.guild_only()
