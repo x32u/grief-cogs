@@ -88,9 +88,10 @@ class UrlButtons(Cog):
         await self.config.guild(message.guild).url_buttons.set(config)
 
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_messages=True)
-    @commands.hybrid_group(autohelp=True)
-    async def urlbuttons(self, ctx: commands.Context) -> None:
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(manage_messages=True)
+    @commands.group(name="urlbuttons", aliases=["tickettoolset"])
+    async def urlbuttons():
         """Group of commands to use UrlButtons."""
         pass
 
