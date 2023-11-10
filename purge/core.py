@@ -88,7 +88,7 @@ class Purge(commands.Cog):
 
     @commands.group(name="purge", invoke_without_command=True)
     @commands.guild_only()
-    @commands.admin_or_permissions(administrator=True)
+    @commands.admin_or_permissions(manage_messages=True)
     async def _purge(
         self,
         ctx: commands.GuildContext,
