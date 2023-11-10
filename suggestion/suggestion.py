@@ -226,6 +226,7 @@ class Suggestion(commands.Cog):
     @commands.group(autohelp=True, invoke_without_command=True)
     async def suggestset(self, ctx: commands.Context):
         """Various Suggestion settings."""
+        pass
 
     @suggestset.command(name="channel")
     async def suggestset_channel(
