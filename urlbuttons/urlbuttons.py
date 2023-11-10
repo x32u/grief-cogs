@@ -265,6 +265,7 @@ class UrlButtons(Cog):
     @commands.has_permissions(manage_messages=True)
     @urlbuttons.command()
     async def list(self, ctx: commands.Context, message: discord.Message = None) -> None:
+        """List all url buttons on the server."""
         url_buttons = await self.config.guild(ctx.guild).url_buttons()
         for url_button in url_buttons:
             url_buttons[url_button]["message"] = url_button
