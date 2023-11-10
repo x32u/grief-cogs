@@ -150,7 +150,7 @@ class JoinPing(commands.Cog):
         cached_chans += channels
         await self.config.guild(ctx.guild).ping_channels.set(cached_chans)
         await self._build_cache()
-        embed = discord.Embed(description=f"The channel to ping in has been added, there are currently {len(cached_chans)} channels.", colour=0x313338)
+        embed = discord.Embed(description=f"The channel to ping in has been added.", colour=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @jpset.command(name="show", aliases=["showsettings", "settings", "setting"])
