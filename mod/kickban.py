@@ -284,7 +284,7 @@ class KickBanMixin(MixinMeta):
                     changed = True
         return changed
 
-    @commands.command()
+    @commands.command(autohelp=True, aliases=["k"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(kick_members=True)
@@ -370,7 +370,7 @@ class KickBanMixin(MixinMeta):
 
         await ctx.tick()
 
-    @commands.command(aliases=["hackban"], usage="<user_ids...> [days] [reason]")
+    @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
@@ -632,7 +632,7 @@ class KickBanMixin(MixinMeta):
             )
             await ctx.tick()
 
-    @commands.command()
+    @commands.command(autohelp=True, aliases=["sb"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
@@ -711,7 +711,7 @@ class KickBanMixin(MixinMeta):
             )
             await ctx.tick()
 
-    @commands.command()
+    @commands.command(autohelp=True, aliases=["vk"])
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(move_members=True)
     async def voicekick(
@@ -802,7 +802,7 @@ class KickBanMixin(MixinMeta):
         )
         await ctx.tick()
 
-    @commands.command()
+    @commands.command(autohelp=True, aliases=["vb"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(mute_members=True, deafen_members=True)
@@ -844,7 +844,7 @@ class KickBanMixin(MixinMeta):
         )
         await ctx.tick()
 
-    @commands.command()
+    @commands.command(autohelp=True, aliases=["ub"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
