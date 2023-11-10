@@ -1,5 +1,5 @@
 import datetime
-import coloarama
+import colorama
 from typing import List, Tuple, cast
 
 import discord
