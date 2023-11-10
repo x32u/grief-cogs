@@ -229,7 +229,6 @@ class LinkQuoter(Cog):
 
     @commands.guild_only()
     @commands.cooldown(rate=3, per=10, type=commands.BucketType.channel)
-    @commands.bot_has_permissions(embed_links=True)
     @commands.hybrid_command(aliases=["linquoter", "lq"])
     async def linkquote(self, ctx: commands.Context, *, message: LinkToMessageConverter = None) -> None:
         """Quote a message from a link."""
@@ -267,7 +266,7 @@ class LinkQuoter(Cog):
         self.views[view._message] = view
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @commands.hybrid_group()
     async def setlinkquoter(self, ctx: commands.Context) -> None:
         """Commands to configure LinkQuoter."""
