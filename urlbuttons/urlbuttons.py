@@ -94,6 +94,7 @@ class UrlButtons(Cog):
         """Group of commands to use UrlButtons."""
         pass
 
+    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command(aliases=["+"])
     async def add(
         self,
@@ -155,6 +156,7 @@ class UrlButtons(Cog):
         await self.config.guild(ctx.guild).url_buttons.set(config)
         await self.list.callback(self, ctx, message=message)
 
+    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command()
     async def bulk(
         self,
@@ -209,6 +211,7 @@ class UrlButtons(Cog):
         await self.config.guild(ctx.guild).url_buttons.set(config)
         await self.list.callback(self, ctx, message=message)
 
+    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command(aliases=["-"])
     async def remove(self, ctx: commands.Context, message: discord.Message, config_identifier: str) -> None:
         """Remove a url-button for a message.
@@ -238,6 +241,7 @@ class UrlButtons(Cog):
         await self.config.guild(ctx.guild).url_buttons.set(config)
         await self.list.callback(self, ctx, message=message)
 
+    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command()
     async def clear(self, ctx: commands.Context, message: discord.Message) -> None:
         """Clear all url-buttons for a message."""
@@ -258,7 +262,7 @@ class UrlButtons(Cog):
         await self.config.guild(ctx.guild).url_buttons.set(config)
         await ctx.send(_("Url-buttons cleared for this message."))
 
-    @commands.has_permissions(ban_members=True)
+    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command()
     async def list(self, ctx: commands.Context, message: discord.Message = None) -> None:
         url_buttons = await self.config.guild(ctx.guild).url_buttons()
