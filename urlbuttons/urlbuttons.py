@@ -298,7 +298,7 @@ class UrlButtons(Cog):
             embeds.append(embed)
         await Menu(pages=embeds).start(ctx)
 
-    @urlbuttons.command(hidden=False)
+    @urlbuttons.command()
     @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx: commands.Context) -> None:
         """Clear all url-buttons for a guild."""
