@@ -239,6 +239,7 @@ class LinkQuoter(commands.Cog):
         """
         Commands for managing the starboard
         """
+    
     @linkquoteset.command(name="auto")
     async def linkquoteset_auto(self, ctx, true_or_false: bool = None):
         """
