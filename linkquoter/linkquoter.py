@@ -237,6 +237,7 @@ class LinkQuoter(commands.Cog):
     @commands.group()
     async def linkquoteset(self, ctx: commands.Context):
         """Manage LinkQuoter settings."""
+        pass
 
     @linkquoteset.command(name="auto")
     async def linkquoteset_auto(self, ctx, true_or_false: bool = None):
