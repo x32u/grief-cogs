@@ -144,8 +144,7 @@ class DisboardReminder(commands.Cog):
         self.bump_tasks[guild.id][task_name] = task
         await asyncio.sleep(0.2)
 
-    @commands.admin_or_permissions(manage_guild=True)
-    @commands.guild_only()
+    @commands.bot_has_permissions(manage_channels=True)
     @commands.group(aliases=["bprm"])
     async def bumpreminder(self, ctx):
         """
