@@ -60,8 +60,7 @@ class EmbedUtils(Cog):
         await super().cog_unload()
 
     @commands.guild_only()
-    @commands.mod_or_permissions(manage_messages=True)
-    @commands.bot_has_permissions(embed_links=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.hybrid_group(invoke_without_command=True, aliases=["embedutils"])
     async def embed(
         self,
@@ -286,7 +285,7 @@ class EmbedUtils(Cog):
             data["content"] = message.content
         await ctx.send(file=text_to_file(text=json.dumps(data, indent=4), filename="embed.json"))
 
-    @commands.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @embed.command(name="edit", usage="<message> <json|yaml|jsonfile|yamlfile|pastebin|message> [data]")
     async def embed_edit(
         self,
@@ -344,7 +343,7 @@ class EmbedUtils(Cog):
         except discord.HTTPException as error:
             return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
 
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @embed.command(name="store", aliases=["storeembed"], usage="[global_level=False] [locked=False] <name> <json|yaml|jsonfile|yamlfile|pastebin|message> [data]")
     async def embed_store(
         self,
@@ -426,7 +425,7 @@ class EmbedUtils(Cog):
                 )
             stored_embeds[name] = {"author": ctx.author.id, "embed": embed.to_dict(), "locked": locked, "uses": 0}
 
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @embed.command(name="unstore", aliases=["unstoreembed"], usage="[global_level=False] <name>")
     async def embed_unstore(
         self,
@@ -444,7 +443,7 @@ class EmbedUtils(Cog):
                 raise commands.UserFeedbackCheckFailure(_("This is not a stored embed at this level."))
             del stored_embeds[name]
 
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @embed.command(name="list", aliases=["liststored", "liststoredembeds"], usage="[global_level=False]")
     async def embed_list(self, ctx: commands.Context, global_level: typing.Optional[bool]):
         """Get info about a stored embed."""
@@ -470,7 +469,7 @@ class EmbedUtils(Cog):
             embeds.append(e)
         await Menu(pages=embeds).start(ctx)
 
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @embed.command(name="info", aliases=["infostored", "infostoredembed"], usage="[global_level=False] <name>")
     async def embed_info(self, ctx: commands.Context, global_level: typing.Optional[bool], name: str):
         """Get info about a stored embed."""
@@ -496,7 +495,7 @@ class EmbedUtils(Cog):
         embed.set_author(name=ctx.me.display_name, icon_url=ctx.me.display_avatar)
         await ctx.send(embed=embed, allowed_mentions=discord.AllowedMentions(users=False))
 
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @embed.command(name="downloadstored", aliases=["downloadstoredembed"], usage="[global_level=False] <name>")
     async def embed_download_stored(self, ctx: commands.Context, global_level: typing.Optional[bool], name: str):
         """Download a JSON file for a stored embed."""
@@ -543,8 +542,7 @@ class EmbedUtils(Cog):
         except discord.HTTPException as error:
             return await StringToEmbed.embed_convert_error(ctx, _("Embed Send Error"), error)
 
-    @commands.mod_or_permissions(manage_webhooks=True)
-    @commands.bot_has_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @embed.command(name="postwebhook", aliases=["webhook"], usage="[channel_or_message=<CurrentChannel>] <username> <avatar_url> [global_level=False] <names>")
     async def embed_post_webhook(
         self,
