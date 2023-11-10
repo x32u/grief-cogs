@@ -30,7 +30,7 @@ class ModInfo(MixinMeta):
         nicks = list(map(escape_spoilers_and_mass_mentions, filter(None, nicks)))
         return usernames, display_names, nicks
 
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(manage_nicknames=True)
     @commands.admin_or_permissions(manage_nicknames=True)
@@ -169,7 +169,7 @@ class ModInfo(MixinMeta):
             string += f"{status_string}\n"
         return string
 
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
     async def userinfo(self, ctx, *, user: discord.Member = None):
@@ -291,7 +291,7 @@ class ModInfo(MixinMeta):
 
         await ctx.send(embed=data)
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def names(self, ctx: commands.Context, *, user: discord.Member):
         """Show previous usernames, global display names, and server nicknames of a member."""
         mod = self.bot.get_cog("Mod")
