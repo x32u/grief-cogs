@@ -24,7 +24,7 @@ class MyMessageConverter(commands.MessageConverter):
 
 @cog_i18n(_)
 class UrlButtons(Cog):
-    """A cog to have url-buttons!"""
+    """Setup buttons to place on embeds/messages sent by grief that will send them to a website."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)
