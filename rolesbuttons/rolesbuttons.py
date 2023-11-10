@@ -203,8 +203,7 @@ class RolesButtons(Cog):
         await self.config.guild(message.guild).roles_buttons.set(config)
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
-    # @commands.bot_has_permissions(manage_roles=True, embed_links=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.hybrid_group()
     async def rolesbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use RolesButtons."""
