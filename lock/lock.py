@@ -29,8 +29,7 @@ class Lock(commands.Cog):
     async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
         return
 
-    @commands.bot_has_permissions(manage_roles=True)
-    @commands.admin_or_permissions(manage_roles=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
     async def lock(
         self,
@@ -103,8 +102,7 @@ class Lock(commands.Cog):
         if msg:
             await ctx.send(msg)
 
-    @commands.bot_has_permissions(manage_roles=True)
-    @commands.admin_or_permissions(manage_roles=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.command()
     async def viewlock(
         self,
@@ -239,8 +237,7 @@ class Lock(commands.Cog):
         if msg:
             await ctx.send(msg)
 
-    @commands.bot_has_permissions(manage_roles=True)
-    @commands.admin_or_permissions(manage_roles=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
     async def unlock(
         self,
@@ -311,8 +308,7 @@ class Lock(commands.Cog):
         if msg:
             await ctx.send(msg)
 
-    @commands.bot_has_permissions(manage_roles=True)
-    @commands.admin_or_permissions(manage_roles=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
     async def unviewlock(
         self,
