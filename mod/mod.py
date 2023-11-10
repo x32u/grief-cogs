@@ -271,3 +271,35 @@ class Mod(
                         unban_count += 1
 
         await ctx.send(_("Done. Unbanned {unban_count} users.").format(unban_count=unban_count))
+
+    @commands.command()
+    @commands.bot_has_permissions(manage_messages=True, view_channel=True)
+    async def toggle(self, ctx: commands.Context):
+        """Toggle AutoPublisher enable or disable.
+
+        - It's disabled by default.
+            - Please ensure that the bot has access to `view_channel` in your news channels. it also need `manage_messages` to be able to publish.
+
+        **Note:**
+        - This cog requires News Channel. If you don't have it, you can't use this cog.
+            - Learn more [here on how to enable](https://support.discord.com/hc/en-us/articles/360047132851-Enabling-Your-Community-Server) community server. (which is a part of news channel feature.)
+        """
+        if "NEWS" not in ctx.guild.features:
+            view = discord.ui.View()
+            style = discord.ButtonStyle.gray
+            discordinfo = discord.ui.Button(
+                style=style,
+                label="Learn more here",
+                url="https://support.discord.com/hc/en-us/articles/360047132851-Enabling-Your-Community-Server",
+                emoji="<:icons_info:880113401207095346>",
+            )
+            view.add_item(item=discordinfo)
+            return await ctx.send(
+                f"Your server doesn't have News Channel feature. Please enable it first.",
+                view=view,
+            )
+        await self.config.guild(ctx.guild).toggle.set(
+            not await self.config.guild(ctx.guild).toggle()
+        )
+        toggle = await self.config.guild(ctx.guild).toggle()
+        await ctx.send(f"AutoPublisher has been {'enabled' if toggle else 'disabled'}.")
