@@ -1,16 +1,15 @@
 import datetime
-import colorama
 from typing import List, Tuple, cast
 
 import discord
-from grief.core import commands, i18n
-from grief.core.utils.chat_formatting import bold, pagify
-from grief.core.utils.common_filters import (
+from redbot.core import commands, i18n
+from redbot.core.utils.chat_formatting import bold, pagify
+from redbot.core.utils.common_filters import (
     filter_invites,
     filter_various_mentions,
     escape_spoilers_and_mass_mentions,
 )
-from grief.core.utils.mod import get_audit_reason
+from redbot.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
 
@@ -24,7 +23,8 @@ class ModInfo(MixinMeta):
 
     async def get_names(self, member: discord.Member) -> Tuple[List[str], List[str], List[str]]:
         user_data = await self.config.user(member).all()
-        usernames, display_names = user_data["past_names"]
+        usernames, display_names = user_data["past_names"], user_data["past_display_names"]
+        nicks = await self.config.member(member).past_nicks()
         usernames = list(map(escape_spoilers_and_mass_mentions, filter(None, usernames)))
         display_names = list(map(escape_spoilers_and_mass_mentions, filter(None, display_names)))
         nicks = list(map(escape_spoilers_and_mass_mentions, filter(None, nicks)))
@@ -192,6 +192,7 @@ class ModInfo(MixinMeta):
         is_special = member.id == 96130341705637888 and guild.id == 133049272517001216
 
         roles = member.roles[-1:0:-1]
+        usernames, display_names, nicks = await self.get_names(member)
 
         if is_special:
             joined_at = special_date
@@ -265,7 +266,7 @@ class ModInfo(MixinMeta):
         else:
             role_str = None
 
-        data = discord.Embed(description=status_string or activity, colour=0x313338)
+        data = discord.Embed(description=status_string or activity, colour=member.colour)
 
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
@@ -273,11 +274,22 @@ class ModInfo(MixinMeta):
             data.add_field(
                 name=_("Roles") if len(roles) > 1 else _("Role"), value=role_str, inline=False
             )
-            if voice_state and voice_state.channel:
+        for single_form, plural_form, names in (
+            (_("Previous Username"), _("Previous Usernames"), usernames),
+            (_("Previous Global Display Name"), _("Previous Global Display Names"), display_names),
+            (_("Previous Server Nickname"), _("Previous Server Nicknames"), nicks),
+        ):
+            if names:
                 data.add_field(
-                    name=_("Current voice channel"),
-                    value="{0.mention} ID: {0.id}".format(voice_state.channel),
+                    name=plural_form if len(names) > 1 else single_form,
+                    value=filter_invites(", ".join(names)),
                     inline=False,
+                )
+        if voice_state and voice_state.channel:
+            data.add_field(
+                name=_("Current voice channel"),
+                value="{0.mention} ID: {0.id}".format(voice_state.channel),
+                inline=False,
             )
         data.set_footer(text=_("Member #{} | User ID: {}").format(member_number, member.id))
 
@@ -289,16 +301,17 @@ class ModInfo(MixinMeta):
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
 
-        await ctx.reply(embed=data, mention_author=False)
+        await ctx.send(embed=data)
 
     @commands.command()
     async def names(self, ctx: commands.Context, *, member: discord.Member):
         """Show previous usernames, global display names, and server nicknames of a member."""
-        usernames, nicks = await self.get_names(member)
+        usernames, display_names, nicks = await self.get_names(member)
         parts = []
         for header, names in (
             (_("Past 20 usernames:"), usernames),
-            (_("Past 20 server nicknames:\n"), nicks),
+            (_("Past 20 global display names:"), display_names),
+            (_("Past 20 server nicknames:"), nicks),
         ):
             if names:
                 parts.append(bold(header) + ", ".join(names))
