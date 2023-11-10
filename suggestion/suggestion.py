@@ -132,9 +132,9 @@ class Suggestion(commands.Cog):
         except discord.Forbidden:
             pass
         
+    @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
-    @commands.group(invoke_without_command=True)
+    @commands.has_guild_permissions(manage_messages=True)
     async def approve(
         self,
         ctx: commands.Context,
@@ -221,12 +221,11 @@ class Suggestion(commands.Cog):
         )
         await ctx.send(content=content, embed=embed)
 
+    @commands.has_guild_permissions(manage_guild=True)
+    @commands.group(autohelp=True, aliases=["suggestion"])
     @commands.guild_only()
-    @commands.has_permissions(manage_messages=True)
-    @commands.group(autohelp=True, invoke_without_command=True)
     async def suggestset(self, ctx: commands.Context):
         """Various Suggestion settings."""
-        pass
 
     @suggestset.command(name="channel")
     async def suggestset_channel(
