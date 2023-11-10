@@ -2,14 +2,14 @@ import datetime
 from typing import List, Tuple, cast
 
 import discord
-from redbot.core import commands, i18n
-from redbot.core.utils.chat_formatting import bold, pagify
-from redbot.core.utils.common_filters import (
+from grief.core import commands, i18n
+from grief.core.utils.chat_formatting import bold, pagify
+from grief.core.utils.common_filters import (
     filter_invites,
     filter_various_mentions,
     escape_spoilers_and_mass_mentions,
 )
-from redbot.core.utils.mod import get_audit_reason
+from grief.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
 
