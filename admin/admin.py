@@ -289,8 +289,7 @@ class Admin(commands.Cog):
             )
 
     @commands.group()
-    @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def editrole(self, ctx: commands.Context):
         """Edit role settings."""
         pass
