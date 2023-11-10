@@ -38,8 +38,7 @@ class ClearChannel(Cog, DashboardIntegration):
         return {}
 
     @commands.guild_only()
-    @commands.bot_has_permissions(manage_channels=True)
-    @commands.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.hybrid_command(name="nuke")
     async def nuke_channel(self, ctx: commands.Context, confirmation: bool = False) -> None:
         """Delete all messages from the current channel by duplicating it and then deleting it.
