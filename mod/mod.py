@@ -5,6 +5,7 @@ from abc import ABC
 from collections import defaultdict
 from typing import Literal
 import discord
+import logging
 
 from grief.core import Config, commands
 from grief.core.bot import Red
@@ -173,6 +174,49 @@ class Mod(
                             guild_data["mention_spam"] = {}
                         guild_data["mention_spam"]["ban"] = current_state
             await self.config.version.set("1.3.0")
+
+    @commands.Cog.listener()
+    async def on_message_without_command(self, message: discord.Message) -> None:
+        """Publish message to news channel."""
+        if message.guild is None:
+            return
+        if not await self.config.guild(message.guild).toggle():
+            return
+        if message.channel.id in (
+            await self.config.guild(message.guild).ignored_channels()
+        ):
+            return
+        if await self.bot.cog_disabled_in_guild(self, message.guild):
+            return
+        if (
+            not message.guild.me.guild_permissions.manage_messages
+            or not message.guild.me.guild_permissions.view_channel
+        ):
+            if await self.config.guild(message.guild).toggle():
+                await self.config.guild(message.guild).toggle.set(False)
+                log.info(
+                    f"AutoPublisher has been disabled in {message.guild} due to missing permissions."
+                )
+            return
+        if "NEWS" not in message.guild.features:
+            if await self.config.guild(message.guild).toggle():
+                await self.config.guild(message.guild).toggle.set(False)
+                log.info(
+                    f"AutoPublisher has been disabled in {message.guild} due to News Channel feature is not enabled."
+                )
+            return
+        if not message.channel.is_news():
+            return
+        if message.channel.is_news():
+            try:
+                await asyncio.sleep(0.5)
+                await asyncio.wait_for(message.publish(), timeout=60)
+            except (
+                discord.HTTPException,
+                discord.Forbidden,
+                asyncio.TimeoutError,
+            ) as e:
+                log.error(e)
 
     @commands.command(hidden=True)
     @commands.is_owner()
