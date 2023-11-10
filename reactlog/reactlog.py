@@ -21,7 +21,7 @@ class ReactLog(commands.Cog):
             channel=None, log_all=False, react_add=False, react_remove=False
         )
 
-    @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_guild=True)
     @commands.guild_only()
     @commands.hybrid_group(aliases=["reactionlog"])
     async def reactlog(self, ctx: commands.Context):
