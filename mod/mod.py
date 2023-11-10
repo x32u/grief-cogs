@@ -355,12 +355,7 @@ class Mod(
         )
         toggle = await self.config.guild(ctx.guild).toggle()
         await ctx.send(f"AutoPublisher has been {'enabled' if toggle else 'disabled'}.")
-
-    @commands.bot_has_permissions(embed_links=True)
-    @app_commands.describe(
-        add_or_remove="Add or remove channels for your guild.",
-        channels="The channels to add or remove.",
-    )
+        
     @autopublisher.command(
         aliases=["ignorechannels"], usage="<add_or_remove> <channels>"
     )
