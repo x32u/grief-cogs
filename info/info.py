@@ -178,25 +178,17 @@ class Info(commands.Cog):
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
     async def userinfo(self, ctx, *, member: discord.Member = None):
-        """Show information about a member.
-        """
+        """Show information about a member."""
         author = ctx.author
         guild = ctx.guild
 
         if not member:
             member = author
 
-        #  A special case for a special someone :^)
-        special_date = datetime.datetime(2016, 1, 10, 6, 8, 4, 443000, datetime.timezone.utc)
-        is_special = member.id == 96130341705637888 and guild.id == 133049272517001216
-
         roles = member.roles[-1:0:-1]
         usernames, display_names, nicks = await self.get_names(member)
 
-        if is_special:
-            joined_at = special_date
-        else:
-            joined_at = member.joined_at
+        joined_at = member.joined_at
         voice_state = member.voice
         member_number = (
             sorted(guild.members, key=lambda m: m.joined_at or ctx.message.created_at).index(
