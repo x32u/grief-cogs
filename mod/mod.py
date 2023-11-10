@@ -13,6 +13,7 @@ from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import AsyncIter
 from grief.core.utils._internal_utils import send_to_owners_with_prefix_replaced
 from grief.core.utils.chat_formatting import inline
+from grief.core.utils.views import ConfirmView
 from .events import Events
 from .kickban import KickBanMixin
 from .names import ModInfo
