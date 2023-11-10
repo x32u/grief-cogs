@@ -87,7 +87,7 @@ class JoinPing(commands.Cog):
             return await ctx.send("The time must be above 5 seconds.")
         await self.config.guild(ctx.guild).delete_after.set(seconds)
         await self._build_cache()
-        await ctx.send(f"The ping message will be deleted after {seconds} seconds.")
+        await ctx.send(f"<:grief_check:1107472942830456892> The ping message will be deleted after {seconds} seconds.")
 
     @jpset.command(name="message", aliases=["m"])
     async def jpset_msg(self, ctx, *, message: str):
@@ -106,7 +106,7 @@ class JoinPing(commands.Cog):
         """
         await self.config.guild(ctx.guild).ping_message.set(message)
         await self._build_cache()
-        embed = discord.Embed(description=f"The ping message has been set to:\n{message}", colour=0x313338)
+        embed = discord.Embed(description=f"<:grief_check:1107472942830456892> The ping message has been set to:\n{message}", colour=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @jpset.group(name="channel", aliases=["c", "channels"], invoke_without_command=True)
@@ -131,7 +131,7 @@ class JoinPing(commands.Cog):
 
         await self.config.guild(ctx.guild).ping_channels.set(cached_chans)
         await self._build_cache()
-        embed = discord.Embed(description=f"The channel to ping in has been removed. There are currently {len(cached_chans)} channels.", colour=0x313338)
+        embed = discord.Embed(description=f"<:grief_check:1107472942830456892> The channel to ping in has been removed. There are currently {len(cached_chans)} channels.", colour=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
     
     @jpset_channels.command(name="add", aliases=["a"])
@@ -145,7 +145,7 @@ class JoinPing(commands.Cog):
         cached_chans += channels
         await self.config.guild(ctx.guild).ping_channels.set(cached_chans)
         await self._build_cache()
-        embed = discord.Embed(description=f"The channel to ping in has been added. There are currently {len(cached_chans)} channels.", colour=0x313338)
+        embed = discord.Embed(description=f"<:grief_check:1107472942830456892> The channel to ping in has been added. There are currently {len(cached_chans)} channels.", colour=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @jpset.command(name="show", aliases=["showsettings", "settings", "setting"])
