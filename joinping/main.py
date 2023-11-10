@@ -76,9 +76,9 @@ class JoinPing(commands.Cog):
         """
         if not self.cache.get(ctx.guild.id):
             embed = discord.Embed(description=f"You have not added any channels to joinping.", colour=0x992D22)
-        await ctx.reply(embed=embed, mention_author=False)
 
         await self.on_member_join(ctx.author)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @jpset.command(name="deleteafter", aliases=["da"])
     async def jpset_da(self, ctx, seconds: int):
