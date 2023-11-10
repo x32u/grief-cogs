@@ -88,6 +88,11 @@ class Mod(
         self.cache: dict = {}
         self.tban_expiry_task = asyncio.create_task(self.tempban_expirations_task())
         self.last_case: dict = defaultdict(dict)
+        default_guild: Dict[str, Union[bool, List[int]]] = {
+            "toggle": False,
+            "ignored_channels": [],
+        }
+        self.config.register_guild(**default_guild)
 
     async def red_delete_data_for_user(
         self,
@@ -355,7 +360,7 @@ class Mod(
         )
         toggle = await self.config.guild(ctx.guild).toggle()
         await ctx.send(f"AutoPublisher has been {'enabled' if toggle else 'disabled'}.")
-        
+
     @autopublisher.command(
         aliases=["ignorechannels"], usage="<add_or_remove> <channels>"
     )
