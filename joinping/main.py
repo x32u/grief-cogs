@@ -158,7 +158,7 @@ class JoinPing(commands.Cog):
         )
 
     @jpset.command(name="show", aliases=["showsettings", "settings", "setting"])
-    async def jpset_show(self, ctx: commands.Context):
+    async def jpset_show(self, ctx):
         data = self.cache.setdefault(ctx.guild.id, guild_defaults)
         channels = data.get("ping_channels", [])
         message = data.get("ping_message", "{member.mention}")
