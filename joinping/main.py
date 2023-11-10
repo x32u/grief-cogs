@@ -67,19 +67,6 @@ class JoinPing(commands.Cog):
         Adjust the settings for the cog."""
         return await ctx.send_help()
 
-    @jpset.command(name="test", aliases=["testping"], hidden=True)
-    async def jpset_test(self, ctx):
-        """
-        Test whether the pings and message you set up work correctly.
-
-        This is hidden as to not abuse the pings.
-        """
-        if not self.cache.get(ctx.guild.id):
-            embed = discord.Embed(description=f"You have not added any channels to joinping.", colour=0x992D22)
-
-        await self.on_member_join(ctx.author)
-        await ctx.reply(embed=embed, mention_author=False)
-
     @jpset.command(name="deleteafter", aliases=["da"])
     async def jpset_da(self, ctx, seconds: int):
         """Set the time in seconds after which the ping message will be deleted."""
