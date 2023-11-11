@@ -137,7 +137,11 @@ class JoinPing(commands.Cog):
         await ctx.reply(embed=embed, mention_author=False)
 
     @jpset.command(name="show", aliases=["showsettings", "settings", "setting"])
+    @commands.bot_has_permissions(embed_links=True)
     async def jpset_show(self, ctx):
+        """
+        Show the current joinping settings.
+        """
         data = self.cache.setdefault(ctx.guild.id, guild_defaults)
         channels = data.get("ping_channels", [])
         message = data.get("ping_message", "{member.mention}")
@@ -150,7 +154,7 @@ class JoinPing(commands.Cog):
         embed = (
             discord.Embed(
                 title=f"JoinPing Settings for **__{ctx.guild.name}__**",
-                color=0x57F287(),
+                color=await ctx.embed_colour(),
             )
             .add_field(
                 name="Channels", value=" ".join([f"<#{i}>" for i in channels]), inline=False
