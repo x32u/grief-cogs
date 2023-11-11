@@ -1045,7 +1045,7 @@ class Info(commands.Cog):
 
         await ctx.reply(embed=data, mention_author=False)
         
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.guild_only()
     @commands.bot_has_permissions(embed_links=True)
     @checks.admin_or_permissions(kick_members=True)
