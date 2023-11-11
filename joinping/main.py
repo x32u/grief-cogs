@@ -1,29 +1,42 @@
 import logging
 
 import discord
+import TagScriptEngine as tse
 from grief.core import Config, commands
 from grief.core.bot import Red
 from grief.core.utils.chat_formatting import box, humanize_list
-
-from .utils import Coordinate
 
 log = logging.getLogger("grief.joinping")
 
 guild_defaults = {
     "ping_channels": [],
     "delete_after": 5,
-    "ping_message": "{member.mention}",
+    "ping_message": "{member(mention)}",
 }
 
 
 class JoinPing(commands.Cog):
-    """Mention users on join."""
+    """
+    Ghost ping users when they join."""
+
+    __version__ = "1.1.1"
+    __author__ = ["crayyy_zee"]
 
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=56789, force_registration=True)
         self.config.register_guild(**guild_defaults)
         self.cache = {}
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        pre_processed = super().format_help_for_context(ctx)
+        n = "\n" if "\n\n" not in pre_processed else ""
+        text = [
+            f"{pre_processed}{n}",
+            f"Cog Version: **{self.__version__}**",
+            f"Author: {humanize_list(self.__author__)}",
+        ]
+        return "\n".join(text)
 
     async def _build_cache(self):
         self.cache = await self.config.all_guilds()
@@ -32,7 +45,7 @@ class JoinPing(commands.Cog):
         return True
 
     @commands.Cog.listener()
-    async def on_member_join(self, member):
+    async def on_member_join(self, member: discord.Member):
         guild_data: dict = self.cache.get(member.guild.id)
         if not guild_data:
             return
@@ -40,15 +53,42 @@ class JoinPing(commands.Cog):
         if not guild_data.get("ping_channels"):
             return
 
+        message = guild_data.get("ping_message", "")
+        engine = tse.AsyncInterpreter(
+            [
+                tse.EmbedBlock(),
+                tse.LooseVariableGetterBlock(),
+                tse.StrictVariableGetterBlock(),
+            ]
+        )
+        resp = await engine.process(
+            message,
+            seed_variables={
+                "member": tse.MemberAdapter(member),
+                "server": tse.GuildAdapter(member.guild),
+            },
+        )
+        if not resp.body and not resp.actions.get("embed"):
+            return
+
         for i in guild_data.get("ping_channels"):
             channel = self.bot.get_channel(i)
             if not channel:
                 continue
 
-            message = f"{(guild_data.get('ping_message', '')).format_map(Coordinate(member=member, server=member.guild.name, guild=member.guild.name))}"
+            if channel.permissions_for(member.guild.me).send_messages is False:
+                continue
+
+            if channel.permissions_for(member.guild.me).embed_links is False and isinstance(
+                emb := resp.actions.get("embed"), discord.Embed
+            ):
+                await channel.send(f"{member.mention} {emb.description or ''}")
+                continue
+
             try:
                 await channel.send(
-                    message,
+                    content=resp.body or None,
+                    embed=resp.actions.get("embed"),
                     delete_after=guild_data.get("delete_after"),
                     allowed_mentions=discord.AllowedMentions(users=True),
                 )
@@ -67,43 +107,58 @@ class JoinPing(commands.Cog):
         Adjust the settings for the cog."""
         return await ctx.send_help()
 
+    @jpset.command(name="test", aliases=["testping"], hidden=True)
+    @commands.bot_has_permissions(embed_links=False)
+    async def jpset_test(self, ctx):
+        """
+        Test whether the pings and message you set up work correctly.
+
+        This is hidden as to not abuse the pings.
+        """
+        if not self.cache.get(ctx.guild.id):
+            return await ctx.send("You haven't set up the join ping yet ._.")
+
+        await self.on_member_join(ctx.author)
+
     @jpset.command(name="deleteafter", aliases=["da"])
+    @commands.bot_has_permissions(embed_links=True)
     async def jpset_da(self, ctx, seconds: int):
         """Set the time in seconds after which the ping message will be deleted."""
         if seconds < 5:
             return await ctx.send("The time must be above 5 seconds.")
         await self.config.guild(ctx.guild).delete_after.set(seconds)
         await self._build_cache()
-        embed = discord.Embed(description=f"The channel to ping message will now be deleted after {seconds} seconds.", colour=0xEEEFF1)
-        await ctx.reply(embed=embed, mention_author=False)
+        await ctx.send(f"The ping message will be deleted after {seconds} seconds.")
 
     @jpset.command(name="message", aliases=["m"])
+    @commands.bot_has_permissions(embed_links=True)
     async def jpset_msg(self, ctx, *, message: str):
         """Set the message that will be sent when a user joins.
 
         Usable placeholders include:
-        - member (the member that joined)
-            - member.mention (the mention)
-            - member.id (the id)
-            - member.name (the name)
-            - member.discriminator (the discriminator)
+        - {member} (the member that joined)
+            - {member(mention)} (the mention)
+            - {member(id)} (the id)
+            - {member(name)} (the name)
+            - {member(discriminator)} (the discriminator)
 
-        - server (the name of the server the member joined)
+        - {server} (the server the member joined)
 
-        These placeholders must be places within `{}` (curly brackets) to be replaced with actual values.
+        This messsage uses tagscript and allows embed
         """
         await self.config.guild(ctx.guild).ping_message.set(message)
         await self._build_cache()
-        embed = discord.Embed(description=f"<:grief_check:1107472942830456892> The ping message has been set to:\n{message}", colour=0xEEEFF1)
-        await ctx.reply(embed=embed, mention_author=False)
+        await ctx.send(f"The ping message has been set to:\n{message}")
 
     @jpset.group(name="channel", aliases=["c", "channels"], invoke_without_command=True)
+    @commands.bot_has_permissions(embed_links=True)
     async def jpset_channels(self, ctx):
         """
         Set the channels where the pings will be sent on member join."""
         return await ctx.send_help()
 
     @jpset_channels.command(name="remove", aliases=["r"])
+    @commands.bot_has_permissions(embed_links=True)
     async def jpsetchan_remove(self, ctx, *channels: discord.TextChannel):
         """
         Add the channels to the list of channels where the pings will be sent on member join."""
@@ -119,10 +174,17 @@ class JoinPing(commands.Cog):
 
         await self.config.guild(ctx.guild).ping_channels.set(cached_chans)
         await self._build_cache()
-        embed = discord.Embed(description=f"<:grief_check:1107472942830456892> The channel to ping in has been removed. There are currently {len(cached_chans)} channels.", colour=0xEEEFF1)
-        await ctx.reply(embed=embed, mention_author=False)
-    
+        await ctx.send(
+            f"The channel to ping in have been removed. There are currently {len(cached_chans)} channels."
+            + (
+                f"Following channels were not present in the list: {humanize_list([f'<#{chan}>' for chan in not_present])}"
+                if not_present
+                else ""
+            )
+        )
+
     @jpset_channels.command(name="add", aliases=["a"])
+    @commands.bot_has_permissions(embed_links=True)
     async def jpsetchan_add(self, ctx, *channels: discord.TextChannel):
         """
         Remove the channels from the list of channels where the pings will be sent on member join.
@@ -133,8 +195,14 @@ class JoinPing(commands.Cog):
         cached_chans += channels
         await self.config.guild(ctx.guild).ping_channels.set(cached_chans)
         await self._build_cache()
-        embed = discord.Embed(description=f"<:grief_check:1107472942830456892> The channel to ping in has been added. There are currently {len(cached_chans)} channels.", colour=0xEEEFF1)
-        await ctx.reply(embed=embed, mention_author=False)
+        await ctx.send(
+            f"The channel to ping in have been added. There are currently {len(cached_chans)} channels.\n"
+            + (
+                f"The following channels were already present: {humanize_list([f'<#{chan}>' for chan in al_present])}"
+                if al_present
+                else ""
+            )
+        )
 
     @jpset.command(name="show", aliases=["showsettings", "settings", "setting"])
     @commands.bot_has_permissions(embed_links=True)
