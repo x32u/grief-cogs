@@ -101,7 +101,7 @@ class JoinPing(commands.Cog):
 
     @commands.group(name="jpset", aliases=["joinpingset"], invoke_without_command=True)
     @commands.guild_only()
-    @commands.admin_or_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def jpset(self, ctx):
         """
         Adjust the settings for the cog."""
