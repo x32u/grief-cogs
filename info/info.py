@@ -766,7 +766,7 @@ class Info(commands.Cog):
         """Get info about role"""
         em = discord.Embed(
             title=chat.escape(role.name, formatting=True),
-            color= 0xEEEFF1,
+            color= 0x313338,
         )
         em.add_field(name=_("ID"), value=role.id)
         em.add_field(
