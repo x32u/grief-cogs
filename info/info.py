@@ -1044,3 +1044,55 @@ class Info(commands.Cog):
             data.set_footer(text=joined_on)
 
         await ctx.reply(embed=data, mention_author=False)
+        
+    @commands.command()
+    @commands.guild_only()
+    @commands.bot_has_permissions(embed_links=True)
+    @checks.admin_or_permissions(kick_members=True)
+    async def freshmembers(self, ctx, hours: int = 24):
+        """Show the members who joined in the specified timeframe
+
+        `hours`: A number of hours to check for new members, must be above 0"""
+        if hours < 1:
+            return await ctx.send("Consider putting hours above 0. Since that helps with searching for members. ;)")
+        elif hours > 300:
+            return await ctx.send("Please use something less then 300 hours.")
+
+        member_list = []
+        for member in ctx.guild.members:
+            if (
+                member.joined_at is not None
+                and member.joined_at > (ctx.message.created_at - datetime.timedelta(hours=hours))
+            ):
+                member_list.append([member.display_name, member.id, member.joined_at])
+
+        member_list.sort(key=lambda member: member[2], reverse=True)
+        member_string = ""
+        for member in member_list:
+            member_string += f"\n{member[0]} ({member[1]})"
+
+        pages = []
+        for page in pagify(escape(member_string, formatting=True), page_length=1000):
+            embed = discord.Embed(description=page)
+            embed.set_author(
+                name=f"{ctx.author.display_name}'s freshmeat of the day.",
+                icon_url=ctx.author.display_avatar,
+            )
+            pages.append(embed)
+
+        page_counter = 1
+        for page in pages:
+            page.set_footer(text=f"Page {page_counter} out of {len(pages)}")
+            page_counter += 1
+
+        if not pages:
+            return await ctx.send("No new members joined in specified timeframe.")
+
+        await menu(
+            ctx,
+            pages=pages,
+            controls=DEFAULT_CONTROLS,
+            message=None,
+            page=0,
+            timeout=90
+        )
