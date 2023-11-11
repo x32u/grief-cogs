@@ -1047,8 +1047,7 @@ class Info(commands.Cog):
         
     @commands.command(hidden=True)
     @commands.guild_only()
-    @commands.bot_has_permissions(embed_links=True)im   
-    @checks.admin_or_permissions(kick_members=True)
+    @commands.has_permissions(kick_members=True)
     async def freshmembers(self, ctx, hours: int = 24):
         """Show the members who joined in the specified timeframe
 
