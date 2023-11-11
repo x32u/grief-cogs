@@ -491,7 +491,7 @@ class Info(commands.Cog):
             for page in cf.pagify(rolelist, shorten_by=1400):
                 embed = discord.Embed(
                     description=f"**Total roles:** {len(ctx.guild.roles)}\n\n{page}",
-                    colour=0xEEEFF1,
+                    colour=0x313338,
                 )
                 embed_list.append(embed)
         else:
@@ -848,7 +848,7 @@ class Info(commands.Cog):
         voice_channels = humanize_number(len(guild.voice_channels))
         stage_channels = humanize_number(len(guild.stage_channels))
         if not details:
-            data = discord.Embed(description=created_at, colour=await ctx.embed_colour())
+            data = discord.Embed(description=created_at, colour=0x313338())
             data.add_field(
                 name=_("Users online"),
                 value=f"{online}/{total_users}" if total_users else _("Not available"),
@@ -942,7 +942,7 @@ class Info(commands.Cog):
 
             data = discord.Embed(
                 description=(f"{guild.description}\n\n" if guild.description else "") + created_at,
-                colour=0xEEEFF1,
+                colour=0x313338,
             )
             data.set_author(
                 name=guild.name,
