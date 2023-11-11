@@ -38,7 +38,6 @@ from textwrap import shorten
 from types import SimpleNamespace
 from typing import Optional, Union
 from datetime import datetime, timedelta
-delta = datetime.timedelta(days)
 
 from fixcogsutils.dpy_future import TimestampStyle, get_markdown_timestamp
 from fixcogsutils.formatting import bool_emojify
