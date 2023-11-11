@@ -771,7 +771,7 @@ class Info(commands.Cog):
         em.add_field(name=_("ID"), value=role.id)
         em.add_field(
             name=_("Permissions"),
-            value="[{0}](https://cogs.fixator10.ru/permissions-calculator/?v={0})".format(
+            value="[{0}](https://permissions.grief.cloud/?v={0})".format(
                 role.permissions.value
             ),
         )
