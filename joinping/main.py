@@ -107,19 +107,6 @@ class JoinPing(commands.Cog):
         Adjust the settings for the cog."""
         return await ctx.send_help()
 
-    @jpset.command(name="test", aliases=["testping"], hidden=True)
-    @commands.bot_has_permissions(embed_links=False)
-    async def jpset_test(self, ctx):
-        """
-        Test whether the pings and message you set up work correctly.
-
-        This is hidden as to not abuse the pings.
-        """
-        if not self.cache.get(ctx.guild.id):
-            return await ctx.send("You haven't set up the join ping yet ._.")
-
-        await self.on_member_join(ctx.author)
-
     @jpset.command(name="deleteafter", aliases=["da"])
     @commands.bot_has_permissions(embed_links=True)
     async def jpset_da(self, ctx, seconds: int):
