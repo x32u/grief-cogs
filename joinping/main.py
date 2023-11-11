@@ -30,7 +30,7 @@ class JoinPing(commands.Cog):
         n = "\n" if "\n\n" not in pre_processed else ""
         text = [
             f"{pre_processed}{n}",
-        return "\n".join(text)
+        return "\n".join(text)]
 
     async def _build_cache(self):
         self.cache = await self.config.all_guilds()
