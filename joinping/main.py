@@ -19,6 +19,9 @@ class JoinPing(commands.Cog):
     """
     Ghost ping users when they join."""
 
+    __version__ = "1.1.1"
+    __author__ = ["crayyy_zee"]
+
     def __init__(self, bot: Red):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=56789, force_registration=True)
@@ -29,8 +32,8 @@ class JoinPing(commands.Cog):
         pre_processed = super().format_help_for_context(ctx)
         n = "\n" if "\n\n" not in pre_processed else ""
         text = [
-            f"{pre_processed}{n}",
-        return "\n".join(text)]
+            f"{pre_processed}{n}"]
+        return text
 
     async def _build_cache(self):
         self.cache = await self.config.all_guilds()
