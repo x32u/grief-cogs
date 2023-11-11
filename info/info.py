@@ -1062,7 +1062,7 @@ class Info(commands.Cog):
         for member in ctx.guild.members:
             if (
                 member.joined_at is not None
-                and member.joined_at > (ctx.message.created_at - datetime.timedelta(hours=hours))
+                and member.joined_at > (ctx.message.created_at - datetime(hours=hours))
             ):
                 member_list.append([member.display_name, member.id, member.joined_at])
 
