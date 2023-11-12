@@ -97,7 +97,6 @@ class EmojiSteal(commands.Cog):
         return emojis
 
     @commands.command(name="enlarge", invoke_without_command=True)
-    @commands.has_permissions(manage_expressions=True)
     async def steal_command(self, ctx: commands.Context):
         """Enlarges the emojis and stickers of the message you reply to. Can also upload them with ;steal upload."""
         if not (emojis := await self.steal_ctx(ctx)):
