@@ -79,7 +79,7 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.avatar == None:
-            em = discord.Embed(color=0xEEEFF1,description=f"{member.mention} doesn't have a pfp set.")
+            em = discord.Embed(color=0x313338,description=f"{member.mention} doesn't have a pfp set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
             avatar_url = user.avatar.url
@@ -101,7 +101,7 @@ class Info(commands.Cog):
             await ctx.reply(self.MEMBER_NO_GUILD_AVATAR)
         else:
             gld_avatar_url = gld_avatar.url
-            embed = discord.Embed(colour=discord.Colour.dark_theme())
+            embed = discord.Embed(colour=0x313338)
             embed.title = f"Server avatar of {user.display_name}"
             embed.description = self.IMAGE_HYPERLINK.format(gld_avatar_url)
             embed.set_image(url=gld_avatar_url)
@@ -116,7 +116,7 @@ class Info(commands.Cog):
             embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon", color=0xEEEFF1)
             await ctx.reply(embed=embed)
             return
-        e = discord.Embed(color=0xEEEFF1)
+        e = discord.Embed(color=0x313338)
         e.set_author(name=f"{ctx.guild.name}'s server icon", icon_url=f"{ctx.guild.icon.url}")
         e.set_image(url=f"{ctx.guild.icon.url}")
         avatar = Button(label="server icon", url=f"{ctx.guild.icon.url}")
@@ -132,7 +132,7 @@ class Info(commands.Cog):
             embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner", color=0xEEEFF1)
             await ctx.reply(embed=embed)
             return
-        e = discord.Embed(color=0xEEEFF1)
+        e = discord.Embed(color=0x313338)
         e.set_author(name=f"{ctx.guild.name}'s server banner", icon_url=f"{ctx.guild.icon.url}")
         e.set_image(url=f"{ctx.guild.banner.url}")
         button = Button(label="server banner", url=f"{ctx.guild.banner.url}")
@@ -145,7 +145,7 @@ class Info(commands.Cog):
     async def invitesplash(self, ctx: commands.Context):
         """Fetch a servers invite splash."""
         if discord.Guild.discovery_splash == None:
-            em = discord.Embed(color=0xEEEFF1, description=f"This server doesn't have a invite splash set.")
+            em = discord.Embed(color=0x313338, description=f"This server doesn't have a invite splash set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
             invsplash_url = ctx.guild.splash
@@ -163,7 +163,7 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.banner == None:
-            em = discord.Embed(color=0xEEEFF1, description=f"{member.mention} doesn't have a banner on their profile")
+            em = discord.Embed(color=0x313338, description=f"{member.mention} doesn't have a banner on their profile")
             await ctx.reply(embed=em, mention_author=False)
         else:
             banner_url = user.banner.url
@@ -267,7 +267,7 @@ class Info(commands.Cog):
 				f'{status[m]} Mobile\n'
 				f'{status[w]} Web'
 			),
-			color=0xEEEFF1
+			color=0x313338
 		)
         if discord.version_info.major == 1:
             embed.set_thumbnail(url=member.avatar_url)
@@ -449,7 +449,7 @@ class Info(commands.Cog):
         if ctx.channel.permissions_for(ctx.guild.me).embed_links:
             embed = discord.Embed(
                 description=f"{user.mention} joined this guild on {joined_on}.",
-                color=0xEEEFF1,
+                color=0x313338,
             )
             await ctx.send(embed=embed)
         else:
