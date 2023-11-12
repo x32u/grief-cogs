@@ -452,7 +452,7 @@ class Snipe(RedCog):
                     )
                 embeds.append(embed)
             if len(embeds) == 1:
-                return await self.reply(ctx, embed=embeds[0])
+                return await self.reply(ctx, embed=embeds[0], mention_author=False)
             await BaseMenu(embeds, timeout=120).start(ctx)
         else:
             await ctx.reply("There's nothing to snipe!")
@@ -498,7 +498,7 @@ class Snipe(RedCog):
                 name=f"{author} ({author.id})",
                 icon_url=author.display_avatar.url,
             )
-            return await self.reply(ctx, embed=embed)
+            return await self.reply(ctx, embed=embed, mention_author=False)
         else:
             await ctx.reply("There's nothing to snipe!")
 
