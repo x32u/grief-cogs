@@ -337,8 +337,8 @@ class Snipe(RedCog):
             )
             old_content = self.get_content(message.old_content)
             new_content = self.get_content(message.new_content)
-            embed.add_field(name="Old Message:", value=old_content, inline=False)
-            embed.add_field(name="New Message:", value=new_content, inline=False)
+            embed.add_field(name="Old Message:", value=old_content, inline=True)
+            embed.add_field(name="New Message:", value=new_content, inline=True)
             embed.set_footer(
                 text=f"Sniped by: {str(ctx.author)}",
                 icon_url=ctx.author.display_avatar.url,
@@ -435,8 +435,8 @@ class Snipe(RedCog):
                 )
                 old_content = self.get_content(message.old_content)
                 new_content = self.get_content(message.new_content)
-                embed.add_field(name="Old Message:", value=old_content, inline=False)
-                embed.add_field(name="New Message:", value=new_content, inline=False)
+                embed.add_field(name="Old Message:", value=old_content, inline=True)
+                embed.add_field(name="New Message:", value=new_content, inline=True)
                 embed.set_footer(
                     text=f"Sniped by: {str(ctx.author)}",
                     icon_url=ctx.author.display_avatar.url,
@@ -573,9 +573,9 @@ class Snipe(RedCog):
                     color=0x2F3136,
                 )
                 embed.set_thumbnail(url=message.emote.url)
-                embed.add_field(name="Emote:", value=f"`{str(message.emote)}`", inline=False)
+                embed.add_field(name="Emote:", value=f"`{str(message.emote)}`", inline=True)
                 embed.add_field(
-                    name="Message:", value=f"[`Jump To Message`]({message.message})", inline=False
+                    name="Message:", value=f"[`Jump To Message`]({message.message})", inline=True
                 )
                 embed.set_footer(
                     text=f"Sniped by: {ctx.author}",
