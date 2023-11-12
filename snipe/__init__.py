@@ -293,7 +293,7 @@ class Snipe(RedCog):
                     embed.set_author(name="Unknown Member")
                 embeds.append(embed)
             if len(embeds) == 1:
-                return await self.reply(ctx, embed=embeds[0], mention_author=False)
+                return await ctx.reply(ctx, embed=embeds[0], mention_author=False)
             await BaseMenu(embeds, timeout=120).start(ctx)
         else:
             await ctx.reply("There's nothing to snipe!")
@@ -301,7 +301,7 @@ class Snipe(RedCog):
     @staticmethod
     def get_content(content: str, limit: int = 1024):
         return content if len(content) <= limit else f"{content[:limit - 3]}..."
-
+    
     @commands.guild_only()
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
