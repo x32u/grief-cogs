@@ -96,7 +96,8 @@ class EmojiSteal(commands.Cog):
             return None
         return emojis
 
-    @commands.group(name="enlarge", invoke_without_command=True)
+    @commands.command(name="enlarge", invoke_without_command=True)
+    @commands.has_permissions(manage_expressions=True)
     async def steal_command(self, ctx: commands.Context):
         """Steals the emojis and stickers of the message you reply to. Can also upload them with [p]steal upload."""
         if not (emojis := await self.steal_ctx(ctx)):
@@ -113,10 +114,9 @@ class EmojiSteal(commands.Cog):
         response = '\n'.join([emoji.url for emoji in emojis])
         await ctx.response.send_message(content=response, ephemeral=True)
 
-    @steal_command.command(name="steal")
+    @commands.command(name="steal")
     @commands.guild_only()
     @commands.has_permissions(manage_expressions=True)
-    @commands.bot_has_permissions(manage_expressions=True, add_reactions=True)
     async def steal_upload_command(self, ctx: commands.Context, *names: str):
         """Steals emojis and stickers you reply to and uploads them to this server."""
         if not (emojis := await self.steal_ctx(ctx)):
@@ -158,7 +158,6 @@ class EmojiSteal(commands.Cog):
     # context menu added in __init__
     @app_commands.guild_only()
     @app_commands.checks.has_permissions(manage_expressions=True)
-    @app_commands.checks.bot_has_permissions(manage_expressions=True)
     async def steal_upload_app_command(self, ctx: discord.Interaction, message: discord.Message):
         if message.stickers:
             emojis = message.stickers
@@ -216,7 +215,6 @@ class EmojiSteal(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_expressions=True)
-    @commands.bot_has_permissions(manage_expressions=True)
     async def uploadsticker(self, ctx: commands.Context, *, name: str = None):
         """Uploads a sticker to the server, useful for mobile."""
         if len(ctx.guild.stickers) >= ctx.guild.sticker_limit:
