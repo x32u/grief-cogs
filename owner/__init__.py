@@ -39,7 +39,7 @@ class Owner(commands.Cog):
     async def ping(self, ctx):
         """View bot latency."""
         start = time.monotonic()
-        ref = ctx.message.to_reference(fail_if_not_exists=False, mention_author=False)
+        ref = ctx.message.to_reference(fail_if_not_exists=False)
         message = await ctx.send("Pinging...", reference=ref)
         end = time.monotonic()
         totalPing = round((end - start) * 1000, 2)
