@@ -96,7 +96,7 @@ class EmojiSteal(commands.Cog):
             return None
         return emojis
 
-    @commands.group(name="steal", aliases=["emojisteal"], invoke_without_command=True)
+    @commands.group(name="enlarge", invoke_without_command=True)
     async def steal_command(self, ctx: commands.Context):
         """Steals the emojis and stickers of the message you reply to. Can also upload them with [p]steal upload."""
         if not (emojis := await self.steal_ctx(ctx)):
@@ -113,7 +113,7 @@ class EmojiSteal(commands.Cog):
         response = '\n'.join([emoji.url for emoji in emojis])
         await ctx.response.send_message(content=response, ephemeral=True)
 
-    @steal_command.command(name="upload")
+    @steal_command.command(name="steal")
     @commands.guild_only()
     @commands.has_permissions(manage_expressions=True)
     @commands.bot_has_permissions(manage_expressions=True, add_reactions=True)
