@@ -402,7 +402,7 @@ class Snipe(RedCog):
                         )
                     embeds.append(embed)
                 if len(embeds) == 1:
-                    return await self.reply(ctx, embed=embeds[0])
+                    return await self.reply(ctx, embed=embeds[0], mention_author=False)
                 await BaseMenu(embeds, timeout=120).start(ctx)
             else:
                 await ctx.reply("There's nothing to snipe!")
