@@ -385,8 +385,8 @@ class Snipe(RedCog):
                     )
                     old_content = self.get_content(message.old_content)
                     new_content = self.get_content(message.new_content)
-                    embed.add_field(name="Old Message:", value=old_content, inline=False)
-                    embed.add_field(name="New Message:", value=new_content, inline=False)
+                    embed.add_field(name="Old Message:", value=old_content, inline=True)
+                    embed.add_field(name="New Message:", value=new_content, inline=True)
                     embed.set_footer(
                         text=f"Sniped by: {str(ctx.author)}",
                         icon_url=ctx.author.display_avatar.url,
@@ -402,7 +402,7 @@ class Snipe(RedCog):
                         )
                     embeds.append(embed)
                 if len(embeds) == 1:
-                    return await self.reply(ctx, embed=embeds[0], mention_author=False)
+                    return await self.reply(ctx, embed=embeds, mention_author=False)
                 await BaseMenu(embeds, timeout=120).start(ctx)
             else:
                 await ctx.reply("There's nothing to snipe!")
