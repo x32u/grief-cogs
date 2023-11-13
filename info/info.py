@@ -1021,7 +1021,7 @@ class Info(commands.Cog):
                 data.add_field(
                     name=_("Server features:"),
                     value="\n".join(
-                        f"<:grief_check:1107472942830456892> {feature}" for feature in feature_names
+                        f"{feature}" for feature in feature_names
                     ),
                 )
 
