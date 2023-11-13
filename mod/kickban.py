@@ -1010,9 +1010,9 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=e, mention_author=False)
             return
            
-    @wcommands.command(aliases=["invitepurge", "staleinvites"])
+    @commands.command(aliases=["invitepurge", "staleinvites"])
     @commands.max_concurrency(1, commands.BucketType.guild)
-    @checks.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def inviteprune(self, ctx: commands.Context):
         """Remove invites with 0 uses."""
         guild: discord.Guild = ctx.guild
