@@ -23,7 +23,7 @@ from io import BytesIO
 from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
 import humanize
-
+from grief.core.utils.views import ConfirmView
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
@@ -1020,6 +1020,13 @@ class KickBanMixin(MixinMeta):
         invites = await guild.invites()
 
         not_used = [i for i in invites if i.uses == 0]
+        if not not_used:
+            return await ctx.send("There are no stale invites!")
+
+        confirmed, _msg = await (f"There are {len(not_used)} invites with 0 uses.", "Can I delete them?")
+
+        if confirmed:
+            return
 
         status = await ctx.send("Deleted 0/{len(not_used)}")
 
@@ -1039,7 +1046,7 @@ class KickBanMixin(MixinMeta):
 
                             if total_errors > 9:
                                 log.error(f"Bailing on {ctx.guild}")
-                                return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord")
+                                return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord", 2)
                 except TimeoutError:
                     total_errors += 1
                     log.warning(f"Timeout for {i}")
