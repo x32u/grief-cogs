@@ -1039,7 +1039,7 @@ class KickBanMixin(MixinMeta):
 
                             if total_errors > 9:
                                 log.error(f"Bailing on {ctx.guild}")
-                                return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord"))
+                                return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord")
                 except TimeoutError:
                     total_errors += 1
                     log.warning(f"Timeout for {i}")
@@ -1049,7 +1049,7 @@ class KickBanMixin(MixinMeta):
 
                 await asyncio.sleep(3)
 
-            return await ctx.send("Stale invites deleted!"))
+            return await ctx.send("Stale invites deleted!")
 
         finally:
             await status.delete()
