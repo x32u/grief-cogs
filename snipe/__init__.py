@@ -243,7 +243,7 @@ class Snipe(RedCog):
             await ctx.reply("There's nothing to snipe!")
 
     @snipe.command(name="bulk")
-    async def snipe_bulk(self, ctx, channel: discord.TextChannel = None):
+    async def snipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """
         Snipe all the last deleted messages in a channel.
         """
@@ -286,7 +286,7 @@ class Snipe(RedCog):
                     embed.set_author(name="Unknown Member")
                 embeds.append(embed)
             if len(embeds) == 1:
-                return await ctx.reply(ctx, embed=embeds[0], mention_author=False)
+                return await ctx.reply(embed=embeds[0], mention_author=False)
             await BaseMenu(embeds, timeout=120).start(ctx)
         else:
             await ctx.reply("There's nothing to snipe!")
