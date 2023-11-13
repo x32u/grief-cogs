@@ -88,6 +88,7 @@ class Mod(
         self.cache: dict = {}
         self.tban_expiry_task = asyncio.create_task(self.tempban_expirations_task())
         self.last_case: dict = defaultdict(dict)
+        
         default_guild: Dict[str, Union[bool, List[int]]] = {
             "toggle": False,
             "ignored_channels": [],
