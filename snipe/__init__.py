@@ -550,7 +550,7 @@ class Snipe(RedCog):
                     icon_url=ctx.author.display_avatar.url,
                 )
                 embed.set_author(
-                    name=f"{author} ({author.id})",
+                    name=f"{author}",
                     icon_url=author.display_avatar.url,
                 )
                 embeds.append(embed)
