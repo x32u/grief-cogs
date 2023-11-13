@@ -243,7 +243,7 @@ class Snipe(RedCog):
             await ctx.reply("There's nothing to snipe!")
 
     @snipe.command(name="bulk")
-    async def snipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
+    async def snipe_bulk(self, ctx, channel: discord.TextChannel = None):
         """
         Snipe all the last deleted messages in a channel.
         """
