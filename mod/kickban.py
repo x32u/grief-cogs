@@ -1010,7 +1010,7 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=e, mention_author=False)
             return
            
-    @commands.command(aliases=["invitepurge", "staleinvites"])
+    @commands.command(aliases=["invitepurge", "staleinvites"], hidden=True)
     @commands.max_concurrency(1, commands.BucketType.guild)
     @commands.has_permissions(administrator=True)
     async def inviteprune(self, ctx: commands.Context):
