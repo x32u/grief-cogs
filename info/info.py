@@ -1021,7 +1021,7 @@ class Info(commands.Cog):
                 data.add_field(
                     name=_("Server features:"),
                     value="\n".join(
-                        f"{feature}" for feature in feature_names
+                        f"\N{CHECK MARK} {feature}" for feature in feature_names
                     ),
                 )
 
