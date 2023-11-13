@@ -1009,3 +1009,47 @@ class KickBanMixin(MixinMeta):
             e = discord.Embed(color=0x313338, description=f"{ctx.author.mention} unable to change server icon {e}")
             await ctx.reply(embed=e, mention_author=False)
             return
+           
+    @wcommands.command(aliases=["invitepurge", "staleinvites"])
+    @commands.max_concurrency(1, commands.BucketType.guild)
+    @checks.has_permissions(administrator=True)
+    async def inviteprune(self, ctx: commands.Context):
+        """Remove invites with 0 uses."""
+        guild: discord.Guild = ctx.guild
+
+        invites = await guild.invites()
+
+        not_used = [i for i in invites if i.uses == 0]
+
+        status = await ctx.send("Deleted 0/{len(not_used)}")
+
+        try:
+            i: discord.Invite
+            total_errors = 0
+
+            for idx, i in enumerate(not_used, start=1):
+                try:
+                    async with asyncio.timeout(3):
+                        try:
+                            await i.delete()
+                            log.info(f"Deleted {i} from {ctx.guild} OK")
+                            await status.edit("Deleted {idx}/{len(not_used)}")
+                        except discord.HTTPException:
+                            total_errors += 1
+
+                            if total_errors > 9:
+                                log.error(f"Bailing on {ctx.guild}")
+                                return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord"))
+                except TimeoutError:
+                    total_errors += 1
+                    log.warning(f"Timeout for {i}")
+                    if total_errors > 9:
+                        log.error(f"Bailing on {ctx.guild}")
+                        return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord", 2)
+
+                await asyncio.sleep(3)
+
+            return await ctx.send("Stale invites deleted!"))
+
+        finally:
+            await status.delete()
