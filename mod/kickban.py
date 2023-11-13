@@ -1060,3 +1060,16 @@ class KickBanMixin(MixinMeta):
 
         finally:
             await status.delete()
+
+    @commands.has_permissions(administrator=True)
+    @commands.command()
+    async def naughty(self, ctx: commands.Context):
+        """Temporarily make the current channel NSFW for 30 seconds."""
+        channel: discord.TextChannel = ctx.channel
+        if not hasattr(channel, "nsfw"):
+            return await ctx.send("This channel cannot be set as NSFW", 3)
+        if channel.nsfw:
+            return await ctx.send("The current channel is already NSFW!")
+        await channel.edit(nsfw=True)
+        self.bot.ioloop.call_later(30, channel.edit, nsfw=False)
+        return await ctx.send("The current channel is NSFW now for 30 seconds")
