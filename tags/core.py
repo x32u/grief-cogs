@@ -10,11 +10,11 @@ from typing import Coroutine, List, Optional
 import aiohttp
 import discord
 from rapidfuzz import fuzz, process
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.config import Config
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_list
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.config import Config
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import humanize_list
 from TagScriptEngine import __version__ as tse_version
 
 from .abc import CompositeMetaClass
