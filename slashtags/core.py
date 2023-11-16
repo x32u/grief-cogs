@@ -1,26 +1,4 @@
-"""
-MIT License
 
-Copyright (c) 2020-present phenom4n4n
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
 
 import asyncio
 import logging
@@ -44,7 +22,7 @@ from .mixins import Commands, Processor
 from .objects import ApplicationCommand, SlashContext, SlashTag
 from .views import ConfirmationView
 
-log = logging.getLogger("red.phenom4n4n.slashtags")
+log = logging.getLogger("grief.slashtags")
 
 
 class SlashTags(Commands, Processor, commands.Cog, metaclass=CompositeMetaClass):
@@ -53,19 +31,12 @@ class SlashTags(Commands, Processor, commands.Cog, metaclass=CompositeMetaClass)
 
     The TagScript documentation can be found [here](https://phen-cogs.readthedocs.io/en/latest/index.html).
     """
-
-    __version__ = "0.6.2"
-    __author__ = ("PhenoM4n4n",)
-
+    
     def format_help_for_context(self, ctx: commands.Context):
         pre_processed = super().format_help_for_context(ctx)
         n = "\n" if "\n\n" not in pre_processed else ""
         text = [
-            f"{pre_processed}{n}",
-            f"Cog Version: **{self.__version__}**",
-            f"TagScriptEngine Version: **{tse.__version__}**",
-            f"Author: {humanize_list(self.__author__)}",
-        ]
+            f"{pre_processed}{n}",]
         return "\n".join(text)
 
     def __init__(self, bot: Red) -> None:
