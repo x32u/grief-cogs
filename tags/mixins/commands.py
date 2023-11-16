@@ -204,7 +204,7 @@ class Commands(MixinMeta):
         await ctx.send(await tag.initialize())
 
     @commands.guild_only()
-    @commands.group(aliases=["customcom", "cc", "alias"])
+    @commands.group(aliases=["customcom", "cc"])
     async def tag(self, ctx: commands.Context):
         """
         Tag management with TagScript.
