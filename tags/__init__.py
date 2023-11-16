@@ -14,7 +14,5 @@ VERSION_RE = re.compile(r"TagScript==(\d\.\d\.\d)")
 
 
 async def setup(bot: Red) -> None:
-    await validate_tagscriptengine(bot)
-
     tags = Tags(bot)
     await bot.add_cog(tags)
