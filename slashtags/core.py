@@ -9,11 +9,11 @@ from typing import Coroutine, Dict, Optional
 import aiohttp
 import discord
 import TagScriptEngine as tse
-from redbot.core import commands
-from redbot.core.bot import Red
-from redbot.core.config import Config
-from redbot.core.utils import AsyncIter
-from redbot.core.utils.chat_formatting import humanize_list
+from grief.core import commands
+from grief.core.bot import Red
+from grief.core.config import Config
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import humanize_list
 
 from .abc import CompositeMetaClass
 from .errors import MissingTagPermissions
@@ -31,7 +31,7 @@ class SlashTags(Commands, Processor, commands.Cog, metaclass=CompositeMetaClass)
 
     The TagScript documentation can be found [here](https://phen-cogs.readthedocs.io/en/latest/index.html).
     """
-    
+
     def format_help_for_context(self, ctx: commands.Context):
         pre_processed = super().format_help_for_context(ctx)
         n = "\n" if "\n\n" not in pre_processed else ""
