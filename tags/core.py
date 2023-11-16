@@ -43,7 +43,6 @@ class Tags(
     def format_help_for_context(self, ctx: commands.Context):
         pre_processed = super().format_help_for_context(ctx)
         n = "\n" if "\n\n" not in pre_processed else ""
-        authors = [f"**{name}**" for name in self.__author__]
         text = [
             f"{pre_processed}{n}",]
         return "\n".join(text)
