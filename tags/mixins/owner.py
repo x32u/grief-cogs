@@ -1,26 +1,5 @@
-"""
-MIT License
 
-Copyright (c) 2020-present phenom4n4n
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-"""
 import inspect
 import logging
 import textwrap
@@ -29,9 +8,9 @@ from typing import List
 
 import discord
 import TagScriptEngine as tse
-from redbot.core import Config, commands
-from redbot.core.dev_commands import Dev, async_compile, cleanup_code, get_pages
-from redbot.core.utils import AsyncIter
+from grief.core import Config, commands
+from grief.core.dev_commands import Dev, async_compile, cleanup_code, get_pages
+from grief.core.utils import AsyncIter
 
 from ..abc import MixinMeta
 from ..blocks import ContextVariableBlock, ConverterBlock
@@ -40,7 +19,7 @@ from ..objects import Tag
 from ..utils import menu
 from ..views import ConfirmationView
 
-log = logging.getLogger("red.phenom4n4n.tags.owner")
+log = logging.getLogger("grief.tags.owner")
 
 
 class OwnerCommands(MixinMeta):

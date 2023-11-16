@@ -1,8 +1,8 @@
 from typing import Any, List, Optional, Tuple
 
 import discord
-from redbot.core import commands
-from redbot.vendored.discord.ext.menus import ListPageSource
+from grief.core import commands
+from grief.vendored.discord.ext.menus import ListPageSource
 
 __all__ = ("ConfirmationView", "PageSource", "PaginatedView")
 
