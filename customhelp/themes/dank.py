@@ -41,12 +41,12 @@ class DankHelp(ThemesMeta):
 
                     title = (
                         str(cat.reaction) + " " if cat.reaction else ""
-                    ) + cat.name()
+                    ) + cat.name.capitalize()
 
                     emb["fields"].append(
                         EmbedField(
                             title,
-                            f"`{cat.long_desc if cat.long_desc else ''}",
+                            f"`{ctx.clean_prefix}help {cat.name}`\n{cat.long_desc if cat.long_desc else ''}",
                             True,
                         )
                     )
@@ -129,7 +129,7 @@ class DankHelp(ThemesMeta):
             return
 
         command = obj
-        signature = _("`{command.qualified_name} {command.signature}`").format(
+        signature = _("`{ctx.clean_prefix}{command.qualified_name} {command.signature}`").format(
             ctx=ctx, command=command
         )
         subcommands = None
@@ -143,7 +143,12 @@ class DankHelp(ThemesMeta):
             if description := command.description:
                 emb["embed"]["title"] = f"{description[:250]}"
 
-                emb["fields"].append(EmbedField("Description:", name[:250], True))
+            command_help = command.format_help_for_context(ctx)
+            if command_help:
+                splitted = command_help.split("\n\n")
+                name = splitted[0]
+                value = "\n\n".join(splitted[1:])
+                emb["fields"].append(EmbedField("Description:", name[:250], False))
             else:
                 value = ""
             emb["fields"].append(EmbedField("Usage:", signature, False))
