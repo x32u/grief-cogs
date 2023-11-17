@@ -254,6 +254,8 @@ class BaguetteHelp(commands.RedHelpFormatter):
 
         description = command.description or ""
         subcommands = None
+        signature = _(
+            "").format(ctx=ctx, command=command)
 
         if hasattr(command, "all_commands"):
             grp = cast(commands.Group, command)
