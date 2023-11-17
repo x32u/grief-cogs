@@ -150,37 +150,6 @@ class CustomHelp(commands.Cog):
 
     async def cog_load(self):
         """Adds the themes and loads the formatter"""
-
-        # Arrow migration
-        if (await self.config.version()) < "1.0.0":
-            new_arrows = []
-            try:
-                async with self.config.settings.arrows() as arrows:
-                    for name, emoji in arrows.items():
-                        new_arrows.append(
-                            {"name": name, "emoji": emoji, "style": "primary", "label": ""}
-                        )
-                    arrows.clear()
-                await self.config.arrows.set(new_arrows)
-            except AttributeError:
-                # We don't care if settings.arrows doesn't exist in the first place
-                pass
-            await self.config.version.set(self.__version__)
-
-        # Category migration V1 - not needed anymore
-        # if (await self.config.version()) < "1.0.1":
-        #     async with self.config.uncategorised() as uncat:
-        #         uncat["style"] = "primary"
-        #         uncat["label"] = ""
-        #     await self.config.version.set(self.__version__)
-
-        # Category migration V2 - add uncategorised to categories in config
-        # Probably redundant
-        # if (await self.config.version()) < "1.1.0":
-        #     await self.add_placeholder_uncategorised()
-        #     await self.config.version.set(self.__version__)
-
-        # This is needed to be on top so that Cache gets populated no matter what (supplements chelp create)
         await self.refresh_cache()
         await self.refresh_arrows()
 
