@@ -253,10 +253,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
         command = obj
 
         description = command.description or ""
-
-        signature = _(
-            "`{ctx.clean_prefix}{command.qualified_name} {command.signature}`"
-        ).format(ctx=ctx, command=command)
         subcommands = None
 
         if hasattr(command, "all_commands"):
@@ -278,7 +274,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
                 value = "\n".join(splitted[1:])
                 if not value:
                     value = EMPTY_STRING
-                field = EmbedField("Description", name[:250] + "\n" + value[:1024], False)
+                field = EmbedField("Description", name[:250] + "\n", False)
                 emb["fields"].append(field)
 
                 if alias := get_aliases(command, ctx.invoked_with):
