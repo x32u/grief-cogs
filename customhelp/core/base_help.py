@@ -255,7 +255,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         description = command.description or ""
         subcommands = None
         signature = _(
-            "`{ctx.clean_prefix}{command.qualified_name} {command.signature}`"
+            "`Syntax: {ctx.clean_prefix}{command.qualified_name} {command.signature}`"
         ).format(ctx=ctx, command=command)
 
         if hasattr(command, "all_commands"):
