@@ -15,7 +15,6 @@ from grief.core.bot import Red
 from grief.core.config import Config
 from grief.core.utils import AsyncIter
 from grief.core.utils.chat_formatting import humanize_list
-from TagScriptEngine import __version__ as tse_version
 
 from .abc import CompositeMetaClass
 from .errors import MissingTagPermissions, TagCharacterLimitReached
