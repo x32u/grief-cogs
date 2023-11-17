@@ -27,6 +27,5 @@ from .rolesbuttons import RolesButtons
 __red_end_user_data_statement__ = get_end_user_data_statement(file=__file__)
 
 
-async def setup(bot: Red):
+async def setup(bot: Red) -> None:
     cog = RolesButtons(bot)
-    await discord.utils.maybe_coroutine(bot.add_cog, cog)
