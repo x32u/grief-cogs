@@ -273,9 +273,9 @@ class BaguetteHelp(commands.RedHelpFormatter):
 
             command_help = command.format_help_for_context(ctx)
             if command_help:
-                splitted = command_help.split("\n\n")
+                splitted = command_help.split("\n")
                 name = splitted[0]
-                value = "\n\n".join(splitted[1:])
+                value = "\n".join(splitted[1:])
                 if not value:
                     value = EMPTY_STRING
                 field = EmbedField("Description", name[:250] + "\n" + value[:1024], False)
@@ -366,14 +366,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
 
         for i, group in enumerate(field_groups, 1):
             embed = discord.Embed(color=color, **embed_dict["embed"])
-
-            if page_count > 1:
-                description = _("Page {page_num} of {page_count}\n{content_description}").format(
-                    content_description=embed.description,
-                    page_num=i,
-                    page_count=page_count,
-                )
-                embed.description = description
 
             embed.set_author(**author_info)
 
