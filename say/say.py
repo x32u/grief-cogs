@@ -6,7 +6,6 @@ import re
 from discord import app_commands
 
 from typing import TYPE_CHECKING, Optional
-from laggron_utils import close_logger
 
 from grief.core import checks, commands
 from grief.core.i18n import Translator, cog_i18n
@@ -274,7 +273,5 @@ class Say(commands.Cog):
         await user.send(_("Session closed"))
 
     async def cog_unload(self):
-        log.debug("Unloading cog...")
         for user in self.interaction:
             await self.stop_interaction(user)
-        close_logger(log)
