@@ -255,7 +255,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         description = command.description or ""
 
         signature = _(
-            "**Syntax:** `{ctx.clean_prefix}{command.qualified_name} {command.signature}`"
+            "`{ctx.clean_prefix}{command.qualified_name} {command.signature}`"
         ).format(ctx=ctx, command=command)
         subcommands = None
 
@@ -278,14 +278,14 @@ class BaguetteHelp(commands.RedHelpFormatter):
                 value = "\n".join(splitted[1:])
                 if not value:
                     value = EMPTY_STRING
-                field = EmbedField("Description", name[:250] + "\n" + value[:1024], True)
+                field = EmbedField("Description", name[:250] + "\n" + value[:1024], False)
                 emb["fields"].append(field)
 
                 if alias := get_aliases(command, ctx.invoked_with):
-                    emb["fields"].append(EmbedField("Aliases", ",".join(alias), True))
+                    emb["fields"].append(EmbedField("Aliases", ",".join(alias), False))
 
                 if final_perms := get_perms(command):
-                    emb["fields"].append(EmbedField("Permissions", final_perms, True))
+                    emb["fields"].append(EmbedField("Permissions", final_perms, False))
 
                 if cooldowns := get_cooldowns(command):
                     emb["fields"].append(EmbedField("Cooldowns", "\n".join(cooldowns), True))
