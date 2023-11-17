@@ -38,11 +38,6 @@ class RolesButtons(Cog):
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)
 
-        self.config: Config = Config.get_conf(
-            self,
-            identifier=205192943327321000143939875896557571750,  # 370638632963
-            force_registration=True,
-        )
         self.CONFIG_SCHEMA = 2
         self.roles_buttons_global: typing.Dict[str, typing.Optional[int]] = {
             "CONFIG_SCHEMA": None,
