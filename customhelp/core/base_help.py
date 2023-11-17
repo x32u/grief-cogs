@@ -6,12 +6,12 @@ from itertools import chain
 from typing import Any, Dict, List, Optional, Union, cast
 
 import discord
-from redbot.core import commands
-from redbot.core.commands.commands import Command
-from redbot.core.commands.context import Context
-from redbot.core.commands.help import HelpSettings, NoCommand, NoSubCommand, _, dpy_commands
-from redbot.core.utils.chat_formatting import pagify
-from redbot.core.utils.mod import mass_purge
+from grief.core import commands
+from grief.core.commands.commands import Command
+from grief.core.commands.context import Context
+from grief.core.commands.help import HelpSettings, NoCommand, NoSubCommand, _, dpy_commands
+from grief.core.utils.chat_formatting import pagify
+from grief.core.utils.mod import mass_purge
 from collections import Counter
 from customhelp.core.views import (
     BaseInteractionMenu,
