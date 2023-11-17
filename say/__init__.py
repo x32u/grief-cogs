@@ -15,4 +15,4 @@ log = logging.getLogger("grief.say")
 
 
 async def setup(bot: "Red"):
-    await bot.add_cog(Say)
+    await bot.add_cog()
