@@ -1,6 +1,7 @@
 from grief.core import errors  # isort:skip
 import importlib
 import sys
+import discord
 
 try:
     import AAA3A_utils
@@ -26,6 +27,6 @@ from .rolesbuttons import RolesButtons
 __red_end_user_data_statement__ = get_end_user_data_statement(file=__file__)
 
 
-async def setup(bot: Red) -> None:
+async def setup(bot: Red):
     cog = RolesButtons(bot)
-    await bot.add_cog(cog)
+    await discord.utils.maybe_coroutine(bot.add_cog, cog)
