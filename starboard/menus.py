@@ -43,7 +43,7 @@ class clownboardPages(menus.ListPageSource):
             emoji=clownboard.emoji,
             channel=s_channel,
             threshold=clownboard.threshold,
-            starred_messages=clownboard.starred_messages,
+            clownred_messages=clownboard.clownred_messages,
             stars_added=clownboard.stars_added,
             selfstar=clownboard.selfstar,
         )
