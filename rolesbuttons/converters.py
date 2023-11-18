@@ -16,9 +16,50 @@ _ = Translator("RolesButtons", __file__)
 class Emoji(commands.EmojiConverter):
     async def convert(
         self, ctx: commands.Context, argument: str
-    ) -> typing.Union[discord.PartialEmoji, str]:
-        argument = argument.strip("\N{VARIATION SELECTOR-16}")
+    ) -> typing.Union[str, discord.Emoji]:
+        # argument = argument.strip("\N{VARIATION SELECTOR-16}")
         if argument in EMOJI_DATA:
+            return argument
+        if argument in {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "#",
+            "*",
+            "🇦",
+            "🇧",
+            "🇨",
+            "🇩",
+            "🇪",
+            "🇫",
+            "🇬",
+            "🇭",
+            "🇮",
+            "🇯",
+            "🇰",
+            "🇱",
+            "🇲",
+            "🇳",
+            "🇴",
+            "🇵",
+            "🇶",
+            "🇷",
+            "🇸",
+            "🇹",
+            "🇺",
+            "🇻",
+            "🇼",
+            "🇽",
+            "🇾",
+            "🇿",
+        }:
             return argument
         return await super().convert(ctx, argument=argument)
 
@@ -30,9 +71,7 @@ class RoleHierarchyConverter(commands.RoleConverter):
 
     async def convert(self, ctx: commands.Context, argument: str) -> discord.Role:
         if not ctx.me.guild_permissions.manage_roles:
-            raise commands.BadArgument(
-                "I require manage roles permission to use this command."
-            )
+            raise commands.BadArgument("I require manage roles permission to use this command.")
         try:
             role = await commands.RoleConverter().convert(ctx, argument=argument)
         except commands.BadArgument:
