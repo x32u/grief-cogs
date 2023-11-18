@@ -254,7 +254,7 @@ class ClownboardEvents:
                 if payload.user_id == msg.author.id:
                     if not starboard.selfstar:
                         reactions.remove(payload.user_id)
-                star_message = StarboardMessage(
+                star_message = ClownboardMessage(
                     guild=guild.id,
                     original_message=payload.message_id,
                     original_channel=payload.channel_id,
@@ -386,10 +386,10 @@ class ClownboardEvents:
     async def _loop_messages(
         self,
         payload: Union[discord.RawReactionActionEvent, FakePayload],
-        starboard: StarboardEntry,
+        starboard: ClownboardEntry,
         star_channel: discord.TextChannel,
         is_clear: bool = False,
-    ) -> Union[StarboardMessage, bool]:
+    ) -> Union[ClownboardMessage, bool]:
         """
         This handles finding if we have already saved a message internally
 
