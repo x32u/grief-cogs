@@ -22,7 +22,7 @@ TimeConverter = commands.converter.TimedeltaConverter(
 
 
 @cog_i18n(_)
-class Starboard(ClownboardEvents, commands.Cog):
+class Clownboard(ClownboardEvents, commands.Cog):
     """
     Create a starboard to pin those special comments indefinitely.
     """
