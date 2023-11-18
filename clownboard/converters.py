@@ -9,7 +9,7 @@ from .clownboard_entry import ClownboardEntry
 _ = Translator("Starboard", __file__)
 
 
-class ClownboardExists(commands.Converter):
+class clownboardExists(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str) -> ClownboardEntry:
         cog = ctx.cog
         guild = ctx.guild
