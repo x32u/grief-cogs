@@ -12,7 +12,7 @@ from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import AsyncIter
 from grief.core.utils.chat_formatting import humanize_timedelta
 
-from .clownboard_entry import FakePayload, StarboardEntry, ClownboardMessage
+from .clownboard_entry import FakePayload, ClownboardEntry, ClownboardMessage
 
 _ = Translator("Starboard", __file__)
 log = logging.getLogger("grief.clownboard")
