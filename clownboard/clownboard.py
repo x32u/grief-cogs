@@ -636,11 +636,11 @@ class Clownboard(ClownboardEvents, commands.Cog):
                 )
                 return
             clownboard = list(self.clownboards[guild.id].values())[0]
-        if clownboard.selfstar:
+        if clownboard.selfclown:
             msg = _("Selfstarring on clownboard {name} disabled.").format(name=clownboard.name)
         else:
             msg = _("Selfstarring on clownboard {name} enabled.").format(name=clownboard.name)
-        self.clownboards[ctx.guild.id][clownboard.name].selfstar = not clownboard.selfstar
+        self.clownboards[ctx.guild.id][clownboard.name].selfstar = not clownboard.selfclown
         await self._save_clownboards(guild)
         await ctx.send(msg)
 
