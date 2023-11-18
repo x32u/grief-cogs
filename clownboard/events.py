@@ -12,21 +12,21 @@ from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import AsyncIter
 from grief.core.utils.chat_formatting import humanize_timedelta
 
-from .starboard_entry import FakePayload, StarboardEntry, StarboardMessage
+from .clownboard_entry import FakePayload, StarboardEntry, ClownboardMessage
 
 _ = Translator("Starboard", __file__)
-log = logging.getLogger("red.trusty-cogs.Starboard")
+log = logging.getLogger("grief.clownboard")
 
 
 @cog_i18n(_)
-class StarboardEvents:
+class ClownboardEvents:
     bot: Red
     config: Config
-    starboards: Dict[int, StarboardEntry]
+    clownboards: Dict[int, ClownboardEntry]
     ready: asyncio.Event
 
     async def _build_embed(
-        self, guild: discord.Guild, message: discord.Message, starboard: StarboardEntry
+        self, guild: discord.Guild, message: discord.Message, starboard: ClownboardEntry
     ) -> List[discord.Embed]:
         channel = cast(discord.TextChannel, message.channel)
         author = message.author
