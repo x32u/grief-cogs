@@ -38,6 +38,12 @@ class RolesButtons(Cog):
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)
 
+        
+        self.config: Config = Config.get_conf(
+            self,
+            identifier=205192943327321000143939875896557571750,  # 974269742704
+            force_registration=True,
+        )
         self.CONFIG_SCHEMA = 2
         self.roles_buttons_global: typing.Dict[str, typing.Optional[int]] = {
             "CONFIG_SCHEMA": None,
@@ -45,6 +51,7 @@ class RolesButtons(Cog):
         self.roles_buttons_guild: typing.Dict[
             str, typing.Dict[str, typing.Dict[str, typing.Dict[str, str]]]
         ] = {"roles_buttons": {}, "modes": {}}
+        self.config.register_global(**self.roles_buttons_global)
         self.config.register_guild(**self.roles_buttons_guild)
 
     async def cog_load(self) -> None:
