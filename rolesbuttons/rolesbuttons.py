@@ -45,7 +45,6 @@ class RolesButtons(Cog):
         self.roles_buttons_guild: typing.Dict[
             str, typing.Dict[str, typing.Dict[str, typing.Dict[str, str]]]
         ] = {"roles_buttons": {}, "modes": {}}
-        self.config.register_global(**self.roles_buttons_global)
         self.config.register_guild(**self.roles_buttons_guild)
 
     async def cog_load(self) -> None:
