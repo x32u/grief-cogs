@@ -37,7 +37,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
         self.cleanup_loop: Optional[asyncio.Task] = None
 
     async def cog_load(self) -> None:
-        log.debug("Started building clownboards cache from config.")
+        log.debug("clownted building clownboards cache from config.")
         for guild_id in await self.config.all_guilds():
             self.clownboards[guild_id] = {}
             all_data = await self.config.guild_from_id(int(guild_id)).clownboards()
@@ -103,7 +103,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
         guild = ctx.guild
         await ctx.typing()
         if guild.id in self.clownboards:
-            await BaseMenu(source=clownboardPages(list(self.clownboards[guild.id].values()))).start(
+            await BaseMenu(source=clownboardPages(list(self.clownboards[guild.id].values()))).clownt(
                 ctx=ctx
             )
 
@@ -234,11 +234,11 @@ class Clownboard(ClownboardEvents, commands.Cog):
         message: discord.Message,
     ) -> None:
         """
-        Manually star a message
+        Manually clown a message
 
         `<name>` is the name of the clownboard you would like to add the message to
         `<message>` is the message ID, `channel_id-message_id`, or a message link
-        of the message you want to star
+        of the message you want to clown
         """
         guild = ctx.guild
         if not clownboard:
@@ -255,7 +255,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
                 return
             clownboard = list(self.clownboards[guild.id].values())[0]
         if message.guild and message.guild.id != guild.id:
-            await ctx.send(_("I cannot star messages from another server."))
+            await ctx.send(_("I cannot clown messages from another server."))
             return
         if not clownboard.enabled:
             error_msg = _("clownboard {name} isn't enabled.").format(name=clownboard.name)
@@ -284,7 +284,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
             emoji=clownboard.emoji,
             event_type="REACTION_ADD",
         )
-        await self._update_stars(fake_payload)
+        await self._update_clowns(fake_payload)
 
     @commands.command()
     @commands.guild_only()
@@ -299,7 +299,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
 
         `<name>` is the name of the clownboard you would like to add the message to
         `<message>` is the message ID, `channe_id-message_id`, or a message link
-        of the message you want to unstar
+        of the message you want to unclown
         """
         guild = ctx.guild
         if not clownboard:
@@ -316,7 +316,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
                 return
             clownboard = list(self.clownboards[guild.id].values())[0]
         if message.guild and message.guild.id != guild.id:
-            await ctx.send(_("I cannot star messages from another server."))
+            await ctx.send(_("I cannot clown messages from another server."))
             return
         if not clownboard.enabled:
             error_msg = _("clownboard {name} isn't enabled.").format(name=clownboard.name)
@@ -345,7 +345,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
             emoji=clownboard.emoji,
             event_type="REACTION_REMOVE",
         )
-        await self._update_stars(fake_payload)
+        await self._update_clowns(fake_payload)
 
     @clownboard.group(name="allowlist", aliases=["whitelist"])
     async def whitelist(self, ctx: commands.Context) -> None:
@@ -481,8 +481,8 @@ class Clownboard(ClownboardEvents, commands.Cog):
             )
             await ctx.send(msg)
             if isinstance(channel_or_role, discord.TextChannel):
-                star_channel = ctx.guild.get_channel(clownboard.channel)
-                if channel_or_role.is_nsfw() and not star_channel.is_nsfw():
+                clown_channel = ctx.guild.get_channel(clownboard.channel)
+                if channel_or_role.is_nsfw() and not clown_channel.is_nsfw():
                     await ctx.send(
                         _(
                             "The channel you have provided is designated "
@@ -613,12 +613,12 @@ class Clownboard(ClownboardEvents, commands.Cog):
         await self._save_clownboards(guild)
         await ctx.send(msg)
 
-    @clownboard.command(name="selfstar")
-    async def toggle_selfstar(
+    @clownboard.command(name="selfclown")
+    async def toggle_selfclown(
         self, ctx: commands.Context, clownboard: Optional[clownboardExists]
     ) -> None:
         """
-        Toggle whether or not a user can star their own post
+        Toggle whether or not a user can clown their own post
 
         `<name>` is the name of the clownboard to toggle
         """
@@ -636,16 +636,16 @@ class Clownboard(ClownboardEvents, commands.Cog):
                 )
                 return
             clownboard = list(self.clownboards[guild.id].values())[0]
-        if clownboard.selfstar:
-            msg = _("Selfstarring on clownboard {name} disabled.").format(name=clownboard.name)
+        if clownboard.selfclown:
+            msg = _("Selfclownring on clownboard {name} disabled.").format(name=clownboard.name)
         else:
-            msg = _("Selfstarring on clownboard {name} enabled.").format(name=clownboard.name)
-        self.clownboards[ctx.guild.id][clownboard.name].selfstar = not clownboard.selfstar
+            msg = _("Selfclownring on clownboard {name} enabled.").format(name=clownboard.name)
+        self.clownboards[ctx.guild.id][clownboard.name].selfclown = not clownboard.selfclown
         await self._save_clownboards(guild)
         await ctx.send(msg)
 
-    @clownboard.command(name="autostar")
-    async def toggle_autostar(
+    @clownboard.command(name="autoclown")
+    async def toggle_autoclown(
         self, ctx: commands.Context, clownboard: Optional[clownboardExists]
     ) -> None:
         """
@@ -667,11 +667,11 @@ class Clownboard(ClownboardEvents, commands.Cog):
                 )
                 return
             clownboard = list(self.clownboards[guild.id].values())[0]
-        if clownboard.autostar:
-            msg = _("Autostarring on clownboard {name} disabled.").format(name=clownboard.name)
+        if clownboard.autoclown:
+            msg = _("Autoclownring on clownboard {name} disabled.").format(name=clownboard.name)
         else:
-            msg = _("Autostarring on clownboard {name} enabled.").format(name=clownboard.name)
-        self.clownboards[ctx.guild.id][clownboard.name].autostar = not clownboard.autostar
+            msg = _("Autoclownring on clownboard {name} enabled.").format(name=clownboard.name)
+        self.clownboards[ctx.guild.id][clownboard.name].autoclown = not clownboard.autoclown
         await self._save_clownboards(guild)
         await ctx.send(msg)
 
