@@ -36,16 +36,16 @@ class clownboardPages(menus.ListPageSource):
             "Name: **{name}**\nEnabled: **{enabled}**\nEmoji: {emoji}\n"
             "Channel: {channel}\nThreshold: **{threshold}**\n"
             "{emoji} Messages: **{starred_messages}**\n"
-            "{emoji} Added: **{stars_added}**\nSelfstar: **{selfstar}**\n"
+            "{emoji} Added: **{stars_added}**\nSelfstar: **{selfclown}**\n"
         ).format(
             name=clownboard.name,
             enabled=clownboard.enabled,
             emoji=clownboard.emoji,
             channel=s_channel,
             threshold=clownboard.threshold,
-            starred_messages=clownboard.starred_messages,
-            stars_added=clownboard.stars_added,
-            selfstar=clownboard.selfstar,
+            starred_messages=clownboard.clowned_messages,
+            clowns_added=clownboard.stars_added,
+            selfclown=clownboard.selfstar,
         )
         if clownboard.blacklist:
             channels = [guild.get_channel(c) for c in clownboard.blacklist]
