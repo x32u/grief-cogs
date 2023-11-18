@@ -222,7 +222,7 @@ class RolesButtons(Cog):
         await self.config.guild(message.guild).roles_buttons.set(config)
 
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
+    @commands.has_permissions(manage_messages=True)
     # @commands.bot_has_permissions(manage_roles=True, embed_links=True)
     @commands.hybrid_group()
     async def rolesbuttons(self, ctx: commands.Context) -> None:
@@ -493,7 +493,7 @@ class RolesButtons(Cog):
             embeds.append(e)
         await Menu(pages=embeds).start(ctx)
 
-    @rolesbuttons.command(hidden=True)
+    @rolesbuttons.command(hidden=False)
     async def purge(self, ctx: commands.Context) -> None:
         """Clear all roles-buttons for a guild."""
         await self.config.guild(ctx.guild).roles_buttons.clear()
