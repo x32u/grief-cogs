@@ -10,7 +10,7 @@ from grief.core.utils.chat_formatting import humanize_timedelta, pagify
 
 from .converters import RealEmoji, clownboardExists
 from .events import ClownboardEvents
-from .menus import BaseMenu, StarboardPages
+from .menus import BaseMenu, ClownboardPages
 from .clownboard_entry import FakePayload, ClownboardEntry
 
 _ = Translator("Clownboard", __file__)
@@ -103,7 +103,7 @@ class Starboard(ClownboardEvents, commands.Cog):
         guild = ctx.guild
         await ctx.typing()
         if guild.id in self.starboards:
-            await BaseMenu(source=StarboardPages(list(self.starboards[guild.id].values()))).start(
+            await BaseMenu(source=ClownboardPages(list(self.starboards[guild.id].values()))).start(
                 ctx=ctx
             )
 
