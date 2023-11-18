@@ -44,8 +44,8 @@ class clownboardPages(menus.ListPageSource):
             channel=s_channel,
             threshold=clownboard.threshold,
             clownred_messages=clownboard.clownred_messages,
-            stars_added=clownboard.stars_added,
-            selfstar=clownboard.selfstar,
+            clowns_added=clownboard.clowns_added,
+            selfclown=clownboard.selfclown,
         )
         if clownboard.blacklist:
             channels = [guild.get_channel(c) for c in clownboard.blacklist]
