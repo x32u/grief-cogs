@@ -4,24 +4,24 @@ import discord
 from grief.core import commands
 from grief.core.i18n import Translator
 
-from .starboard_entry import StarboardEntry
+from .clownboard_entry import ClownboardEntry
 
 _ = Translator("Starboard", __file__)
 
 
-class StarboardExists(commands.Converter):
-    async def convert(self, ctx: commands.Context, argument: str) -> StarboardEntry:
+class ClownboardExists(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> ClownboardEntry:
         cog = ctx.cog
         guild = ctx.guild
-        if guild.id not in cog.starboards:
+        if guild.id not in cog.clownboards:
             raise commands.BadArgument(_("There are no starboards setup on this server!"))
         try:
-            starboard = cog.starboards[guild.id][argument.lower()]
+            clownboard = cog.clownboards[guild.id][argument.lower()]
         except KeyError:
             raise commands.BadArgument(
-                _("There is no starboard named {name}").format(name=argument)
+                _("There is no clownboard named {name}").format(name=argument)
             )
-        return starboard
+        return clownboard
 
 
 class RealEmoji(commands.EmojiConverter):
