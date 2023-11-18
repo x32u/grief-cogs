@@ -9,28 +9,28 @@ from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list, pagify
 from grief.vendored.discord.ext import menus
 
-from .starboard_entry import StarboardEntry
+from .clownboard_entry import clownboardEntry
 
-log = logging.getLogger("red.Trusty-cogs.starboard")
+log = logging.getLogger("red.Trusty-cogs.clownboard")
 _ = Translator("RoleTools", __file__)
 
 
-class StarboardPages(menus.ListPageSource):
-    def __init__(self, roles: List[StarboardEntry]):
+class clownboardPages(menus.ListPageSource):
+    def __init__(self, roles: List[clownboardEntry]):
         super().__init__(roles, per_page=1)
 
     def is_paginating(self) -> bool:
         return True
 
     async def format_page(
-        self, menu: menus.MenuPages, starboard: StarboardEntry
+        self, menu: menus.MenuPages, clownboard: clownboardEntry
     ) -> discord.Embed:
         guild = menu.ctx.guild
         embed = discord.Embed(
             colour=await menu.ctx.bot.get_embed_colour(menu.ctx.channel)
         )
-        embed.title = _("Starboard settings for {guild}").format(guild=guild.name)
-        channel = guild.get_channel(starboard.channel)
+        embed.title = _("Clownboard settings for {guild}").format(guild=guild.name)
+        channel = guild.get_channel(clownboard.channel)
         s_channel = channel.mention if channel else "deleted_channel"
         msg = _(
             "Name: **{name}**\nEnabled: **{enabled}**\nEmoji: {emoji}\n"
@@ -38,27 +38,27 @@ class StarboardPages(menus.ListPageSource):
             "{emoji} Messages: **{starred_messages}**\n"
             "{emoji} Added: **{stars_added}**\nSelfstar: **{selfstar}**\n"
         ).format(
-            name=starboard.name,
-            enabled=starboard.enabled,
-            emoji=starboard.emoji,
+            name=clownboard.name,
+            enabled=clownboard.enabled,
+            emoji=clownboard.emoji,
             channel=s_channel,
-            threshold=starboard.threshold,
-            starred_messages=starboard.starred_messages,
-            stars_added=starboard.stars_added,
-            selfstar=starboard.selfstar,
+            threshold=clownboard.threshold,
+            starred_messages=clownboard.starred_messages,
+            stars_added=clownboard.stars_added,
+            selfstar=clownboard.selfstar,
         )
-        if starboard.blacklist:
-            channels = [guild.get_channel(c) for c in starboard.blacklist]
-            roles = [guild.get_role(r) for r in starboard.blacklist]
+        if clownboard.blacklist:
+            channels = [guild.get_channel(c) for c in clownboard.blacklist]
+            roles = [guild.get_role(r) for r in clownboard.blacklist]
             chans = humanize_list([c.mention for c in channels if c is not None])
             roles_str = humanize_list([r.mention for r in roles if r is not None])
             if chans:
                 msg += _("Blocked Channels: {chans}\n").format(chans=chans)
             if roles_str:
                 msg += _("Blocked roles: {roles}\n").format(roles=roles_str)
-        if starboard.whitelist:
-            channels = [guild.get_channel(c) for c in starboard.whitelist]
-            roles = [guild.get_role(r) for r in starboard.whitelist]
+        if clownboard.whitelist:
+            channels = [guild.get_channel(c) for c in clownboard.whitelist]
+            roles = [guild.get_role(r) for r in clownboard.whitelist]
             chans = humanize_list([c.mention for c in channels if c is not None])
             roles_str = humanize_list([r.mention for r in roles if r is not None])
             if chans:
@@ -71,7 +71,7 @@ class StarboardPages(menus.ListPageSource):
             if count <= 1:
                 embed.description += msg
             else:
-                embed.add_field(name=_("Starboard info continued"), value=page)
+                embed.add_field(name=_("clownboard info continued"), value=page)
             count += 1
         embed.set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()}")
         return embed
