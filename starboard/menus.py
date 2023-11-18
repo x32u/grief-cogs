@@ -9,28 +9,28 @@ from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list, pagify
 from grief.vendored.discord.ext import menus
 
-from .clownboard_entry import clownboardEntry
+from .starboard_entry import StarboardEntry
 
-log = logging.getLogger("red.Trusty-cogs.clownboard")
+log = logging.getLogger("red.Trusty-cogs.starboard")
 _ = Translator("RoleTools", __file__)
 
 
-class clownboardPages(menus.ListPageSource):
-    def __init__(self, roles: List[clownboardEntry]):
+class StarboardPages(menus.ListPageSource):
+    def __init__(self, roles: List[StarboardEntry]):
         super().__init__(roles, per_page=1)
 
     def is_paginating(self) -> bool:
         return True
 
     async def format_page(
-        self, menu: menus.MenuPages, clownboard: clownboardEntry
+        self, menu: menus.MenuPages, starboard: StarboardEntry
     ) -> discord.Embed:
         guild = menu.ctx.guild
         embed = discord.Embed(
             colour=await menu.ctx.bot.get_embed_colour(menu.ctx.channel)
         )
-        embed.title = _("Clownboard settings for {guild}").format(guild=guild.name)
-        channel = guild.get_channel(clownboard.channel)
+        embed.title = _("Starboard settings for {guild}").format(guild=guild.name)
+        channel = guild.get_channel(starboard.channel)
         s_channel = channel.mention if channel else "deleted_channel"
         msg = _(
             "Name: **{name}**\nEnabled: **{enabled}**\nEmoji: {emoji}\n"
@@ -38,27 +38,27 @@ class clownboardPages(menus.ListPageSource):
             "{emoji} Messages: **{starred_messages}**\n"
             "{emoji} Added: **{stars_added}**\nSelfstar: **{selfstar}**\n"
         ).format(
-            name=clownboard.name,
-            enabled=clownboard.enabled,
-            emoji=clownboard.emoji,
+            name=starboard.name,
+            enabled=starboard.enabled,
+            emoji=starboard.emoji,
             channel=s_channel,
-            threshold=clownboard.threshold,
-            clownred_messages=clownboard.clownred_messages,
-            stars_added=clownboard.stars_added,
-            selfstar=clownboard.selfstar,
+            threshold=starboard.threshold,
+            starred_messages=starboard.starred_messages,
+            stars_added=starboard.stars_added,
+            selfstar=starboard.selfstar,
         )
-        if clownboard.blacklist:
-            channels = [guild.get_channel(c) for c in clownboard.blacklist]
-            roles = [guild.get_role(r) for r in clownboard.blacklist]
+        if starboard.blacklist:
+            channels = [guild.get_channel(c) for c in starboard.blacklist]
+            roles = [guild.get_role(r) for r in starboard.blacklist]
             chans = humanize_list([c.mention for c in channels if c is not None])
             roles_str = humanize_list([r.mention for r in roles if r is not None])
             if chans:
                 msg += _("Blocked Channels: {chans}\n").format(chans=chans)
             if roles_str:
                 msg += _("Blocked roles: {roles}\n").format(roles=roles_str)
-        if clownboard.whitelist:
-            channels = [guild.get_channel(c) for c in clownboard.whitelist]
-            roles = [guild.get_role(r) for r in clownboard.whitelist]
+        if starboard.whitelist:
+            channels = [guild.get_channel(c) for c in starboard.whitelist]
+            roles = [guild.get_role(r) for r in starboard.whitelist]
             chans = humanize_list([c.mention for c in channels if c is not None])
             roles_str = humanize_list([r.mention for r in roles if r is not None])
             if chans:
@@ -71,7 +71,7 @@ class clownboardPages(menus.ListPageSource):
             if count <= 1:
                 embed.description += msg
             else:
-                embed.add_field(name=_("clownboard info continued"), value=page)
+                embed.add_field(name=_("Starboard info continued"), value=page)
             count += 1
         embed.set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()}")
         return embed
