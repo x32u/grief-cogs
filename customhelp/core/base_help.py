@@ -343,7 +343,7 @@ class BaguetteHelp(commands.RedHelpFormatter):
         page_char_limit = help_settings.page_char_limit
         page_char_limit = min(page_char_limit, 5500)
         author_info = {
-            "name": _("{ctx.me.display_name} Help Menu").format(ctx=ctx),
+            "name": _("{ctx.me.display_name} help menu").format(ctx=ctx),
             "icon_url": ctx.me.display_avatar.url,
         }
         offset = len(author_info["name"]) + 20
