@@ -182,7 +182,7 @@ class Snipe(RedCog):
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["su"])
-    async def snipe_user(self, ctx: commands.Context, user: discord.Member, channel: discord.TextChannel = None):
+    async def snipeuser(self, ctx: commands.Context, user: discord.Member, channel: discord.TextChannel = None):
         """Snipe a user's past deleted messages in a channel."""
         channel = channel or ctx.channel
         pre_check = await self.pre_check_perms(ctx, channel)
@@ -233,7 +233,7 @@ class Snipe(RedCog):
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["se"])
-    async def snipe_embed(self, ctx: commands.Context, channel: discord.TextChannel = None):
+    async def snipeembed(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """
         Snipe all past deleted embeds in a channel.
         """
@@ -252,7 +252,7 @@ class Snipe(RedCog):
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["bs"])
-    async def snipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
+    async def bulksnipe(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """
         Snipe all the last deleted messages in a channel.
         """
@@ -358,7 +358,7 @@ class Snipe(RedCog):
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["eu"])
-    async def editsnipe_user(self, ctx: commands.Context, user: discord.Member,channel: discord.TextChannel = None,):
+    async def editsnipeuser(self, ctx: commands.Context, user: discord.Member,channel: discord.TextChannel = None,):
         """Snipe a user's past edited messages in the current channel."""
         channel = channel or ctx.channel
         pre_check = await self.pre_check_perms(ctx, channel)
@@ -408,7 +408,7 @@ class Snipe(RedCog):
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["esb"])
-    async def editsnipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
+    async def editsnipebulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """Snipe all the last edited messages in this channel."""
         channel = channel or ctx.channel
         pre_check = await self.pre_check_perms(ctx, channel)
@@ -495,7 +495,7 @@ class Snipe(RedCog):
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["rsu"])
-    async def reactsnipe_user(self, ctx: commands.Context, user: discord.Member, channel: discord.TextChannel = None,):
+    async def reactsnipeuser(self, ctx: commands.Context, user: discord.Member, channel: discord.TextChannel = None,):
         """Snipe a remove reaction from a message by sorting user and channel."""
         channel = channel or ctx.channel
         pre_check = await self.pre_check_perms(ctx, channel)
@@ -539,7 +539,7 @@ class Snipe(RedCog):
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
     @commands.command(aliases=["rsb"])
-    async def reactsnipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
+    async def reactsnipebulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """Snipe message reactions on bulk"""
         channel = channel or ctx.channel
         pre_check = await self.pre_check_perms(ctx, channel)
