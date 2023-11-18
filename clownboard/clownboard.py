@@ -11,7 +11,7 @@ from grief.core.utils.chat_formatting import humanize_timedelta, pagify
 from .converters import RealEmoji, clownboardExists
 from .events import ClownboardEvents
 from .menus import BaseMenu, clownboardPages
-from .clownboard_entry import FakePayload, clownboardEntry
+from .clownboard_entry import FakePayload, ClownboardEntry
 
 _ = Translator("clownboard", __file__)
 log = logging.getLogger("grief.clownboard")
@@ -32,7 +32,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
         self.config = Config.get_conf(self, 356488795)
         self.config.register_global(purge_time=None)
         self.config.register_guild(clownboards={})
-        self.clownboards: Dict[int, Dict[str, clownboardEntry]] = {}
+        self.clownboards: Dict[int, Dict[str, ClownboardEntry]] = {}
         self.ready = asyncio.Event()
         self.cleanup_loop: Optional[asyncio.Task] = None
 
@@ -43,7 +43,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
             all_data = await self.config.guild_from_id(int(guild_id)).clownboards()
             for name, data in all_data.items():
                 try:
-                    clownboard = await clownboardEntry.from_json(data, guild_id)
+                    clownboard = await ClownboardEntry.from_json(data, guild_id)
                 except Exception:
                     log.exception("error converting clownboard")
                 self.clownboards[guild_id][name] = clownboard
@@ -146,7 +146,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
         if name in clownboards:
             await ctx.send(_("{name} clownboard name is already being used").format(name=name))
             return
-        clownboard = clownboardEntry(name=name, channel=channel.id, emoji=str(emoji), guild=guild.id)
+        clownboard = ClownboardEntry(name=name, channel=channel.id, emoji=str(emoji), guild=guild.id)
         self.clownboards[guild.id][name] = clownboard
         await self._save_clownboards(guild)
         msg = _("clownboard set to {channel} with emoji {emoji}").format(
