@@ -1171,29 +1171,6 @@ class CustomHelp(commands.Cog):
             + ("Invalid categories:\n" + "\n".join(failed) if failed else "")
         )
 
-    @commands.command(aliases=["findcat"])
-    async def findcategory(self, ctx, *, command):
-        """Get the category where the command is present"""
-        # TODO check for cog here as well.
-        if cmd := self.bot.get_command(command):
-            em = discord.Embed(title=f"{command}", color=await ctx.embed_color())
-            if cmd.cog:
-                cog_name = cmd.cog.__class__.__name__
-                for cat in GLOBAL_CATEGORIES:
-                    if cog_name in cat.cogs:
-                        em.add_field(name="Category:", value=cat.name, inline=False)
-                        em.add_field(name="Cog:", value=cog_name, inline=False)
-                        await ctx.send(embed=em)
-                        break
-                else:
-                    await ctx.send("Impossible! report this to the cog owner of customhelp pls")
-            else:
-                em.add_field(name="Category:", value=GLOBAL_CATEGORIES.category.name, inline=False)
-                em.add_field(name="Cog:", value="None", inline=False)
-                await ctx.send(embed=em)
-        else:
-            await ctx.send("Command not found")
-
     def _update_conf(self, var, key, value):
         """Sample:
         var = settings
