@@ -14,5 +14,6 @@ if TYPE_CHECKING:
 log = logging.getLogger("grief.say")
 
 
-async def setup(bot: "Red"):
-    await bot.add_cog()
+async def setup(bot):
+    cog = Say(bot)
+    await bot.add_cog(cog)
