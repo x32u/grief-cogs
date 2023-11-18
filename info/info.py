@@ -84,7 +84,7 @@ class Info(commands.Cog):
         else:
             avatar_url = user.avatar.url
             button1 = Button(label="avatar", url=avatar_url)
-            e = discord.Embed(color=0xEEEFF1, url=user.avatar.url)
+            e = discord.Embed(color=0x313338, url=user.avatar.url)
             e.set_author(name=f"{member.display_name}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=avatar_url)
             view = View()
@@ -113,7 +113,7 @@ class Info(commands.Cog):
     async def servericon(self, ctx):
         """Fetch the server icon."""
         if ctx.guild.icon is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon", color=0xEEEFF1)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon", color=0x313338)
             await ctx.reply(embed=embed)
             return
         e = discord.Embed(color=0x313338)
@@ -129,7 +129,7 @@ class Info(commands.Cog):
     async def serverbanner(self, ctx):
         """Fetch the server banner."""
         if ctx.guild.banner is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner", color=0xEEEFF1)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner", color=0x313338)
             await ctx.reply(embed=embed)
             return
         e = discord.Embed(color=0x313338)
@@ -150,7 +150,7 @@ class Info(commands.Cog):
         else:
             invsplash_url = ctx.guild.splash
             button1 = Button(label="invite splash", url=ctx.guild.splash.url)
-            e = discord.Embed(color=0xEEEFF1)
+            e = discord.Embed(color=0x313338)
             e.set_image(url=invsplash_url)
             view = View()
             view.add_item(button1)
@@ -168,7 +168,7 @@ class Info(commands.Cog):
         else:
             banner_url = user.banner.url
             button1 = Button(label="banner", url=banner_url)
-            e = discord.Embed(color=0xEEEFF1)
+            e = discord.Embed(color=0x313338)
             e.set_image(url=banner_url)
             view = View()
             view.add_item(button1)
@@ -543,7 +543,7 @@ class Info(commands.Cog):
             )
 
             embed: discord.Embed = discord.Embed(
-                color=0xEEEFF1,
+                color=0x313338,
                 timestamp=messages[0].created_at,
                 description=f"[First message in]({messages[0].jump_url}) {chan}",
             )
