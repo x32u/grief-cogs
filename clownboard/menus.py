@@ -9,43 +9,43 @@ from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list, pagify
 from grief.vendored.discord.ext import menus
 
-from .clownboard_entry import ClownboardEntry
+from .clownboard_entry import clownboardEntry
 
 log = logging.getLogger("red.Trusty-cogs.clownboard")
 _ = Translator("RoleTools", __file__)
 
 
 class clownboardPages(menus.ListPageSource):
-    def __init__(self, roles: List[ClownboardEntry]):
+    def __init__(self, roles: List[clownboardEntry]):
         super().__init__(roles, per_page=1)
 
     def is_paginating(self) -> bool:
         return True
 
     async def format_page(
-        self, menu: menus.MenuPages, clownboard: ClownboardEntry
+        self, menu: menus.MenuPages, clownboard: clownboardEntry
     ) -> discord.Embed:
         guild = menu.ctx.guild
         embed = discord.Embed(
             colour=await menu.ctx.bot.get_embed_colour(menu.ctx.channel)
         )
-        embed.title = _("clownboard settings for {guild}").format(guild=guild.name)
+        embed.title = _("Clownboard settings for {guild}").format(guild=guild.name)
         channel = guild.get_channel(clownboard.channel)
         s_channel = channel.mention if channel else "deleted_channel"
         msg = _(
             "Name: **{name}**\nEnabled: **{enabled}**\nEmoji: {emoji}\n"
             "Channel: {channel}\nThreshold: **{threshold}**\n"
             "{emoji} Messages: **{starred_messages}**\n"
-            "{emoji} Added: **{stars_added}**\nSelfstar: **{selfclown}**\n"
+            "{emoji} Added: **{stars_added}**\nSelfstar: **{selfstar}**\n"
         ).format(
             name=clownboard.name,
             enabled=clownboard.enabled,
             emoji=clownboard.emoji,
             channel=s_channel,
             threshold=clownboard.threshold,
-            starred_messages=clownboard.clowned_messages,
-            clowns_added=clownboard.stars_added,
-            selfclown=clownboard.selfstar,
+            clownred_messages=clownboard.clownred_messages,
+            stars_added=clownboard.stars_added,
+            selfstar=clownboard.selfstar,
         )
         if clownboard.blacklist:
             channels = [guild.get_channel(c) for c in clownboard.blacklist]
