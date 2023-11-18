@@ -9,12 +9,12 @@ from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_timedelta, pagify
 
 from .converters import RealEmoji, clownboardExists
-from .events import StarboardEvents
+from .events import ClownboardEvents
 from .menus import BaseMenu, StarboardPages
 from .clownboard_entry import FakePayload, ClownboardEntry
 
-_ = Translator("Starboard", __file__)
-log = logging.getLogger("grief.starboard")
+_ = Translator("Clownboard", __file__)
+log = logging.getLogger("grief.clownboard")
 
 TimeConverter = commands.converter.TimedeltaConverter(
     minimum=timedelta(days=7), allowed_units=["days", "weeks"], default_unit="days"
@@ -22,7 +22,7 @@ TimeConverter = commands.converter.TimedeltaConverter(
 
 
 @cog_i18n(_)
-class Starboard(StarboardEvents, commands.Cog):
+class Starboard(ClownboardEvents, commands.Cog):
     """
     Create a starboard to pin those special comments indefinitely.
     """
