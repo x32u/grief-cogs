@@ -131,7 +131,7 @@ class Snipe(RedCog):
     @commands.guild_only()
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
-    @commands.group(aliases=["s"])
+    @commands.command(aliases=["s"])
     async def snipe(self, ctx: commands.Context, channel: discord.TextChannel = None, index: int = None):
         """Shows the last deleted messages in a channel."""
         channel = channel or ctx.channel
@@ -178,7 +178,10 @@ class Snipe(RedCog):
         else:
             await ctx.reply("There's nothing to snipe!")
 
-    @snipe.command(name="user")
+    @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.member)
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command(aliases=["su"])
     async def snipe_user(self, ctx: commands.Context, user: discord.Member, channel: discord.TextChannel = None):
         """Snipe a user's past deleted messages in a channel."""
         channel = channel or ctx.channel
@@ -226,7 +229,10 @@ class Snipe(RedCog):
         else:
             await ctx.reply("There's nothing to snipe!")
 
-    @snipe.command(name="embed")
+    @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.member)
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command(aliases=["se"])
     async def snipe_embed(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """
         Snipe all past deleted embeds in a channel.
@@ -242,7 +248,10 @@ class Snipe(RedCog):
         else:
             await ctx.reply("There's nothing to snipe!")
 
-    @snipe.command(name="bulk")
+    @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.member)
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command(aliases=["sb"])
     async def snipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """
         Snipe all the last deleted messages in a channel.
@@ -298,10 +307,7 @@ class Snipe(RedCog):
     @commands.guild_only()
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
-    @commands.group(
-        aliases=["esnipe"],
-        invoke_without_command=True,
-    )
+    @commands.command(aliases=["es"])
     async def editsnipe(
         self, ctx: commands.Context, index: int = None, channel: discord.TextChannel = None
     ):
@@ -348,7 +354,10 @@ class Snipe(RedCog):
         else:
             return await ctx.reply("There's nothing to snipe!")
 
-    @editsnipe.command(name="user")
+    @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.member)
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command(aliases=["eu"])
     async def editsnipe_user(self, ctx: commands.Context, user: discord.Member,channel: discord.TextChannel = None,):
         """Snipe a user's past edited messages in the current channel."""
         channel = channel or ctx.channel
@@ -395,7 +404,10 @@ class Snipe(RedCog):
         else:
             await ctx.reply("There's nothing to snipe!")
 
-    @editsnipe.command(name="bulk")
+    @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.member)
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command(aliases=["esb"])
     async def editsnipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """Snipe all the last edited messages in this channel."""
         channel = channel or ctx.channel
@@ -442,7 +454,7 @@ class Snipe(RedCog):
     @commands.guild_only()
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
-    @commands.group(aliases=["rsnipe"], invoke_without_command=True,)
+    @commands.command(aliases=["rs"])
     async def reactionsnipe(self, ctx: commands.Context, channel: discord.TextChannel = None, index: int = None):
         """
         Snipe a removed reaction from a message.
@@ -479,7 +491,10 @@ class Snipe(RedCog):
         else:
             await ctx.reply("There's nothing to snipe!")
 
-    @reactionsnipe.command(name="user",)
+    @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.member)
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command(aliases=["rsu"])
     async def reactsnipe_user(self, ctx: commands.Context, user: discord.Member, channel: discord.TextChannel = None,):
         """Snipe a remove reaction from a message by sorting user and channel."""
         channel = channel or ctx.channel
@@ -520,7 +535,10 @@ class Snipe(RedCog):
         else:
             await ctx.reply("There's nothing to snipe!")
 
-    @reactionsnipe.command(name="bulk")
+    @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.member)
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command(aliases=["rsb"])
     async def reactsnipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """Snipe message reactions on bulk"""
         channel = channel or ctx.channel
