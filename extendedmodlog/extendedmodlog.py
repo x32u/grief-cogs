@@ -141,8 +141,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
         """
         Toggle various extended modlog notifications
 
-        Requires the channel to be setup with `[p]modlogset modlog #channel`
-        Or can be sent to separate channels with `[p]modlog channel #channel event_name`
+        Can be sent to separate channels with `[p]modlog channel #channel event_name`
         """
         pass
 
