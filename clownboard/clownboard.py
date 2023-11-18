@@ -284,7 +284,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
             emoji=clownboard.emoji,
             event_type="REACTION_ADD",
         )
-        await self._update_stars(fake_payload)
+        await self._update_clowns(fake_payload)
 
     @commands.command()
     @commands.guild_only()
