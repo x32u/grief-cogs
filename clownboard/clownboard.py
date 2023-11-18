@@ -8,7 +8,7 @@ from grief.core import Config, checks, commands
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_timedelta, pagify
 
-from .converters import RealEmoji, StarboardExists
+from .converters import RealEmoji, ClownboardExists
 from .events import StarboardEvents
 from .menus import BaseMenu, StarboardPages
 from .clownboard_entry import FakePayload, ClownboardEntry
@@ -193,7 +193,7 @@ class Starboard(StarboardEvents, commands.Cog):
 
     @clownboard.command(name="remove", aliases=["delete", "del"])
     async def remove_starboard(
-        self, ctx: commands.Context, starboard: Optional[StarboardExists]
+        self, ctx: commands.Context, starboard: Optional[ClownboardExists]
     ) -> None:
         """
         Remove a starboard from the server
@@ -230,7 +230,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def star(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         message: discord.Message,
     ) -> None:
         """
@@ -291,7 +291,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def unstar(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         message: discord.Message,
     ) -> None:
         """
@@ -361,7 +361,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def blacklist_add(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         channel_or_role: Union[discord.TextChannel, discord.CategoryChannel, discord.Role],
     ) -> None:
         """
@@ -402,7 +402,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def blacklist_remove(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         channel_or_role: Union[discord.TextChannel, discord.CategoryChannel, discord.Role],
     ) -> None:
         """
@@ -443,7 +443,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def whitelist_add(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         channel_or_role: Union[discord.TextChannel, discord.CategoryChannel, discord.Role],
     ) -> None:
         """
@@ -496,7 +496,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def whitelist_remove(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         channel_or_role: Union[discord.TextChannel, discord.CategoryChannel, discord.Role],
     ) -> None:
         """
@@ -537,7 +537,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def change_channel(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         channel: discord.TextChannel,
     ) -> None:
         """
@@ -584,7 +584,7 @@ class Starboard(StarboardEvents, commands.Cog):
 
     @clownboard.command(name="toggle")
     async def toggle_starboard(
-        self, ctx: commands.Context, starboard: Optional[StarboardExists]
+        self, ctx: commands.Context, starboard: Optional[ClownboardExists]
     ) -> None:
         """
         Toggle a starboard on/off
@@ -615,7 +615,7 @@ class Starboard(StarboardEvents, commands.Cog):
 
     @clownboard.command(name="selfstar")
     async def toggle_selfstar(
-        self, ctx: commands.Context, starboard: Optional[StarboardExists]
+        self, ctx: commands.Context, starboard: Optional[ClownboardExists]
     ) -> None:
         """
         Toggle whether or not a user can star their own post
@@ -646,7 +646,7 @@ class Starboard(StarboardEvents, commands.Cog):
 
     @clownboard.command(name="autostar")
     async def toggle_autostar(
-        self, ctx: commands.Context, starboard: Optional[StarboardExists]
+        self, ctx: commands.Context, starboard: Optional[ClownboardExists]
     ) -> None:
         """
         Toggle whether or not the bot will add the emoji automatically to the starboard message.
@@ -679,7 +679,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def colour_starboard(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         colour: Union[discord.Colour, str],
     ) -> None:
         """
@@ -725,7 +725,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def set_emoji(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         emoji: RealEmoji,
     ) -> None:
         """
@@ -761,7 +761,7 @@ class Starboard(StarboardEvents, commands.Cog):
     async def set_threshold(
         self,
         ctx: commands.Context,
-        starboard: Optional[StarboardExists],
+        starboard: Optional[ClownboardExists],
         threshold: int,
     ) -> None:
         """
