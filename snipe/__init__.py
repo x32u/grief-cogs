@@ -251,7 +251,7 @@ class Snipe(RedCog):
     @commands.guild_only()
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
-    @commands.command(aliases=["sb"])
+    @commands.command(aliases=["bs"])
     async def snipe_bulk(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """
         Snipe all the last deleted messages in a channel.
