@@ -9,21 +9,21 @@ from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list, pagify
 from grief.vendored.discord.ext import menus
 
-from .clownboard_entry import clownboardEntry
+from .clownboard_entry import ClownboardEntry
 
 log = logging.getLogger("red.Trusty-cogs.clownboard")
 _ = Translator("RoleTools", __file__)
 
 
 class clownboardPages(menus.ListPageSource):
-    def __init__(self, roles: List[clownboardEntry]):
+    def __init__(self, roles: List[ClownboardEntry]):
         super().__init__(roles, per_page=1)
 
     def is_paginating(self) -> bool:
         return True
 
     async def format_page(
-        self, menu: menus.MenuPages, clownboard: clownboardEntry
+        self, menu: menus.MenuPages, clownboard: ClownboardEntry
     ) -> discord.Embed:
         guild = menu.ctx.guild
         embed = discord.Embed(
