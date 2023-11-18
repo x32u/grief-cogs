@@ -15,7 +15,7 @@ log = logging.getLogger("grief.clownboard")
 
 @dataclass
 class FakePayload:
-    """A fake payload object to utilize `_update_stars` method"""
+    """A fake payload object to utilize `_update_clowns` method"""
 
     guild_id: int
     channel_id: int
@@ -36,15 +36,15 @@ class ClownboardEntry:
         self.emoji: str = kwargs.get("emoji")
         self.colour: str = kwargs.get("colour", "user")
         self.enabled: bool = kwargs.get("enabled", True)
-        self.selfstar: bool = kwargs.get("selfstar", False)
+        self.selfclown: bool = kwargs.get("selfclown", False)
         self.blacklist: List[int] = kwargs.get("blacklist", [])
         self.whitelist: List[int] = kwargs.get("whitelist", [])
         self.messages: Dict[str, ClownboardMessage] = kwargs.get("messages", {})
         self.clownboarded_messages: Dict[str, str] = kwargs.get("clownboarded_messages", {})
         self.threshold: int = kwargs.get("threshold", 1)
-        self.autostar: bool = kwargs.get("autostar", False)
-        self.starred_messages: int = kwargs.get("starred_messages", 0)
-        self.stars_added: int = kwargs.get("stars_added", 0)
+        self.autoclown: bool = kwargs.get("autoclown", False)
+        self.clownred_messages: int = kwargs.get("clownred_messages", 0)
+        self.clowns_added: int = kwargs.get("clowns_added", 0)
         self.lock: asyncio.Lock = asyncio.Lock()
 
     def __repr__(self) -> str:
@@ -111,7 +111,7 @@ class ClownboardEntry:
         Returns
         -------
             bool
-                Whether or not the channel we got a "star" in we're allowed
+                Whether or not the channel we got a "clown" in we're allowed
                 to repost.
         """
         guild = bot.get_guild(self.guild)
@@ -157,7 +157,7 @@ class ClownboardEntry:
             "channel": self.channel,
             "emoji": self.emoji,
             "colour": 0x313338,
-            "selfstar": self.selfstar,
+            "selfclown": self.selfclown,
             "blacklist": self.blacklist,
             "whitelist": self.whitelist,
             "messages": {
@@ -165,9 +165,9 @@ class ClownboardEntry:
             },
             "clownboarded_messages": self.clownboarded_messages,
             "threshold": self.threshold,
-            "autostar": self.autostar,
-            "starred_messages": self.starred_messages,
-            "stars_added": self.stars_added,
+            "autoclown": self.autoclown,
+            "clownred_messages": self.clownred_messages,
+            "clowns_added": self.clowns_added,
         }
 
     @classmethod
@@ -196,11 +196,11 @@ class ClownboardEntry:
             async for message_ids, obj in AsyncIter(messages.items()):
                 key = f"{obj.new_channel}-{obj.new_message}"
                 clownboarded_messages[key] = f"{obj.original_channel}-{obj.original_message}"
-        starred_messages = data.get("starred_messages", len(clownboarded_messages))
-        stars_added = data.get("stars_added", 0)
-        if not stars_added:
+        clownred_messages = data.get("clownred_messages", len(clownboarded_messages))
+        clowns_added = data.get("clowns_added", 0)
+        if not clowns_added:
             async for message_id, message in AsyncIter(messages.items(), steps=500):
-                stars_added += len(message.reactions)
+                clowns_added += len(message.reactions)
         blacklist = data.get("blacklist", [])
         whitelist = data.get("whitelist", [])
         if data.get("blacklist_channel") or data.get("blacklist_role"):
@@ -218,15 +218,15 @@ class ClownboardEntry:
             emoji=data.get("emoji"),
             colour=0x313338,
             enabled=data.get("enabled"),
-            selfstar=data.get("selfstar", False),
+            selfclown=data.get("selfclown", False),
             blacklist=blacklist,
             whitelist=whitelist,
             messages=messages,
             threshold=data.get("threshold"),
-            autostar=data.get("autostar", False),
+            autoclown=data.get("autoclown", False),
             clownboarded_messages=clownboarded_messages,
-            starred_messages=starred_messages,
-            stars_added=stars_added,
+            clownred_messages=clownred_messages,
+            clowns_added=clowns_added,
         )
 
 
@@ -254,28 +254,28 @@ class ClownboardMessage:
             "new_channel={0.new_channel} new_message={0.new_message}>"
         ).format(self, len(self.reactions))
 
-    async def delete(self, star_channel: discord.TextChannel) -> None:
+    async def delete(self, clown_channel: discord.TextChannel) -> None:
         if self.new_message is None:
             return
         try:
             if version_info >= VersionInfo.from_str("3.4.6"):
-                message_edit = star_channel.get_partial_message(self.new_message)
+                message_edit = clown_channel.get_partial_message(self.new_message)
             else:
-                message_edit = await star_channel.fetch_message(self.new_message)
+                message_edit = await clown_channel.fetch_message(self.new_message)
             self.new_message = None
             self.new_channel = None
             await message_edit.delete()
         except (discord.errors.NotFound, discord.errors.Forbidden):
             return
 
-    async def edit(self, star_channel: discord.TextChannel, content: str) -> None:
+    async def edit(self, clown_channel: discord.TextChannel, content: str) -> None:
         if self.new_message is None:
             return
         try:
             if version_info >= VersionInfo.from_str("3.4.6"):
-                message_edit = star_channel.get_partial_message(self.new_message)
+                message_edit = clown_channel.get_partial_message(self.new_message)
             else:
-                message_edit = await star_channel.fetch_message(self.new_message)
+                message_edit = await clown_channel.fetch_message(self.new_message)
             await message_edit.edit(content=content)
         except (discord.errors.NotFound, discord.errors.Forbidden):
             return
@@ -293,7 +293,7 @@ class ClownboardMessage:
         ----------
             bot: Red
                 The bot object used for bot.get_guild
-            starbaord: clownboardEntry
+            clownbaord: clownboardEntry
                 The clownboard object which contains this message entry
             remove: Optional[int]
                 This was used to represent a user who removed their reaction.
@@ -330,7 +330,7 @@ class ClownboardMessage:
             async for user in reaction.users():
                 if not clownboard.check_roles(user):
                     continue
-                if not clownboard.selfstar and user.id == orig_msg.author.id:
+                if not clownboard.selfclown and user.id == orig_msg.author.id:
                     continue
                 if user.id not in self.reactions and not user.bot:
                     self.reactions.append(user.id)
