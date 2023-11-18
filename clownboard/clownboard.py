@@ -9,7 +9,7 @@ from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_timedelta, pagify
 
 from .converters import RealEmoji, clownboardExists
-from .events import clownboardEvents
+from .events import ClownboardEvents
 from .menus import BaseMenu, clownboardPages
 from .clownboard_entry import FakePayload, clownboardEntry
 
@@ -22,7 +22,7 @@ TimeConverter = commands.converter.TimedeltaConverter(
 
 
 @cog_i18n(_)
-class Clownboard(clownboardEvents, commands.Cog):
+class Clownboard(ClownboardEvents, commands.Cog):
     """
     Create a clownboard to pin those special comments indefinitely.
     """
