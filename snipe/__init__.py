@@ -131,8 +131,7 @@ class Snipe(RedCog):
     @commands.guild_only()
     @commands.cooldown(1, 5, commands.BucketType.member)
     @commands.bot_has_permissions(embed_links=True)
-    @commands.command(autohelp=True, aliases=["s"])
-    @commands.group(invoke_without_command=True)
+    @commands.group(autohelp=True, aliases=["s"])
     async def snipe(self, ctx: commands.Context, channel: discord.TextChannel = None, index: int = None):
         """Shows the last deleted messages in a channel."""
         channel = channel or ctx.channel
