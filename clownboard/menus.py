@@ -35,8 +35,8 @@ class clownboardPages(menus.ListPageSource):
         msg = _(
             "Name: **{name}**\nEnabled: **{enabled}**\nEmoji: {emoji}\n"
             "Channel: {channel}\nThreshold: **{threshold}**\n"
-            "{emoji} Messages: **{starred_messages}**\n"
-            "{emoji} Added: **{stars_added}**\nSelfstar: **{selfstar}**\n"
+            "{emoji} Messages: **{clownred_messages}**\n"
+            "{emoji} Added: **{clowns_added}**\nSelfstar: **{selfclown}**\n"
         ).format(
             name=clownboard.name,
             enabled=clownboard.enabled,
