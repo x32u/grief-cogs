@@ -103,7 +103,7 @@ class Clownboard(ClownboardEvents, commands.Cog):
         guild = ctx.guild
         await ctx.typing()
         if guild.id in self.clownboards:
-            await BaseMenu(source=clownboardPages(list(self.clownboards[guild.id].values()))).clownt(
+            await BaseMenu(source=clownboardPages(list(self.clownboards[guild.id].values()))).clown(
                 ctx=ctx
             )
 
