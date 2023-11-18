@@ -288,14 +288,14 @@ class Clownboard(ClownboardEvents, commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    async def unstar(
+    async def unclown(
         self,
         ctx: commands.Context,
         clownboard: Optional[clownboardExists],
         message: discord.Message,
     ) -> None:
         """
-        Manually unstar a message
+        Manually unclown a message
 
         `<name>` is the name of the clownboard you would like to add the message to
         `<message>` is the message ID, `channe_id-message_id`, or a message link
