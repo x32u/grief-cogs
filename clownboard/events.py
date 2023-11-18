@@ -153,12 +153,12 @@ class ClownboardEvents:
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent) -> None:
         await self.ready.wait()
-        await self._update_stars(payload)
+        await self._update_clowns(payload)
 
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent) -> None:
         await self.ready.wait()
-        await self._update_stars(payload)
+        await self._update_clowns(payload)
 
     @commands.Cog.listener()
     async def on_raw_reaction_clear(self, payload: discord.RawReactionActionEvent) -> None:
@@ -174,11 +174,11 @@ class ClownboardEvents:
         # clownboards = await self.config.guild(guild).clownboards()
         for name, clownboard in self.clownboards[guild.id].items():
             # clownboard = clownboardEntry.from_json(s_board)
-            star_channel = guild.get_channel(clownboard.channel)
-            if not star_channel:
+            clown_channel = guild.get_channel(clownboard.channel)
+            if not clown_channel:
                 continue
             async with clownboard.lock:
-                await self._loop_messages(payload, clownboard, star_channel)
+                await self._loop_messages(payload, clownboard, clown_channel)
 
     async def is_bot_or_server_owner(self, member: discord.Member) -> bool:
         guild = member.guild
@@ -188,7 +188,7 @@ class ClownboardEvents:
             return True
         return await self.bot.is_owner(member)
 
-    async def _update_stars(
+    async def _update_clowns(
         self, payload: Union[discord.RawReactionActionEvent, FakePayload]
     ) -> None:
         """
@@ -226,21 +226,21 @@ class ClownboardEvents:
             log.debug("User or channel not in allowlist")
             return
 
-        star_channel = guild.get_channel(clownboard.channel)
-        if not star_channel:
+        clown_channel = guild.get_channel(clownboard.channel)
+        if not clown_channel:
             return
         if (
-            not star_channel.permissions_for(guild.me).send_messages
-            or not star_channel.permissions_for(guild.me).embed_links
+            not clown_channel.permissions_for(guild.me).send_messages
+            or not clown_channel.permissions_for(guild.me).embed_links
         ):
             return
 
         async with clownboard.lock:
-            star_message = await self._loop_messages(payload, clownboard, star_channel)
-            if star_message is True:
+            clown_message = await self._loop_messages(payload, clownboard, clown_channel)
+            if clown_message is True:
                 return
 
-            if star_message is False:
+            if clown_message is False:
                 if getattr(payload, "event_type", None) == "REACTION_REMOVE":
                     # Return early so we don't create a new clownboard message
                     # when the first time we're seeing the message is on a
@@ -252,9 +252,9 @@ class ClownboardEvents:
                     return
                 reactions = [payload.user_id]
                 if payload.user_id == msg.author.id:
-                    if not clownboard.selfstar:
+                    if not clownboard.selfclown:
                         reactions.remove(payload.user_id)
-                star_message = ClownboardMessage(
+                clown_message = ClownboardMessage(
                     guild=guild.id,
                     original_message=payload.message_id,
                     original_channel=payload.channel_id,
@@ -263,39 +263,39 @@ class ClownboardEvents:
                     author=msg.author.id,
                     reactions=reactions,
                 )
-            clownboard.stars_added += 1
+            clownboard.clowns_added += 1
             key = f"{payload.channel_id}-{payload.message_id}"
-            # await star_message.update_count(self.bot, clownboard, remove)
-            count = len(star_message.reactions)
+            # await clown_message.update_count(self.bot, clownboard, remove)
+            count = len(clown_message.reactions)
             log.debug(f"First time {count=} {clownboard.threshold=}")
             if count < clownboard.threshold:
                 if key not in clownboard.messages:
-                    self.clownboards[guild.id][clownboard.name].messages[key] = star_message
+                    self.clownboards[guild.id][clownboard.name].messages[key] = clown_message
                 await self._save_clownboards(guild)
                 return
             try:
                 msg = await channel.fetch_message(payload.message_id)
             except (discord.errors.NotFound, discord.Forbidden):
                 return
-            if not clownboard.selfstar and msg.author.id == payload.user_id:
-                log.debug("Is a selfstar so let's return")
-                # this is here to prevent 1 threshold selfstars
+            if not clownboard.selfclown and msg.author.id == payload.user_id:
+                log.debug("Is a selfclown so let's return")
+                # this is here to prevent 1 threshold selfclowns
                 return
             embeds = await self._build_embed(guild, msg, clownboard)
             count_msg = "{} **#{}**".format(payload.emoji, count)
-            post_msg = await star_channel.send(count_msg, embeds=embeds)
-            if clownboard.autostar:
+            post_msg = await clown_channel.send(count_msg, embeds=embeds)
+            if clownboard.autoclown:
                 try:
                     await post_msg.add_reaction(clownboard.emoji)
                 except Exception:
-                    log.exception("Error adding autostar.")
+                    log.exception("Error adding autoclown.")
             if key not in clownboard.messages:
-                self.clownboards[guild.id][clownboard.name].messages[key] = star_message
-            star_message.new_message = post_msg.id
-            star_message.new_channel = star_channel.id
-            clownboard.starred_messages += 1
-            index_key = f"{star_channel.id}-{post_msg.id}"
-            self.clownboards[guild.id][clownboard.name].messages[key] = star_message
+                self.clownboards[guild.id][clownboard.name].messages[key] = clown_message
+            clown_message.new_message = post_msg.id
+            clown_message.new_channel = clown_channel.id
+            clownboard.clownred_messages += 1
+            index_key = f"{clown_channel.id}-{post_msg.id}"
+            self.clownboards[guild.id][clownboard.name].messages[key] = clown_message
             self.clownboards[guild.id][clownboard.name].clownboarded_messages[index_key] = key
             await self._save_clownboards(guild)
 
@@ -387,7 +387,7 @@ class ClownboardEvents:
         self,
         payload: Union[discord.RawReactionActionEvent, FakePayload],
         clownboard: ClownboardEntry,
-        star_channel: discord.TextChannel,
+        clown_channel: discord.TextChannel,
         is_clear: bool = False,
     ) -> Union[ClownboardMessage, bool]:
         """
@@ -396,10 +396,10 @@ class ClownboardEvents:
         Parameters
         ----------
             paylod: Union[discord.RawReactionActionEvent, FakePayload]
-                Represents the raw reaction payload for the starred message
+                Represents the raw reaction payload for the clownred message
             clownboard: clownboardEntry
                 The clownboard which matched the reaction emoji.
-            star_channel: discord.TextChannel
+            clown_channel: discord.TextChannel
                 The channel which we want to send clownboard messages into.
             is_clear: bool
                 Whether or not the reaction event was for clearing all emojis.
@@ -417,15 +417,15 @@ class ClownboardEvents:
 
         """
         try:
-            guild = star_channel.guild
+            guild = clown_channel.guild
         except AttributeError:
             return False
         key = f"{payload.channel_id}-{payload.message_id}"
         if key in clownboard.messages:
-            # the starred message was an original clownboard message
+            # the clownred message was an original clownboard message
             clownboard_msg = clownboard.messages[key]
         elif key in clownboard.clownboarded_messages:
-            # the starred message was the clownboarded message
+            # the clownred message was the clownboarded message
             key = clownboard.clownboarded_messages[key]
             clownboard_msg = clownboard.messages[key]
             pass
@@ -433,19 +433,19 @@ class ClownboardEvents:
             return False
 
         # await clownboard_msg.update_count(self.bot, clownboard, remove)
-        if not clownboard.selfstar and payload.user_id == clownboard_msg.author:
+        if not clownboard.selfclown and payload.user_id == clownboard_msg.author:
             return True
 
         if getattr(payload, "event_type", None) == "REACTION_ADD":
             if (user_id := getattr(payload, "user_id", 0)) not in clownboard_msg.reactions:
                 clownboard_msg.reactions.append(user_id)
                 log.debug("Adding user in _loop_messages")
-                clownboard.stars_added += 1
+                clownboard.clowns_added += 1
         else:
             if (user_id := getattr(payload, "user_id", 0)) in clownboard_msg.reactions:
                 clownboard_msg.reactions.remove(user_id)
                 log.debug("Removing user in _loop_messages")
-                clownboard.stars_added -= 1
+                clownboard.clowns_added -= 1
 
         if not clownboard_msg.new_message or not clownboard_msg.new_channel:
             return clownboard_msg
@@ -458,13 +458,13 @@ class ClownboardEvents:
                 log.debug("Removed old message from index")
             except KeyError:
                 pass
-            await clownboard_msg.delete(star_channel)
-            clownboard.starred_messages -= 1
+            await clownboard_msg.delete(clown_channel)
+            clownboard.clownred_messages -= 1
             await self._save_clownboards(guild)
             return True
         log.debug("Editing clownboard")
         count_message = f"{clownboard.emoji} **#{count}**"
-        asyncio.create_task(clownboard_msg.edit(star_channel, count_message))
+        asyncio.create_task(clownboard_msg.edit(clown_channel, count_message))
         # create a task because otherwise we could wait up to an hour to open the lock.
         # This is thanks to announcement channels and published messages.
         return True
