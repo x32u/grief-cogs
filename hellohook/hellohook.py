@@ -172,7 +172,7 @@ class Hellohook(commands.Cog):
 
         Due to Discord limitations, you will have to create a webhook yourself in the channel you want the welcome message in. See **`[p]hellohook setgreethook`** for more details.
 
-        [See Documentation >](https://docs.griefbot.lol/hellohook)
+        [See Documentation >](https://docs.grief.cloud/hellohook)
         """
         if not ctx.invoked_subcommand:
             pass
@@ -245,7 +245,7 @@ class Hellohook(commands.Cog):
 
         You can use variables to put the info of new users into the welcome message automatically.
 
-        [Create a webhook message here >\nSee Hellohook help documentation >](https://docs.griefbot.lol/hellohook)
+        [Create a webhook message here >\nSee Hellohook help documentation >](https://docs.grief.cloud/hellohook)
 
         When you are done on Discohook:
         - Scroll to the bottom
@@ -265,7 +265,7 @@ class Hellohook(commands.Cog):
 
         You can use variables to put the info of users into the message automatically.
 
-        [Create a webhook message here >\nSee Hellohook help documentation >](https://docs.griefbot.lol/hellohook)
+        [Create a webhook message here >\nSee Hellohook help documentation >](https://docs.grief.cloud/hellohook)
 
         When you are done on Discohook:
         - Scroll to the bottom
@@ -342,7 +342,7 @@ class Hellohook(commands.Cog):
         -
         ⚠️ **Warning: This feature is still in testing.
         Data loss is possible. Use at your own risk.
-        [See Documentation >](https://docs.griefbot.lol/hellohook)**
+        [See Documentation >](https://docs.grief.cloud/hellohook)**
         """
         if not ctx.invoked_subcommand:
             pass
