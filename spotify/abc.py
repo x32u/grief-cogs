@@ -63,15 +63,6 @@ class SpotifyMixin(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def red_delete_data_for_user(
-        self,
-        *,
-        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
-        user_id: int,
-    ):
-        raise NotImplementedError()
-
-    @abstractmethod
     async def get_user_auth(
         self,
         ctx: commands.Context,
