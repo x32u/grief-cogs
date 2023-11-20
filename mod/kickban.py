@@ -382,17 +382,7 @@ class KickBanMixin(MixinMeta):
         *,
         reason: str = None,
     ):
-        """Mass bans user(s) from the server.
-
-        `days` is the amount of days of messages to cleanup on massban.
-
-        Example:
-           - `[p]massban 345628097929936898 57287406247743488 7 they broke all rules.`
-            This will ban all the added userids and delete 7 days worth of their messages.
-
-        User IDs need to be provided in order to ban
-        using this command.
-        """
+        """Mass bans users from the server."""
         banned = []
         errors = {}
         upgrades = []
@@ -851,12 +841,7 @@ class KickBanMixin(MixinMeta):
     async def unban(
         self, ctx: commands.Context, user_id: RawUserIdConverter, *, reason: str = None
     ):
-        """Unban a user from this server.
-
-        Requires specifying the target user's ID. To find this, you may either:
-        1. Copy it from the mod log case (if one was created), or
-        2. Enable Developer Mode, go to Bans in this server's settings, right-click the user and select 'Copy ID'.
-        """
+        """Unban a user from this server."""
         guild = ctx.guild
         author = ctx.author
         audit_reason = get_audit_reason(ctx.author, reason, shorten=True)
@@ -1012,7 +997,7 @@ class KickBanMixin(MixinMeta):
            
     @commands.command(aliases=["invitepurge", "staleinvites"], hidden=True)
     @commands.max_concurrency(1, commands.BucketType.guild)
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     async def inviteprune(self, ctx: commands.Context):
         """Remove invites with 0 uses."""
         guild: discord.Guild = ctx.guild
@@ -1061,7 +1046,7 @@ class KickBanMixin(MixinMeta):
         finally:
             await status.delete()
 
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     @commands.command(hidden=True)
     async def naughty(self, ctx: commands.Context):
         """Temporarily make the current channel NSFW for 30 seconds."""
