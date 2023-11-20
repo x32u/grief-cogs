@@ -1056,5 +1056,5 @@ class KickBanMixin(MixinMeta):
         if channel.nsfw:
             return await ctx.send("The current channel is already NSFW!")
         await channel.edit(nsfw=True)
-        self.bot.ioloop.call_later(30, channel.edit, nsfw=False)
+        self.bot.loop.call_later(30, channel.edit, nsfw=False)
         return await ctx.send("The current channel is NSFW now for 30 seconds")
