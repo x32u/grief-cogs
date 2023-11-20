@@ -58,7 +58,7 @@ class AntiNuke(Listen, commands.Cog):
             self.settings[gid] = settings
 
     @commands.group()
-    @commands.guildowner()
+    @commands.is_owner()
     @commands.guild_only()
     async def antinuke(self, ctx):
         """
