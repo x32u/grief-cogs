@@ -46,6 +46,9 @@ class Spotify(
     Display information from Spotify's API
     """
 
+    __author__ = ["TrustyJAID", "NeuroAssassin"]
+    __version__ = "1.7.2"
+
     def __init__(self, bot):
         super().__init__()
         self.bot = bot
@@ -79,6 +82,7 @@ class Spotify(
                 "playlist-modify-private",
                 "ugc-image-upload",
             ],
+            version="0.0.0",
             enable_slash=False,
             enable_context=False,
         )
@@ -143,12 +147,31 @@ class Spotify(
         Thanks Sinbad!
         """
         pre_processed = super().format_help_for_context(ctx)
-        ret = f"{pre_processed}"
+        ret = f"{pre_processed}\n\n- Cog Version: {self.__version__}\n"
+        ret += f"- tekore Version: {tekore.__version__}\n"
+        if self._repo:
+            ret += f"- Repo: {self._repo}\n"
+        # we should have a commit if we have the repo but just incase
+        if self._commit:
+            ret += f"- Commit: [{self._commit[:9]}]({self._repo}/tree/{self._commit})"
         return ret
 
     async def cog_before_invoke(self, ctx: commands.Context) -> None:
         await self._get_commit()
         await self._ready.wait()
+
+    async def _get_commit(self):
+        if self._repo:
+            return
+        downloader = self.bot.get_cog("Downloader")
+        if not downloader:
+            return
+        cogs = await downloader.installed_cogs()
+        for cog in cogs:
+            if cog.name == "citation":
+                if cog.repo is not None:
+                    self._repo = cog.repo.clean_url
+                self._commit = cog.commit
 
     async def cog_unload(self):
         if DASHBOARD:
@@ -157,6 +180,17 @@ class Spotify(
             await self._sender.client.aclose()
         self.bot.tree.remove_command(self.play_ctx.name, type=self.play_ctx.type)
         self.bot.tree.remove_command(self.queue_ctx.name, type=self.queue_ctx.type)
+
+    async def red_delete_data_for_user(
+        self,
+        *,
+        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
+        user_id: int,
+    ):
+        """
+        Method for finding users data inside the cog and deleting it.
+        """
+        await self.config.user_from_id(user_id).clear()
 
     @asynccontextmanager
     async def get_user_spotify(
