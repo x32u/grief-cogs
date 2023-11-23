@@ -468,8 +468,8 @@ class Mod(
 
         if not confirmation and not ctx.assume_yes:
             embed: discord.Embed = discord.Embed()
-            embed.title = _("Nuke")
-            embed.description = _(
+            embed.title = ("Nuke")
+            embed.description = (
                 "{Nuke channel {old_channel.mention} ({old_channel.id})?\n The channel will be deleted and recreated.}"
             ).format(old_channel=old_channel)
             embed.color = 0x313338
