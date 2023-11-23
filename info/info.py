@@ -33,7 +33,7 @@ from grief.core.commands import GuildContext
 
 from .converter import FuzzyMember
 from .converters import GuildConverter, MultiGuildConverter, PermissionConverter
-from .menus import AvatarPages, BaseView, GuildPages, ListPages
+from .menuss import AvatarPages, BaseView, GuildPages, ListPages
 
 from asyncio import TimeoutError as AsyncTimeoutError
 from textwrap import shorten
