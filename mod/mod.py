@@ -20,6 +20,7 @@ from .names import ModInfo
 from .slowmode import Slowmode
 from .settings import ModSettings
 from grief.core.utils.chat_formatting import box, humanize_list
+from AAA3A_utils import Cog, CogsUtils, Settings
 
 from grief.core.utils.predicates import MessagePredicate
 from typing import Any, Dict, Final, List, Literal, Optional
@@ -452,3 +453,38 @@ class Mod(
             await ctx.send("AutoPublisher setting has been reset.")
         else:
             await ctx.send("AutoPublisher setting reset has been cancelled.")
+
+    @commands.guild_only()
+    @commands.has_permissions(manage_channels=True)
+    @commands.hybrid_command(name="nuke")
+    async def nuke_channel(self, ctx: commands.Context, confirmation: bool = False) -> None:
+        """Delete all messages from the current channel by duplicating it and then deleting it.
+        """
+        config = await self.config.guild(ctx.guild).all()
+        old_channel = ctx.channel
+        channel_position = old_channel.position
+
+        if not confirmation and not ctx.assume_yes:
+            embed: discord.Embed = discord.Embed()
+            embed.title = _("Nuke")
+            embed.description = _(
+                "Nuke channel {old_channel.mention} ({old_channel.id})?\n The channel will be deleted and recreated."
+            ).format(old_channel=old_channel)
+            embed.color = 0x313338
+            if not await CogsUtils.ConfirmationAsk(
+                ctx, content=f"{ctx.author.mention}", embed=embed
+            ):
+                await CogsUtils.delete_message(ctx.message)
+                return
+
+        reason = _("Nuke requested by {ctx.author} ({ctx.author.id}).").format(ctx=ctx)
+        new_channel = await old_channel.clone(reason=reason)
+        await old_channel.delete(reason=reason)
+        await new_channel.edit(
+            position=channel_position,
+            reason=reason,
+        )
+        self.log.info(
+            f"{ctx.author} ({ctx.author.id}) deleted all messages in channel {old_channel.name} ({old_channel.id})."
+        ),
+        await new_channel.send("first")
