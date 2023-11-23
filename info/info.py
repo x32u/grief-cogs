@@ -1,8 +1,9 @@
 
-import discord
 from grief.core.utils.menus import SimpleMenu
 from grief.core import commands
 from grief.core.bot import Red
+from grief import VersionInfo, version_info
+from grief.core.utils import AsyncIter
 
 import asyncio
 import datetime
@@ -1233,3 +1234,125 @@ class Info(commands.Cog):
             source=ListPages(pages=pages),
             cog=self,
         ).start(ctx=ctx)
+
+    @commands.hybrid_command()
+    @commands.bot_has_permissions(read_message_history=True, add_reactions=True)
+    async def whois(self, ctx: commands.Context, *, user_id: discord.User) -> None:
+        """
+        Display servers a user shares with the bot
+
+        `member` can be a user ID or mention
+        """
+        async with ctx.typing():
+            if not user_id:
+                await ctx.send(_("You need to supply a user ID for this to work properly."))
+                return
+            if isinstance(user_id, int):
+                try:
+                    member = await self.bot.fetch_user(user_id)
+                except AttributeError:
+                    member = await self.bot.get_user_info(user_id)
+                except discord.errors.NotFound:
+                    await ctx.send(str(user_id) + _(" doesn't seem to be a discord user."))
+                    return
+            else:
+                member = user_id
+
+            if await self.bot.is_owner(ctx.author):
+                guild_list = []
+                async for guild in AsyncIter(self.bot.guilds, steps=100):
+                    if m := guild.get_member(member.id):
+                        guild_list.append(m)
+            else:
+                guild_list = []
+                async for guild in AsyncIter(self.bot.guilds, steps=100):
+                    if not guild.get_member(ctx.author.id):
+                        continue
+                    if m := guild.get_member(member.id):
+                        guild_list.append(m)
+            embed_list = []
+            robot = "\N{ROBOT FACE}" if member.bot else ""
+            if guild_list != []:
+                url = "https://discord.com/channels/{guild_id}"
+                msg = f"**{member}** ({member.id}) {robot}" + _("is on:\n\n")
+                embed_msg = ""
+                for m in guild_list:
+                    # m = guild.get_member(member.id)
+                    guild_join = ""
+                    guild_url = url.format(guild_id=m.guild.id)
+                    if m.joined_at:
+                        ts = int(m.joined_at.timestamp())
+                        guild_join = f"Joined the server <t:{ts}:R>"
+                    is_owner = ""
+                    nick = ""
+                    if m.id == m.guild.owner_id:
+                        is_owner = "\N{CROWN}"
+                    if m.nick:
+                        nick = f"`{m.nick}` in"
+                    msg += f"{is_owner}{nick} __[{m.guild.name}]({guild_url})__ {guild_join}\n\n"
+                    embed_msg += (
+                        f"{is_owner}{nick} __[{m.guild.name}]({guild_url})__ {guild_join}\n\n"
+                    )
+                if ctx.channel.permissions_for(ctx.me).embed_links:
+                    for em in pagify(embed_msg, ["\n"], page_length=1024):
+                        embed = discord.Embed()
+                        since_created = f"<t:{int(member.created_at.timestamp())}:R>"
+                        user_created = f"<t:{int(member.created_at.timestamp())}:D>"
+                        public_flags = ""
+                        if version_info >= VersionInfo.from_str("3.4.0"):
+                            public_flags = "\n".join(
+                                bold(i.replace("_", " ").title())
+                                for i, v in member.public_flags
+                                if v
+                            )
+                        created_on = _(
+                            "Joined Discord on {user_created}\n"
+                            "({since_created})\n"
+                            "{public_flags}"
+                        ).format(
+                            user_created=user_created,
+                            since_created=since_created,
+                            public_flags=public_flags,
+                        )
+                        embed.description = created_on
+                        embed.set_thumbnail(url=member.display_avatar)
+                        embed.colour = 0x313338
+                        embed.set_author(
+                            name=f"{member} ({member.id}) {robot}", icon_url=member.display_avatar
+                        )
+                        embed.add_field(name=_("Shared Servers"), value=em)
+                        embed_list.append(embed)
+                else:
+                    for page in pagify(msg, ["\n"]):
+                        embed_list.append(page)
+            else:
+                if ctx.channel.permissions_for(ctx.me).embed_links:
+                    embed = discord.Embed()
+                    since_created = f"<t:{int(member.created_at.timestamp())}:R>"
+                    user_created = f"<t:{int(member.created_at.timestamp())}:D>"
+                    public_flags = ""
+                    if version_info >= VersionInfo.from_str("3.4.0"):
+                        public_flags = "\n".join(
+                            bold(i.replace("_", " ").title()) for i, v in member.public_flags if v
+                        )
+                    created_on = _(
+                        "Joined Discord on {user_created}\n" "({since_created})\n" "{public_flags}"
+                    ).format(
+                        user_created=user_created,
+                        since_created=since_created,
+                        public_flags=public_flags,
+                    )
+                    embed.description = created_on
+                    embed.set_thumbnail(url=member.display_avatar)
+                    embed.colour = discord.Colour.dark_theme()
+                    embed.set_author(
+                        name=f"{member} ({member.id}) {robot}", icon_url=member.display_avatar
+                    )
+                    embed_list.append(embed)
+                else:
+                    msg = f"**{member}** ({member.id}) " + _("is not in any shared servers!")
+                    embed_list.append(msg)
+            await BaseView(
+                source=ListPages(pages=embed_list),
+                cog=self,
+            ).start(ctx=ctx)
