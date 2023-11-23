@@ -27,6 +27,7 @@ log: logging.Logger = logging.getLogger("grief.purge")
 
 
 class Purge(commands.Cog):
+    """Purge messages."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__()
