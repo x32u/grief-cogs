@@ -93,13 +93,14 @@ class Owner(commands.Cog):
         except discord.NotFound:
             return
 
-    @commands.group(name="avatar")
+    @commands.group(name="avatarset")
     @commands.has_permissions(administrator=True)
     @commands.guild_only()
-    async def _avatar(self, ctx: Context):
+    async def avatarset(self, ctx: Context):
         """Avatar commands."""
+        pass
 
-    @_avatar.command(name="save")
+    @avatarset.command(name="save")
     async def _saveAvatars(self, ctx: Context):
         """Save all avatars in the current guild."""
         async with ctx.typing():
