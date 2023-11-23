@@ -24,13 +24,6 @@ class Owner(commands.Cog):
     def __init__(self, bot: Red):
         self.bot = bot
         self.saveFolder = data_manager.cog_data_path(cog_instance=self)
-        if self.logger.level == 0:
-            logPath = os.path.join(self.saveFolder, "info.log")
-            handler = logging.FileHandler(filename=logPath, encoding="utf-8", mode="a")
-            handler.setFormatter(
-                logging.Formatter("%(asctime)s %(message)s", datefmt="[%d/%m/%Y %H:%M:%S]")
-            )
-            self.logger.addHandler(handler)
 
     @commands.command()
     @commands.is_owner()
