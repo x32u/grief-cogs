@@ -25,7 +25,7 @@ from grief.core.utils.menus import start_adding_reactions
 from grief.core.utils.predicates import MessagePredicate, ReactionPredicate
 
 from .converters import GuildConverter, MultiGuildConverter, PermissionConverter
-from .menus import AvatarPages, BaseView, GuildPages, ListPages
+from .menus import BaseView, GuildPages, ListPages
 
 _ = Translator("ServerStats", __file__)
 log = logging.getLogger("red.trusty-cogs.ServerStats")
