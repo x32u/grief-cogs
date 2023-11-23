@@ -93,50 +93,6 @@ class Owner(commands.Cog):
         except discord.NotFound:
             return
 
-    @commands.group(name="avatarset")
-    @commands.has_permissions(administrator=True)
-    @commands.guild_only()
-    async def avatarset(self, ctx: Context):
-        """Avatar commands."""
-        pass
-
-    @avatarset.command(name="save")
-    async def _saveAvatars(self, ctx: Context):
-        """Save all avatars in the current guild."""
-        async with ctx.typing():
-            for member in ctx.guild.members:
-                await self.saveAvatar(member)
-            await ctx.send("Saved all avatars!")
-
-    @commands.Cog.listener("on_user_update")
-    async def newAvatarListener(self, oldUser, updatedUser):
-        """Listener for user updates."""
-        if oldUser.avatar == updatedUser.avatar:
-            return
-
-        self.logger.info(
-            "%s#%s (%s) updated their avatar, saving image",
-            updatedUser.name,
-            updatedUser.discriminator,
-            updatedUser.id,
-        )
-        await self.saveAvatar(updatedUser)
-
-    async def saveAvatar(self, user: discord.User):
-        """Save avatar images to the cog folder.
-
-        Parameters
-        ----------
-        user: discord.User
-            The user of which you wish to save the avatar for.
-        """
-        avatar = user.avatar.url
-        userPath = os.path.join(self.saveFolder, str(user.id))
-        pathlib.Path(userPath).mkdir(parents=True, exist_ok=True)
-        filePath = os.path.join(userPath, f"{user.id}.png")
-        await avatar.save(filePath)
-        self.logger.debug("Saved image to %s", filePath)
-
 async def setup(bot: Red) -> None:
     cog = Owner(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
