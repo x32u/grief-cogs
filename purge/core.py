@@ -27,10 +27,6 @@ log: logging.Logger = logging.getLogger("grief.purge")
 
 
 class Purge(commands.Cog):
-    __doc__ = CleanupCog.__doc__
-
-    __author__: Final[List[str]] = ["inthedark.org"]
-    __version__: Final[str] = "0.1.1"
 
     def __init__(self, bot: Red) -> None:
         super().__init__()
@@ -58,9 +54,7 @@ class Purge(commands.Cog):
         pre_processed = super().format_help_for_context(ctx) or ""
         n = "\n" if "\n\n" not in pre_processed else ""
         text = [
-            f"{pre_processed}{n}",
-            f"Version: **{self.__version__}**",
-            f"Author: **{humanize_list(self.__author__)}**",
+            f"{pre_processed}{n}"
         ]
         return "\n".join(text)
 
@@ -525,7 +519,7 @@ class Purge(commands.Cog):
             humanize_number(len(to_delete), override_locale="en_US"),
             ctx.channel.name,
         )
-        
+
         await mod.mass_purge(to_delete, ctx.channel, reason=reason)
         await ctx.send(
             f"Successfully deleted {len(to_delete)} {'message' if len(to_delete) == 1 else 'messages'}.",
