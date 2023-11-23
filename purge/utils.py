@@ -14,7 +14,6 @@ T = TypeVar("T")
 
 __all__: Tuple[str, ...] = (
     "_cleanup",
-    "_create_case",
     "_check_permissions",
     "has_hybrid_permissions",
     "get_message_from_reference",
@@ -28,32 +27,6 @@ LINKS_RE = re.compile(
     r"((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*",
     flags=re.IGNORECASE,
 )
-
-
-async def _create_case(
-    bot: Red,
-    guild: discord.Guild,
-    type: str,
-    reason: str,
-    user: Union[discord.User, discord.Member],
-    until: Optional[datetime.datetime] = None,
-    moderator: Optional[Union[discord.Member, discord.ClientUser]] = None,
-) -> Optional[modlog.Case]:
-    try:
-        case = await modlog.create_case(
-            bot,
-            guild,
-            discord.utils.utcnow(),
-            type,
-            user,
-            moderator=moderator if moderator is not None else user,
-            reason=reason,
-            until=until,
-        )
-    except RuntimeError:
-        case = None
-
-    return case
 
 
 async def _cleanup(
@@ -107,15 +80,6 @@ async def _cleanup(
             allowed_mentions=discord.AllowedMentions(replied_user=False),
         )
         return
-    else:
-        await _create_case(
-            ctx.bot,
-            ctx.guild,
-            type="purge",
-            reason=reason,
-            user=ctx.guild.me,
-            moderator=ctx.author,
-        )
 
     # https://github.com/Rapptz/RoboDanny/blob/rewrite/cogs/mod.py#L1814
     spammers: Union[Counter[str], List[Tuple[str, int]]] = Counter(

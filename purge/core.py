@@ -18,7 +18,6 @@ from .utils import (
     CUSTOM_EMOJI_RE,
     LINKS_RE,
     _cleanup,
-    _create_case,
     get_message_from_reference,
     get_messages_for_deletion,
     has_hybrid_permissions,
@@ -48,19 +47,6 @@ class Purge(commands.Cog):
         except Exception as error:
             log.exception("Task failed.", exc_info=error)
 
-    @staticmethod
-    async def _register_casetype() -> None:
-        purge_case: Dict[str, Union[str, bool]] = {
-            "name": "purge",
-            "default_setting": True,
-            "image": "🧹",
-            "case_str": "Purge",
-        }
-        try:
-            await modlog.register_casetype(**purge_case)  # type: ignore
-        except RuntimeError:
-            pass
-
     def _create_task(
         self, coroutine: Coroutine, *, name: Optional[str] = None
     ) -> asyncio.Task[Any]:
@@ -80,7 +66,6 @@ class Purge(commands.Cog):
 
     async def _initialize(self) -> None:
         await self.bot.wait_until_red_ready()
-        await self._register_casetype()
 
     async def cog_unload(self) -> None:
         self.task.cancel()
@@ -476,14 +461,6 @@ class Purge(commands.Cog):
             ctx.channel.name,
         )
 
-        await _create_case(
-            self.bot,
-            ctx.guild,
-            type="purge",
-            reason=reason,
-            user=ctx.guild.me,
-            moderator=ctx.author,
-        )
         await mod.mass_purge(to_delete, ctx.channel, reason=reason)
         await ctx.send(
             f"Successfully deleted {len(to_delete)} {'message' if len(to_delete) == 1 else 'messages'}.",
@@ -548,15 +525,7 @@ class Purge(commands.Cog):
             humanize_number(len(to_delete), override_locale="en_US"),
             ctx.channel.name,
         )
-
-        await _create_case(
-            self.bot,
-            ctx.guild,
-            type="purge",
-            reason=reason,
-            user=ctx.guild.me,
-            moderator=ctx.author,
-        )
+        
         await mod.mass_purge(to_delete, ctx.channel, reason=reason)
         await ctx.send(
             f"Successfully deleted {len(to_delete)} {'message' if len(to_delete) == 1 else 'messages'}.",
@@ -614,14 +583,6 @@ class Purge(commands.Cog):
             ctx.channel.name,
         )
 
-        await _create_case(
-            self.bot,
-            ctx.guild,
-            type="purge",
-            reason=reason,
-            user=ctx.guild.me,
-            moderator=ctx.author,
-        )
         await mod.mass_purge(to_delete, ctx.channel, reason=reason)
         await ctx.send(
             f"Successfully deleted {len(to_delete)} {'message' if len(to_delete) == 1 else 'messages'}.",
@@ -661,14 +622,6 @@ class Purge(commands.Cog):
         )
         to_delete.append(ctx.message)
 
-        await _create_case(
-            self.bot,
-            ctx.guild,
-            type="purge",
-            reason="Duplicate message purge.",
-            user=ctx.guild.me,
-            moderator=ctx.author,
-        )
         await mod.mass_purge(to_delete, ctx.channel, reason="Duplicate message purge.")
         await ctx.send(
             f"Successfully deleted {len(to_delete)} {'message' if len(to_delete) == 1 else 'messages'}.",
