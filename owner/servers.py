@@ -27,8 +27,8 @@ from grief.core.utils.predicates import MessagePredicate, ReactionPredicate
 from .converters import GuildConverter, MultiGuildConverter, PermissionConverter
 from .menus import BaseView, GuildPages, ListPages
 
-_ = Translator("ServerStats", __file__)
-log = logging.getLogger("red.trusty-cogs.ServerStats")
+_ = Translator("Owner", __file__)
+log = logging.getLogger("grief.owner")
 
 
 @cog_i18n(_)

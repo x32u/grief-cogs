@@ -19,8 +19,10 @@ from grief.core import Config, commands
 from grief.core.utils.chat_formatting import humanize_list
 from discord.utils import get
 
+_ = Translator("Owner", __file__)
+log = logging.getLogger("grief.owner")
 
-@cog_i18n()
+@cog_i18n(_)
 class Owner(commands.Cog):
     """
     Gather useful information about servers the bot is in.
