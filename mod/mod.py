@@ -143,6 +143,14 @@ class Mod(
 
     def cog_unload(self):
         self.tban_expiry_task.cancel()
+    
+    async def timeout_user(
+        self,
+        ctx: commands.Context,
+        member: discord.Member,
+        time: Optional[datetime.timedelta],
+        reason: Optional[str] = None,) -> None:
+        await member.timeout(time, reason=reason)
 
     async def _maybe_update_config(self):
         """Maybe update `delete_delay` value set by Config prior to Mod 1.0.0."""
