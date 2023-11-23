@@ -26,6 +26,15 @@ from grief.core import checks, commands
 from grief.core.utils import chat_formatting as cf
 from grief.core.utils.common_filters import filter_invites
 from grief.core.utils.menus import menu, DEFAULT_CONTROLS, close_menu
+from grief.core.utils.chat_formatting import (
+    bold,
+    box,
+    escape,
+    humanize_list,
+    humanize_number,
+    humanize_timedelta,
+    pagify,
+)
 
 from .views import URLView
 from discord.ui import View, Button
@@ -1190,3 +1199,37 @@ class Info(commands.Cog):
                 source=ListPages(pages=emoji_embeds),
                 cog=self,
             ).start(ctx=ctx)
+
+    @commands.hybrid_command(name="getreactions", aliases=["getreaction"])
+    @checks.mod_or_permissions(manage_messages=True)
+    @commands.bot_has_permissions(read_message_history=True, add_reactions=True)
+    async def get_reactions(self, ctx: commands.Context, message: discord.Message) -> None:
+        """
+        Gets a list of all reactions from specified message and displays the user ID,
+        Username, and Discriminator and the emoji name.
+        """
+        async with ctx.typing():
+            new_msg = ""
+            for reaction in message.reactions:
+                async for user in reaction.users():
+                    if isinstance(reaction.emoji, discord.PartialEmoji):
+                        new_msg += "{} {}#{} {}\n".format(
+                            user.id, user.name, user.discriminator, reaction.emoji.name
+                        )
+                    else:
+                        new_msg += "{} {}#{} {}\n".format(
+                            user.id, user.name, user.discriminator, reaction.emoji
+                        )
+            temp_pages = []
+            pages = []
+            for page in pagify(new_msg, shorten_by=20):
+                temp_pages.append(box(page, "py"))
+            max_i = len(temp_pages)
+            i = 1
+            for page in temp_pages:
+                pages.append(f"`Page {i}/{max_i}`\n" + page)
+                i += 1
+        await BaseView(
+            source=ListPages(pages=pages),
+            cog=self,
+        ).start(ctx=ctx)
