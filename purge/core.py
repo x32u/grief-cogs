@@ -335,8 +335,8 @@ class Purge(commands.Cog):
             allowed_mentions=discord.AllowedMentions(replied_user=False),
         )
 
-    @_purge.command(name="self")  # type: ignore
-    async def _self(
+    @commands.command(name="self")  # type: ignore
+    async def self(
         self,
         ctx: commands.GuildContext,
         number: commands.Range[int, 1, 2000],
