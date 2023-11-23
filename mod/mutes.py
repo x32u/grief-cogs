@@ -3,7 +3,7 @@ import contextlib
 import discord
 import logging
 
-from abc import ABC, MixinMeta
+from abc import ABC
 from typing import cast, Optional, Dict, List, Tuple, Literal, Union
 from datetime import datetime, timedelta, timezone
 
