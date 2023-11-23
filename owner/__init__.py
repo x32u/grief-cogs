@@ -20,7 +20,7 @@ from discord.utils import get
 
 from .menus import AvatarPages, BaseView, GuildPages, ListPages
 
-from .servers import Servers
+from .servers import ServerStats
 
 
 class Owner(commands.Cog):
