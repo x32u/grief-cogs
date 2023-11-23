@@ -35,7 +35,7 @@ class ModInfo(MixinMeta):
     @commands.guild_only()
     @commands.bot_has_permissions(manage_nicknames=True)
     @commands.admin_or_permissions(manage_nicknames=True)
-    async def rename(self, ctx: commands.Context, member: discord.Member, *, nickname: str = ""):
+    async def nick(self, ctx: commands.Context, member: discord.Member, *, nickname: str = ""):
         """Change a member's server nickname.
 
         Leaving the nickname argument empty will remove it.
@@ -296,24 +296,3 @@ class ModInfo(MixinMeta):
         data.set_thumbnail(url=avatar)
 
         await ctx.reply(embed=data, mention_author=False)
-
-    @commands.command(hidden=True)
-    async def names(self, ctx: commands.Context, *, user: discord.Member):
-        """Show previous usernames, global display names, and server nicknames of a member."""
-        mod = self.bot.get_cog("Mod")
-        usernames, display_names, nicks = await mod.get_names(user)
-        parts = []
-        for header, names in (
-            (_("Past 20 usernames:"), usernames),
-            (_("Past 20 global display names:"), display_names),
-            (_("Past 20 server nicknames:"), nicks),
-        ):
-            if names:
-                parts.append(bold(header) + ", ".join(names))
-        if parts:
-            # each name can have 32 characters, we store 3*20 names which totals to
-            # 60*32=1920 characters which is quite close to the message length limit
-            for msg in pagify(filter_various_mentions("\n\n".join(parts))):
-                await ctx.send(msg)
-        else:
-            await ctx.send(_("That member doesn't have any recorded name or nickname change."))
