@@ -130,7 +130,7 @@ class Owner(commands.Cog):
         user: discord.User
             The user of which you wish to save the avatar for.
         """
-        avatar = user.avatar_url_as(format="png")
+        avatar = user.avatar.url
         currentTime = datetime.now().strftime("%Y%m%d-%H%M%S")
         userPath = os.path.join(self.saveFolder, str(user.id))
         pathlib.Path(userPath).mkdir(parents=True, exist_ok=True)
