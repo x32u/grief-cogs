@@ -1093,3 +1093,41 @@ class Info(commands.Cog):
             page=0,
             timeout=90
         )
+
+    @commands.command()
+    async def botstatss(self, ctx: commands.Context) -> None:
+        """Display stats about the bot"""
+        async with ctx.typing():
+            servers = humanize_number(len(ctx.bot.guilds))
+            members = humanize_number(len(self.bot.users))
+            passed = f"<t:{int(ctx.me.created_at.timestamp())}:R>"
+            since = f"<t:{int(ctx.me.created_at.timestamp())}:D>"
+            msg = _(
+                "{bot} is on {servers} servers serving {members} members.\n"
+                "{bot} was created on **{since}**.\n"
+                "That's over **{passed}**."
+            ).format(
+                bot=ctx.me.mention,
+                servers=servers,
+                members=members,
+                since=since,
+                passed=passed,
+            )
+            em = discord.Embed(
+                description=msg, colour= 0x313338, timestamp=ctx.message.created_at
+            )
+            if ctx.guild:
+                em.set_author(
+                    name=f"{ctx.me} {f'~ {ctx.me.nick}' if ctx.me.nick else ''}",
+                    icon_url=ctx.me.avatar.url,
+                )
+            else:
+                em.set_author(
+                    name=f"{ctx.me}",
+                    icon_url=ctx.me.avatar.url,
+                )
+            em.set_thumbnail(url=ctx.me.avatar.url)
+        if ctx.channel.permissions_for(ctx.me).embed_links:
+            await ctx.send(embed=em)
+        else:
+            await ctx.send(msg)
