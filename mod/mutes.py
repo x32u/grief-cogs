@@ -3,7 +3,7 @@ import contextlib
 import discord
 import logging
 
-from abc import ABC, _send_dm_notification
+from abc import ABC, MixinMeta
 from typing import cast, Optional, Dict, List, Tuple, Literal, Union
 from datetime import datetime, timedelta, timezone
 
