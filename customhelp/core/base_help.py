@@ -231,8 +231,6 @@ class BaguetteHelp(commands.RedHelpFormatter):
                 for i, page in enumerate(pagify(command_text, page_length=500, shorten_by=0)):
                     if i == 0:
                         title = _("**__Commands:__**")
-                    else:
-                        title = _("**__Commands:__** (continued)")
                     field = EmbedField(title, page, False)
                     emb["fields"].append(field)
 
