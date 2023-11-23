@@ -23,6 +23,7 @@ from .names import ModInfo
 from .slowmode import Slowmode
 from .settings import ModSettings
 from grief.core.utils.chat_formatting import box, humanize_list
+from grief.core.utils.mod import get_audit_reason
 
 from .converters import ChannelToggle, LockableChannel, LockableRole
 
