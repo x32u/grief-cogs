@@ -489,4 +489,4 @@ class Mod(
         self.log.info(
             f"{ctx.author} ({ctx.author.id}) deleted all messages in channel {old_channel.name} ({old_channel.id})."
         ),
-        await new_channel.send("first")
+        await ctx.send("first")
