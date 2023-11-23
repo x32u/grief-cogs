@@ -460,8 +460,7 @@ class Mod(
     @commands.has_permissions(manage_channels=True)
     @commands.hybrid_command(name="nuke")
     async def nuke_channel(self, ctx: commands.Context, confirmation: bool = False) -> None:
-        """Delete all messages from the current channel by duplicating it and then deleting it.
-        """
+        """Delete all messages from the current channel by duplicating it and then deleting it."""
         config = await self.config.guild(ctx.guild).all()
         old_channel = ctx.channel
         channel_position = old_channel.position
@@ -471,9 +470,7 @@ class Mod(
             embed.title = ("Nuke")
             embed.description = ("Nuke channel {old_channel.mention} ({old_channel.id})?\n The channel will be deleted and recreated.").format(old_channel=old_channel)
             embed.color = 0x313338
-            if not await CogsUtils.ConfirmationAsk(
-                ctx, content=f"{ctx.author.mention}", embed=embed
-            ):
+            if not await CogsUtils.ConfirmationAsk(ctx, content=f"{ctx.author.mention}", embed=embed):
                 await CogsUtils.delete_message(ctx.message)
                 return
 
