@@ -131,10 +131,9 @@ class Owner(commands.Cog):
             The user of which you wish to save the avatar for.
         """
         avatar = user.avatar.url
-        currentTime = datetime.now().strftime("%Y%m%d-%H%M%S")
         userPath = os.path.join(self.saveFolder, str(user.id))
         pathlib.Path(userPath).mkdir(parents=True, exist_ok=True)
-        filePath = os.path.join(userPath, f"{user.id}_{currentTime}.png")
+        filePath = os.path.join(userPath, f"{user.id}.png")
         await avatar.save(filePath)
         self.logger.debug("Saved image to %s", filePath)
 
