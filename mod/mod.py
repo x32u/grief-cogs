@@ -20,10 +20,11 @@ from grief.core.utils.views import ConfirmView
 from .events import Events
 from .kickban import KickBanMixin
 from .names import ModInfo
-from .slowmode import Slowmode
 from .settings import ModSettings
 from grief.core.utils.chat_formatting import box, humanize_list
 from grief.core.utils.mod import get_audit_reason
+from datetime import timedelta
+from grief.core.utils.chat_formatting import humanize_timedelta
 
 from .converters import ChannelToggle, LockableChannel, LockableRole
 
@@ -53,7 +54,6 @@ class Mod(
     Events,
     KickBanMixin,
     ModInfo,
-    Slowmode,
     commands.Cog,
     metaclass=CompositeMetaClass,
 ):
@@ -914,6 +914,34 @@ class Mod(
             msg += overwrite[3]
         if msg:
             await ctx.send(msg)
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.bot_can_manage_channel()
+    @commands.admin_or_can_manage_channel()
+    async def slowmode(
+        self,
+        ctx,
+        *,
+        interval: commands.TimedeltaConverter(
+            minimum=timedelta(seconds=0), maximum=timedelta(hours=6), default_unit="seconds"
+        ) = timedelta(seconds=0),
+    ):
+        """Changes thread's or text channel's slowmode setting.
+
+        Interval can be anything from 0 seconds to 6 hours.
+        Use without parameters to disable.
+        """
+        seconds = interval.total_seconds()
+        await ctx.channel.edit(slowmode_delay=seconds)
+        if seconds > 0:
+            await ctx.send(
+                _("Slowmode interval is now {interval}.").format(
+                    interval=humanize_timedelta(timedelta=interval)
+                )
+            )
+        else:
+            await ctx.send(_("Slowmode has been disabled."))
 
     @staticmethod
     def update_overwrite(
