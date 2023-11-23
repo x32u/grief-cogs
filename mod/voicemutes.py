@@ -1,6 +1,6 @@
 from typing import Optional, Tuple
 from datetime import timezone, timedelta, datetime
-from .abc import MixinMeta
+from .abc import MixinMeta, _send_dm_notification
 
 import discord
 from grief.core import commands, i18n, modlog
