@@ -352,8 +352,8 @@ class Purge(commands.Cog):
         - `<channel>`: The channel you want to delete messages in. (Defaults to current channel)
 
         **Examples:**
-        - `[p]purge self 10`
-        - `[p]purge self 2000`
+        - `[p]self 10`
+        - `[p]self 2000`
         """
         await _cleanup(ctx, number, lambda e: e.author == ctx.author, channel=channel)
 
