@@ -10,7 +10,7 @@ from grief.core import commands
 from grief.core.i18n import Translator
 from unidecode import unidecode
 
-_ = Translator("Servers", __file__)
+_ = Translator("Server", __file__)
 log = logging.getLogger("grief.ServerStats")
 
 
