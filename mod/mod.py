@@ -20,7 +20,9 @@ from .names import ModInfo
 from .slowmode import Slowmode
 from .settings import ModSettings
 from grief.core.utils.chat_formatting import box, humanize_list
+
 from AAA3A_utils import Cog, CogsUtils, Settings
+from AAA3A_utils.settings import CustomMessageConverter
 
 from grief.core.utils.predicates import MessagePredicate
 from typing import Any, Dict, Final, List, Literal, Optional
