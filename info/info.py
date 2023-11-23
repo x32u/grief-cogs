@@ -32,6 +32,8 @@ from discord.ui import View, Button
 from grief.core.commands import GuildContext
 
 from .converter import FuzzyMember
+from .converters import GuildConverter, MultiGuildConverter, PermissionConverter
+from .menus import AvatarPages, BaseView, GuildPages, ListPages
 
 from asyncio import TimeoutError as AsyncTimeoutError
 from textwrap import shorten
@@ -1093,7 +1095,7 @@ class Info(commands.Cog):
             page=0,
             timeout=90
         )
-
+# ------------------- IMPORTED FROM SERVERSTATS
     @commands.command()
     async def botstatss(self, ctx: commands.Context) -> None:
         """Display stats about the bot"""
@@ -1131,3 +1133,60 @@ class Info(commands.Cog):
             await ctx.send(embed=em)
         else:
             await ctx.send(msg)
+
+    @commands.guild_only()
+    @commands.hybrid_command(aliases=["serveremojis"])
+    @commands.bot_has_permissions(read_message_history=True, add_reactions=True, embed_links=True)
+    async def guildemojis(
+        self,
+        ctx: commands.Context,
+        id_emojis: Optional[bool] = False,
+        *,
+        guild: GuildConverter = None,
+    ) -> None:
+        """
+        Display all server emojis in a menu that can be scrolled through
+
+        `id_emojis` return the id of emojis. Default to False, set True
+         if you want to see emojis ID's.
+        `guild_name` can be either the server ID or partial name
+        """
+        if not guild:
+            guild = ctx.guild
+        msg = ""
+        embed = discord.Embed(timestamp=ctx.message.created_at)
+        embed.set_author(name=guild.name, icon_url=guild.icon.url)
+        regular = []
+        for emoji in guild.emojis:
+            if id_emojis:
+                regular.append(
+                    (
+                        f"{emoji} = `:{emoji.name}:` "
+                        f"`<{'a' if emoji.animated else ''}:{emoji.name}:{emoji.id}>`\n"
+                    )
+                )
+            else:
+                regular.append(f"{emoji} = `:{emoji.name}:`\n")
+        if regular != "":
+            embed.description = regular
+        x = [regular[i : i + 10] for i in range(0, len(regular), 10)]
+        emoji_embeds = []
+        count = 1
+        for page in x:
+            em = discord.Embed(timestamp=ctx.message.created_at)
+            em.set_author(name=guild.name + _(" Emojis"), icon_url=guild.icon.url)
+            regular = []
+            msg = ""
+            for emoji in page:
+                msg += emoji
+            em.description = msg
+            em.set_footer(text="Page {} of {}".format(count, len(x)))
+            count += 1
+            emoji_embeds.append(em)
+        if len(emoji_embeds) == 0:
+            await ctx.send(_("There are no emojis on {guild}.").format(guild=guild.name))
+        else:
+            await BaseView(
+                source=ListPages(pages=emoji_embeds),
+                cog=self,
+            ).start(ctx=ctx)
