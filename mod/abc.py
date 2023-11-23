@@ -33,6 +33,7 @@ class MixinMeta(ABC):
     ) -> bool:
         raise NotImplementedError()
 
+    @staticmethod
     @abstractmethod
     async def _send_dm_notification(
         self,
