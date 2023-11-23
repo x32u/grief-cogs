@@ -1107,7 +1107,7 @@ class Info(commands.Cog):
         )
 # ------------------- IMPORTED FROM SERVERSTATS
     @commands.command()
-    async def botstatss(self, ctx: commands.Context) -> None:
+    async def botstats(self, ctx: commands.Context) -> None:
         """Display stats about the bot"""
         async with ctx.typing():
             servers = humanize_number(len(ctx.bot.guilds))
@@ -1356,3 +1356,45 @@ class Info(commands.Cog):
                 source=ListPages(pages=embed_list),
                 cog=self,
             ).start(ctx=ctx)
+
+    @commands.guild_only()
+    @commands.hybrid_command(aliases=["groles"])
+    @checks.mod_or_permissions(manage_messages=True)
+    @commands.bot_has_permissions(read_message_history=True, add_reactions=True)
+    async def roles(self, ctx: commands.Context, *, guild: GuildConverter = None) -> None:
+        """
+        Displays all roles their ID and number of members in order of
+        hierarchy
+        `guild_name` can be either the server ID or partial name
+        """
+        if not guild:
+            guild = ctx.guild
+        msg = ""
+        for role in sorted(guild.roles, reverse=True):
+            if ctx.channel.permissions_for(ctx.me).embed_links and guild is ctx.guild:
+                msg += f"{role.mention} ({role.id}): {len(role.members)}\n"
+            else:
+                msg += f"{role.name} ({role.id}): {len(role.members)}\n"
+        msg_list = []
+        for page in pagify(msg, ["\n"]):
+            if ctx.channel.permissions_for(ctx.me).embed_links:
+                embed = discord.Embed()
+                embed.description = page
+                embed.set_author(name=f"{guild.name} " + _("Roles"), icon_url=guild.icon)
+                embed.colour = 0x313338
+                msg_list.append(embed)
+            else:
+                msg_list.append(page)
+        await BaseView(
+            source=ListPages(pages=msg_list),
+            cog=self,
+        ).start(ctx=ctx)
+
+    async def check_highest(self, data):
+        highest = 0
+        users = 0
+        for user, value in data.items():
+            if value > highest:
+                highest = value
+                users = user
+        return highest, users
