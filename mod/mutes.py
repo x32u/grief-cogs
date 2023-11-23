@@ -3,7 +3,7 @@ import contextlib
 import discord
 import logging
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import cast, Optional, Dict, List, Tuple, Literal, Union
 from datetime import datetime, timedelta, timezone
 
@@ -1921,3 +1921,17 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
                     "reason": _(MUTE_UNMUTE_ISSUES["voice_mute_permission"]),
                 }
         return {"success": True, "channel": channel, "reason": None}
+
+
+    @staticmethod
+    @abstractmethod
+    async def _send_dm_notification(
+        self,
+        user: Union[discord.User, discord.Member],
+        moderator: Optional[Union[discord.User, discord.Member]],
+        guild: discord.Guild,
+        mute_type: str,
+        reason: Optional[str],
+        duration=None,
+    ):
+        raise NotImplementedError()
