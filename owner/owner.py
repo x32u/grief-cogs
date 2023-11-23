@@ -12,7 +12,7 @@ import os
 import pathlib
 import datetime
 from grief.core import checks, commands, data_manager
-from grief.core.i18n import cog_i18n
+from grief.core.i18n import Translator, cog_i18n
 from grief.core.commands.context import Context
 from grief.core.bot import Red
 from grief.core import Config, commands
