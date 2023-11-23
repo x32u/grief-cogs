@@ -1,6 +1,5 @@
 from grief.core.bot import Red
 from .mod import Mod
-from .mutes import Mutes
 
 
 async def setup(bot: Red) -> None:
