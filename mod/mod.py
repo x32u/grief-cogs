@@ -470,7 +470,7 @@ class Mod(
             embed: discord.Embed = discord.Embed()
             embed.title = _("Nuke")
             embed.description = _(
-                "Nuke channel {old_channel.mention} ({old_channel.id})?\n The channel will be deleted and recreated."
+                "{ctx.author.mention} Are you sure you want to nuke this channel?"
             ).format(old_channel=old_channel)
             embed.color = 0x313338
             if not await CogsUtils.ConfirmationAsk(
