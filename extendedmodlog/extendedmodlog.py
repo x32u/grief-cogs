@@ -64,9 +64,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
                             # del all_data[guild_id][entry]
                             logger.error("Somehow your dict was invalid.")
                             continue
-                await self.config.guild(guild).set(all_data[guild_id])
-                await self.config.version.set("2.8.5")
-
         self.settings = all_data
 
     async def modlog_settings(self, ctx: commands.Context) -> None:
