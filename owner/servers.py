@@ -32,7 +32,7 @@ log = logging.getLogger("grief.owner")
 
 
 @cog_i18n(_)
-class Owner(commands.Cog):
+class Owner1(commands.Cog):
     """
     Gather useful information about servers the bot is in.
     """
