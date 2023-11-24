@@ -80,6 +80,7 @@ class Owner(commands.Cog):
         await destination.send(message)
         await ctx.tick()
 
+    ### FROM SERVERSTATS 
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.group(invoke_without_command=True)
