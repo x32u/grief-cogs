@@ -298,7 +298,7 @@ class Info(commands.Cog):
     @commands.guild_only()
     @commands.command()
     @commands.has_permissions(manage_guild=True)
-    async def banlist(self, ctx):
+    async def bans(self, ctx):
         """Displays the server's banlist."""
         try:
             banlist = [bans async for bans in ctx.guild.bans()]
@@ -1199,8 +1199,7 @@ class Info(commands.Cog):
                 cog=self,
             ).start(ctx=ctx)
 
-    @commands.hybrid_command(name="getreactions", aliases=["getreaction"])
-    @checks.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(read_message_history=True, add_reactions=True)
     async def get_reactions(self, ctx: commands.Context, message: discord.Message) -> None:
         """
