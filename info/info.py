@@ -1055,8 +1055,8 @@ class Info(commands.Cog):
         
     @commands.command()
     @commands.guild_only()
-    @checks.has_permissions(manage_members=True)
-    async def freshmeat(self, ctx, hours: int = 24):
+    @commands.has_permissions(manage_members=True)
+    async def freshmembers(self, ctx, hours: int = 24):
         """Show the members who joined in the specified timeframe
 
         `hours`: A number of hours to check for new members, must be above 0"""
@@ -1069,7 +1069,7 @@ class Info(commands.Cog):
         for member in ctx.guild.members:
             if (
                 member.joined_at is not None
-                and member.joined_at > (ctx.message.created_at - datetime(hours=hours))
+                and member.joined_at > (ctx.message.created_at - datetime.timedelta(hours=hours))
             ):
                 member_list.append([member.display_name, member.id, member.joined_at])
 
