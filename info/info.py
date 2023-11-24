@@ -286,7 +286,7 @@ class Info(commands.Cog):
         else:
             embed.set_thumbnail(url=member.display_avatar.url)
         try:
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed, mention_author=False)
         except discord.errors.Forbidden:
             await ctx.send(
 				f'{member.display_name}\'s devices:\n'
