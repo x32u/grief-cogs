@@ -463,9 +463,7 @@ class Info(commands.Cog):
                 description=f"{user.mention} joined this guild on {joined_on}.",
                 color=0x313338,
             )
-            await ctx.send(embed=embed)
-        else:
-            await ctx.send(f"**{user.display_name}** joined this guild on **{joined_on}**.")
+            await ctx.send(embed=embed, mention_author=False)
 
     @commands.guild_only()
     @commands.command()
@@ -570,7 +568,7 @@ class Info(commands.Cog):
 
         view = URLView(label="Jump to message", jump_url=messages[0].jump_url)
 
-        await ctx.send(embed=embed, view=view)
+        await ctx.reply(embed=embed, view=view, mention_author=False)
 
 
     @staticmethod
