@@ -32,6 +32,9 @@ class ExtendedModLog(EventMixin, commands.Cog):
         self.settings = {}
         self._ban_cache = {}
         self.invite_links_loop.start()
+        self.config = Config.get_conf(self, 9517306284, True)
+        self.config.register_guild(
+            channel=None, log_all=False, react_add=False, react_remove=False)
 
     async def cog_unload(self):
         self.invite_links_loop.stop()
