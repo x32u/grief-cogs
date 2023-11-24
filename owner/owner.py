@@ -60,6 +60,11 @@ class Owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.saveFolder = data_manager.cog_data_path(cog_instance=self)
+        default_global: dict = {"join_channel": None}
+        default_guild: dict = {"last_checked": 0, "members": {}, "total": 0, "channels": {}}
+        self.config: Config = Config.get_conf(self, 54853421465543, force_registration=True)
+        self.config.register_global(**default_global)
+        self.config.register_guild(**default_guild)
 
     @commands.command()
     @commands.is_owner()
