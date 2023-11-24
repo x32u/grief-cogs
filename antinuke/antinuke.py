@@ -39,7 +39,7 @@ class AntiNuke(Listen, commands.Cog):
             "dm": False,  # Whether to DM the user the bot kicks
             "action": "notify",  # Valid types are 'kick', 'ban', 'strip', and 'notify'
             "ignore_bots": False,  # Whether to ignore other bots
-            "whitelist": [],  # Whitelist of trusted users(or bots)
+            "trust": [],  # passport of trusted users(or bots)
         }
         self.config.register_guild(**default_guild)
 
@@ -88,7 +88,7 @@ class AntiNuke(Listen, commands.Cog):
             await ctx.send("antinuke system **Enabled**")
         await self.initialize(ctx.guild)
 
-    @antinuke.command()
+    @antinuke.command(hidden=True)
     async def ignorebots(self, ctx):
         """
         Toggle whether other bots are ignored
@@ -106,7 +106,7 @@ class AntiNuke(Listen, commands.Cog):
             await ctx.send("Other bots will be ignored")
         await self.initialize(ctx.guild)
 
-    @antinuke.command()
+    @antinuke.command(hidden=True)
     async def dm(self, ctx):
         """Toggle whether the bot sends the user a DM when a kick or ban action is performed"""
         toggle = await self.config.guild(ctx.guild).dm()
@@ -194,8 +194,8 @@ class AntiNuke(Listen, commands.Cog):
         await self.initialize(ctx.guild)
 
     @antinuke.command()
-    async def whitelist(self, ctx: commands.Context, user: discord.Member):
-        """Add/Remove users from the whitelist"""
+    async def trust(self, ctx: commands.Context, user: discord.Member):
+        """Add/Remove users from the trust"""
         async with self.config.guild(ctx.guild).whitelist() as whitelist:
             if user.id in whitelist:
                 whitelist.remove(user.id)
@@ -211,13 +211,11 @@ class AntiNuke(Listen, commands.Cog):
         conf = await self.config.guild(ctx.guild).all()
         lchan = self.bot.get_channel(conf["log"]) if conf["log"] else "Not Set"
         em = discord.Embed(
-            title="antinuke Settings",
+            title="antinuke settings",
             description=f"`Enabled:    `{conf['enabled']}\n"
             f"`Cooldown:   `{conf['cooldown']}\n"
             f"`Overload:   `{conf['overload']}\n"
-            f"`DM:         `{conf['dm']}\n"
             f"`Action:     `{conf['action']}\n"
-            f"`IgnoreBots: `{conf['ignore_bots']}\n"
             f"`LogChannel: `{lchan}",
         )
         await ctx.send(embed=em)
