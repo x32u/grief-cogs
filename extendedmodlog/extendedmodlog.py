@@ -33,7 +33,12 @@ class ExtendedModLog(EventMixin, commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 154457677895, force_registration=True)
-        self.config.register_guild(**inv_settings)
+        self.config.register_guild(**inv_settings, blacklist=[],
+            channel=None,
+            ignored=[],
+            log_all=False,
+            react_add=False,
+            react_remove=False,)
         self.config.register_global(version="0.0.0")
         self.settings = {}
         self._ban_cache = {}
