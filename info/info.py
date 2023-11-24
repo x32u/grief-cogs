@@ -1053,10 +1053,10 @@ class Info(commands.Cog):
 
         await ctx.reply(embed=data, mention_author=False)
         
-    @commands.command(hidden=True)
+    @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(kick_members=True)
-    async def freshmembers(self, ctx, hours: int = 24):
+    @checks.has_permissions(manage_members=True)
+    async def freshmeat(self, ctx, hours: int = 24):
         """Show the members who joined in the specified timeframe
 
         `hours`: A number of hours to check for new members, must be above 0"""
@@ -1069,7 +1069,7 @@ class Info(commands.Cog):
         for member in ctx.guild.members:
             if (
                 member.joined_at is not None
-                and member.joined_at > (ctx.message.created_at - datetime.strptime(str(time), "%H"))
+                and member.joined_at > (ctx.message.created_at - datetime.timedelta(hours=hours))
             ):
                 member_list.append([member.display_name, member.id, member.joined_at])
 
@@ -1198,39 +1198,6 @@ class Info(commands.Cog):
                 source=ListPages(pages=emoji_embeds),
                 cog=self,
             ).start(ctx=ctx)
-
-    @commands.has_permissions(manage_messages=True)
-    @commands.bot_has_permissions(read_message_history=True, add_reactions=True)
-    async def get_reactions(self, ctx: commands.Context, message: discord.Message) -> None:
-        """
-        Gets a list of all reactions from specified message and displays the user ID,
-        Username, and Discriminator and the emoji name.
-        """
-        async with ctx.typing():
-            new_msg = ""
-            for reaction in message.reactions:
-                async for user in reaction.users():
-                    if isinstance(reaction.emoji, discord.PartialEmoji):
-                        new_msg += "{} {}#{} {}\n".format(
-                            user.id, user.name, user.discriminator, reaction.emoji.name
-                        )
-                    else:
-                        new_msg += "{} {}#{} {}\n".format(
-                            user.id, user.name, user.discriminator, reaction.emoji
-                        )
-            temp_pages = []
-            pages = []
-            for page in pagify(new_msg, shorten_by=20):
-                temp_pages.append(box(page, "py"))
-            max_i = len(temp_pages)
-            i = 1
-            for page in temp_pages:
-                pages.append(f"`Page {i}/{max_i}`\n" + page)
-                i += 1
-        await BaseView(
-            source=ListPages(pages=pages),
-            cog=self,
-        ).start(ctx=ctx)
 
     @commands.hybrid_command()
     @commands.bot_has_permissions(read_message_history=True, add_reactions=True)
