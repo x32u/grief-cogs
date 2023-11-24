@@ -2,8 +2,8 @@
 
 from .menus import AvatarPages, BaseView, GuildPages, ListPages
 
-from .servers import Owner
-from .owner import Owner1
+from .servers import Owner1
+from .owner import Owner
 
 async def setup(bot):
     await bot.add_cog(Owner(bot))
