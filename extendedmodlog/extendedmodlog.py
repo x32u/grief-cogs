@@ -22,7 +22,13 @@ logger = logging.getLogger("grief.extendedmodlog")
 
 @cog_i18n(_)
 class ExtendedModLog(EventMixin, commands.Cog):
-    """Advanced Logging to keep track of events in your server."""
+    """
+    Extended modlogs
+    Works with core modlogset channel
+    """
+
+    __author__ = ["RePulsar", "TrustyJAID"]
+    __version__ = "2.12.3"
 
     def __init__(self, bot):
         self.bot = bot
@@ -32,9 +38,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
         self.settings = {}
         self._ban_cache = {}
         self.invite_links_loop.start()
-        self.config = Config.get_conf(self, 9517306284, True)
-        self.config.register_guild(
-            channel=None, log_all=False, react_add=False, react_remove=False)
+        self.allowed_mentions = discord.AllowedMentions(users=False, roles=False, everyone=False)
 
     async def cog_unload(self):
         self.invite_links_loop.stop()
