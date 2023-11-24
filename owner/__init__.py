@@ -1,8 +1,6 @@
 
 
 from .menus import AvatarPages, BaseView, GuildPages, ListPages
-
-from .servers import Owner1
 from .owner import Owner
 
 async def setup(bot):
