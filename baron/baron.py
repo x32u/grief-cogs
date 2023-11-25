@@ -292,7 +292,7 @@ class Baron(commands.Cog):
             if insert_function:
                 guild_desc.append(str(insert_function(guild)))
             if guild.id in whitelist:
-                guild_desc.append("[Whitelisted](https://www.youtube.com/watch?v=oHg5SJYRHA0)")
+                guild_desc.append("Whitelisted")
             desc.append("\n".join(guild_desc))
 
         pages = list(pagify("\n\n".join(desc), ["\n\n"], page_length=page_length))
@@ -489,7 +489,7 @@ class Baron(commands.Cog):
         await self.leave_guilds(
             ctx,
             guilds,
-            f"grief is now whitelist only if you would like your server whitelisted, please join https://discord.gg/zPDH4pMard and check out https://discord.com/channels/1035549901880303626/1156487363665612860",
+            f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148",
             confirmed=confirm,
         )
 
@@ -707,7 +707,7 @@ class Baron(commands.Cog):
         if data["min_members"] and guild.member_count < data["min_members"]:
             await self.notify_guild(
                 guild,
-                f"grief is now whitelist only if you would like your server whitelisted, please join https://discord.gg/zPDH4pMard and check out https://discord.com/channels/1035549901880303626/1156487363665612860",
+                f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148",
             )
             await guild.leave()
             await self.baron_log("min_member_leave", guild=guild)
