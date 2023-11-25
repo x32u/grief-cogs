@@ -56,6 +56,8 @@ class Owner(commands.Cog):
     """
     Gather useful information about servers the bot is in.
     """
+    
+    default_role = {"banned_members": []}
 
     def __init__(self, bot):
         self.bot = bot
@@ -63,6 +65,7 @@ class Owner(commands.Cog):
         default_global: dict = {"join_channel": None}
         default_guild: dict = {"last_checked": 0, "members": {}, "total": 0, "channels": {}}
         self.config: Config = Config.get_conf(self, 54853421465543, force_registration=True)
+        self.config.register_role(**self.default_role)
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
 
