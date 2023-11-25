@@ -479,7 +479,7 @@ class Mod(
     @commands.guild_only()
     @commands.has_permissions(manage_channels=True)
     @commands.hybrid_command(name="nuke")
-    async def nuke_channel(self, ctx: commands.Context, confirmation: bool = False) -> None:
+    async def nuke(self, ctx: commands.Context, confirmation: bool = False) -> None:
         """Delete all messages from the current channel by duplicating it and then deleting it."""
         config = await self.config.guild(ctx.guild).all()
         old_channel = ctx.channel
@@ -502,9 +502,6 @@ class Mod(
             reason=reason,
         ),
         await new_channel.send("first")
-        self.log.info(
-            f"{ctx.author} ({ctx.author.id}) deleted all messages in channel {old_channel.name} ({old_channel.id})."
-        )
 
     @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
