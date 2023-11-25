@@ -4,7 +4,7 @@ from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
-from .utils import EmojiLabelDescriptionValueConverter
+from .utils import Emoji, EmojiLabelDescriptionValueConverter
 
 _ = Translator("TicketTool", __file__)
 
@@ -19,12 +19,21 @@ class ProfileConverter(commands.Converter):
         return argument.lower()
 
 
+class MyMessageConverter(commands.MessageConverter):
+    async def convert(self, ctx: commands.Context, argument: str) -> discord.Message:
+        message = await super().convert(ctx, argument=argument)
+        if message.author != ctx.me:
+            raise commands.UserFeedbackCheckFailure(
+                _("I have to be the author of the message. You can use EmbedUtils by AAA3A to send one.")
+            )
+        return message
+
+
 @cog_i18n(_)
 class settings(Cog):
     @commands.guild_only()
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    @commands.has_permissions(administrator=True, manage_guild=True)
-    @commands.group(name="settickettool", aliases=["tickettoolset"])
+    @commands.admin_or_permissions(administrator=True)
+    @commands.hybrid_group(name="settickettool", aliases=["tickettoolset"])
     async def configuration(self, ctx: commands.Context) -> None:
         """Configure TicketTool for your server."""
         pass
@@ -35,8 +44,10 @@ class settings(Cog):
         ctx: commands.Context,
         profile: ProfileConverter,
         channel: typing.Optional[discord.TextChannel],
-        message: typing.Optional[commands.MessageConverter],
+        message: typing.Optional[MyMessageConverter],
         reason_options: commands.Greedy[EmojiLabelDescriptionValueConverter],
+        emoji: typing.Optional[Emoji] = "🎟️",
+        label: str = None,
     ) -> None:
         """Send a message with a button to open a ticket or dropdown with possible reasons.
 
@@ -60,11 +71,6 @@ class settings(Cog):
             )
         if reason_options == []:
             reason_options = None
-        if message is not None and message.author != ctx.me:
-            await ctx.send(
-                _("I have to be the author of the message for the interaction to work.")
-            )
-            return
         config = await self.get_config(ctx.guild, profile)
         actual_color = config["color"]
         actual_thumbnail = config["thumbnail"]
@@ -86,8 +92,8 @@ class settings(Cog):
                 buttons=[
                     {
                         "style": discord.ButtonStyle(2),
-                        "label": _("Create ticket"),
-                        "emoji": "🎟️",
+                        "label": label or _("Create ticket"),
+                        "emoji": f"{getattr(emoji, 'id', emoji)}",
                         "custom_id": "create_ticket_button",
                         "disabled": False,
                     }
@@ -119,24 +125,16 @@ class settings(Cog):
                     )
                     return
             dropdowns_config = await self.config.guild(ctx.guild).dropdowns.all()
-            all_options = []
-            for emoji, label, description, value in reason_options:
-                emoji = emoji.id if hasattr(emoji, "id") else emoji
-                try:
-                    int(emoji)
-                except ValueError:
-                    e = emoji
-                else:
-                    e = self.bot.get_emoji(int(emoji))
-                all_options.append(
-                    {
-                        "label": label,
-                        "value": value,
-                        "description": description,
-                        "emoji": e,
-                        "default": False,
-                    }
-                )
+            all_options = [
+                {
+                    "label": label,
+                    "value": value.strip(),
+                    "description": description,
+                    "emoji": f"{getattr(emoji, 'id', emoji)}",
+                    "default": False,
+                }
+                for emoji, label, description, value in reason_options
+            ]
             view = self.get_dropdown(
                 placeholder=config["embed_button"]["placeholder_dropdown"],
                 options=all_options,
@@ -149,10 +147,10 @@ class settings(Cog):
             dropdowns_config[f"{message.channel.id}-{message.id}"] = [
                 {
                     "profile": profile,
-                    "emoji": emoji.id if hasattr(emoji, "id") else emoji,
+                    "emoji": f"{getattr(emoji, 'id', emoji)}",
                     "label": label,
                     "description": description,
-                    "value": value,
+                    "value": value.strip(),
                 }
                 for emoji, label, description, value in reason_options
             ]
@@ -170,24 +168,35 @@ class settings(Cog):
             if not getattr(channel.permissions_for(channel.guild.me), permission)
         ]
 
-    @configuration.command(aliases=["buttonembed"])
-    async def embedbutton(self, ctx: commands.Context,profile: ProfileConverter, where: typing.Literal["title", "description", "image", "placeholderdropdown"], *, text: typing.Optional[str] = None,):
-        """Set the settings for the button embed."""
-        if text is None:
-            if where == "title":
-                await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "title")
-            elif where == "description":
-                await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "description")
-            elif where == "image":
-                await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "image")
-            elif where == "placeholderdropdown":
-                await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "placeholder_dropdown")
-                return
-            if where == "title":
-                await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "title", value=text)
-            elif where == "description":
-                await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "description", value=text)
-            elif where == "image":
-                await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "image", value=text)
-            elif where == "placeholderdropdown":
-                await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "placeholder_dropdown", value=text)
+    # @configuration.command(aliases=["buttonembed"])
+    # async def embedbutton(
+    #     self,
+    #     ctx: commands.Context,
+    #     profile: ProfileConverter,
+    #     where: typing.Literal["title", "description", "image", "placeholderdropdown"],
+    #     *,
+    #     text: typing.Optional[str] = None,
+    # ):
+    #     """Set the settings for the button embed."""
+    #     if text is None:
+    #         if where == "title":
+    #             await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "title")
+    #         elif where == "description":
+    #             await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "description")
+    #         elif where == "image":
+    #             await self.config.guild(ctx.guild).profiles.clear_raw(profile, "embed_button", "image")
+    #         elif where == "placeholderdropdown":
+    #             await self.config.guild(
+    #                 ctx.guild
+    #             ).profiles.clear_raw(profile, "embed_button", "placeholder_dropdown")
+
+    #         return
+
+    #     if where == "title":
+    #         await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "title", value=text)
+    #     elif where == "description":
+    #         await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "description", value=text)
+    #     elif where == "image":
+    #         await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "image", value=text)
+    #     elif where == "placeholderdropdown":
+    #         await self.config.guild(ctx.guild).profiles.set_raw(profile, "embed_button", "placeholder_dropdown", value=text)
