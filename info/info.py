@@ -1053,6 +1053,7 @@ class Info(commands.Cog):
 
         await ctx.reply(embed=data, mention_author=False)
         
+    # -------- IMPORTED FROM FRESHMEAT
     @commands.command()
     @commands.guild_only()
     @commands.has_permissions(manage_members=True)

@@ -5,6 +5,7 @@ from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
+import asyncio
 import datetime
 import io
 from copy import deepcopy
@@ -17,13 +18,14 @@ from grief.core.utils.chat_formatting import pagify
 from .dashboard_integration import DashboardIntegration
 from .settings import settings
 from .ticket import Ticket
+from .utils import CustomModalConverter
 
 _ = Translator("TicketTool", __file__)
 
 
 @cog_i18n(_)
 class TicketTool(settings, DashboardIntegration, Cog):
-    """Setup a ticket system to easier assist members."""
+    """A cog to manage a tickets system!"""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)
@@ -33,7 +35,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
             identifier=205192943327321000143939875896557571750,  # 937480369417
             force_registration=True,
         )
-        self.CONFIG_SCHEMA: int = 3
+        self.CONFIG_SCHEMA: int = 4
         self.tickettool_global: typing.Dict[str, typing.Optional[int]] = {
             "CONFIG_SCHEMA": None,
         }
@@ -58,19 +60,19 @@ class TicketTool(settings, DashboardIntegration, Cog):
                 "forum_channel": None,
                 "category_open": None,
                 "category_close": None,
-                "admin_role": None,
-                "support_role": None,
-                "view_role": None,
-                "ping_role": None,
+                "admin_roles": [],
+                "support_roles": [],
+                "view_roles": [],
+                "ping_roles": [],
                 "ticket_role": None,
-                "nb_max": 1,
+                "nb_max": 5,
                 "create_modlog": False,
                 "close_on_leave": False,
                 "create_on_react": False,
                 "user_can_close": True,
                 "delete_on_close": False,
-                "color": 0x2B2D31,
-                "thumbnail": "",
+                "color": 0x01D758,
+                "thumbnail": "http://www.quidd.it/wp-content/uploads/2017/10/Ticket-add-icon.png",
                 "audit_logs": False,
                 "close_confirmation": False,
                 "emoji_open": "❓",
@@ -79,7 +81,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
                 "last_nb": 0000,
                 "custom_message": None,
                 "embed_button": {
-                    "title": "Create a ticket",
+                    "title": "Create a Ticket",
                     "description": _(
                         "To get help on this server or to make an order for example, you can create a ticket.\n"
                         "Just use the command `{prefix}ticket create` or click on the button below.\n"
@@ -89,6 +91,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
                     "placeholder_dropdown": "Choose a reason to open a ticket.",
                     "rename_channel_dropdown": False,
                 },
+                "custom_modal": None,
             },
             "tickets": {},
             "buttons": {},
@@ -100,85 +103,74 @@ class TicketTool(settings, DashboardIntegration, Cog):
         _settings: typing.Dict[
             str, typing.Dict[str, typing.Union[typing.List[str], typing.Any, str]]
         ] = {
-            "enable": {"path": ["enable"], "converter": bool, "description": "Enable the system."},
+            "enable": {"converter": bool, "description": "Enable the system."},
             "logschannel": {
-                "path": ["logschannel"],
                 "converter": discord.TextChannel,
                 "description": "Set the channel where the logs will be saved.",
             },
             "forum_channel": {
-                "path": ["forum_channel"],
                 "converter": typing.Union[discord.ForumChannel, discord.TextChannel],
                 "description": "Set the forum channel where the opened tickets will be, or a text channel to use private threads. If it's set, `category_open` and `category_close` will be ignored (except for existing tickets).",
             },
             "category_open": {
-                "path": ["category_open"],
                 "converter": discord.CategoryChannel,
                 "description": "Set the category where the opened tickets will be.",
             },
             "category_close": {
-                "path": ["category_close"],
                 "converter": discord.CategoryChannel,
                 "description": "Set the category where the closed tickets will be.",
             },
-            "admin_role": {
-                "path": ["admin_role"],
-                "converter": discord.Role,
+            "admin_roles": {
+                "converter": commands.Greedy[discord.Role],
                 "description": "Users with this role will have full permissions for tickets, but will not be able to set up the cog.",
             },
-            "support_role": {
-                "path": ["support_role"],
-                "converter": discord.Role,
+            "support_roles": {
+                "converter": commands.Greedy[discord.Role],
                 "description": "Users with this role will be able to participate and claim the ticket.",
             },
-            "view_role": {
-                "path": ["view_role"],
-                "converter": discord.Role,
+            "view_roles": {
+                "converter": commands.Greedy[discord.Role],
                 "description": "Users with this role will only be able to read messages from the ticket, but not send them.",
             },
-            "ping_role": {
-                "path": ["ping_role"],
-                "converter": discord.Role,
+            "ping_roles": {
+                "converter": commands.Greedy[discord.Role],
                 "description": "This role will be pinged automatically when the ticket is created, but does not give any additional permissions.",
             },
             "ticket_role": {
-                "path": ["ticket_role"],
                 "converter": discord.Role,
                 "description": "This role will be added automatically to open tickets owners.",
             },
             "dynamic_channel_name": {
-                "path": ["dynamic_channel_name"],
                 "converter": str,
                 "description": "Set the template that will be used to name the channel when creating a ticket.\n\n`{ticket_id}` - Ticket number\n`{owner_display_name}` - user's nick or name\n`{owner_name}` - user's name\n`{owner_id}` - user's id\n`{guild_name}` - guild's name\n`{guild_id}` - guild's id\n`{bot_display_name}` - bot's nick or name\n`{bot_name}` - bot's name\n`{bot_id}` - bot's id\n`{shortdate}` - mm-dd\n`{longdate}` - mm-dd-yyyy\n`{time}` - hh-mm AM/PM according to bot host system time\n`{emoji}` - The open/closed emoji.",
             },
             "nb_max": {
-                "path": ["nb_max"],
                 "converter": commands.Range[int, 1, None],
                 "description": "Sets the maximum number of open tickets a user can have on the system at any one time (for a profile only).",
             },
             "custom_message": {
-                "path": ["custom_message"],
                 "converter": str,
                 "description": "This message will be sent in the ticket channel when the ticket is opened.\n\n`{ticket_id}` - Ticket number\n`{owner_display_name}` - user's nick or name\n`{owner_name}` - user's name\n`{owner_id}` - user's id\n`{guild_name}` - guild's name\n`{guild_id}` - guild's id\n`{bot_display_name}` - bot's nick or name\n`{bot_name}` - bot's name\n`{bot_id}` - bot's id\n`{shortdate}` - mm-dd\n`{longdate}` - mm-dd-yyyy\n`{time}` - hh-mm AM/PM according to bot host system time\n`{emoji}` - The open/closed emoji.",
                 "style": discord.ButtonStyle(2),
             },
             "user_can_close": {
-                "path": ["user_can_close"],
                 "converter": bool,
                 "description": "Can the author of the ticket, if he/she does not have a role set up for the system, close the ticket himself?",
             },
             "close_confirmation": {
-                "path": ["close_confirmation"],
                 "converter": bool,
                 "description": "Should the bot ask for confirmation before closing the ticket (deletion will necessarily have a confirmation)?",
             },
+            "custom_modal": {
+                "converter": CustomModalConverter,
+                "description": "Ask a maximum of 5 questions to the user who opens a ticket, with a Discord Modal.\n\n**Example:**\n```\n[p]settickettool customodal <profile>\n- label: What is the problem?\n  style: 2 #  short = 1, paragraph = 2\n  required: True\n  default: None\n  placeholder: None\n  min_length: None\n  max_length: None\n```",
+            },
             "close_on_leave": {
-                "path": ["close_on_leave"],
                 "converter": bool,
                 "description": "If a user leaves the server, will all their open tickets be closed?\n\nIf the user then returns to the server, even if their ticket is still open, the bot will not automatically add them to the ticket.",
+                "no_slash": True,
             },
             "delete_on_close": {
-                "path": ["delete_on_close"],
                 "converter": bool,
                 "description": "Does closing the ticket directly delete it (with confirmation)?",
                 "no_slash": True,
@@ -190,13 +182,11 @@ class TicketTool(settings, DashboardIntegration, Cog):
                 "no_slash": True,
             },
             "audit_logs": {
-                "path": ["audit_logs"],
                 "converter": bool,
                 "description": "On all requests to the Discord api regarding the ticket (channel modification), does the bot send the name and id of the user who requested the action as the reason?",
                 "no_slash": True,
             },
             "create_on_react": {
-                "path": ["create_on_react"],
                 "converter": bool,
                 "description": "Create a ticket when the reaction 🎟️ is set on any message on the server.",
                 "no_slash": True,
@@ -220,15 +210,25 @@ class TicketTool(settings, DashboardIntegration, Cog):
             commands_group=self.configuration,
         )
 
-    async def cog_load(self):
+    async def cog_load(self) -> None:
         await super().cog_load()
         await self.edit_config_schema()
         await self.settings.add_commands()
         try:
-            await modlog.register_casetype("ticket_created", default_setting=True, image="🎟️", case_str="New Ticket")
+            await modlog.register_casetype(
+                "ticket_created", default_setting=True, image="🎟️", case_str="New Ticket"
+            )
         except RuntimeError:  # The case is already registered.
             pass
-        await self.load_buttons()
+        asyncio.create_task(self.load_buttons())
+
+    async def red_delete_data_for_user(self, *args, **kwargs) -> None:
+        """Nothing to delete. Don't delete operational tickets."""
+        return
+
+    # async def red_get_data_for_user(self, *args, **kwargs) -> typing.Dict[str, typing.Any]:
+    #     """Nothing to get."""
+    #     return {}
 
     async def edit_config_schema(self):
         CONFIG_SCHEMA = await self.config.CONFIG_SCHEMA()
@@ -292,6 +292,27 @@ class TicketTool(settings, DashboardIntegration, Cog):
                             del guilds_data[guild]["dropdowns"][message_id]["panel"]
             CONFIG_SCHEMA = 3
             await self.config.CONFIG_SCHEMA.set(CONFIG_SCHEMA)
+        if CONFIG_SCHEMA == 3:
+            guild_group = self.config._get_base_group(self.config.GUILD)
+            async with guild_group.all() as guilds_data:
+                _guilds_data = deepcopy(guilds_data)
+                for guild in _guilds_data:
+                    if "profiles" in guilds_data[guild]:
+                        for profile in guilds_data[guild]["profiles"]:
+                            if guilds_data[guild]["profiles"][profile].get("admin_role") is not None:
+                                guilds_data[guild]["profiles"][profile]["admin_roles"] = [guilds_data[guild]["profiles"][profile]["admin_role"]]
+                                del guilds_data[guild]["profiles"][profile]["admin_role"]
+                            if guilds_data[guild]["profiles"][profile].get("support_role") is not None:
+                                guilds_data[guild]["profiles"][profile]["support_roles"] = [guilds_data[guild]["profiles"][profile]["support_role"]]
+                                del guilds_data[guild]["profiles"][profile]["support_role"]
+                            if guilds_data[guild]["profiles"][profile].get("view_role") is not None:
+                                guilds_data[guild]["profiles"][profile]["view_roles"] = [guilds_data[guild]["profiles"][profile]["view_role"]]
+                                del guilds_data[guild]["profiles"][profile]["view_role"]
+                            if guilds_data[guild]["profiles"][profile].get("ping_role") is not None:
+                                guilds_data[guild]["profiles"][profile]["ping_roles"] = [guilds_data[guild]["profiles"][profile]["ping_role"]]
+                                del guilds_data[guild]["profiles"][profile]["ping_role"]
+            CONFIG_SCHEMA = 4
+            await self.config.CONFIG_SCHEMA.set(CONFIG_SCHEMA)
         if CONFIG_SCHEMA < self.CONFIG_SCHEMA:
             CONFIG_SCHEMA = self.CONFIG_SCHEMA
             await self.config.CONFIG_SCHEMA.set(CONFIG_SCHEMA)
@@ -300,6 +321,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         )
 
     async def load_buttons(self) -> None:
+        await self.bot.wait_until_red_ready()
         try:
             view = self.get_buttons(
                 buttons=[
@@ -358,18 +380,19 @@ class TicketTool(settings, DashboardIntegration, Cog):
                     continue
                 message_id = int((str(message).split("-"))[1])
                 try:
+                    options = [
+                        {
+                            "label": reason_option["label"],
+                            "value": reason_option.get("value", reason_option["label"]).strip(),
+                            "description": reason_option.get("description", None),
+                            "emoji": reason_option["emoji"],  # reason_option.get("emoji")
+                            "default": False,
+                        }
+                        for reason_option in all_guilds[guild]["dropdowns"][message]
+                    ]
                     view = self.get_dropdown(
                         placeholder=_("Choose the reason for open a ticket."),
-                        options=[
-                            {
-                                "label": reason_option["label"],
-                                "value": reason_option.get("value", reason_option["label"]),
-                                "description": reason_option.get("description", None),
-                                "emoji": reason_option["emoji"],
-                                "default": False,
-                            }
-                            for reason_option in all_guilds[guild]["dropdowns"][message]
-                        ],
+                        options=options,
                     )
                     self.bot.add_view(view, message_id=message_id)
                     self.views[discord.PartialMessage(channel=channel, id=message_id)] = view
@@ -392,16 +415,16 @@ class TicketTool(settings, DashboardIntegration, Cog):
             config["category_open"] = guild.get_channel(config["category_open"])
         if config["category_close"] is not None:
             config["category_close"] = guild.get_channel(config["category_close"])
-        if config["admin_role"] is not None:
-            config["admin_role"] = guild.get_role(config["admin_role"])
-        if config["support_role"] is not None:
-            config["support_role"] = guild.get_role(config["support_role"])
+        if config["admin_roles"]:
+            config["admin_roles"] = [role for role_id in config["admin_roles"] if (role := guild.get_role(role_id)) is not None]
+        if config["support_roles"]:
+            config["support_roles"] = [role for role_id in config["support_roles"] if (role := guild.get_role(role_id)) is not None]
+        if config["view_roles"]:
+            config["view_roles"] = [role for role_id in config["view_roles"] if (role := guild.get_role(role_id)) is not None]
+        if config["ping_roles"]:
+            config["ping_roles"] = [role for role_id in config["ping_roles"] if (role := guild.get_role(role_id)) is not None]
         if config["ticket_role"] is not None:
             config["ticket_role"] = guild.get_role(config["ticket_role"])
-        if config["view_role"] is not None:
-            config["view_role"] = guild.get_role(config["view_role"])
-        if config["ping_role"] is not None:
-            config["ping_role"] = guild.get_role(config["ping_role"])
         for key, value in self.config._defaults[self.config.GUILD][
             "default_profile_settings"
         ].items():
@@ -542,7 +565,11 @@ class TicketTool(settings, DashboardIntegration, Cog):
                     value=f"{ticket.closed_at}",
                 )
         reason_pages = list(pagify(reason, page_length=1020))
-        embed.add_field(inline=False, name=_("Reason:"), value=f"{reason_pages[0]}\n..." if len(reason_pages) > 1 else reason)
+        embed.add_field(
+            inline=False,
+            name=_("Reason:"),
+            value=f"{reason_pages[0]}\n..." if len(reason_pages) > 1 else reason,
+        )
         return embed
 
     async def get_embed_action(
@@ -614,33 +641,40 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check: typing.Optional[bool] = False,
         status: typing.Optional[str] = None,
         ticket_owner: typing.Optional[bool] = False,
-        admin_role: typing.Optional[bool] = False,
-        support_role: typing.Optional[bool] = False,
+        admin_roles: typing.Optional[bool] = False,
+        support_roles: typing.Optional[bool] = False,
+        view_roles: typing.Optional[bool] = False,
         ticket_role: typing.Optional[bool] = False,
-        view_role: typing.Optional[bool] = False,
         guild_owner: typing.Optional[bool] = False,
         claim: typing.Optional[bool] = None,
         claim_staff: typing.Optional[bool] = False,
         members: typing.Optional[bool] = False,
         locked: typing.Optional[bool] = None,
     ) -> None:
-        async def pred(ctx) -> bool:
+        async def pred(ctx: commands.Context) -> bool:
             if not ticket_check:
                 return True
 
-            ticket: Ticket = await ctx.bot.get_cog("TicketTool").get_ticket(ctx.channel)
+            cog = ctx.bot.get_cog("TicketTool")
+            ticket: Ticket = await cog.get_ticket(ctx.channel)
             if ticket is None:
                 raise commands.CheckFailure(_("You're not in a ticket."))
-            config = await ctx.bot.get_cog("TicketTool").get_config(ticket.guild, ticket.profile)
+            config = await cog.get_config(ticket.guild, ticket.profile)
             if status is not None and ticket.status != status:
-                raise commands.CheckFailure(_("This ticket isn't {status}ed.").format(status=status))
+                raise commands.CheckFailure(
+                    _("This ticket isn't {status}ed.").format(status=status)
+                )
             if claim is not None:
                 if ticket.claim is not None:
                     check = True
                 elif ticket.claim is None:
                     check = False
                 if check != claim:
-                    raise commands.CheckFailure(_("This ticket is {status}.").format(status="claimed" if check else "unclaimed"))
+                    raise commands.CheckFailure(
+                        _("This ticket is {status}.").format(
+                            status="claimed" if check else "unclaimed"
+                        )
+                    )
             if (
                 locked is not None
                 and not isinstance(ticket.channel, discord.TextChannel)
@@ -657,27 +691,27 @@ class TicketTool(settings, DashboardIntegration, Cog):
             ):
                 return True
             if (
-                admin_role
-                and config["admin_role"] is not None
-                and ctx.author in config["admin_role"].members
+                admin_roles
+                and config["admin_roles"]
+                and any(role in ctx.author.roles for role in config["admin_roles"])
             ):
                 return True
             if (
-                support_role
-                and config["support_role"] is not None
-                and ctx.author in config["support_role"].members
+                (support_roles or (ctx.command == cog.command_delete and config["delete_on_close"]))
+                and config["support_roles"]
+                and any(role in ctx.author.roles for role in config["support_roles"])
+            ):
+                return True
+            if (
+                view_roles
+                and config["view_roles"]
+                and any(role in ctx.author.roles for role in config["view_roles"])
             ):
                 return True
             if (
                 ticket_role
                 and config["ticket_role"] is not None
                 and ctx.author in config["ticket_role"].members
-            ):
-                return True
-            if (
-                view_role
-                and config["view_role"] is not None
-                and ctx.author in config["view_role"].members
             ):
                 return True
             if guild_owner and ctx.author == ctx.guild.owner:
@@ -702,7 +736,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
     @commands.guild_only()
     @commands.hybrid_group(name="ticket")
     async def ticket(self, ctx: commands.Context) -> None:
-        """Commands for using the ticket system.
+        """Commands for using the Tickets system.
 
         Many commands to manage tickets appear when you run help in a ticket channel.
         """
@@ -715,7 +749,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         *,
         reason: typing.Optional[str] = "No reason provided.",
     ) -> None:
-        """Create a ticket.
+        """Create a Ticket.
 
         If only one profile has been created on this server, you don't need to specify its name.
         """
@@ -745,7 +779,8 @@ class TicketTool(settings, DashboardIntegration, Cog):
             raise commands.UserFeedbackCheckFailure(
                 _("Sorry. You have already reached the limit of {limit} open tickets.").format(
                     limit=limit
-                )
+                ),
+                "delete_after",  # An extra arg checked in `commands.Cog.cog_command_error`.
             )
         if forum_channel is None:
             if (
@@ -766,18 +801,78 @@ class TicketTool(settings, DashboardIntegration, Cog):
                     "The bot does not have `manage_channel` permission in the forum channel to allow the ticket system to function properly. Please notify an administrator of this server."
                 )
             )
+        if config["custom_modal"] is not None:
+            if getattr(ctx, "_tickettool_modal_answers", None) is None:
+                modal = discord.ui.Modal(
+                    title="Create Ticket", custom_id="create_ticket_custom_modal"
+                )
+                modal.on_submit = lambda interaction: interaction.response.defer(ephemeral=True)
+                inputs = []
+                for _input in config["custom_modal"]:
+                    _input["style"] = discord.TextStyle(_input["style"])
+                    text_input = discord.ui.TextInput(**_input)
+                    text_input.max_length = (
+                        1024 if text_input.max_length is None else min(text_input.max_length, 1024)
+                    )
+                    inputs.append(text_input)
+                    modal.add_item(text_input)
+                view: discord.ui.View = discord.ui.View()
+                button: discord.ui.Button = discord.ui.Button(
+                    label="Create Ticket", emoji="🎟️", style=discord.ButtonStyle.secondary
+                )
+
+                async def send_modal(interaction: discord.Interaction) -> None:
+                    await interaction.response.send_modal(modal)
+                    view.stop()
+
+                button.callback = send_modal
+                view.add_item(button)
+                message = await ctx.send(
+                    _("Please provide the required informations by clicking on the button below."),
+                    view=view,
+                )
+                timeout = await view.wait()
+                await CogsUtils.delete_message(message)
+                if timeout:
+                    return  # timeout
+                if await modal.wait():
+                    return  # timeout
+                modal_answers: typing.Dict[str, str] = {
+                    _input.label: _input.value.strip() or "Not provided." for _input in inputs
+                }
+            else:
+                modal_answers: typing.Dict[str, str] = ctx._tickettool_modal_answers
         ticket: Ticket = Ticket.instance(ctx, profile=profile, reason=reason)
         await ticket.create()
+        if config["custom_modal"] is not None:
+            embed: discord.Embed = discord.Embed()
+            embed.title = "Custom Modal"
+            embed.set_author(name=ctx.author.display_name, icon_url=ctx.author.display_avatar)
+            embed.color = await ctx.embed_color()
+            for label, value in modal_answers.items():
+                try:
+                    embed.add_field(
+                        name=label,
+                        value=value,
+                        inline=False,
+                    )
+                except Exception:
+                    pass
+            if config["forum_channel"] is not None:
+                channel = config["forum_channel"].get_thread(int(ticket.channel))
+            else:
+                channel = ctx.guild.get_channel(int(ticket.channel))
+            await channel.send(embed=embed)
         ctx.ticket: Ticket = ticket
 
     @decorator(
         ticket_check=True,
         status=None,
         ticket_owner=True,
-        admin_role=True,
-        support_role=False,
+        admin_roles=True,
+        support_roles=False,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -786,7 +881,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
     )
     @ticket.command(name="export")
     async def command_export(self, ctx: commands.Context) -> None:
-        """Export all the messages of an existing ticket in html format.
+        """Export all the messages of an existing Ticket in html format.
         Please note: all attachments and user avatars are saved with the Discord link in this file.
         """
         ticket: Ticket = await self.get_ticket(ctx.channel)
@@ -821,10 +916,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status="close",
         ticket_owner=True,
-        admin_role=True,
-        support_role=True,
+        admin_roles=True,
+        support_roles=True,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -835,7 +930,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
     async def command_open(
         self, ctx: commands.Context, *, reason: typing.Optional[str] = "No reason provided."
     ) -> None:
-        """Open an existing ticket."""
+        """Open an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         config = await ctx.bot.get_cog("TicketTool").get_config(ticket.guild, ticket.profile)
         if not config["enable"]:
@@ -848,10 +943,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status="open",
         ticket_owner=True,
-        admin_role=True,
-        support_role=True,
+        admin_roles=True,
+        support_roles=True,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -866,7 +961,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         *,
         reason: typing.Optional[str] = _("No reason provided."),
     ) -> None:
-        """Close an existing ticket."""
+        """Close an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         config = await self.get_config(ticket.guild, ticket.profile)
         if config["delete_on_close"]:
@@ -895,10 +990,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status=None,
         ticket_owner=False,
-        admin_role=True,
-        support_role=False,
+        admin_roles=True,
+        support_roles=False,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -913,7 +1008,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         *,
         reason: typing.Optional[str] = _("No reason provided."),
     ) -> None:
-        """Lock an existing ticket."""
+        """Lock an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         if isinstance(ticket.channel, discord.TextChannel):
             raise commands.UserFeedbackCheckFailure(_("Cannot execute action on a text channel."))
@@ -938,10 +1033,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status=None,
         ticket_owner=False,
-        admin_role=True,
-        support_role=False,
+        admin_roles=True,
+        support_roles=False,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -955,7 +1050,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         *,
         reason: typing.Optional[str] = _("No reason provided."),
     ) -> None:
-        """Unlock an existing locked ticket."""
+        """Unlock an existing locked Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         if isinstance(ticket.channel, discord.TextChannel):
             raise commands.UserFeedbackCheckFailure(_("Cannot execute action on a text channel."))
@@ -965,10 +1060,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status=None,
         ticket_owner=True,
-        admin_role=True,
-        support_role=True,
+        admin_roles=True,
+        support_roles=True,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -983,7 +1078,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         *,
         reason: typing.Optional[str] = _("No reason provided."),
     ) -> None:
-        """Rename an existing ticket."""
+        """Rename an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         await ticket.rename(new_name, ctx.author, reason=reason)
 
@@ -991,10 +1086,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status=None,
         ticket_owner=False,
-        admin_role=True,
-        support_role=False,
+        admin_roles=True,
+        support_roles=False,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -1009,8 +1104,9 @@ class TicketTool(settings, DashboardIntegration, Cog):
         *,
         reason: typing.Optional[str] = _("No reason provided."),
     ) -> None:
-        """Delete an existing ticket.
-        If a log channel is defined, an html file containing all the messages of this ticket will be generated.
+        """Delete an existing Ticket.
+
+        If a logs channel is defined, an html file containing all the messages of this ticket will be generated.
         (Attachments are not supported, as they are saved with their Discord link)
         """
         ticket: Ticket = await self.get_ticket(ctx.channel)
@@ -1020,9 +1116,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
             embed.title = _(
                 "Do you really want to delete all the messages of the ticket {ticket.id}?"
             ).format(ticket=ticket)
-            embed.description = _(
-                "If a log channel is defined, an html file containing all the messages of this ticket will be generated. (Attachments are not supported, as they are saved with their Discord link)"
-            )
+            if config["logschannel"] is not None:
+                embed.description = _(
+                    "If a logs channel is defined, an html file containing all the messages of this ticket will be generated. (Attachments are not supported, as they are saved with their Discord link.)"
+                )
             embed.color = config["color"]
             embed.set_author(
                 name=ctx.author.name,
@@ -1038,10 +1135,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status="open",
         ticket_owner=False,
-        admin_role=True,
-        support_role=True,
+        admin_roles=True,
+        support_roles=True,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=False,
         claim_staff=False,
@@ -1056,7 +1153,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         *,
         reason: typing.Optional[str] = _("No reason provided."),
     ) -> None:
-        """Claim an existing ticket."""
+        """Claim an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         if member is None:
             member = ctx.author
@@ -1066,10 +1163,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status=None,
         ticket_owner=False,
-        admin_role=True,
-        support_role=True,
+        admin_roles=True,
+        support_roles=True,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=True,
         claim_staff=True,
@@ -1080,7 +1177,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
     async def command_unclaim(
         self, ctx: commands.Context, *, reason: typing.Optional[str] = _("No reason provided.")
     ) -> None:
-        """Unclaim an existing ticket."""
+        """Unclaim an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         await ticket.unclaim_ticket(ticket.claim, ctx.author, reason=reason)
 
@@ -1088,10 +1185,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status="open",
         ticket_owner=True,
-        admin_role=True,
-        support_role=False,
+        admin_roles=True,
+        support_roles=False,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=False,
@@ -1106,7 +1203,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         *,
         reason: typing.Optional[str] = _("No reason provided."),
     ) -> None:
-        """Change the owner of an existing ticket."""
+        """Change the owner of an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         if new_owner is None:
             new_owner = ctx.author
@@ -1116,10 +1213,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status="open",
         ticket_owner=True,
-        admin_role=True,
-        support_role=False,
+        admin_roles=True,
+        support_roles=False,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -1132,7 +1229,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ctx: commands.Context,
         members: commands.Greedy[discord.Member],
     ) -> None:
-        """Add a member to an existing ticket."""
+        """Add a member to an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         members = list(members)
         await ticket.add_member(members, ctx.author)
@@ -1141,10 +1238,10 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ticket_check=True,
         status=None,
         ticket_owner=True,
-        admin_role=True,
-        support_role=False,
+        admin_roles=True,
+        support_roles=False,
+        view_roles=False,
         ticket_role=False,
-        view_role=False,
         guild_owner=True,
         claim=None,
         claim_staff=True,
@@ -1157,7 +1254,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         ctx: commands.Context,
         members: commands.Greedy[discord.Member],
     ) -> None:
-        """Remove a member to an existing ticket."""
+        """Remove a member to an existing Ticket."""
         ticket: Ticket = await self.get_ticket(ctx.channel)
         members = list(members)
         await ticket.remove_member(members, ctx.author)
@@ -1171,7 +1268,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         status: typing.Optional[typing.Literal["open", "close", "all"]],
         owner: typing.Optional[discord.Member],
     ) -> None:
-        """List existings tickets for a profile. You can provide a status and/or a ticket owner."""
+        """List the existing Tickets for a profile. You can provide a status and/or a ticket owner."""
         if status is None:
             status = "open"
         tickets = await self.config.guild(ctx.guild).tickets.all()
@@ -1230,50 +1327,70 @@ class TicketTool(settings, DashboardIntegration, Cog):
                 ]
             else:
                 profile = "main"
-            modal = discord.ui.Modal(
-                title="Create a Ticket", timeout=180, custom_id="create_ticket_modal"
-            )
-            modal.on_submit = lambda interaction: interaction.response.defer(ephemeral=True)
-            profile_input = discord.ui.TextInput(
-                label="Profile",
-                style=discord.TextStyle.short,
-                default=profile,
-                max_length=10,
-                required=True,
-            )
-            reason_input = discord.ui.TextInput(
-                label="Why are you creating this ticket?",
-                style=discord.TextStyle.long,
-                max_length=1000,
-                required=False,
-                placeholder="No reason provided.",
-            )
-            modal.add_item(profile_input)
-            modal.add_item(reason_input)
-            await interaction.response.send_modal(modal)
-            timeout = await modal.wait()
-            if timeout:
-                return
-            if not interaction.response.is_done():
-                await interaction.response.defer(ephemeral=True)
-            profile = profile_input.value
-            reason = reason_input.value or ""
             profiles = await self.config.guild(interaction.guild).profiles()
             if profile not in profiles:
-                await interaction.followup.send(
+                await interaction.response.send_message(
                     _("The profile for which this button was configured no longer exists."),
                     ephemeral=True,
                 )
                 return
+            config = await self.get_config(guild=interaction.guild, profile=profile)
+            if config["custom_modal"] is None:
+                modal = discord.ui.Modal(title="Create Ticket", custom_id="create_ticket_modal")
+                modal.on_submit = lambda interaction: interaction.response.defer(ephemeral=True)
+                # profile_input = discord.ui.TextInput(
+                #     label="Profile",
+                #     style=discord.TextStyle.short,
+                #     default=profile,
+                #     max_length=10,
+                #     required=True,
+                # )
+                # modal.add_item(profile_input)
+                reason_input = discord.ui.TextInput(
+                    label="Why are you creating this ticket?",
+                    style=discord.TextStyle.long,
+                    max_length=1000,
+                    required=False,
+                    placeholder="No reason provided.",
+                )
+                modal.add_item(reason_input)
+                await interaction.response.send_modal(modal)
+                if await modal.wait():
+                    return  # timeout
+                # profile = profile_input.value
+                reason = reason_input.value or ""
+                kwargs = {}
+            else:
+                reason = ""
+                modal = discord.ui.Modal(
+                    title="Create Ticket", custom_id="create_ticket_custom_modal"
+                )
+                modal.on_submit = lambda interaction: interaction.response.defer(ephemeral=True)
+                inputs = []
+                for _input in config["custom_modal"]:
+                    _input["style"] = discord.TextStyle(_input["style"])
+                    text_input = discord.ui.TextInput(**_input)
+                    text_input.max_length = (
+                        1024 if text_input.max_length is None else min(text_input.max_length, 1024)
+                    )
+                    inputs.append(text_input)
+                    modal.add_item(text_input)
+                await interaction.response.send_modal(modal)
+                if await modal.wait():
+                    return  # timeout
+                kwargs = {
+                    "_tickettool_modal_answers": {
+                        _input.label: _input.value.strip() or "Not provided." for _input in inputs
+                    }
+                }
             ctx = await CogsUtils.invoke_command(
                 bot=interaction.client,
                 author=interaction.user,
                 channel=interaction.channel,
                 command=f"ticket create {profile}" + (f" {reason}" if reason != "" else ""),
+                **kwargs,
             )
-            if not await ctx.command.can_run(
-                ctx, change_permission_state=True
-            ):  # await discord.utils.async_all(check(ctx) for check in ctx.command.checks)
+            if not await discord.utils.async_all([check(ctx) for check in ctx.command.checks]):
                 await interaction.followup.send(
                     _("You are not allowed to execute this command."), ephemeral=True
                 )
@@ -1299,12 +1416,6 @@ class TicketTool(settings, DashboardIntegration, Cog):
             if timeout:
                 return
             reason = reason_input.value or ""
-            ctx = await CogsUtils.invoke_command(
-                bot=interaction.client,
-                author=interaction.user,
-                channel=interaction.channel,
-                command=("ticket close" + (f" {reason}" if reason != "" else "")),
-            )
             try:
                 await interaction.followup.send(
                     _(
@@ -1314,82 +1425,93 @@ class TicketTool(settings, DashboardIntegration, Cog):
                 )
             except discord.HTTPException:
                 pass
+            ctx = await CogsUtils.invoke_command(
+                bot=interaction.client,
+                author=interaction.user,
+                channel=interaction.channel,
+                command=("ticket close" + (f" {reason}" if reason != "" else "")),
+            )
         elif interaction.data["custom_id"] == "open_ticket_button":
             ctx = await CogsUtils.invoke_command(
                 bot=interaction.client,
                 author=interaction.user,
                 channel=interaction.channel,
                 command="ticket open",
+                invoke=False,
             )
             try:
-                if not await ctx.command.can_run(
-                    ctx, change_permission_state=True
-                ):  # await discord.utils.async_all(check(ctx) for check in ctx.command.checks)
+                if not await discord.utils.async_all([check(ctx) for check in ctx.command.checks]):
                     await interaction.followup.send(
                         _("You are not allowed to execute this command."), ephemeral=True
                     )
-                else:
-                    await interaction.followup.send(
-                        _(
-                            "You have chosen to re-open this ticket."
-                        ),
-                        ephemeral=True,
-                    )
-            except discord.HTTPException:
-                pass
+            except commands.CheckFailure:
+                await interaction.followup.send(
+                    _("You are not allowed to execute this command."), ephemeral=True
+                )
+            await interaction.client.invoke(ctx)
+            await interaction.followup.send(
+                _("You have chosen to re-open this ticket."),
+                ephemeral=True,
+            )
         elif interaction.data["custom_id"] == "claim_ticket_button":
             ctx = await CogsUtils.invoke_command(
                 bot=interaction.client,
                 author=interaction.user,
                 channel=interaction.channel,
                 command="ticket claim",
+                invoke=False,
             )
-            if not await ctx.command.can_run(
-                ctx, change_permission_state=True
-            ):  # await discord.utils.async_all(check(ctx) for check in ctx.command.checks)
+            try:
+                if not await discord.utils.async_all([check(ctx) for check in ctx.command.checks]):
+                    await interaction.followup.send(
+                        _("You are not allowed to execute this command."), ephemeral=True
+                    )
+            except commands.CheckFailure:
                 await interaction.followup.send(
                     _("You are not allowed to execute this command."), ephemeral=True
                 )
-            else:
-                await interaction.followup.send(
-                    _(
-                        "You have chosen to claim this ticket. If this is not done, you do not have the necessary permissions to execute this command."
-                    ),
-                    ephemeral=True,
-                )
+            await interaction.client.invoke(ctx)
+            await interaction.followup.send(
+                _(
+                    "You have chosen to claim this ticket. If this is not done, you do not have the necessary permissions to execute this command."
+                ),
+                ephemeral=True,
+            )
         elif interaction.data["custom_id"] == "delete_ticket_button":
             ctx = await CogsUtils.invoke_command(
                 bot=interaction.client,
                 author=interaction.user,
                 channel=interaction.channel,
                 command="ticket delete",
+                invoke=False,
             )
-            if not await ctx.command.can_run(
-                ctx, change_permission_state=True
-            ):  # await discord.utils.async_all(check(ctx) for check in ctx.command.checks)
+            try:
+                if not await discord.utils.async_all([check(ctx) for check in ctx.command.checks]):
+                    await interaction.followup.send(
+                        _("You are not allowed to execute this command."), ephemeral=True
+                    )
+            except commands.CheckFailure:
                 await interaction.followup.send(
                     _("You are not allowed to execute this command."), ephemeral=True
                 )
+            await interaction.client.invoke(ctx)
 
     async def on_dropdown_interaction(
         self, interaction: discord.Interaction, select_menu: discord.ui.Select
     ) -> None:
         options = select_menu.values
         if len(options) == 0:
-            if not interaction.response.is_done():
-                await interaction.response.defer()
             return
         permissions = interaction.channel.permissions_for(interaction.user)
         if not permissions.read_messages and not permissions.send_messages:
+            await interaction.response.defer()
             return
         permissions = interaction.channel.permissions_for(interaction.guild.me)
         if not permissions.read_messages and not permissions.read_message_history:
             return
-        if not interaction.response.is_done():
-            await interaction.response.defer(ephemeral=True)
         dropdowns = await self.config.guild(interaction.guild).dropdowns()
         if f"{interaction.message.channel.id}-{interaction.message.id}" not in dropdowns:
-            await interaction.followup.send(
+            await interaction.response.send_message(
                 _("This message is not in TicketTool config."), ephemeral=True
             )
             return
@@ -1398,21 +1520,45 @@ class TicketTool(settings, DashboardIntegration, Cog):
         )
         profiles = await self.config.guild(interaction.guild).profiles()
         if profile not in profiles:
-            await interaction.followup.send(
+            await interaction.response.send_message(
                 _("The profile for which this dropdown was configured no longer exists."),
                 ephemeral=True,
             )
             return
         option = [option for option in select_menu.options if option.value == options[0]][0]
         reason = f"{option.emoji} - {option.label}"
+        config = await self.get_config(guild=interaction.guild, profile=profile)
+        if config["custom_modal"] is not None:
+            modal = discord.ui.Modal(title="Create Ticket", custom_id="create_ticket_custom_modal")
+            modal.on_submit = lambda interaction: interaction.response.defer(ephemeral=True)
+            inputs = []
+            for _input in config["custom_modal"]:
+                _input["style"] = discord.TextStyle(_input["style"])
+                text_input = discord.ui.TextInput(**_input)
+                text_input.max_length = (
+                    1024 if text_input.max_length is None else min(text_input.max_length, 1024)
+                )
+                inputs.append(text_input)
+                modal.add_item(text_input)
+            await interaction.response.send_modal(modal)
+            if await modal.wait():
+                return  # timeout
+            kwargs = {
+                "_tickettool_modal_answers": {
+                    _input.label: _input.value.strip() or "Not provided." for _input in inputs
+                }
+            }
+        else:
+            kwargs = {}
         ctx = await CogsUtils.invoke_command(
             bot=interaction.client,
             author=interaction.user,
             channel=interaction.channel,
             command=f"ticket create {profile} {reason}",
+            **kwargs,
         )
         if not await discord.utils.async_all(
-            check(ctx) for check in ctx.command.checks
+            [check(ctx) for check in ctx.command.checks]
         ) or not hasattr(ctx, "ticket"):
             await interaction.followup.send(
                 _("You are not allowed to execute this command."), ephemeral=True
@@ -1421,7 +1567,11 @@ class TicketTool(settings, DashboardIntegration, Cog):
         config = await self.get_config(interaction.guild, profile)
         if config["embed_button"]["rename_channel_dropdown"]:
             try:
-                ticket: Ticket = await self.get_ticket(config["forum_channel"].get_thread(ctx.ticket.channel) if config["forum_channel"] is not None else ctx.guild.get_channel(ctx.ticket.channel))
+                ticket: Ticket = await self.get_ticket(
+                    config["forum_channel"].get_thread(ctx.ticket.channel)
+                    if config["forum_channel"] is not None
+                    else ctx.guild.get_channel(ctx.ticket.channel)
+                )
                 if ticket is not None:
                     await ticket.rename(
                         new_name=f"{option.emoji}-{option.value}_{interaction.user.id}".replace(
@@ -1447,7 +1597,9 @@ class TicketTool(settings, DashboardIntegration, Cog):
         member = guild.get_member(payload.user_id)
         if member == guild.me or member.bot:
             return
-        if await self.bot.cog_disabled_in_guild(cog=self, guild=guild) or not await self.bot.allowed_by_whitelist_blacklist(who=member):
+        if await self.bot.cog_disabled_in_guild(
+            cog=self, guild=guild
+        ) or not await self.bot.allowed_by_whitelist_blacklist(who=member):
             return
         profile = "main"
         profiles = await self.config.guild(guild).profiles()
@@ -1527,7 +1679,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
     def get_dropdown(self, placeholder: str, options: typing.List[dict]) -> discord.ui.View:
         view = discord.ui.View(timeout=None)
         select_menu = discord.ui.Select(
-            placeholder=placeholder, custom_id="create_ticket_dropdown"
+            placeholder=placeholder, custom_id="create_ticket_dropdown", min_values=0, max_values=1
         )
         for option in options:
             if "emoji" in option:
@@ -1544,50 +1696,48 @@ class TicketTool(settings, DashboardIntegration, Cog):
         return view
 
     @commands.Cog.listener()
-    async def on_assistant_cog_add(self, assistant_cog: typing.Optional[commands.Cog] = None) -> None:  # Vert's Assistant integration/third party.
-        schema = {
-            "name": "get_open_tickets_list_in_server",
-            "description": "Get open tickets for the user in this server, and their reason.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                },
-                "required": [
-                ]
-            },
-        }
-        async def get_open_tickets_list_in_server(user: discord.Member, *args, **kwargs):
-            if not isinstance(user, discord.Member):
-                return "The command isn't executed in a server."
-            tickets = await self.config.guild(user.guild).tickets.all()
-            tickets_to_show = []
-            for channel_id in tickets:
-                config = await self.get_config(user.guild, profile=tickets[channel_id]["profile"])
-                if config["forum_channel"] is not None:
-                    channel = config["forum_channel"].get_thread(int(channel_id))
-                else:
-                    channel = user.guild.get_channel(int(channel_id))
-                if channel is None:
-                    continue
-                ticket: Ticket = await self.get_ticket(channel)
-                if (
-                    (ticket.owner is not None and ticket.owner == user)
-                    and ticket.status == "open"
-                ):
-                    tickets_to_show.append(ticket)
-            if not tickets_to_show:
-                raise commands.UserFeedbackCheckFailure(_("No open tickets by this user in this server."))
-            BREAK_LINE = "\n"
-            open_tickets = "\n" + "\n".join(
-                [
-                    f"• #{ticket.id} - {ticket.channel.mention} - {ticket.reason.split(BREAK_LINE)[0][:50]}"
-                    for ticket in sorted(tickets_to_show, key=lambda x: x.id)
-                ]
-            )
-            data = {
-                "Open Tickets": open_tickets,
-            }
-            return [f"{key}: {value}\n" for key, value in data.items() if value is not None]
+    async def on_assistant_cog_add(
+        self, assistant_cog: typing.Optional[commands.Cog] = None
+    ) -> None:  # Vert's Assistant integration/third party.
         if assistant_cog is None:
-            return get_open_tickets_list_in_server
-        await assistant_cog.register_function(cog=self, schema=schema, function=get_open_tickets_list_in_server)
+            return self.get_open_tickets_list_in_server_for_assistant
+        schema = {
+            "name": "get_open_tickets_list_in_server_for_assistant",
+            "description": "Get open tickets for the user in this server, and their reason.",
+            "parameters": {"type": "object", "properties": {}, "required": []},
+        }
+        await assistant_cog.register_function(cog_name=self.qualified_name, schema=schema)
+
+    async def get_open_tickets_list_in_server_for_assistant(
+        self, user: discord.Member, *args, **kwargs
+    ):
+        if not isinstance(user, discord.Member):
+            return "The command isn't executed in a server."
+        tickets = await self.config.guild(user.guild).tickets.all()
+        tickets_to_show = []
+        for channel_id in tickets:
+            config = await self.get_config(user.guild, profile=tickets[channel_id]["profile"])
+            if config["forum_channel"] is not None:
+                channel = config["forum_channel"].get_thread(int(channel_id))
+            else:
+                channel = user.guild.get_channel(int(channel_id))
+            if channel is None:
+                continue
+            ticket: Ticket = await self.get_ticket(channel)
+            if (ticket.owner is not None and ticket.owner == user) and ticket.status == "open":
+                tickets_to_show.append(ticket)
+        if not tickets_to_show:
+            raise commands.UserFeedbackCheckFailure(
+                _("No open tickets by this user in this server.")
+            )
+        BREAK_LINE = "\n"
+        open_tickets = "\n" + "\n".join(
+            [
+                f"• #{ticket.id} - {ticket.channel.mention} - {ticket.reason.split(BREAK_LINE)[0][:50]}"
+                for ticket in sorted(tickets_to_show, key=lambda x: x.id)
+            ]
+        )
+        data = {
+            "Open Tickets": open_tickets,
+        }
+        return [f"{key}: {value}\n" for key, value in data.items() if value is not None]
