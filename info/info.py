@@ -185,42 +185,6 @@ class Info(commands.Cog):
             view = View()
             view.add_item(button1)
             await ctx.reply(embed=e, view=view, mention_author=False)
-
-
-    @commands.guild_only()
-    @commands.command()
-    async def onlinestatus(self, ctx):
-        """Print how many people are using each type of device."""
-        device = {
-			(True, True, True): 0,
-			(False, True, True): 1,
-			(True, False, True): 2,
-			(True, True, False): 3,
-			(False, False, True): 4,
-			(True, False, False): 5,
-			(False, True, False): 6,
-			(False, False, False): 7
-		}
-        store = [0, 0, 0, 0, 0, 0, 0, 0]
-        for m in ctx.guild.members:
-                value = (
-				    m.desktop_status == discord.Status.offline,
-				    m.web_status == discord.Status.offline,
-				    m.mobile_status == discord.Status.offline
-			)
-        store[device[value]] += 1
-        msg = (
-			f'offline all: {store[0]}'
-			f'\ndesktop only: {store[1]}'
-			f'\nweb only: {store[2]}'
-			f'\nmobile only: {store[3]}'
-			f'\ndesktop web: {store[4]}'
-			f'\nweb mobile: {store[5]}'
-			f'\ndesktop mobile: {store[6]}'
-			f'\nonline all: {store[7]}'
-		)
-        await ctx.send(f'```py\n{msg}```')
-
     
     @commands.guild_only()
     @commands.command(aliases=["mc"])
