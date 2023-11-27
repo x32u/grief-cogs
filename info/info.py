@@ -105,13 +105,14 @@ class Info(commands.Cog):
             await ctx.reply(embed=e, view=view, mention_author=False)
 
     @commands.command(aliases=["sav"])
-    async def serveravatar(self, ctx: commands.Context, user: discord.Member = None):
+    async def serveravatar(self, ctx: commands.Context, member: discord.Member = None):
         """Get someone's server pfp (if they have one)."""
         if user is None:
             user = ctx.author
         gld_avatar = user.guild_avatar
-        if not gld_avatar:
-            await ctx.reply(self.MEMBER_NO_GUILD_AVATAR)
+        if gld_avatar is None:
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{member.mention}** does not have a server avatar set.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
         else:
             gld_avatar_url = gld_avatar.url
             embed = discord.Embed(colour=0x313338)
@@ -122,12 +123,12 @@ class Info(commands.Cog):
             await ctx.reply(embed=embed, mention_author=False)
     
     @commands.command(aliases=["sicon", "si", "sico", "savi"])
-    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.cooldown(1, 3, commands.BucketType.user, )
     async def servericon(self, ctx):
         """Fetch the server icon."""
         if ctx.guild.icon is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon", color=0x313338)
-            await ctx.reply(embed=embed)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon set.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             return
         e = discord.Embed(color=0x313338)
         e.set_author(name=f"{ctx.guild.name}'s server icon", icon_url=f"{ctx.guild.icon.url}")
@@ -142,8 +143,8 @@ class Info(commands.Cog):
     async def serverbanner(self, ctx):
         """Fetch the server banner."""
         if ctx.guild.banner is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner", color=0x313338)
-            await ctx.reply(embed=embed)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner set.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             return
         e = discord.Embed(color=0x313338)
         e.set_author(name=f"{ctx.guild.name}'s server banner", icon_url=f"{ctx.guild.icon.url}")
@@ -158,8 +159,8 @@ class Info(commands.Cog):
     async def invitesplash(self, ctx: commands.Context):
         """Fetch a servers invite splash."""
         if discord.Guild.discovery_splash == None:
-            em = discord.Embed(color=0x313338, description=f"This server doesn't have a invite splash set.")
-            await ctx.reply(embed=em, mention_author=False)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a invite splash set.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
         else:
             invsplash_url = ctx.guild.splash
             button1 = Button(label="invite splash", url=ctx.guild.splash.url)
@@ -176,8 +177,8 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.banner == None:
-            em = discord.Embed(color=0x313338, description=f"{member.mention} doesn't have a banner on their profile")
-            await ctx.reply(embed=em, mention_author=False)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{member.mention}** does not have a banner set.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
         else:
             banner_url = user.banner.url
             button1 = Button(label="banner", url=banner_url)
@@ -208,7 +209,7 @@ class Info(commands.Cog):
             embed.add_field(name="Members", value=str(member_count))
             embed.add_field(name="Humans", value=str(human_count))
             embed.add_field(name="Bots", value=str(bot_count))
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed, mention_author=False)
         else:
             await ctx.send(
                 f"**Members:** {member_count}\n"
@@ -1104,13 +1105,12 @@ class Info(commands.Cog):
                 )
             em.set_thumbnail(url=ctx.me.avatar.url)
         if ctx.channel.permissions_for(ctx.me).embed_links:
-            await ctx.send(embed=em)
+            await ctx.reply(embed=em, mention_author=False)
         else:
             await ctx.send(msg)
 
+    @commands.command()
     @commands.guild_only()
-    @commands.hybrid_command(aliases=["serveremojis"])
-    @commands.bot_has_permissions(read_message_history=True, add_reactions=True, embed_links=True)
     async def guildemojis(
         self,
         ctx: commands.Context,
@@ -1288,9 +1288,8 @@ class Info(commands.Cog):
             ).start(ctx=ctx)
 
 ### ---- STOLEN FROM MELANIE
-
     @commands.command(name="inviteinfo", aliases=["ii"])
-    async def _inviteinfo(self, ctx, code: str):
+    async def inviteinfo(self, ctx, code: str):
         """Fetch information on a server from its invite/vanity code."""
         if "/" in code:
             code = code.split("/", -1)[-1].replace(" ", "")
