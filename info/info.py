@@ -1320,7 +1320,7 @@ class Info(commands.Cog):
             urls += f"[**banner**]({banner_url}), "
             lookup = (str(invite.guild.banner.url))
             if lookup:
-                embed.color = lookup.dominant.decimal
+                embed.color = 0x313338
             embed.set_image(url=str(banner_url))
 
         if invite.guild.splash:
