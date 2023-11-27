@@ -105,13 +105,13 @@ class Info(commands.Cog):
             await ctx.reply(embed=e, view=view, mention_author=False)
 
     @commands.command(aliases=["sav"])
-    async def serveravatar(self, ctx: commands.Context, member: discord.Member = None):
+    async def serveravatar(self, ctx: commands.Context, user: discord.Member = None):
         """Get someone's server pfp (if they have one)."""
         if user is None:
             user = ctx.author
         gld_avatar = user.guild_avatar
         if gld_avatar is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{member.mention}** does not have a server avatar set.", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{user.mention}** does not have a server avatar set.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
         else:
             gld_avatar_url = gld_avatar.url
