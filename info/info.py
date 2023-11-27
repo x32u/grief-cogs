@@ -92,7 +92,7 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.avatar == None:
-            em = discord.Embed(color=0x313338,description=f"{member.mention} doesn't have a pfp set.")
+            em = discord.Embed(color=0x313338,description=f"{ctx.author.mention}: **{member.mention}** doesn't have a pfp set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
             avatar_url = user.avatar.url
@@ -111,7 +111,7 @@ class Info(commands.Cog):
             user = ctx.author
         gld_avatar = user.guild_avatar
         if gld_avatar is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{user.mention}** does not have a server avatar set.", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{user.mention}** doesn't have a server avatar set.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
         else:
             gld_avatar_url = gld_avatar.url
@@ -127,7 +127,7 @@ class Info(commands.Cog):
     async def servericon(self, ctx):
         """Fetch the server icon."""
         if ctx.guild.icon is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a icon set.", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** doesn't have a icon set.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
             return
         e = discord.Embed(color=0x313338)
@@ -143,7 +143,7 @@ class Info(commands.Cog):
     async def serverbanner(self, ctx):
         """Fetch the server banner."""
         if ctx.guild.banner is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a banner set.", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** doesn't have a banner set.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
             return
         e = discord.Embed(color=0x313338)
@@ -159,7 +159,7 @@ class Info(commands.Cog):
     async def invitesplash(self, ctx: commands.Context):
         """Fetch a servers invite splash."""
         if discord.Guild.discovery_splash == None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** does not have a invite splash set.", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{ctx.guild.name}** doesn't have a invite splash set.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
         else:
             invsplash_url = ctx.guild.splash
@@ -177,7 +177,7 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.banner == None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{member.mention}** does not have a banner set.", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{member.mention}** doesn't have a banner set.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
         else:
             banner_url = user.banner.url
@@ -377,7 +377,7 @@ class Info(commands.Cog):
                     description=cf.bold(f"0 users found in the {role.name} role."),
                     colour=await ctx.embed_colour(),
                 )
-                return await ctx.send(embed=embed)
+                return await ctx.reply(embed=embed, mention_author=False)
             else:
                 return await ctx.send(cf.bold(f"0 users found in the {role.name} role."))
 
@@ -476,6 +476,7 @@ class Info(commands.Cog):
 
         await menu(ctx, embed_list, DEFAULT_CONTROLS)
 
+    @commands.is_owner()
     @commands.command(hidden=True)
     async def sharedservers(self, ctx, user: discord.Member = None):
         """Shows shared server info. Defaults to author."""
@@ -492,7 +493,7 @@ class Info(commands.Cog):
     
     @commands.command()
     @commands.has_permissions(read_message_history=True)
-    @commands.bot_has_permissions(read_message_history=True)
+
     async def firstmessage(
         self,
         ctx: commands.Context,
@@ -1175,7 +1176,7 @@ class Info(commands.Cog):
         """
         async with ctx.typing():
             if not user_id:
-                await ctx.send(_("You need to supply a user ID for this to work properly."))
+                user_id=ctx.author
                 return
             if isinstance(user_id, int):
                 try:
