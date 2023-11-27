@@ -1308,7 +1308,7 @@ class Info(commands.Cog):
         urls = ""
 
         if invite.guild.icon:
-            icon_url = yarl.URL(str(invite.guild.icon_url))
+            icon_url = yarl.URL(str(guild.icon_url))
             if "a_" in icon_url.path:
                 icon_url = str(icon_url).replace("webp", "gif")
             urls += f"[**icon**]({icon_url}), "
