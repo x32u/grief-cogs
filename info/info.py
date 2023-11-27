@@ -1314,7 +1314,7 @@ class Info(commands.Cog):
             urls += f"[**icon**]({icon_url}), "
             embed.set_thumbnail(url=icon_url)
         if invite.guild.banner:
-            banner_url = yarl.URL(str(invite.guild.banner_url))
+            banner_url = yarl.URL(str(invite.guild.banner.url))
             if "a_" in banner_url.path:
                 banner_url = str(banner_url).replace("webp", "gif")
             urls += f"[**banner**]({banner_url}), "
@@ -1324,7 +1324,7 @@ class Info(commands.Cog):
             embed.set_image(url=str(banner_url))
 
         if invite.guild.splash:
-            urls += f"[**splash**]({invite.guild.splash_url}), "
+            urls += f"[**splash**]({invite.guild.splash.url}), "
         if len(urls) > 0:
             embed.add_field(name="**assets**", value=urls[:-2], inline=False)
         await ctx.send(embed=embed)
