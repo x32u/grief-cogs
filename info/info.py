@@ -178,6 +178,7 @@ class Info(commands.Cog):
             button1 = Button(label="banner", url=banner_url)
             e = discord.Embed(color=0x313338)
             e.set_image(url=banner_url)
+            e.title = f"Banner of {user.display_name}"
             view = View()
             view.add_item(button1)
             await ctx.reply(embed=e, view=view, mention_author=False)
