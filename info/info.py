@@ -13,6 +13,7 @@ import itertools
 import logging
 import re
 import timeago
+import yarl
 from uwuipy import uwuipy
 
 from discord.ui import Button, View
@@ -1285,3 +1286,45 @@ class Info(commands.Cog):
                 source=ListPages(pages=embed_list),
                 cog=self,
             ).start(ctx=ctx)
+
+### ---- STOLEN FROM MELANIE
+
+    @commands.command(name="inviteinfo", aliases=["ii"], hidden=True)
+    async def _inviteinfo(self, ctx, code: str):
+        """Fetch information on a server from its invite/vanity code."""
+        if "/" in code:
+            code = code.split("/", -1)[-1].replace(" ", "")
+
+        try:
+            invite = await ctx.bot.fetch_invite(code)
+        except discord.NotFound:
+            return await ctx.send(embed= ("Invalid invite"))
+        members_total = f"{invite.approximate_member_count:,}"
+        members_online_total = f"{invite.approximate_presence_count:,}"
+        embed = discord.Embed(title=f"Invite Info: {invite.guild}")
+        owner_string = f"**Owner:** {guild.owner}\n**Owner ID:** {guild.owner_id}\n" if (guild := self.bot.get_guild(invite.guild.id)) else ""
+        ratio_string = round(invite.approximate_presence_count / invite.approximate_member_count, 2) * 100
+        embed.description = f"**ID:** `{invite.guild.id}`\n**Created:** <t:{str(invite.guild.created_at.timestamp()).split('.')[0]}> (<t:{str(invite.guild.created_at.timestamp()).split('.')[0]}:R>)\n{owner_string}**Members:** {members_total}\n**Members Online:** {members_online_total}\n**Online Percent:** {ratio_string}\n**Verification Level:** {str(invite.guild.verification_level).title()}\n\n**Channel Name:** {invite.channel} (`{invite.channel.type}`)\n**Channel ID:** `{invite.channel.id}`\n**Invite Created:**<t:{str(invite.channel.created_at.timestamp()).split('.')[0]}> (<t:{str(invite.channel.created_at.timestamp()).split('.')[0]}:R>)\n"
+        urls = ""
+
+        if invite.guild.icon:
+            icon_url = yarl.URL(str(invite.guild.icon_url))
+            if "a_" in icon_url.path:
+                icon_url = str(icon_url).replace("webp", "gif")
+            urls += f"[**icon**]({icon_url}), "
+            embed.set_thumbnail(url=icon_url)
+        if invite.guild.banner:
+            banner_url = yarl.URL(str(invite.guild.banner_url))
+            if "a_" in banner_url.path:
+                banner_url = str(banner_url).replace("webp", "gif")
+            urls += f"[**banner**]({banner_url}), "
+            lookup = await (str(invite.guild.banner_url))
+            if lookup:
+                embed.color = lookup.dominant.decimal
+            embed.set_image(url=str(banner_url))
+
+        if invite.guild.splash:
+            urls += f"[**splash**]({invite.guild.splash_url}), "
+        if len(urls) > 0:
+            embed.add_field(name="**assets**", value=urls[:-2], inline=False)
+        await ctx.send(embed=embed)
