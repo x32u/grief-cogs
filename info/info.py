@@ -1289,7 +1289,7 @@ class Info(commands.Cog):
 
 ### ---- STOLEN FROM MELANIE
 
-    @commands.command(name="inviteinfo", aliases=["ii"], hidden=True)
+    @commands.command(name="inviteinfo", aliases=["ii"])
     async def _inviteinfo(self, ctx, code: str):
         """Fetch information on a server from its invite/vanity code."""
         if "/" in code:
