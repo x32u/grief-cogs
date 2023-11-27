@@ -1287,7 +1287,7 @@ class Info(commands.Cog):
                 cog=self,
             ).start(ctx=ctx)
 
-### ---- IMPORTED FROM MELANIE
+### ---- STOLEN FROM MELANIE
 
     @commands.command(name="inviteinfo", aliases=["ii"], hidden=True)
     async def _inviteinfo(self, ctx, code: str):
@@ -1308,23 +1308,23 @@ class Info(commands.Cog):
         urls = ""
 
         if invite.guild.icon:
-            icon_url = yarl.URL(str(guild.icon))
+            icon_url = yarl.URL(str(invite.guild.icon.url))
             if "a_" in icon_url.path:
                 icon_url = str(icon_url).replace("webp", "gif")
             urls += f"[**icon**]({icon_url}), "
             embed.set_thumbnail(url=icon_url)
         if invite.guild.banner:
-            banner_url = yarl.URL(str(invite.guild.banner))
+            banner_url = yarl.URL(str(invite.guild.banner_url))
             if "a_" in banner_url.path:
                 banner_url = str(banner_url).replace("webp", "gif")
             urls += f"[**banner**]({banner_url}), "
-            lookup = await (str(invite.guild.banner))
+            lookup = await (str(invite.guild.banner_url))
             if lookup:
                 embed.color = lookup.dominant.decimal
             embed.set_image(url=str(banner_url))
 
         if invite.guild.splash:
-            urls += f"[**splash**]({invite.guild.splash}), "
+            urls += f"[**splash**]({invite.guild.splash_url}), "
         if len(urls) > 0:
             embed.add_field(name="**assets**", value=urls[:-2], inline=False)
         await ctx.send(embed=embed)
