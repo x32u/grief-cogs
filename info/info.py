@@ -92,8 +92,7 @@ class Info(commands.Cog):
             avatar_url = user.avatar.url
             button1 = Button(label="avatar", url=avatar_url)
             e = discord.Embed(color=0x313338, url=user.avatar.url)
-            e.set_author(name=f"{member.display_name}", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
-            e.title = f"Avatar of {user.display_name}"
+            e.set_author(name=f"**{member.display_name}'s avatar**", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=avatar_url)
             view = View()
             view.add_item(button1)
@@ -111,8 +110,7 @@ class Info(commands.Cog):
         else:
             gld_avatar_url = gld_avatar.url
             embed = discord.Embed(colour=0x313338)
-            embed.set_author(name=f"{user.display_name}", icon_url=f"{user.guild_avatar}", url=f"https://discord.com/users/{user.id}")
-            embed.title = f"Server avatar of {user.display_name}"
+            embed.set_author(name=f"**{user.display_name}'s server avatar**", icon_url=f"{user.guild_avatar}", url=f"https://discord.com/users/{user.id}")
             embed.set_image(url=gld_avatar_url)
             await ctx.reply(embed=embed, mention_author=False)
     
@@ -125,7 +123,7 @@ class Info(commands.Cog):
             await ctx.reply(embed=embed, mention_author=False)
             return
         e = discord.Embed(color=0x313338)
-        e.set_author(name=f"{ctx.guild.name}'s server icon", icon_url=f"{ctx.guild.icon.url}")
+        e.set_author(name=f"**{ctx.guild.name}'s server icon**", icon_url=f"{ctx.guild.icon.url}")
         e.set_image(url=f"{ctx.guild.icon.url}")
         avatar = Button(label="server icon", url=f"{ctx.guild.icon.url}")
         view = View()
@@ -141,7 +139,7 @@ class Info(commands.Cog):
             await ctx.reply(embed=embed, mention_author=False)
             return
         e = discord.Embed(color=0x313338)
-        e.set_author(name=f"{ctx.guild.name}'s server banner", icon_url=f"{ctx.guild.icon.url}")
+        e.set_author(name=f"**{ctx.guild.name}'s server banner**", icon_url=f"{ctx.guild.icon.url}")
         e.set_image(url=f"{ctx.guild.banner.url}")
         button = Button(label="server banner", url=f"{ctx.guild.banner.url}")
         view = View()
@@ -178,7 +176,7 @@ class Info(commands.Cog):
             button1 = Button(label="banner", url=banner_url)
             e = discord.Embed(color=0x313338)
             e.set_image(url=banner_url)
-            e.title = f"Banner of {user.display_name}"
+            e.title = f"**{user.display_name}'s banner**"
             view = View()
             view.add_item(button1)
             await ctx.reply(embed=e, view=view, mention_author=False)
