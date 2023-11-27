@@ -74,12 +74,6 @@ from grief.core.utils.chat_formatting import (
 
 class Info(commands.Cog):
     """Suite of tools to grab banners, icons, etc."""
-    
-    # Messages.
-    X = ":x: Error: "
-    MEMBER_NO_GUILD_AVATAR = X + "this user does not have a server avatar."
-    # Other constants.
-    IMAGE_HYPERLINK = "**Image link:**  [Click here]({})"
 
     def __init__(self, bot: Red):
         super().__init__()
@@ -116,11 +110,13 @@ class Info(commands.Cog):
         else:
             gld_avatar_url = gld_avatar.url
             embed = discord.Embed(colour=0x313338)
+            embed.set_author(name=f"{user.display_name}", icon_url=f"{user.guild_avatar}", url=f"https://discord.com/users/{user.id}")
             embed.title = f"Server avatar of {user.display_name}"
-            embed.description = self.IMAGE_HYPERLINK.format(gld_avatar_url)
             embed.set_image(url=gld_avatar_url)
-            embed.set_footer(text=f"User ID: {user.id}")
-            await ctx.reply(embed=embed, mention_author=False)
+            button1 = Button(label="server avatar", url=user.guild_avatar.url)
+            view = View()
+            view.add_item(button1)
+            await ctx.reply(embed=embed, view=view, mention_author=False)
     
     @commands.command(aliases=["sicon", "si", "sico", "savi"])
     @commands.cooldown(1, 3, commands.BucketType.user, )
@@ -493,7 +489,6 @@ class Info(commands.Cog):
     
     @commands.command()
     @commands.has_permissions(read_message_history=True)
-
     async def firstmessage(
         self,
         ctx: commands.Context,
@@ -1176,7 +1171,7 @@ class Info(commands.Cog):
         """
         async with ctx.typing():
             if not user_id:
-                user_id=ctx.author
+                await ctx.send(_("You need to supply a user ID for this to work properly."))
                 return
             if isinstance(user_id, int):
                 try:
