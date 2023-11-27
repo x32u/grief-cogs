@@ -1318,7 +1318,7 @@ class Info(commands.Cog):
             if "a_" in banner_url.path:
                 banner_url = str(banner_url).replace("webp", "gif")
             urls += f"[**banner**]({banner_url}), "
-            lookup = await (str(invite.guild.banner.url))
+            lookup = (str(invite.guild.banner.url))
             if lookup:
                 embed.color = lookup.dominant.decimal
             embed.set_image(url=str(banner_url))
