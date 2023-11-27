@@ -1314,7 +1314,7 @@ class Info(commands.Cog):
             urls += f"[**icon**]({icon_url}), "
             embed.set_thumbnail(url=icon_url)
         if invite.guild.banner:
-            banner_url = yarl.URL(str(invite.guild.banner.url))
+            banner_url = yarl.URL(str(ctx.guild.banner.urll))
             if "a_" in banner_url.path:
                 banner_url = str(banner_url).replace("webp", "gif")
             urls += f"[**banner**]({banner_url}), "
