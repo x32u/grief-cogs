@@ -1327,4 +1327,4 @@ class Info(commands.Cog):
             urls += f"[**splash**]({invite.guild.splash.url}), "
         if len(urls) > 0:
             embed.add_field(name="**assets**", value=urls[:-2], inline=False)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed, mention_author=False)
