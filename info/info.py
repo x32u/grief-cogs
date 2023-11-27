@@ -1297,8 +1297,8 @@ class Info(commands.Cog):
 
         try:
             invite = await ctx.bot.fetch_invite(code)
-        except discord.errors.NotFound:
-            return await ctx.reply(embed=discord.Embed(description=f"invalid invite", color="0x313338", mention_author=False))
+        except discord.NotFound:
+            return await ctx.send(embed=discord.Embed(description="Invalid invite"))
         members_total = f"{invite.approximate_member_count:,}"
         members_online_total = f"{invite.approximate_presence_count:,}"
         embed = discord.Embed(title=f"Invite Info: {invite.guild}")
