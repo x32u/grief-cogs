@@ -118,7 +118,6 @@ class KickBanMixin(MixinMeta):
         ctx: commands.Context,
         days: int = 0,
         reason: str = None,
-        create_modlog_case=False,
     ) -> Tuple[bool, str]:
         author = ctx.author
         guild = ctx.guild
@@ -213,19 +212,6 @@ class KickBanMixin(MixinMeta):
                     )
                 )
                 return False, _("An unexpected error occurred.")
-
-        if create_modlog_case:
-            await modlog.create_case(
-                self.bot,
-                guild,
-                ctx.message.created_at,
-                ban_type,
-                user,
-                author,
-                reason,
-                until=None,
-                channel=None,
-            )
 
         return True, success_message
 
@@ -340,19 +326,6 @@ class KickBanMixin(MixinMeta):
                     author.name, author.id, member.name, member.id
                 )
             )
-        else:
-            await modlog.create_case(
-                self.bot,
-                guild,
-                ctx.message.created_at,
-                "kick",
-                member,
-                author,
-                reason,
-                until=None,
-                channel=None,
-            )
-            await ctx.tick()
 
     @commands.command(autohelp=True, aliases=["b"])
     @commands.guild_only()
@@ -367,7 +340,7 @@ class KickBanMixin(MixinMeta):
             user = self.bot.get_user(user) or discord.Object(id=user)
 
         success_, message = await self.ban_user(
-            user=user, ctx=ctx, days=days, reason=reason, create_modlog_case=True
+            user=user, ctx=ctx, days=days, reason=reason
         )
 
         await ctx.tick()
@@ -472,7 +445,7 @@ class KickBanMixin(MixinMeta):
             try:
                 # using `reason` here would shadow the reason passed to command
                 success, failure_reason = await self.ban_user(
-                    user=member, ctx=ctx, days=days, reason=reason, create_modlog_case=True
+                    user=member, ctx=ctx, days=days, reason=reason
                 )
                 if success:
                     banned.append(user_id)
@@ -522,19 +495,6 @@ class KickBanMixin(MixinMeta):
                         continue
                     else:
                         banned.append(user_id)
-
-            await modlog.create_case(
-                self.bot,
-                guild,
-                ctx.message.created_at,
-                "hackban",
-                user_id,
-                author,
-                reason,
-                until=None,
-                channel=None,
-            )
-        await show_results()
 
     @commands.command()
     @commands.guild_only()
@@ -611,18 +571,6 @@ class KickBanMixin(MixinMeta):
             await ctx.send(_("I can't do that for some reason."))
         except discord.HTTPException:
             await ctx.send(_("Something went wrong while banning."))
-        else:
-            await modlog.create_case(
-                self.bot,
-                guild,
-                ctx.message.created_at,
-                "tempban",
-                member,
-                author,
-                reason,
-                unban_time,
-            )
-            await ctx.tick()
 
     @commands.command(autohelp=True, aliases=["sbn"])
     @commands.guild_only()
@@ -690,18 +638,6 @@ class KickBanMixin(MixinMeta):
                 "{}({}) softbanned {}({}), deleting 1 day worth "
                 "of messages.".format(author.name, author.id, member.name, member.id)
             )
-            await modlog.create_case(
-                self.bot,
-                guild,
-                ctx.message.created_at,
-                "softban",
-                member,
-                author,
-                reason,
-                until=None,
-                channel=None,
-            )
-            await ctx.tick()
 
     @commands.command(autohelp=True, aliases=["vk"])
     @commands.cooldown(1, 3, commands.BucketType.guild)
@@ -736,19 +672,6 @@ class KickBanMixin(MixinMeta):
         except discord.HTTPException:
             await ctx.send(_("Something went wrong while attempting to kick that member."))
             return
-        else:
-            await modlog.create_case(
-                self.bot,
-                guild,
-                ctx.message.created_at,
-                "vkick",
-                member,
-                author,
-                reason,
-                until=None,
-                channel=case_channel,
-            )
-            await ctx.tick()
 
     @commands.command()
     @commands.guild_only()
@@ -779,21 +702,6 @@ class KickBanMixin(MixinMeta):
             await ctx.send(_("That user isn't muted or deafened by the server."))
             return
 
-        guild = ctx.guild
-        author = ctx.author
-        await modlog.create_case(
-            self.bot,
-            guild,
-            ctx.message.created_at,
-            "voiceunban",
-            member,
-            author,
-            reason,
-            until=None,
-            channel=None,
-        )
-        await ctx.tick()
-
     @commands.command(autohelp=True, aliases=["vb"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
@@ -823,19 +731,6 @@ class KickBanMixin(MixinMeta):
             await ctx.send(_("That user is already muted and deafened server-wide."))
             return
 
-        await modlog.create_case(
-            self.bot,
-            guild,
-            ctx.message.created_at,
-            "voiceban",
-            member,
-            author,
-            reason,
-            until=None,
-            channel=None,
-        )
-        await ctx.tick()
-
     @commands.command(autohelp=True, aliases=["ub"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
@@ -857,19 +752,6 @@ class KickBanMixin(MixinMeta):
         except discord.HTTPException:
             await ctx.send(_("Something went wrong while attempting to unban that user."))
             return
-        else:
-            await modlog.create_case(
-                self.bot,
-                guild,
-                ctx.message.created_at,
-                "unban",
-                ban_entry.user,
-                author,
-                reason,
-                until=None,
-                channel=None,
-            )
-            await ctx.tick()
 
         if await self.config.guild(guild).reinvite_on_unban():
             user = ctx.bot.get_user(user_id)
@@ -903,6 +785,7 @@ class KickBanMixin(MixinMeta):
                             "an invite. Here's the link so you can try: {invite_link}"
                         ).format(invite_link=invite)
                     )
+    
     @commands.group(aliases=["gedit", "sedit", "serveredit"])
     @commands.has_permissions(manage_guild=True)
     async def guildedit(self, ctx: commands.Context) -> None:
