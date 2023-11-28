@@ -42,7 +42,6 @@ class NickNamer(commands.Cog):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=190420201535, force_registration=True)
         standard = {
-            "modlog": True,
             "nick": "CHANGEME",
             "dm": False,
             "frozen": [],
@@ -61,33 +60,6 @@ class NickNamer(commands.Cog):
         if len(nickname) <= 32:
             return True
         return False
-
-    @staticmethod
-    async def register_casetypes():
-        forcechange_case = {
-            "name": "nickchange",
-            "default_setting": True,
-            "image": ":pencil2:",
-            "case_str": "Nickname changed",
-        }
-        freeze_case = {
-            "name": "nickfreeze",
-            "default_setting": True,
-            "image": "\N{FREEZING FACE}",
-            "case_str": "Nickname frozen.",
-        }
-        temp_case = {
-            "name": "tempnick",
-            "default_setting": True,
-            "image": "\N{TIMER CLOCK}\N{VARIATION SELECTOR-16}",
-            "case_str": "Nickname temporarily changed.",
-        }
-        try:
-            await modlog.register_casetype(**forcechange_case)
-            await modlog.register_casetype(**freeze_case)
-            await modlog.register_casetype(**temp_case)
-        except RuntimeError:
-            pass
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
@@ -142,68 +114,10 @@ class NickNamer(commands.Cog):
         try:
             await user.edit(nick=await self.config.guild(ctx.guild).nick())
             await ctx.tick()
-            if await self.config.guild(ctx.guild).modlog():
-                await modlog.create_case(
-                    self.bot,
-                    ctx.guild,
-                    datetime.now(),
-                    "nickchange",
-                    user,
-                    moderator=ctx.author,
-                    reason=reason,
-                    channel=ctx.channel,
-                )
-            if await self.config.guild(ctx.guild).dm():
-                try:
-                    await user.send(
-                        _(
-                            "Your nickname on ``{ctxguildname}`` has been force-changed by a moderator."
-                        ).format(ctxguildname=ctx.guild.name)
-                    )
-                except:
-                    pass
         except discord.errors.Forbidden:
             await ctx.send(
                 _("Missing permissions.")
             )  # can remove this as the check is made on invoke with the decorator
-
-    @checks.mod()
-    @commands.command()
-    @checks.bot_has_permissions(manage_nicknames=True)
-    async def cnick(self, ctx, user: discord.Member, nickname: str, *, reason: Optional[str]):
-        """Forcibly change a user's nickname."""
-        valid_nick_check = self.valid_nickname(nickname=nickname)
-        if not valid_nick_check:
-            return await ctx.send(
-                "That nickname is too long. Keep it under 32 characters, please."
-            )
-        if not reason:
-            reason = _("Nickname force-changed")
-        try:
-            await user.edit(nick=nickname)
-            await ctx.tick()
-            if await self.config.guild(ctx.guild).modlog():
-                await modlog.create_case(
-                    self.bot,
-                    ctx.guild,
-                    datetime.now(),
-                    "nickchange",
-                    user,
-                    moderator=ctx.author,
-                    reason=reason,
-                    channel=ctx.channel,
-                )
-            if await self.config.guild(ctx.guild).dm():
-                try:
-                    await user.send(
-                        _(
-                            "Your nickname on ``{ctxguildname}`` has been force-changed by a moderator."
-                        ).format(ctxguildname=ctx.guild.name)
-                    )
-                except:
-                    pass
-        except discord.errors.Forbidden:
-            await ctx.send(_("Missing permissions."))
 
     @checks.mod()
     @commands.command()
@@ -230,26 +144,6 @@ class NickNamer(commands.Cog):
             await ctx.tick()
             async with self.config.guild(ctx.guild).frozen() as frozen:
                 frozen.append((user.id, nickname))
-            if await self.config.guild(ctx.guild).modlog():
-                await modlog.create_case(
-                    self.bot,
-                    ctx.guild,
-                    datetime.now(),
-                    "nickfreeze",
-                    user,
-                    moderator=ctx.author,
-                    reason=reason,
-                    channel=ctx.channel,
-                )
-            if await self.config.guild(ctx.guild).dm():
-                try:
-                    await user.send(
-                        _("Your nickname on ``{ctxguildname}`` has been frozen.").format(
-                            ctxguildname=ctx.guild.name
-                        )
-                    )
-                except:
-                    pass
         except discord.errors.Forbidden:
             await ctx.send(_("Missing permissions."))
 
@@ -262,15 +156,6 @@ class NickNamer(commands.Cog):
                 if user.id in e:
                     frozen.remove(e)
                     await ctx.tick()
-                    if await self.config.guild(ctx.guild).dm():
-                        try:
-                            await user.send(
-                                _("Your nickname on ``{ctxguildname}`` has been unfrozen.").format(
-                                    ctxguildname=ctx.guild.name
-                                )
-                            )
-                        except:
-                            pass
 
     @checks.mod()
     @commands.command()
@@ -297,76 +182,6 @@ class NickNamer(commands.Cog):
             change_end = datetime.utcnow() + duration
             async with self.config.guild(ctx.guild).active() as active:
                 active.append((user.id, oldnick, change_end.timestamp()))
-            if self.config.guild(ctx.guild).modlog():
-                await modlog.create_case(
-                    self.bot,
-                    ctx.guild,
-                    datetime.now(),
-                    "tempnick",
-                    user,
-                    moderator=ctx.author,
-                    reason=reason,
-                    channel=ctx.channel,
-                )
-            if await self.config.guild(ctx.guild).dm():
-                try:
-                    await user.send(
-                        _(
-                            "Your nickname in ``{ctxguildname}`` has been temporarily changed."
-                        ).format(ctxguildname=ctx.guild.name)
-                    )
-                except:
-                    pass
+                pass
         except discord.errors.Forbidden:
             await ctx.send(_("Missing permissions."))
-
-    @checks.admin()
-    @commands.group()
-    @checks.bot_has_permissions(manage_nicknames=True)
-    async def nickset(self, ctx):
-        """Nicknamer settings"""
-        pass
-
-    @nickset.command()
-    async def name(self, ctx, *, name: str):
-        """Set the default name that will be applied when using ``[p]nick``"""
-        if len(name) < 33 and len(name) > 1:
-            await self.config.guild(ctx.guild).nick.set(name)
-            await ctx.send(_("Standard Nickname set to ``{name}``.").format(name=name))
-
-    @nickset.command()
-    async def modlog(self, ctx, true_or_false: bool):
-        """Set if you would like to create a modlog entry everytime a nickname is being changed."""
-        await self.config.guild(ctx.guild).modlog.set(true_or_false)
-        await ctx.send(
-            _("Modlog entries set to {true_or_false}.").format(true_or_false=true_or_false)
-        )
-
-    @nickset.command()
-    async def dm(self, ctx, true_or_false: bool):
-        """Set if you would like the bot to DM the user who's nickname was changed."""
-        await self.config.guild(ctx.guild).dm.set(true_or_false)
-        await ctx.send(
-            _("Sending a DM set to {true_or_false}.").format(true_or_false=true_or_false)
-        )
-
-    @checks.admin()
-    @commands.command()
-    async def nickpurge(self, ctx, *, are_you_sure: Optional[bool]):
-        """Remove all nicknames in the server."""
-        if are_you_sure:
-            for member in ctx.guild.members:
-                if member.nick:
-                    await member.edit(nick=None, reason="Nickname purge")
-            await ctx.send(_("Nicknames purged"))
-        else:
-            await ctx.send(
-                _(
-                    "This will remove the nicknames of all members. If you are sure you want to do this run:\n{command}"
-                ).format(command=f"``{ctx.clean_prefix}nickpurge yes``")
-                )
-            except discord.Forbidden:
-                    errors[user_id] = _(
-                      "Could not ban user with ID {user_id}: missing permissions."
-                        ).format(user_id=user_id)
-                        continue
