@@ -43,7 +43,6 @@ from discord.ui import View, Button
 from grief.core.commands import GuildContext
 
 from .converters import GuildConverter, MultiGuildConverter, PermissionConverter, FuzzyMember
-from .menuss import AvatarPages, BaseView, GuildPages, ListPages
 
 from asyncio import TimeoutError as AsyncTimeoutError
 from textwrap import shorten
@@ -56,7 +55,7 @@ from fixcogsutils.formatting import bool_emojify
 
 from .common_variables import CHANNEL_TYPE_EMOJIS, GUILD_FEATURES, KNOWN_CHANNEL_TYPES
 from .embeds import emoji_embed
-from .menus import ActivityPager, BaseMenu, ChannelsMenu, ChannelsPager, EmojiPager, PagePager
+from .menus import ActivityPager, BaseMenu, ChannelsMenu, ChannelsPager, EmojiPager, PagePager, AvatarPages, BaseView, GuildPages, ListPages
 from .utils import _
 
 from grief.core import commands
