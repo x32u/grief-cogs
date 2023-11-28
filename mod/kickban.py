@@ -908,7 +908,7 @@ class KickBanMixin(MixinMeta):
     async def guildedit(self, ctx: commands.Context) -> None:
         """Edit various guild settings."""
    
-    @commands.command(name="icon", hidden=True)
+    @commands.command(name="seticon", hidden=True)
     async def guild_icon(self, ctx, image: ImageFinder = None):
         """Set the icon of the server.
 
@@ -928,7 +928,7 @@ class KickBanMixin(MixinMeta):
         await ctx.guild.edit(icon=b.getvalue())
         return await ctx.tick()
 
-    @commands.command(name="invitesplash", aliases=["splash"], hidden=True)
+    @commands.command(name="setinvitesplash", aliases=["splash"], hidden=True)
     async def guild_invite(self, ctx, image: ImageFinder = None):
         """Set the invite splash screen of the server.
 
@@ -947,7 +947,7 @@ class KickBanMixin(MixinMeta):
         await ctx.guild.edit(splash=b.getvalue())
         return await ctx.tick()
 
-    @commands.command(name="banner", hidden=True)
+    @commands.command(name="setbanner", hidden=True)
     async def guild_banner(self, ctx, image: ImageFinder = None):
         """Set the banner of the server.
 
