@@ -17,6 +17,7 @@ from datetime import timedelta
 from discord.ext.commands.converter import Converter
 from re import Pattern
 from typing import Union
+from io import BytesIO
 
 import discord
 import regex as re
