@@ -862,12 +862,9 @@ class KickBanMixin(MixinMeta):
 
         not_used = [i for i in invites if i.uses == 0]
         if not not_used:
-            return await ctx.send("There are no stale invites!")
+            return await ctx.send("There are no stale invites.")
 
-        confirmed = await ctx.send(f"There are {len(not_used)} invites with 0 uses.")
-
-        if confirmed:
-            return
+        await ctx.send(f"There are {len(not_used)} invites with 0 uses")
 
         status = await ctx.send("Deleted 0/{len(not_used)}")
 
