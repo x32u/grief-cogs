@@ -15,7 +15,6 @@ from red_commons.logging import getLogger
 from grief.core import commands
 from grief.core.i18n import Translator
 from grief.vendored.discord.ext import menus
-from .menus import BaseView
 
 
 def check_channels(channel_type: str):
@@ -24,6 +23,132 @@ def check_channels(channel_type: str):
 
     return predicate
 
+class BaseView(discord.ui.View):
+    def __init__(
+        self,
+        source: menus.PageSource,
+        cog: commands.Cog,
+        clear_reactions_after: bool = True,
+        delete_message_after: bool = False,
+        timeout: int = 180,
+        message: discord.Message = None,
+        page_start: int = 0,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(
+            timeout=timeout,
+        )
+        self._source = source
+        self.cog = cog
+        self.page_start = page_start
+        self.current_page = page_start
+        self.message = message
+        self.ctx = kwargs.get("ctx", None)
+        self.forward_button = ForwardButton(discord.ButtonStyle.grey, 0)
+        self.back_button = BackButton(discord.ButtonStyle.grey, 0)
+        self.first_item = FirstItemButton(discord.ButtonStyle.grey, 0)
+        self.last_item = LastItemButton(discord.ButtonStyle.grey, 0)
+        self.stop_button = StopButton(discord.ButtonStyle.red, 0)
+        self.add_item(self.stop_button)
+        self.add_item(self.first_item)
+        self.add_item(self.back_button)
+        self.add_item(self.forward_button)
+        self.add_item(self.last_item)
+        if (
+            isinstance(source, GuildPages)
+            and self.ctx
+            and self.ctx.author.id in self.ctx.bot.owner_ids
+        ):
+            self.leave_guild_button = LeaveGuildButton(discord.ButtonStyle.red, 1)
+            self.join_guild_button = JoinGuildButton(discord.ButtonStyle.green, 1)
+            self.add_item(self.leave_guild_button)
+            self.add_item(self.join_guild_button)
+        if isinstance(source, AvatarPages):
+            self.avatar_swap = {}
+            for style in AvatarDisplay:
+                button = SwapAvatarButton(style)
+                self.avatar_swap[style.value] = button
+                self.add_item(button)
+
+    @property
+    def source(self):
+        return self._source
+
+    async def on_timeout(self):
+        await self.message.edit(view=None)
+
+    async def start(self, ctx: commands.Context):
+        await self.send_initial_message(ctx)
+
+    def disable_navigation(self):
+        self.first_item.disabled = True
+        self.back_button.disabled = True
+        self.forward_button.disabled = True
+        self.last_item.disabled = True
+
+    def enable_navigation(self):
+        self.first_item.disabled = False
+        self.back_button.disabled = False
+        self.forward_button.disabled = False
+        self.last_item.disabled = False
+
+    async def send_initial_message(self, ctx: commands.Context):
+        """|coro|
+        The default implementation of :meth:`Menu.send_initial_message`
+        for the interactive pagination session.
+        This implementation shows the first page of the source.
+        """
+        self.ctx = ctx
+        if not self.source.is_paginating():
+            self.disable_navigation()
+        page = await self._source.get_page(self.page_start)
+        kwargs = await self._get_kwargs_from_page(page)
+        self.message = await ctx.send(**kwargs, view=self)
+        return self.message
+
+    async def _get_kwargs_from_page(self, page):
+        value = await discord.utils.maybe_coroutine(self._source.format_page, self, page)
+        if isinstance(value, dict):
+            return value
+        elif isinstance(value, str):
+            return {"content": value, "embed": None}
+        elif isinstance(value, discord.Embed):
+            return {"embed": value, "content": None}
+
+    async def show_page(self, page_number: int, interaction: discord.Interaction):
+        if not self.source.is_paginating():
+            self.disable_navigation()
+        else:
+            self.enable_navigation()
+        page = await self._source.get_page(page_number)
+        self.current_page = page_number
+        kwargs = await self._get_kwargs_from_page(page)
+        await interaction.response.edit_message(**kwargs, view=self)
+
+    async def show_checked_page(self, page_number: int, interaction: discord.Interaction) -> None:
+        max_pages = self._source.get_max_pages()
+        try:
+            if max_pages is None:
+                # If it doesn't give maximum pages, it cannot be checked
+                await self.show_page(page_number, interaction)
+            elif page_number >= max_pages:
+                await self.show_page(0, interaction)
+            elif page_number < 0:
+                await self.show_page(max_pages - 1, interaction)
+            elif max_pages > page_number >= 0:
+                await self.show_page(page_number, interaction)
+        except IndexError:
+            # An error happened that can be handled, so ignore it.
+            pass
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        """Just extends the default reaction_check to use owner_ids"""
+        if interaction.user.id not in (*self.ctx.bot.owner_ids, self.ctx.author.id):
+            await interaction.response.send_message(
+                content=_("You are not authorized to interact with this."), ephemeral=True
+            )
+            return False
+        return True
 
 class BaseMenu(menus.MenuPages, inherit_buttons=False):
     def __init__(
@@ -455,133 +580,6 @@ class JoinGuildButton(discord.ui.Button):
         if not interaction.response.is_done():
             await interaction.response.defer()
 
-
-class BaseView(discord.ui.View):
-    def __init__(
-        self,
-        source: menus.PageSource,
-        cog: commands.Cog,
-        clear_reactions_after: bool = True,
-        delete_message_after: bool = False,
-        timeout: int = 180,
-        message: discord.Message = None,
-        page_start: int = 0,
-        **kwargs: Any,
-    ) -> None:
-        super().__init__(
-            timeout=timeout,
-        )
-        self._source = source
-        self.cog = cog
-        self.page_start = page_start
-        self.current_page = page_start
-        self.message = message
-        self.ctx = kwargs.get("ctx", None)
-        self.forward_button = ForwardButton(discord.ButtonStyle.grey, 0)
-        self.back_button = BackButton(discord.ButtonStyle.grey, 0)
-        self.first_item = FirstItemButton(discord.ButtonStyle.grey, 0)
-        self.last_item = LastItemButton(discord.ButtonStyle.grey, 0)
-        self.stop_button = StopButton(discord.ButtonStyle.red, 0)
-        self.add_item(self.stop_button)
-        self.add_item(self.first_item)
-        self.add_item(self.back_button)
-        self.add_item(self.forward_button)
-        self.add_item(self.last_item)
-        if (
-            isinstance(source, GuildPages)
-            and self.ctx
-            and self.ctx.author.id in self.ctx.bot.owner_ids
-        ):
-            self.leave_guild_button = LeaveGuildButton(discord.ButtonStyle.red, 1)
-            self.join_guild_button = JoinGuildButton(discord.ButtonStyle.green, 1)
-            self.add_item(self.leave_guild_button)
-            self.add_item(self.join_guild_button)
-        if isinstance(source, AvatarPages):
-            self.avatar_swap = {}
-            for style in AvatarDisplay:
-                button = SwapAvatarButton(style)
-                self.avatar_swap[style.value] = button
-                self.add_item(button)
-
-    @property
-    def source(self):
-        return self._source
-
-    async def on_timeout(self):
-        await self.message.edit(view=None)
-
-    async def start(self, ctx: commands.Context):
-        await self.send_initial_message(ctx)
-
-    def disable_navigation(self):
-        self.first_item.disabled = True
-        self.back_button.disabled = True
-        self.forward_button.disabled = True
-        self.last_item.disabled = True
-
-    def enable_navigation(self):
-        self.first_item.disabled = False
-        self.back_button.disabled = False
-        self.forward_button.disabled = False
-        self.last_item.disabled = False
-
-    async def send_initial_message(self, ctx: commands.Context):
-        """|coro|
-        The default implementation of :meth:`Menu.send_initial_message`
-        for the interactive pagination session.
-        This implementation shows the first page of the source.
-        """
-        self.ctx = ctx
-        if not self.source.is_paginating():
-            self.disable_navigation()
-        page = await self._source.get_page(self.page_start)
-        kwargs = await self._get_kwargs_from_page(page)
-        self.message = await ctx.send(**kwargs, view=self)
-        return self.message
-
-    async def _get_kwargs_from_page(self, page):
-        value = await discord.utils.maybe_coroutine(self._source.format_page, self, page)
-        if isinstance(value, dict):
-            return value
-        elif isinstance(value, str):
-            return {"content": value, "embed": None}
-        elif isinstance(value, discord.Embed):
-            return {"embed": value, "content": None}
-
-    async def show_page(self, page_number: int, interaction: discord.Interaction):
-        if not self.source.is_paginating():
-            self.disable_navigation()
-        else:
-            self.enable_navigation()
-        page = await self._source.get_page(page_number)
-        self.current_page = page_number
-        kwargs = await self._get_kwargs_from_page(page)
-        await interaction.response.edit_message(**kwargs, view=self)
-
-    async def show_checked_page(self, page_number: int, interaction: discord.Interaction) -> None:
-        max_pages = self._source.get_max_pages()
-        try:
-            if max_pages is None:
-                # If it doesn't give maximum pages, it cannot be checked
-                await self.show_page(page_number, interaction)
-            elif page_number >= max_pages:
-                await self.show_page(0, interaction)
-            elif page_number < 0:
-                await self.show_page(max_pages - 1, interaction)
-            elif max_pages > page_number >= 0:
-                await self.show_page(page_number, interaction)
-        except IndexError:
-            # An error happened that can be handled, so ignore it.
-            pass
-
-    async def interaction_check(self, interaction: discord.Interaction):
-        """Just extends the default reaction_check to use owner_ids"""
-        if interaction.user.id not in (*self.ctx.bot.owner_ids, self.ctx.author.id):
-            await interaction.response.send_message(
-                content=_("You are not authorized to interact with this."), ephemeral=True
-            )
-            return False
-        return True
 
 
 class ConfirmView(discord.ui.View):
