@@ -901,99 +901,68 @@ class KickBanMixin(MixinMeta):
                             "an invite. Here's the link so you can try: {invite_link}"
                         ).format(invite_link=invite)
                     )
+    @commands.group(aliases=["gedit", "sedit", "serveredit"])
+    @commands.has_permissions(manage_guild=True)
+    async def guildedit(self, ctx: commands.Context) -> None:
+        """Edit various guild settings."""
+   
+    @commands.command(name="icon", hidden=True)
+    async def guild_icon(self, ctx, image: ImageFinder = None):
+        """Set the icon of the server.
 
-    @commands.command()
-    @commands.guild_only()
-    @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(administrator=True)
-    async def cbanner(self, ctx: commands.Context, banner=None):
-        """Change the servers banner."""
-        if ctx.guild.premium_subscription_count <  7:
-            e = discord.Embed(color=0x313338, description=f"{ctx.author.mention} this server does not have server banner feature unlocked.")
-            await ctx.reply(embed=e, mention_author=False)
-            return  
-        if banner == None:
-           if not ctx.message.attachments: 
-            await ctx.send('you must attach either a link or a image to change the server banner.')
-           else:
-            banner = ctx.message.attachments[0].url
-        
-        link = banner
-        async with aiohttp.ClientSession() as ses: 
-          async with ses.get(link) as r:
-           try:
-            if r.status in range (200, 299):
-                img = BytesIO(await r.read())
-                bytes = img.getvalue()
-                await ctx.guild.edit(banner=bytes)
-                emb = discord.Embed(color=0x2f3136, description=f"{ctx.author.mention} changed the server banner to the attached image or link.")
-                await ctx.reply(embed=emb, mention_author=False)
-                return
-           except Exception as e:
-            e = discord.Embed(color=0xff0000, description=f"{ctx.author.mention} unable to change the server banner. {e}")
-            await ctx.reply(embed=e, mention_author=False)
-            return    
-           
-    @commands.command()
-    @commands.guild_only()
-    @commands.cooldown(1, 5, commands.BucketType.guild)
-    @commands.has_permissions(administrator=True)
-    async def csplash(self, ctx: commands.Context, splash=None):
-        """Change the servers invite splash."""
-        if ctx.guild.premium_subscription_count <  2:
-            e = discord.Embed(color=0x313338, description=f"{ctx.author.mention} this server does not have splash feature unlocked.")
-            await ctx.reply(embed=e, mention_author=False)
-            return  
-        if splash == None:
-           if not ctx.message.attachments: 
-            await ctx.send("you must attach a image or a link to set as the server invite splash.")
-           else:
-            splash = ctx.message.attachments[0].url
-        
-        link = splash
-        async with aiohttp.ClientSession() as ses: 
-          async with ses.get(link) as r:
-           try:
-            if r.status in range (200, 299):
-                img = BytesIO(await r.read())
-                bytes = img.getvalue()
-                await ctx.guild.edit(splash=bytes)
-                emb = discord.Embed(color=0x313338, description=f"{ctx.author.mention} changed the server invite splash to the attached image or link.")
-                await ctx.reply(embed=emb, mention_author=False)
-                return
-           except Exception as e:
-            e = discord.Embed(color=0x313338, description=f"{ctx.author.mention} unable to change the server invite splash. {e}")
-            await ctx.reply(embed=e, mention_author=False)
-            return
-           
-    @commands.command()
-    @commands.guild_only()
-    @commands.cooldown(1, 5, commands.BucketType.guild)
-    @commands.has_permissions(administrator=True)
-    async def cicon(self, ctx: commands.Context, icon=None):
-        """Change the servers icon."""
-        if icon == None:
-           if not ctx.message.attachments: 
-            await ctx.send("you must attach a image or a link to set as the server icon.")
-           else:
-            icon = ctx.message.attachments[0].url  
-        
-        link = icon
-        async with aiohttp.ClientSession() as ses: 
-          async with ses.get(link) as r:
-           try:
-            if r.status in range (200, 299):
-                img = BytesIO(await r.read())
-                bytes = img.getvalue()
-                await ctx.guild.edit(icon=bytes)
-                emb = discord.Embed(color=0x313338, description=f"{ctx.author.mention} changed the server server icon to the attached image or link.")
-                emb.set_image(url=link)
-                await ctx.reply(embed=emb, mention_author=False)
-                return
-           except Exception as e:
-            e = discord.Embed(color=0x313338, description=f"{ctx.author.mention} unable to change server icon {e}")
-            await ctx.reply(embed=e, mention_author=False)
-            return
+        `<image>` URL to the image or image uploaded with running the
+        command
+
+        """
+        if image is None:
+            image = await ImageFinder().search_for_images(ctx)
+
+        url = image[0]
+
+        b, mime = await self.bytes_download(url)
+        if not b:
+            return await ctx.send("That's not a valid image.")
+
+        await ctx.guild.edit(icon=b.getvalue())
+        return await ctx.tick()
+
+    @commands.command(name="invite", aliases=["splash"], hidden=True)
+    async def guild_invite(self, ctx, image: ImageFinder = None):
+        """Set the invite splash screen of the server.
+
+        `<image>` URL to the image or image uploaded with running the
+        command
+
+        """
+        if image is None:
+            image = await ImageFinder().search_for_images(ctx)
+        url = image[0]
+
+        b, mime = await self.bytes_download(url)
+        if not b:
+            return await ctx.send("That's not a valid image.")
+
+        await ctx.guild.edit(splash=b.getvalue())
+        return await ctx.tick()
+
+    @commands.command(name="banner", hidden=True)
+    async def guild_banner(self, ctx, image: ImageFinder = None):
+        """Set the banner of the server.
+
+        `<image>` URL to the image or image uploaded with running the
+        command
+
+        """
+        if image is None:
+            image = await ImageFinder().search_for_images(ctx)
+        url = image[0]
+
+        b, mime = await self.bytes_download(url)
+        if not b:
+            return await ctx.send("That's not a valid image.")
+
+        await ctx.guild.edit(banner=b.getvalue())
+        return await ctx.tick()
            
     @commands.command(aliases=["invitepurge", "staleinvites"], hidden=True)
     @commands.max_concurrency(1, commands.BucketType.guild)
