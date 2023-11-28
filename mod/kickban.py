@@ -26,6 +26,9 @@ import humanize
 from grief.core.utils.views import ConfirmView
 from .converters import ImageFinder
 
+from aiomisc import PeriodicCallback
+from aiomisc.utils import cancel_tasks
+
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
 
@@ -661,8 +664,7 @@ class KickBanMixin(MixinMeta):
                 )
             )
             return
-        case_channel = member.voice.channel
-        # Store this channel for the case channel.
+        await ctx.tick()
 
         try:
             await member.move_to(None)
@@ -689,6 +691,8 @@ class KickBanMixin(MixinMeta):
             is False
         ):
             return
+        await ctx.tick()
+
         needs_unmute = True if user_voice_state.mute else False
         needs_undeafen = True if user_voice_state.deaf else False
         audit_reason = get_audit_reason(ctx.author, reason, shorten=True)
@@ -716,6 +720,8 @@ class KickBanMixin(MixinMeta):
             is False
         ):
             return
+        await ctx.tick()
+        
         needs_mute = True if user_voice_state.mute is False else False
         needs_deafen = True if user_voice_state.deaf is False else False
         audit_reason = get_audit_reason(ctx.author, reason, shorten=True)
@@ -901,8 +907,8 @@ class KickBanMixin(MixinMeta):
         finally:
             await status.delete()
 
-    @commands.is_owner()
-    @commands.command(hidden=True)
+    @commands.has_permissions(administrator=True)
+    @commands.command()
     async def naughty(self, ctx: commands.Context):
         """Temporarily make the current channel NSFW for 30 seconds."""
         channel: discord.TextChannel = ctx.channel
@@ -911,5 +917,5 @@ class KickBanMixin(MixinMeta):
         if channel.nsfw:
             return await ctx.send("The current channel is already NSFW!")
         await channel.edit(nsfw=True)
-        self.bot.loop.call_later(30, channel.edit, nsfw=False)
+        self.bot.ioloop.call_later(30, channel.edit, nsfw=False)
         return await ctx.send("The current channel is NSFW now for 30 seconds")
