@@ -760,6 +760,7 @@ class KickBanMixin(MixinMeta):
                     _("I don't share another server with this user. I can't reinvite them.")
                 )
                 return
+            await ctx.tick()
 
             invite = await self.get_invite_for_reinvite(ctx)
             if invite:
