@@ -42,8 +42,7 @@ from .views import URLView
 from discord.ui import View, Button
 from grief.core.commands import GuildContext
 
-from .converter import FuzzyMember
-from .converters import GuildConverter, MultiGuildConverter, PermissionConverter
+from .converters import GuildConverter, MultiGuildConverter, PermissionConverter, FuzzyMember
 from .menuss import AvatarPages, BaseView, GuildPages, ListPages
 
 from asyncio import TimeoutError as AsyncTimeoutError
