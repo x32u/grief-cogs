@@ -24,7 +24,7 @@ from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
 import humanize
 from grief.core.utils.views import ConfirmView
-from notsobot.converter import ImageFinder
+from .converters import ImageFinder
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
@@ -68,6 +68,7 @@ class KickBanMixin(MixinMeta):
                 return (await channel.create_invite(max_age=max_age)).url
             except discord.HTTPException:
                 return ""
+                
 
     @staticmethod
     async def _voice_perm_check(
