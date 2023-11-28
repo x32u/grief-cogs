@@ -885,9 +885,6 @@ class KickBanMixin(MixinMeta):
                         except discord.HTTPException:
                             total_errors += 1
 
-                            if total_errors > 9:
-                                log.error(f"Bailing on {ctx.guild}")
-                                return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord", 2)
                 except TimeoutError:
                     total_errors += 1
                     log.warning(f"Timeout for {i}")
