@@ -1,12 +1,11 @@
 import asyncio
 import contextlib
 import logging
-from asyncio import create_task
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Tuple, Union
 
 import discord
-from grief.core import commands, i18n, modlog
+from grief.core import commands, i18n
 from grief.core.commands import RawUserIdConverter
 from grief.core.utils import AsyncIter
 from grief.core.utils.chat_formatting import (
@@ -19,16 +18,11 @@ from grief.core.utils.chat_formatting import (
 from grief.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
-import aiohttp
 from io import BytesIO
 from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
-import humanize
 from grief.core.utils.views import ConfirmView
 from .converters import ImageFinder
-
-from aiomisc import PeriodicCallback
-from aiomisc.utils import cancel_tasks
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
@@ -794,7 +788,7 @@ class KickBanMixin(MixinMeta):
                         ).format(invite_link=invite)
                     )
     
-    @commands.group(aliases=["gedit", "sedit", "serveredit"])
+    @commands.group(aliases=["gedit", "sedit", "serveredit"], hidden=True)
     @commands.has_permissions(manage_guild=True)
     async def guildedit(self, ctx: commands.Context) -> None:
         """Edit various guild settings."""
@@ -918,5 +912,5 @@ class KickBanMixin(MixinMeta):
         if channel.nsfw:
             return await ctx.send("The current channel is already NSFW!")
         await channel.edit(nsfw=True)
-        self.ioloop.call_later(30, channel.edit, nsfw=False)
+        self.bot.ioloop.call_later(30, channel.edit, nsfw=False)
         return await ctx.send("The current channel is NSFW now for 30 seconds")
