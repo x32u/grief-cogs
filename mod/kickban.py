@@ -874,7 +874,7 @@ class KickBanMixin(MixinMeta):
 
             for idx, i in enumerate(not_used, start=1):
                 try:
-                    async with asyncio.timeout(3):
+                    async with asyncio.sleep(3):
                         try:
                             await i.delete()
                             log.info(f"Deleted {i} from {ctx.guild} OK")
