@@ -24,6 +24,7 @@ from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
 import humanize
 from grief.core.utils.views import ConfirmView
+from notsobot.converter import ImageFinder
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
