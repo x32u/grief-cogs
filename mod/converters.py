@@ -150,7 +150,6 @@ class ImageFinder(Converter):
         if not urls:
             for m in ctx.guild.members:
                 m: discord.Member
-                await checkpoint()
                 if argument.lower() in unidecode.unidecode(m.display_name.lower()):
                     # display_name so we can get the nick of the user first
                     # without being NoneType and then check username if that matches
@@ -185,7 +184,6 @@ class ImageFinder(Converter):
             if match := IMAGE_LINKS.match(ref.content):
                 urls.append(match.group(1))
         async for message in ctx.channel.history(limit=50):
-            await checkpoint()
             if message.attachments:
                 urls.extend(i.url for i in message.attachments)
             if match := IMAGE_LINKS.match(message.content):
@@ -229,7 +227,6 @@ class VideoFinder(ImageFinder):
         if not urls:
             for m in ctx.guild.members:
                 m: discord.Member
-                await checkpoint()
                 if argument.lower() in unidecode.unidecode(m.display_name.lower()):
                     # display_name so we can get the nick of the user first
                     # without being NoneType and then check username if that matches
