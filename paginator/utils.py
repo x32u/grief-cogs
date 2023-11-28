@@ -6,7 +6,7 @@ from typing import Literal, TypedDict
 import discord
 import yaml
 from grief.core import commands
-from grief.bot.core.utils import chat_formatting as cf
+from grief.core.utils import chat_formatting as cf
 from grief.core.utils import menus
 
 __all__ = ["Page", "PageGroup", "StringToPage", "PastebinConverter"]
