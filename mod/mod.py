@@ -1024,6 +1024,34 @@ class Mod(
             if not member.is_timed_out():
                 embed = discord.Embed(description=f"> {member.mention} is not timed out.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
+
+    @commands.command(aliases = ['spotify', "sp"])
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    async def spotifytrack(self, ctx, user: discord.Member = None):
+        user = user or ctx.author
+        spotify_result = next((activity for activity in user.activities if isinstance(activity, discord.Spotify)), None)
+        if user == ctx.author:
+                if spotify_result is None:
+                    embed = discord.Embed(description=f"{ctx.author.mention}: **You are not currently listening to Spotify.**", color=0x57F287)
+                    embed.set_footer(icon_url="https://freeimage.host/i/spotify.HMt8JIa", text="Check that your spotify is playing or check your connections.")
+                    await ctx.reply(embed=embed)
+                    return
+        if user == user:
+            if spotify_result is None:
+                embed = discord.Embed(description=f"{ctx.author.mention}: **They are not currently listening to Spotify.**", color=0x57F287)
+                embed.set_footer(icon_url="https://freeimage.host/i/spotify.HMt8JIa", text="They may not have there spotify connected.")
+                await ctx.reply(embed=embed)
+            else:
+                artist = spotify_result.artist.replace(";", ",")
+                loading  = discord.Embed(description=f"{ctx.author.mention}: Loading the current spotify song...", color=0x57F287)
+                await ctx.send(embed=loading, delete_after=3.0)
+                report = f"https://api.jeyy.xyz/discord/spotify?title={spotify_result.title}&cover_url={spotify_result.album_cover_url}&duration_seconds={spotify_result.duration.seconds}&start_timestamp={spotify_result.created_at.timestamp()}&artists={', '.join(spotify_result.artists).replace(',', '%2C').replace(' ', '%20')}"
+                embed = discord.Embed(description=f"**Track:** [***` {spotify_result.title} `***]({spotify_result.track_url})\n**Artist:** ***` {artist} `***\n**Album:** ***` {spotify_result.album} `***", color=0x57F287)
+                embed.set_author(name=f"{user.name}#{user.discriminator} is listening to:", icon_url=f"{user.display_avatar}")
+                embed.set_thumbnail(url=f'{spotify_result.album_cover_url}')
+                embed.set_image(url="attachment://screw.png")
+                embed.set_footer(icon_url="https://freeimage.host/i/HMt8JIa", text=f"category: spotify・revine ©️ 2023")
+                embed = await ctx.reply(file=report, embed=embed, mention_author=False)
         
 async def is_allowed_by_hierarchy(
     bot: Red, user: discord.Member, member: discord.Member
