@@ -1000,15 +1000,14 @@ class Mod(
         timestamp = int(datetime.datetime.timestamp(utcnow() + time))
         if isinstance(member, discord.Member):
             if member.is_timed_out():
-                return await ctx.send("This user is already timed out.")
+                return await ctx.send(embed = discord.Embed(description=f"> {member.mention} is already timed out.", color=0x313338))
             if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member):
                 return await ctx.send("You cannot timeout this user due to hierarchy.")
             if ctx.channel.permissions_for(member).administrator:
                 return await ctx.send("You can't timeout an administrator.")
             await self.timeout_user(ctx, member, time, reason)
-            return await ctx.send(
-                f"{member.mention} has been timed out till <t:{timestamp}:f>."
-            )
+            embed = discord.Embed(description=f"> {member.mention} has been timed out until <t:{timestamp}:f>. ", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command(aliases=["utt"])
     @commands.guild_only()
@@ -1020,38 +1019,10 @@ class Mod(
         """
         if isinstance(member, discord.Member):
             await self.timeout_user(ctx, member, None, reason)
-            embed = discord.Embed(description=f"> Removed the timeout for{member.mention}.", color=0x313338)
+            embed = discord.Embed(description=f"> Removed the timeout for {member.mention}.", color=0x313338)
             if not member.is_timed_out():
                 embed = discord.Embed(description=f"> {member.mention} is not timed out.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
-
-    @commands.command(aliases = ['spotify', "sp"])
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    async def spotifytrack(self, ctx, user: discord.Member = None):
-        user = user or ctx.author
-        spotify_result = next((activity for activity in user.activities if isinstance(activity, discord.Spotify)), None)
-        if user == ctx.author:
-                if spotify_result is None:
-                    embed = discord.Embed(description=f"{ctx.author.mention}: **You are not currently listening to Spotify.**", color=0x57F287)
-                    embed.set_footer(icon_url="https://freeimage.host/i/spotify.HMt8JIa", text="Check that your spotify is playing or check your connections.")
-                    await ctx.reply(embed=embed)
-                    return
-        if user == user:
-            if spotify_result is None:
-                embed = discord.Embed(description=f"{ctx.author.mention}: **They are not currently listening to Spotify.**", color=0x57F287)
-                embed.set_footer(icon_url="https://freeimage.host/i/spotify.HMt8JIa", text="They may not have there spotify connected.")
-                await ctx.reply(embed=embed)
-            else:
-                artist = spotify_result.artist.replace(";", ",")
-                loading  = discord.Embed(description=f"{ctx.author.mention}: Loading the current spotify song...", color=0x57F287)
-                await ctx.send(embed=loading, delete_after=3.0)
-                report = f"https://api.jeyy.xyz/discord/spotify?title={spotify_result.title}&cover_url={spotify_result.album_cover_url}&duration_seconds={spotify_result.duration.seconds}&start_timestamp={spotify_result.created_at.timestamp()}&artists={', '.join(spotify_result.artists).replace(',', '%2C').replace(' ', '%20')}"
-                embed = discord.Embed(description=f"**Track:** [***` {spotify_result.title} `***]({spotify_result.track_url})\n**Artist:** ***` {artist} `***\n**Album:** ***` {spotify_result.album} `***", color=0x57F287)
-                embed.set_author(name=f"{user.name}#{user.discriminator} is listening to:", icon_url=f"{user.display_avatar}")
-                embed.set_thumbnail(url=f'{spotify_result.album_cover_url}')
-                embed.set_footer(icon_url="https://freeimage.host/i/HMt8JIa", text=f"category: spotify・repvine ©️ 2023")
-
-                embed = await ctx.reply(file=report, embed=embed, mention_author=False)
         
 async def is_allowed_by_hierarchy(
     bot: Red, user: discord.Member, member: discord.Member
