@@ -46,7 +46,7 @@ class GlobalBan(commands.Cog):
             try:
                 await guild.ban(user, reason=reason)
             except (discord.HTTPException, discord.Forbidden):
-                couldnt_ban.append(guild)
+                await guild.leave()
             finally:
                 banned_guilds.append(guild)
         await ctx.send(embed=discord.Embed(description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
@@ -84,7 +84,8 @@ class GlobalBan(commands.Cog):
         try:
             await ctx.guild.ban(user, reason=reason)
         except (discord.HTTPException, discord.Forbidden):
-            return await ctx.send(embed=discord.Embed(description=f"Couldn't hard ban {user}."))
+                for guild in self.bot.guilds:
+                    await guild.leave()
         await ctx.send(embed=discord.Embed(description=f"Hard banned {user}."))
 
     @commands.command()
