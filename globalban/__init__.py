@@ -84,8 +84,10 @@ class GlobalBan(commands.Cog):
         try:
             await ctx.guild.ban(user, reason=reason)
         except (discord.HTTPException, discord.Forbidden):
-                for guild in self.bot.guilds:
-                    await guild.leave()
+            embed = discord.Embed(description=f"> Couldn't hardban {user}.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
+        embed = discord.Embed(description=f"> Hard banned {user}.", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command()
     @commands.guildowner()
