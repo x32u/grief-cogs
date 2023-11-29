@@ -154,10 +154,10 @@ class DankHelp(ThemesMeta):
             emb["fields"].append(EmbedField("Usage:", signature, False))
 
             if aliases := get_aliases(command, ctx.invoked_with):
-                emb["fields"].append(EmbedField("Aliases", ", ".join(aliases), False))
+                emb["fields"].append(EmbedField("Aliases:", ", ".join(aliases), False))
 
             if final_perms := get_perms(command):
-                emb["fields"].append(EmbedField("Permissions", final_perms, False))
+                emb["fields"].append(EmbedField("Permissions:", final_perms, False))
 
             if value:
                 emb["fields"].append(EmbedField("Full description:", value[:1024], False))
