@@ -990,9 +990,11 @@ class Mod(
                 embed = discord.Embed(description=f"> <:grief_x:1107472962333978655> {member.mention} is already timed out.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
             if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member):
-                return await ctx.send("You cannot timeout this user due to hierarchy.")
+                embed = discord.Embed(description=f"> <:grief_x:1107472962333978655> You cannot timeout this user due to hierarchy.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
             if ctx.channel.permissions_for(member).administrator:
-                return await ctx.send("You can't timeout an administrator.")
+                embed = discord.Embed(description=f"> <:grief_x:1107472962333978655> You can't timeout an administrator.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
             await self.timeout_user(ctx, member, time, reason)
             embed = discord.Embed(description=f"> <:grief_check:1107472942830456892> {member.mention} has been timed out until <t:{timestamp}:f>. ", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
