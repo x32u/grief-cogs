@@ -1000,7 +1000,7 @@ class Mod(
         timestamp = int(datetime.datetime.timestamp(utcnow() + time))
         if isinstance(member, discord.Member):
             if member.is_timed_out():
-                return await ctx.reply(embed = discord.Embed(description=f"> {member.mention} is already timed out.", color=0x313338, mention_author=False))
+                return await ctx.reply(embed = discord.Embed(description=f"> {member.mention} is already timed out.", mention_author=False, color=0x313338))
             if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member):
                 return await ctx.send("You cannot timeout this user due to hierarchy.")
             if ctx.channel.permissions_for(member).administrator:
