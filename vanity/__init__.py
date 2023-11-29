@@ -163,9 +163,8 @@ class Vanity(commands.Cog):
         await self.config.guild(ctx.guild).vanity.set(vanity)
         if "VANITY_URL" in ctx.guild.features:
             self.vanity_cache[ctx.guild.id] = vanity
-        await ctx.send(
-            f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}."
-        )
+        embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
 
     @vanity.command()
     @commands.guild_only()
@@ -174,18 +173,14 @@ class Vanity(commands.Cog):
     async def role(self, ctx: commands.Context, role: discord.Role) -> None:
         """Setup the role to be rewarded."""
         if role.position >= ctx.author.top_role.position:
-            await ctx.send(
-                "Your role is lower or equal to the vanity role, please choose a lower role than yourself."
-            )
-            return
+            embed = discord.Embed(description=f"> Your role is lower or equal to the vanity role, please choose a lower role than yourself.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         if role.position >= ctx.guild.me.top_role.position:
-            await ctx.send("The role is higher than me, please choose a lower role than me.")
-            return
+            embed = discord.Embed(description=f"> The role is higher than me, please choose a lower role than me.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         await self.config.guild(ctx.guild).role.set(role.id)
-        await ctx.send(
-            f"Vanity role has been updated to {role.mention}",
-            allowed_mentions=discord.AllowedMentions.none(),
-        )
+        embed = discord.Embed(description=f"> Vanity role has been updated to {role.mention}", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @vanity.command()
     @commands.guild_only()
