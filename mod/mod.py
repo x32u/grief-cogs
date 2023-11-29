@@ -981,13 +981,7 @@ class Mod(
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(moderate_members=True)
     async def timeout(self, ctx: commands.Context, member: discord.Member, time: TimedeltaConverter(minimum=datetime.timedelta(minutes=1), maximum=datetime.timedelta(days=28), default_unit="minutes", allowed_units=["minutes", "seconds", "hours", "days"],) = None, *, reason: Optional[str] = None,):
-        """
-        Timeout users.
-
-        `[time]` is the time to mute for. Time is any valid time length such as `45 minutes`
-        or `3 days`. If nothing is provided the timeout will be 60 seconds default.
-        `[reason]` is the reason for the timeout. Defaults to `None` if nothing is provided.
-        """
+        """Timeout users."""
         if not time:
             time = datetime.timedelta(seconds=60)
         timestamp = int(datetime.datetime.timestamp(utcnow() + time))
@@ -1000,7 +994,7 @@ class Mod(
             if ctx.channel.permissions_for(member).administrator:
                 return await ctx.send("You can't timeout an administrator.")
             await self.timeout_user(ctx, member, time, reason)
-            embed = discord.Embed(description=f"><:grief_check:1107472942830456892> {member.mention} has been timed out until <t:{timestamp}:f>. ", color=0x313338)
+            embed = discord.Embed(description=f"> <:grief_check:1107472942830456892> {member.mention} has been timed out until <t:{timestamp}:f>. ", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command(aliases=["utt"])
@@ -1008,17 +1002,12 @@ class Mod(
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.has_permissions(moderate_members=True)
     async def untimeout(self, ctx: commands.Context, member: discord.Member, *, reason: Optional[str] = None,):
-        """
-        Untimeout users.
-        """
-        
+        """Untimeout users."""
         if isinstance(member, discord.Member):
-                
                 if not member.is_timed_out():
                     embed = discord.Embed(description=f"> <:grief_x:1107472962333978655> {member.mention} is not timed out.", color=0x313338)
                     return await ctx.reply(embed=embed, mention_author=False)
-            
-        await self.timeout_user(ctx, member, None, reason)
+            await self.timeout_user(ctx, member, None, reason)
         embed = discord.Embed(description=f"> <:grief_check:1107472942830456892> Removed the timeout for {member.mention}.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
         
