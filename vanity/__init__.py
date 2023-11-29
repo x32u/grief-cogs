@@ -189,20 +189,14 @@ class Vanity(commands.Cog):
     async def channel(self, ctx: commands.Context, channel: discord.TextChannel) -> None:
         """Setup the log channel."""
         if not channel.permissions_for(ctx.guild.me).send_messages:
-            await ctx.send(
-                f"I don't have permission to send messages in {channel.mention}, please give me permission to send messages."
-            )
-            return
+            embed = discord.Embed(description=f"> I don't have permission to send messages in {channel.mention}, please give me permission to send messages.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         if not channel.permissions_for(ctx.guild.me).embed_links:
-            await ctx.send(
-                f"I don't have permission to embed links in {channel.mention}, please give me permission to embed links."
-            )
-            return
+            embed = discord.Embed(description=f"> I don't have permission to embed links in {channel.mention}, please give me permission to embed links.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         await self.config.guild(ctx.guild).channel.set(channel.id)
-        await ctx.send(
-            f"Vanity log channel has been updated to {channel.mention}",
-            allowed_mentions=discord.AllowedMentions.none(),
-        )
+        embed = discord.Embed(description=f"> Vanity log channel has been updated to {channel.mention}", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
 
 
 async def setup(bot: Red):
