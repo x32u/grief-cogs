@@ -862,9 +862,12 @@ class KickBanMixin(MixinMeta):
 
         not_used = [i for i in invites if i.uses == 0]
         if not not_used:
-            return await ctx.send("There are no stale invites.")
+            return await ctx.send("There are no stale invites!")
 
-        await ctx.send(f"There are {len(not_used)} invites with 0 uses")
+        confirmed = await ctx.send(f"There are {len(not_used)} invites with 0 uses.", "Can I delete them?")
+
+        if confirmed:
+            return
 
         status = await ctx.send("Deleted 0/{len(not_used)}")
 
@@ -874,7 +877,7 @@ class KickBanMixin(MixinMeta):
 
             for idx, i in enumerate(not_used, start=1):
                 try:
-                    async with asyncio.sleep(3):
+                    async with asyncio.timeout(3):
                         try:
                             await i.delete()
                             log.info(f"Deleted {i} from {ctx.guild} OK")
@@ -882,6 +885,9 @@ class KickBanMixin(MixinMeta):
                         except discord.HTTPException:
                             total_errors += 1
 
+                            if total_errors > 9:
+                                log.error(f"Bailing on {ctx.guild}")
+                                return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord", 2)
                 except TimeoutError:
                     total_errors += 1
                     log.warning(f"Timeout for {i}")

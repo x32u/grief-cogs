@@ -1020,9 +1020,11 @@ class Mod(
         """
         if isinstance(member, discord.Member):
             if not member.is_timed_out():
-                return await ctx.send("This user is not timed out.")
+                embed = discord.Embed(description=f"{member.mention} is not timed out.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             await self.timeout_user(ctx, member, None, reason)
-            return await ctx.send(f"Removed timeout from {member.mention}")
+            embed = discord.Embed(description=f"Removed the timeout for{member.mention}.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
         
 async def is_allowed_by_hierarchy(
     bot: Red, user: discord.Member, member: discord.Member
