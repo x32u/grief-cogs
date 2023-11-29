@@ -32,7 +32,7 @@ def get_perms(command):
             user_perms.append(neat_format(perms.name))
 
     if user_perms:
-        final_perms += "User Permission(s): " + ", ".join(user_perms) + "\n"
+        final_perms += "User Permissions: " + ", ".join(user_perms) + "\n"
 
     if perms := getattr(command.requires, "bot_perms"):
         if perms_list := ", ".join(neat_format(i) for i, j in perms if j):
