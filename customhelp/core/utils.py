@@ -34,10 +34,6 @@ def get_perms(command):
     if user_perms:
         final_perms += "User Permissions: " + ", ".join(user_perms) + "\n"
 
-    if perms := getattr(command.requires, "bot_perms"):
-        if perms_list := ", ".join(neat_format(i) for i, j in perms if j):
-            final_perms += "Bot Permission(s): " + perms_list
-
     return final_perms
 
 def get_cooldowns(command):
