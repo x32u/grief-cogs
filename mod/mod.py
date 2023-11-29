@@ -1007,7 +1007,7 @@ class Mod(
                 if not member.is_timed_out():
                     embed = discord.Embed(description=f"> <:grief_x:1107472962333978655> {member.mention} is not timed out.", color=0x313338)
                     return await ctx.reply(embed=embed, mention_author=False)
-            await self.timeout_user(ctx, member, None, reason)
+                await self.timeout_user(ctx, member, None, reason)
         embed = discord.Embed(description=f"> <:grief_check:1107472942830456892> Removed the timeout for {member.mention}.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
         
