@@ -1049,8 +1049,8 @@ class Mod(
                 embed = discord.Embed(description=f"**Track:** [***` {spotify_result.title} `***]({spotify_result.track_url})\n**Artist:** ***` {artist} `***\n**Album:** ***` {spotify_result.album} `***", color=0x57F287)
                 embed.set_author(name=f"{user.name}#{user.discriminator} is listening to:", icon_url=f"{user.display_avatar}")
                 embed.set_thumbnail(url=f'{spotify_result.album_cover_url}')
-                embed.set_image(url="attachment://screw.png")
-                embed.set_footer(icon_url="https://freeimage.host/i/HMt8JIa", text=f"category: spotify・revine ©️ 2023")
+                embed.set_footer(icon_url="https://freeimage.host/i/HMt8JIa", text=f"category: spotify・repvine ©️ 2023")
+
                 embed = await ctx.reply(file=report, embed=embed, mention_author=False)
         
 async def is_allowed_by_hierarchy(
