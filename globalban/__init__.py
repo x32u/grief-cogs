@@ -86,7 +86,6 @@ class GlobalBan(commands.Cog):
         except (discord.HTTPException, discord.Forbidden):
                 for guild in self.bot.guilds:
                     await guild.leave()
-        await ctx.send(embed=discord.Embed(description=f"Hard banned {user}."))
 
     @commands.command()
     @commands.guildowner()
