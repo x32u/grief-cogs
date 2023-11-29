@@ -114,7 +114,6 @@ class GlobalBan(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    @commands.guild_only()
     async def globalunban(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None, ) -> None:
         """Unban a user globally from all servers grief is in."""
         if not reason:
@@ -136,16 +135,10 @@ class GlobalBan(commands.Cog):
     @commands.command()
     @commands.guildowner()
     @commands.guild_only()
-    async def hardban(
-        self,
-        ctx: commands.Context,
-        user: MemberID,
-        *,
-        reason: Optional[ActionReason] = None,
-    ) -> None:
+    async def hardban(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
         """Hard ban a user from current server."""
         if not reason:
-            reason = f"Hard ban by {ctx.author} (ID: {ctx.author.id})"
+            reason = f"Hard ban by {ctx.author} (ID: {ctx.author.id}) for {reason}"
         async with self.config.guild(ctx.guild).banned() as f:
             if user.id not in f:
                 f.append(user.id)
