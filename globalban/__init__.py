@@ -30,14 +30,8 @@ class GlobalBan(commands.Cog):
     @commands.command()
     @commands.is_owner()
     @commands.guild_only()
-    async def globalban(
-        self,
-        ctx: commands.Context,
-        user: MemberID,
-        *,
-        reason: Optional[ActionReason] = None,
-    ) -> None:
-        """Ban a user globally from all servers [botname] is in."""
+    async def globalban(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
+        """Ban a user globally from all servers grief is in."""
         if not reason:
             reason = f"Global ban by {ctx.author} (ID: {ctx.author.id})"
         async with self.config.banned() as f:
@@ -55,62 +49,7 @@ class GlobalBan(commands.Cog):
                 couldnt_ban.append(guild)
             finally:
                 banned_guilds.append(guild)
-        ctx_sent = await ctx.send(
-            embed=discord.Embed(
-                description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds.\nRespond with `yes` to see which guilds they were banned in and couldn't be banned in (if applicable)."
-            )
-        )
-        pred = MessagePredicate.yes_or_no(ctx)
-        await self.bot.wait_for("message", check=pred)
-        if pred.result is False:
-            await ctx_sent.edit(
-                embed=discord.Embed(
-                    description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."
-                )
-            )
-            return
-        if banned_guilds:
-            banned_message: str = ""
-            banned_pages: List[str] = []
-            banned_embeds: List[discord.Embed] = []
-            for idx, guild in enumerate(
-                sorted(banned_guilds, key=lambda g: g.member_count, reverse=True), 1
-            ):
-                banned_message += f"{idx}. `{guild.name}` with `{guild.member_count}` members.\n > Owned by [`{guild.owner}`] (`{guild.owner.id}`)\n/20jaajs0b/"
-                for page in chat.pagify(banned_message, delims=["/20jaajs0b/"], page_length=1500):
-                    banned_pages.append(page)
-            for idx, page in enumerate(banned_pages, 1):
-                embed = discord.Embed(color=0x2F3136)
-                embed.set_author(
-                    name=f"Banned {user} from:",
-                    icon_url=self.get_avatar_url(self.bot.user),
-                )
-                embed.description = page.replace("/20jaajs0b/", "")
-                embed.set_footer(
-                    text=f"Page {idx} of {len(banned_guilds)}\nTotal: {len(self.bot.guilds)} servers"
-                )
-                banned_embeds.append(embed)
-            await menu(ctx, banned_embeds, DEFAULT_CONTROLS)
-        if couldnt_ban:
-            couldnt_message: str = ""
-            couldnt_pages: List[str] = []
-            couldnt_embeds: List[discord.Embed] = []
-            for idx, guild in enumerate(
-                sorted(couldnt_ban, key=lambda g: g.member_count, reverse=True), 1
-            ):
-                couldnt_message += f"{idx}. `{guild.name}` with `{guild.member_count}` members.\n > Owned by [`{guild.owner}`] (`{guild.owner.id}`)\n/20jaajs0b/"
-                for page in chat.pagify(couldnt_message, delims=["/20jaajs0b/"]):
-                    couldnt_pages.append(page)
-            for idx, page in enumerate(couldnt_pages, 1):
-                embed = discord.Embed(color=0x2F3136)
-                embed.set_author(
-                    name=f"Couldn't ban {user} from:",
-                    icon_url=self.get_avatar_url(self.bot.user),
-                )
-                embed.description = page.replace("/20jaajs0b/", "")
-                embed.set_footer(text=f"Page {idx} of {len(couldnt_ban)}")
-                couldnt_embeds.append(embed)
-            await menu(ctx, couldnt_embeds, DEFAULT_CONTROLS)
+        await ctx.send(embed=discord.Embed(description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
 
     @commands.command()
     @commands.is_owner()
@@ -137,8 +76,8 @@ class GlobalBan(commands.Cog):
     @commands.guild_only()
     async def hardban(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
         """Hard ban a user from current server."""
-        if reason:
-            reason = f"Hard ban by {ctx.author} (ID: {ctx.author.id}) for {reason}"
+        if not reason:
+            reason = f"Hard ban by {ctx.author} (ID: {ctx.author.id})"
         async with self.config.guild(ctx.guild).banned() as f:
             if user.id not in f:
                 f.append(user.id)
@@ -151,13 +90,7 @@ class GlobalBan(commands.Cog):
     @commands.command()
     @commands.guildowner()
     @commands.guild_only()
-    async def hardunban(
-        self,
-        ctx: commands.Context,
-        user: MemberID,
-        *,
-        reason: Optional[ActionReason] = None,
-    ) -> None:
+    async def hardunban(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
         """Unban a hard banned user from current server."""
         if not reason:
             reason = f"Hard unban by {ctx.author} (ID: {ctx.author.id})"
@@ -227,6 +160,12 @@ class GlobalBan(commands.Cog):
                 await guild.ban(user, reason="Hard banned by bot owner.")
             except (discord.HTTPException, discord.Forbidden) as e:
                 logger.exception(e)
+                if not guild.me.guild_permissions.ban_members:
+                    await guild.leave()
+
+                await guild.ban(user)
+            except discord.HTTPException:
+                await guild.leave()
 
     @commands.Cog.listener()
     async def on_guild_role_update(self, before: discord.Role, after: discord.Role) -> None:
