@@ -271,24 +271,3 @@ class LinkQuoter(Cog):
     async def setlinkquoter(self, ctx: commands.Context) -> None:
         """Commands to configure LinkQuoter."""
         pass
-
-    @commands.is_owner()
-    @setlinkquoter.command(aliases=["migratefromlinkquoter"])
-    async def migratefromphen(self, ctx: commands.Context) -> None:
-        """Migrate config from LinkQuoter by Phen."""
-        old_config: Config = Config.get_conf(
-            "LinkQuoter", identifier=6234567898747434823, force_registration=True, cog_name="LinkQuoter"
-        )
-        new_guild_group = self.config._get_base_group(self.config.GUILD)
-        old_guilds_data = await old_config.all_members()
-        async with new_guild_group.all() as new_guilds_data:
-            for guild_id in old_guilds_data:
-                if "on" in old_guilds_data[guild_id]:
-                    new_guilds_data[str(guild_id)]["enabled"] = old_guilds_data[guild_id]["on"]
-                if "webhooks" in old_guilds_data[guild_id]:
-                    new_guilds_data[str(guild_id)]["webhooks"] = old_guilds_data[guild_id]["webhooks"]
-                if "cross_server" in old_guilds_data[guild_id]:
-                    new_guilds_data[str(guild_id)]["cross_server"] = old_guilds_data[guild_id]["cross_server"]
-                if "delete" in old_guilds_data[guild_id]:
-                    new_guilds_data[str(guild_id)]["delete_message"] = old_guilds_data[guild_id]["delete_message"]
-        await ctx.send(_("Data successfully migrated from LinkQuoter by Phen."))
