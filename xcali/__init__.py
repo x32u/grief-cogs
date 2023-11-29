@@ -190,7 +190,8 @@ class XCali(commands.Cog):
         """Toggle reposting."""
         old = await self.config.guild(ctx.guild).enabled()
         await self.config.guild(ctx.guild).enabled.set(not old)
-        await ctx.send(f"Reposting is now {'enabled' if not old else 'disabled'}.")  # noqa
+        embed = discord.Embed(description=f"> Reposting is now {'enabled' if not old else 'disabled'}.", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
 
 
 async def setup(bot: Red) -> None:
