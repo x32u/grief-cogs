@@ -1,7 +1,6 @@
 from grief.core.bot import Red
 
-from .tools import Tools
-from .admin import Admin
+from .tools import Admin
 
 
 async def setup(bot: Red) -> None:
