@@ -8,7 +8,7 @@ from typing import List, Union
 import discord
 from discord import ButtonStyle, Interaction
 from discord.ui import Button, View
-from redbot.core import commands
+from grief.core import commands
 
 color_map = {
     "\N{CROSS MARK}": ButtonStyle.grey,
