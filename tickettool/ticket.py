@@ -749,10 +749,6 @@ class Ticket:
                 ),
                 reason=reason,
             )
-            message = await logschannel.send(
-                _("Report on the deletion of the ticket {ticket.id}.").format(ticket=self),
-                embed=embed,
-            )
             await logschannel.send(embed=embed)
         if isinstance(self.channel, discord.TextChannel):
             _reason = await self.cog.get_audit_reason(
