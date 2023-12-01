@@ -1,4 +1,5 @@
 
+import random
 import datetime
 import time
 from enum import Enum
@@ -341,3 +342,36 @@ class Fun(commands.Cog):
             uwu = uwuipy()
             uwu_message = uwu.uwuify(message)
             await ctx.reply(uwu_message, mention_author=False)
+            
+    @commands.command()
+    async def penis(self, ctx, *users: discord.Member):
+        """Detects user's penis length
+
+        This is 100% accurate.
+        Enter multiple users for an accurate comparison!"""
+        if not users:
+            await ctx.send_help()
+            return
+
+        dongs = {}
+        msg = ""
+        state = random.getstate()
+
+        for user in users:
+            random.seed(str(user.id))
+
+            if ctx.bot.user.id == user.id:
+                length = 50
+            else:
+                length = random.randint(0, 30)
+
+            dongs[user] = "8{}D".format("=" * length)
+
+        random.setstate(state)
+        dongs = sorted(dongs.items(), key=lambda x: x[1])
+
+        for user, dong in dongs:
+            msg += "**{}'s size:**\n{}\n".format(user.display_name, dong)
+
+        for page in pagify(msg):
+            await ctx.send(page)
