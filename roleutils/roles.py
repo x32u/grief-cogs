@@ -723,10 +723,7 @@ class Roles(MixinMeta):
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
     @role.command(name="listt")
-    async def editrole_list(
-        self,
-        ctx: commands.Context,
-    ) -> None:
+    async def role_list(self, ctx: commands.Context,) -> None:
         """List all roles in the current guild."""
         description = "".join(
             f"\n**•** **{len(ctx.guild.roles) - role.position}** - {role.mention} ({role.id}) - {len(role.members)} members"
@@ -741,3 +738,84 @@ class Roles(MixinMeta):
             e.description = page
             embeds.append(e)
         await Menu(pages=embeds).start(ctx)
+
+    @commands.guild_only()
+    @commands.has_permissions(manage_roles=True)
+    @role.command(name="position")
+    async def role_position(
+        self, ctx: commands.Context, role: discord.Role, position: PositionConverter
+    ) -> None:
+        """Edit role position.
+
+        Warning: The role with a position 1 is the highest role in the Discord hierarchy.
+        """
+        await self.check_role(ctx, role)
+        try:
+            await role.edit(
+                position=position,
+                reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
+            )
+        except discord.HTTPException as e:
+            raise commands.UserFeedbackCheckFailure(
+                _(ERROR_MESSAGE).format(error=box(e, lang="py")))
+        
+
+    @commands.guild_only()
+    @commands.has_permissions(manage_roles=True)
+    @role.command(name="permissionss")
+    async def editrole_permissionss(
+        self, ctx: commands.Context, role: discord.Role, true_or_false: bool, permissions: commands.Greedy[PermissionConverter]
+    ) -> None:
+        """Edit role permissions.
+
+        You must possess the permissions you wish to modify.
+
+        • `create_instant_invite`
+        • `manage_channels`
+        • `add_reactions`
+        • `priority_speaker`
+        • `stream`
+        • `read_messages`
+        • `send_messages`
+        • `send_tts_messages`
+        • `manage_messages`
+        • `embed_links`
+        • `attach_files`
+        • `read_message_history`
+        • `mention_everyone`
+        • `external_emojis`
+        • `connect`
+        • `speak`
+        • `mute_members`
+        • `deafen_members`
+        • `move_members`
+        • `use_voice_activation`
+        • `manage_roles`
+        • `manage_webhooks`
+        • `use_application_commands`
+        • `request_to_speak`
+        • `manage_threads`
+        • `create_public_threads`
+        • `create_private_threads`
+        • `external_stickers`
+        • `send_messages_in_threads`
+        """
+        await self.check_role(ctx, role)
+        if not permissions:
+            raise commands.UserFeedbackCheckFailure(
+                _("You need to provide at least one permission.")
+            )
+        role_permissions = role.permissions
+        for permission in permissions:
+            if not getattr(ctx.author.guild_permissions, permission):
+                raise commands.UserFeedbackCheckFailure(_("You don't have the permission {permission_name} in this guild.").format(permission_name=permission))
+            setattr(role_permissions, permission, true_or_false)
+        try:
+            await role.edit(
+                permissions=role_permissions,
+                reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
+            )
+        except discord.HTTPException as e:
+            raise commands.UserFeedbackCheckFailure(
+                _(ERROR_MESSAGE).format(error=box(e, lang="py"))
+            )
