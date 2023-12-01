@@ -23,7 +23,7 @@ import asyncio
 
 from grief.core.utils import get_end_user_data_statement
 
-from .discordedit import DiscordEdit
+from .tools import tools
 
 __red_end_user_data_statement__ = get_end_user_data_statement(file=__file__)
 
@@ -32,7 +32,7 @@ old_editrole = None
 
 async def setup_after_ready(bot: Red) -> None:
     await bot.wait_until_red_ready()
-    cog = DiscordEdit(bot)
+    cog = tools(bot)
     global old_editrole
     if old_editrole := bot.get_command("editrole"):
         bot.remove_command(old_editrole.name)
