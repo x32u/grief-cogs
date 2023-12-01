@@ -201,36 +201,6 @@ class Roles(MixinMeta):
         else:
             await ctx.send_help()
 
-    @role.command("info")
-    async def role_info(self, ctx: commands.Context, *, role: FuzzyRole):
-        """Get information about a role."""
-        await ctx.send(embed=await self.get_info(role))
-
-    async def get_info(self, role: discord.Role) -> discord.Embed:
-        if guild_roughly_chunked(role.guild) is False and self.bot.intents.members:
-            await role.guild.chunk()
-        description = [
-            f"{role.mention}",
-            f"Members: {len(role.members)} | Position: {role.position}",
-            f"Color: {role.color}",
-            f"Hoisted: {role.hoist}",
-            f"Mentionable: {role.mentionable}",
-        ]
-        if role.managed:
-            description.append(f"Managed: {role.managed}")
-        if role in await self.bot.get_mod_roles(role.guild):
-            description.append(f"Mod Role: True")
-        if role in await self.bot.get_admin_roles(role.guild):
-            description.append(f"Admin Role: True")
-        e = discord.Embed(
-            color=role.color,
-            title=role.name,
-            description="\n".join(description),
-            timestamp=role.created_at,
-        )
-        e.set_footer(text=role.id)
-        return e
-
     def format_member(self, member: discord.Member, formatting: str) -> str:
         output = self.interpreter.process(formatting, {"member": MemberAdapter(member)})
         return output.body
