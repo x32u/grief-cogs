@@ -51,7 +51,7 @@ from discord.channel import TextChannel
 
 _ = T_ = Translator("Mod", __file__)
 
-__version__ = "1.2.0"
+log = (__name__)
 
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):
