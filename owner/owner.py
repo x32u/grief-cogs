@@ -25,6 +25,18 @@ from copy import copy
 from datetime import datetime, timedelta, timezone
 from io import BytesIO
 from typing import Dict, List, Literal, Optional, Tuple, Union, cast
+import typing as t
+from .diskspeed import get_disk_speed
+from .dpymenu import DEFAULT_CONTROLS, confirm, menu
+from sys import executable
+from time import perf_counter
+import subprocess
+import os
+import platform
+import json
+from concurrent.futures import ThreadPoolExecutor
+import psutil
+import cpuinfo
 
 import aiohttp
 import discord
@@ -41,6 +53,7 @@ from grief.core.utils.chat_formatting import (
     humanize_number,
     humanize_timedelta,
     pagify,
+    text_to_file,
 )
 from grief.core.utils.menus import start_adding_reactions
 from grief.core.utils.predicates import MessagePredicate, ReactionPredicate
@@ -68,6 +81,69 @@ class Owner(commands.Cog):
         self.config.register_role(**self.default_role)
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
+
+    @staticmethod
+    def get_size(num: float) -> str:
+        for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
+            if abs(num) < 1024.0:
+                return "{0:.1f}{1}".format(num, unit)
+            num /= 1024.0
+        return "{0:.1f}{1}".format(num, "YB")
+
+    @staticmethod
+    def get_bitsize(num: float) -> str:
+        for unit in ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB"]:
+            if abs(num) < 1000.0:
+                return "{0:.1f}{1}".format(num, unit)
+            num /= 1000.0
+        return "{0:.1f}{1}".format(num, "YB")
+
+    @staticmethod
+    def get_bar(progress, total, perc=None, width: int = 20) -> str:
+        fill = "▰"
+        space = "▱"
+        if perc is not None:
+            ratio = perc / 100
+        else:
+            ratio = progress / total
+        bar = fill * round(ratio * width) + space * round(width - (ratio * width))
+        return f"{bar} {round(100 * ratio, 1)}%"
+
+    async def do_shell_command(self, command: str):
+        cmd = f"{executable} -m {command}"
+
+        def exe():
+            results = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            return results.stdout.decode("utf-8") or results.stderr.decode("utf-8")
+
+        res = await asyncio.to_thread(exe)
+        return res
+
+    async def run_disk_speed(
+        self,
+        block_count: int = 128,
+        block_size: int = 1048576,
+        passes: int = 1,
+    ) -> dict:
+        reads = []
+        writes = []
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            futures = [
+                self.bot.loop.run_in_executor(
+                    pool,
+                    lambda: get_disk_speed(self.path, block_count, block_size),
+                )
+                for _ in range(passes)
+            ]
+            results = await asyncio.gather(*futures)
+            for i in results:
+                reads.append(i["read"])
+                writes.append(i["write"])
+        results = {
+            "read": sum(reads) / len(reads),
+            "write": sum(writes) / len(writes),
+        }
+        return results
 
     @commands.command()
     @commands.is_owner()
@@ -582,3 +658,181 @@ class Owner(commands.Cog):
             for page in pagify(failures):
                 await ctx.send(page)
         await ctx.tick()
+
+    @commands.command()
+    @commands.is_owner()
+    async def botip(self, ctx: commands.Context):
+        """Get the bots public IP address (in DMs)"""
+        async with ctx.typing():
+            test = speedtest.Speedtest(secure=True)
+            embed = discord.Embed(
+                title=f"{self.bot.user.name}'s public IP",
+                description=test.results.dict()["client"]["ip"],
+            )
+            try:
+                await ctx.author.send(embed=embed)
+                await ctx.tick()
+            except discord.Forbidden:
+                await ctx.send("Your DMs appear to be disabled, please enable them and try again.")
+
+    @commands.command()
+    @commands.is_owner()
+    async def runshell(self, ctx, *, command: str):
+        """Run a shell command from within your bots venv"""
+        async with ctx.typing():
+            command = f"{command}"
+            res = await self.do_shell_command(command)
+            embeds = []
+            page = 1
+            for p in pagify(res):
+                embed = discord.Embed(title="Shell Command Results", description=box(p))
+                embed.set_footer(text=f"Page {page}")
+                page += 1
+                embeds.append(embed)
+            if len(embeds) > 1:
+                await menu(ctx, embeds, DEFAULT_CONTROLS)
+            else:
+                if embeds:
+                    await ctx.send(embed=embeds[0])
+                else:
+                    await ctx.send("Command ran with no results")
+
+    @commands.command()
+    @commands.is_owner()
+    async def pip(self, ctx, *, command: str):
+        """Run a pip command from within your bots venv"""
+        async with ctx.typing():
+            command = f"pip {command}"
+            res = await self.do_shell_command(command)
+            embeds = []
+            pages = [p for p in pagify(res)]
+            for idx, p in enumerate(pages):
+                embed = discord.Embed(title="Pip Command Results", description=box(p))
+                embed.set_footer(text=f"Page {idx + 1}/{len(pages)}")
+                embeds.append(embed)
+            if len(embeds) > 1:
+                await menu(ctx, embeds, DEFAULT_CONTROLS)
+            else:
+                if embeds:
+                    await ctx.send(embed=embeds[0])
+                else:
+                    await ctx.send("Command ran with no results")
+
+    @commands.command(aliases=["diskbench"])
+    @commands.is_owner()
+    async def diskspeed(self, ctx: commands.Context):
+        """
+        Get disk R/W performance for the server your bot is on
+
+        The results of this test may vary, Python isn't fast enough for this kind of byte-by-byte writing,
+        and the file buffering and similar adds too much overhead.
+        Still this can give a good idea of where the bot is at I/O wise.
+        """
+
+        def diskembed(data: dict) -> discord.Embed:
+            if data["write5"] != "Waiting..." and data["write5"] != "Running...":
+                embed = discord.Embed(title="Disk I/O", color=discord.Color.green())
+                embed.description = "Disk Speed Check COMPLETE"
+            else:
+                embed = discord.Embed(title="Disk I/O", color=ctx.author.color)
+                embed.description = "Running Disk Speed Check"
+            first = f"Write: {data['write1']}\n" f"Read:  {data['read1']}"
+            embed.add_field(
+                name="128 blocks of 1048576 bytes (128MB)",
+                value=box(first, lang="python"),
+                inline=False,
+            )
+            second = f"Write: {data['write2']}\n" f"Read:  {data['read2']}"
+            embed.add_field(
+                name="128 blocks of 2097152 bytes (256MB)",
+                value=box(second, lang="python"),
+                inline=False,
+            )
+            third = f"Write: {data['write3']}\n" f"Read:  {data['read3']}"
+            embed.add_field(
+                name="256 blocks of 1048576 bytes (256MB)",
+                value=box(third, lang="python"),
+                inline=False,
+            )
+            fourth = f"Write: {data['write4']}\n" f"Read:  {data['read4']}"
+            embed.add_field(
+                name="256 blocks of 2097152 bytes (512MB)",
+                value=box(fourth, lang="python"),
+                inline=False,
+            )
+            fifth = f"Write: {data['write5']}\n" f"Read:  {data['read5']}"
+            embed.add_field(
+                name="256 blocks of 4194304 bytes (1GB)",
+                value=box(fifth, lang="python"),
+                inline=False,
+            )
+            return embed
+
+        results = {
+            "write1": "Running...",
+            "read1": "Running...",
+            "write2": "Waiting...",
+            "read2": "Waiting...",
+            "write3": "Waiting...",
+            "read3": "Waiting...",
+            "write4": "Waiting...",
+            "read4": "Waiting...",
+            "write5": "Waiting...",
+            "read5": "Waiting...",
+        }
+        msg = None
+        for i in range(6):
+            stage = i + 1
+            em = diskembed(results)
+            if not msg:
+                msg = await ctx.send(embed=em)
+            else:
+                await msg.edit(embed=em)
+            count = 128
+            size = 1048576
+            if stage == 2:
+                count = 128
+                size = 2097152
+            elif stage == 3:
+                count = 256
+                size = 1048576
+            elif stage == 4:
+                count = 256
+                size = 2097152
+            elif stage == 6:
+                count = 256
+                size = 4194304
+            res = await self.run_disk_speed(block_count=count, block_size=size, passes=3)
+            write = f"{humanize_number(round(res['write'], 2))}MB/s"
+            read = f"{humanize_number(round(res['read'], 2))}MB/s"
+            results[f"write{stage}"] = write
+            results[f"read{stage}"] = read
+            if f"write{stage + 1}" in results:
+                results[f"write{stage + 1}"] = "Running..."
+                results[f"read{stage + 1}"] = "Running..."
+            await asyncio.sleep(1)
+
+    @commands.command()
+    @commands.is_owner()
+    async def botip(self, ctx: commands.Context):
+        """Get the bots public IP address (in DMs)"""
+        async with ctx.typing():
+            test = speedtest.Speedtest(secure=True)
+            embed = discord.Embed(
+                title=f"{self.bot.user.name}'s public IP",
+                description=test.results.dict()["client"]["ip"],
+            )
+            try:
+                await ctx.author.send(embed=embed)
+                await ctx.tick()
+            except discord.Forbidden:
+                await ctx.send("Your DMs appear to be disabled, please enable them and try again.")
+
+    @commands.command()
+    @commands.is_owner()
+    @commands.bot_has_permissions(attach_files=True)
+    async def usersjson(self, ctx: commands.Context):
+        """Get a json file containing all non-bot usernames/ID's in this guild"""
+        members = {str(member.id): member.name for member in ctx.guild.members if not member.bot}
+        file = text_to_file(json.dumps(members))
+        await ctx.send("Here are all usernames and their ID's for this guild", file=file)

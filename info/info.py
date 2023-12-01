@@ -53,9 +53,6 @@ from textwrap import shorten
 from types import SimpleNamespace
 from typing import Optional, Union
 from datetime import datetime, timedelta
-from concurrent.futures import ThreadPoolExecutor
-import psutil
-import cpuinfo
 
 from fixcogsutils.dpy_future import TimestampStyle, get_markdown_timestamp
 from fixcogsutils.formatting import bool_emojify
@@ -77,17 +74,11 @@ from grief.core.utils.chat_formatting import (
     humanize_timedelta,
 )
 
-from .diskspeed import get_disk_speed
+
 from .dpymenu import DEFAULT_CONTROLS, confirm, menu
 from sys import executable
 from time import perf_counter
 import subprocess
-import os
-import platform
-import json
-import inspect
-import datetime
-import asyncio
 
 async def wait_reply(ctx: commands.Context, timeout: int = 60):
     def check(message: discord.Message):
@@ -156,42 +147,6 @@ class Info(commands.Cog):
             ratio = progress / total
         bar = fill * round(ratio * width) + space * round(width - (ratio * width))
         return f"{bar} {round(100 * ratio, 1)}%"
-
-    async def do_shell_command(self, command: str):
-        cmd = f"{executable} -m {command}"
-
-        def exe():
-            results = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-            return results.stdout.decode("utf-8") or results.stderr.decode("utf-8")
-
-        res = await asyncio.to_thread(exe)
-        return res
-
-    async def run_disk_speed(
-        self,
-        block_count: int = 128,
-        block_size: int = 1048576,
-        passes: int = 1,
-    ) -> dict:
-        reads = []
-        writes = []
-        with ThreadPoolExecutor(max_workers=1) as pool:
-            futures = [
-                self.bot.loop.run_in_executor(
-                    pool,
-                    lambda: get_disk_speed(self.path, block_count, block_size),
-                )
-                for _ in range(passes)
-            ]
-            results = await asyncio.gather(*futures)
-            for i in results:
-                reads.append(i["read"])
-                writes.append(i["write"])
-        results = {
-            "read": sum(reads) / len(reads),
-            "write": sum(writes) / len(writes),
-        }
-        return results
 
     
     @commands.command(aliases=["av", "pfp"])
@@ -1437,100 +1392,6 @@ class Info(commands.Cog):
             embed.add_field(name="**assets**", value=urls[:-2], inline=False)
         await ctx.reply(embed=embed, mention_author=False)
 
-    @commands.command(aliases=["diskbench"])
-    @commands.is_owner()
-    async def diskspeed(self, ctx: commands.Context):
-        """
-        Get disk R/W performance for the server your bot is on
-
-        The results of this test may vary, Python isn't fast enough for this kind of byte-by-byte writing,
-        and the file buffering and similar adds too much overhead.
-        Still this can give a good idea of where the bot is at I/O wise.
-        """
-
-        def diskembed(data: dict) -> discord.Embed:
-            if data["write5"] != "Waiting..." and data["write5"] != "Running...":
-                embed = discord.Embed(title="Disk I/O", color=discord.Color.green())
-                embed.description = "Disk Speed Check COMPLETE"
-            else:
-                embed = discord.Embed(title="Disk I/O", color=ctx.author.color)
-                embed.description = "Running Disk Speed Check"
-            first = f"Write: {data['write1']}\n" f"Read:  {data['read1']}"
-            embed.add_field(
-                name="128 blocks of 1048576 bytes (128MB)",
-                value=box(first, lang="python"),
-                inline=False,
-            )
-            second = f"Write: {data['write2']}\n" f"Read:  {data['read2']}"
-            embed.add_field(
-                name="128 blocks of 2097152 bytes (256MB)",
-                value=box(second, lang="python"),
-                inline=False,
-            )
-            third = f"Write: {data['write3']}\n" f"Read:  {data['read3']}"
-            embed.add_field(
-                name="256 blocks of 1048576 bytes (256MB)",
-                value=box(third, lang="python"),
-                inline=False,
-            )
-            fourth = f"Write: {data['write4']}\n" f"Read:  {data['read4']}"
-            embed.add_field(
-                name="256 blocks of 2097152 bytes (512MB)",
-                value=box(fourth, lang="python"),
-                inline=False,
-            )
-            fifth = f"Write: {data['write5']}\n" f"Read:  {data['read5']}"
-            embed.add_field(
-                name="256 blocks of 4194304 bytes (1GB)",
-                value=box(fifth, lang="python"),
-                inline=False,
-            )
-            return embed
-
-        results = {
-            "write1": "Running...",
-            "read1": "Running...",
-            "write2": "Waiting...",
-            "read2": "Waiting...",
-            "write3": "Waiting...",
-            "read3": "Waiting...",
-            "write4": "Waiting...",
-            "read4": "Waiting...",
-            "write5": "Waiting...",
-            "read5": "Waiting...",
-        }
-        msg = None
-        for i in range(6):
-            stage = i + 1
-            em = diskembed(results)
-            if not msg:
-                msg = await ctx.send(embed=em)
-            else:
-                await msg.edit(embed=em)
-            count = 128
-            size = 1048576
-            if stage == 2:
-                count = 128
-                size = 2097152
-            elif stage == 3:
-                count = 256
-                size = 1048576
-            elif stage == 4:
-                count = 256
-                size = 2097152
-            elif stage == 6:
-                count = 256
-                size = 4194304
-            res = await self.run_disk_speed(block_count=count, block_size=size, passes=3)
-            write = f"{humanize_number(round(res['write'], 2))}MB/s"
-            read = f"{humanize_number(round(res['read'], 2))}MB/s"
-            results[f"write{stage}"] = write
-            results[f"read{stage}"] = read
-            if f"write{stage + 1}" in results:
-                results[f"write{stage + 1}"] = "Running..."
-                results[f"read{stage + 1}"] = "Running..."
-            await asyncio.sleep(1)
-
     @commands.command()
     @commands.is_owner()
     async def pip(self, ctx, *, command: str):
@@ -1553,237 +1414,6 @@ class Info(commands.Cog):
                     await ctx.send("Command ran with no results")
 
     @commands.command()
-    @commands.is_owner()
-    async def runshell(self, ctx, *, command: str):
-        """Run a shell command from within your bots venv"""
-        async with ctx.typing():
-            command = f"{command}"
-            res = await self.do_shell_command(command)
-            embeds = []
-            page = 1
-            for p in pagify(res):
-                embed = discord.Embed(title="Shell Command Results", description=box(p))
-                embed.set_footer(text=f"Page {page}")
-                page += 1
-                embeds.append(embed)
-            if len(embeds) > 1:
-                await menu(ctx, embeds, DEFAULT_CONTROLS)
-            else:
-                if embeds:
-                    await ctx.send(embed=embeds[0])
-                else:
-                    await ctx.send("Command ran with no results")
-
-    # Inspired by kennnyshiwa's imperialtoolkit botstat command
-    # https://github.com/kennnyshiwa/kennnyshiwa-cogs
-    @commands.command()
-    @commands.bot_has_permissions(embed_links=True)
-    @commands.cooldown(1, 15, commands.BucketType.user)
-    async def botinfo(self, ctx: commands.Context):
-        """
-        Get info about the bot
-        """
-        async with ctx.typing():
-            latency = self.bot.latency * 1000
-
-            latency_ratio = max(0.0, min(1.0, latency / 100))
-
-            # Calculate RGB values based on latency ratio
-            green = 255 - round(255 * latency_ratio) if latency_ratio > 0.5 else 255
-            red = 255 if latency_ratio > 0.5 else round(255 * latency_ratio)
-
-            color = discord.Color.from_rgb(red, green, 0)
-
-            embed = await asyncio.to_thread(self.get_bot_info_embed, color)
-
-            latency_txt = f"Websocket: {humanize_number(round(latency, 2))} ms"
-            embed.add_field(
-                name="\N{HIGH VOLTAGE SIGN} Latency",
-                value=box(latency_txt, lang="python"),
-                inline=False,
-            )
-
-            start = perf_counter()
-            message = await ctx.send(embed=embed)
-            end = perf_counter()
-
-            field = embed.fields[-1]
-            latency_txt += f"\nMessage:   {humanize_number(round((end - start) * 1000, 2))} ms"
-            embed.set_field_at(
-                index=5,
-                name=field.name,
-                value=box(latency_txt, lang="python"),
-                inline=False,
-            )
-            await message.edit(embed=embed)
-
-    def get_bot_info_embed(self, color: discord.Color) -> discord.Embed:
-        process = psutil.Process(os.getpid())
-        bot_cpu_used = process.cpu_percent(interval=3)
-
-        # -/-/-/CPU-/-/-/
-        cpu_count = psutil.cpu_count()  # Int
-        cpu_perc: t.List[float] = psutil.cpu_percent(interval=3, percpu=True)
-        cpu_avg = round(sum(cpu_perc) / len(cpu_perc), 1)
-        cpu_freq: list = psutil.cpu_freq(percpu=True)  # t.List of Objects
-        if not cpu_freq:
-            freq = psutil.cpu_freq(percpu=False)
-            if freq:
-                cpu_freq = [freq]
-        cpu_info: dict = cpuinfo.get_cpu_info()  # Dict
-        cpu_type = cpu_info.get("brand_raw", "Unknown")
-
-        # -/-/-/MEM-/-/-/
-        ram = psutil.virtual_memory()  # Obj
-        ram_total = self.get_size(ram.total)
-        ram_used = self.get_size(ram.used)
-        disk = psutil.disk_usage(os.getcwd())
-        disk_total = self.get_size(disk.total)
-        disk_used = self.get_size(disk.used)
-        bot_ram_used = self.get_size(process.memory_info().rss)
-
-        io_counters = process.io_counters()
-        disk_usage_process = io_counters[2] + io_counters[3]  # read_bytes + write_bytes
-        # Disk load
-        disk_io_counter = psutil.disk_io_counters()
-        if disk_io_counter:
-            disk_io_total = disk_io_counter[2] + disk_io_counter[3]  # read_bytes + write_bytes
-            disk_usage = (disk_usage_process / disk_io_total) * 100
-        else:
-            disk_usage = 0
-
-        # -/-/-/NET-/-/-/
-        net = psutil.net_io_counters()  # Obj
-        sent = self.get_size(net.bytes_sent)
-        recv = self.get_size(net.bytes_recv)
-
-        # -/-/-/OS-/-/-/
-        ostype = "Unknown"
-        if os.name == "nt":
-            osdat = platform.uname()
-            ostype = f"{osdat.system} {osdat.release} (version {osdat.version})"
-        elif sys.platform == "darwin":
-            osdat = platform.mac_ver()
-            ostype = f"Mac OS {osdat[0]} {osdat[1]}"
-        elif sys.platform == "linux":
-            import distro
-
-            ostype = f"{distro.name()} {distro.version()}"
-
-        td = datetime.datetime.utcnow() - datetime.datetime.fromtimestamp(psutil.boot_time())
-        sys_uptime = humanize_timedelta(timedelta=td)
-
-        # -/-/-/BOT-/-/-/
-        servers = "{:,}".format(len(self.bot.guilds))
-        shards = self.bot.shard_count
-        users = "{:,}".format(len(self.bot.users))
-        channels = "{:,}".format(sum(len(guild.channels) for guild in self.bot.guilds))
-        emojis = "{:,}".format(len(self.bot.emojis))
-        cogs = "{:,}".format(len(self.bot.cogs))
-        commandcount = 0
-        for cog in self.bot.cogs:
-            for __ in self.bot.get_cog(cog).walk_commands():
-                commandcount += 1
-        commandcount = "{:,}".format(commandcount)
-        td = datetime.datetime.utcnow() - self.bot.uptime
-        uptime = humanize_timedelta(timedelta=td)
-
-        # -/-/-/LIBS-/-/-/
-        ver = sys.version_info
-        py_version = f"{ver.major}.{ver.minor}.{ver.micro}"
-
-        embed = discord.Embed(
-            title=f"Stats for {self.bot.user.display_name}",
-            description="Below are various stats about the bot and the system it runs on.",
-            color=color,
-        )
-        embed.set_footer(text=f"System: {ostype}\nUptime: {sys_uptime}", icon_url=self.bot.user.display_avatar)
-
-        botstats = (
-            f"Servers:  {servers} ({shards} {'shard' if shards == 1 else 'shards'})\n"
-            f"Users:    {users}\n"
-            f"Channels: {channels}\n"
-            f"Emojis:   {emojis}\n"
-            f"Cogs:     {cogs}\n"
-            f"Commands: {commandcount}\n"
-            f"Uptime:   {uptime}\n"
-            f"Python:   {py_version}"
-        )
-        embed.add_field(
-            name="\N{ROBOT FACE} BOT",
-            value=box(botstats, lang="python"),
-            inline=False,
-        )
-
-        cpustats = f"CPU: {cpu_type}\n"
-        cpustats += f"Bot: {bot_cpu_used}%\nOverall: {cpu_avg}%\nCores: {cpu_count}"
-        if cpu_freq:
-            clock, clockmax = round(cpu_freq[0].current), round(cpu_freq[0].max)
-            if clockmax:
-                cpustats += f" @ {clock}/{clockmax} MHz\n"
-            else:
-                cpustats += f" @ {clock} MHz\n"
-        else:
-            cpustats += "\n"
-
-        preformat = []
-        for i, perc in enumerate(cpu_perc):
-            space = "" if i >= 10 or len(cpu_perc) < 10 else " "
-            bar = self.get_bar(0, 0, perc, width=14)
-            speed_text = None
-            if cpu_freq:
-                index = i if len(cpu_freq) > i else 0
-                speed = round(cpu_freq[index].current)
-                speed_text = f"{speed} MHz"
-            preformat.append((f"c{i}:{space} {bar}", speed_text))
-
-        max_width = max([len(i[0]) for i in preformat])
-        for usage, speed in preformat:
-            space = (max_width - len(usage)) * " " if len(usage) < max_width else ""
-            if speed is not None:
-                cpustats += f"{usage}{space} @ {speed}\n"
-            else:
-                cpustats += f"{usage}{space}\n"
-
-        for p in pagify(cpustats, page_length=1024):
-            embed.add_field(
-                name="\N{DESKTOP COMPUTER} CPU",
-                value=box(p, lang="python"),
-                inline=False,
-            )
-
-        rambar = self.get_bar(0, 0, ram.percent, width=18)
-        diskbar = self.get_bar(0, 0, disk.percent, width=18)
-        memtext = (
-            f"RAM {ram_used}/{ram_total} (Bot: {bot_ram_used})\n"
-            f"{rambar}\n"
-            f"DISK {disk_used}/{disk_total}\n"
-            f"{diskbar}\n"
-        )
-        embed.add_field(
-            name="\N{FLOPPY DISK} MEM",
-            value=box(memtext, lang="python"),
-            inline=False,
-        )
-
-        disk_usage_bar = self.get_bar(0, 0, disk_usage, width=18)
-        i_o = f"DISK LOAD\n" f"{disk_usage_bar}"
-        embed.add_field(
-            name="\N{GEAR}\N{VARIATION SELECTOR-16} I/O",
-            value=box(i_o, lang="python"),
-            inline=False,
-        )
-
-        netstat = f"Sent:     {sent}\n" f"Received: {recv}"
-        embed.add_field(
-            name="\N{SATELLITE ANTENNA} Network",
-            value=box(netstat, lang="python"),
-            inline=False,
-        )
-
-        return embed
-
-    @commands.command()
     async def getuser(self, ctx, *, user_id: t.Union[int, discord.User]):
         """Find a user by ID"""
         if isinstance(user_id, int):
@@ -1804,33 +1434,8 @@ class Info(commands.Cog):
             description=created_on,
             color=await ctx.embed_color(),
         )
-        embed.set_image(url=member.display_avatar.url)
+        embed.thumbnail(url=member.display_avatar.url)
         await ctx.send(embed=embed)
-
-    @commands.command()
-    @commands.is_owner()
-    async def botip(self, ctx: commands.Context):
-        """Get the bots public IP address (in DMs)"""
-        async with ctx.typing():
-            test = speedtest.Speedtest(secure=True)
-            embed = discord.Embed(
-                title=f"{self.bot.user.name}'s public IP",
-                description=test.results.dict()["client"]["ip"],
-            )
-            try:
-                await ctx.author.send(embed=embed)
-                await ctx.tick()
-            except discord.Forbidden:
-                await ctx.send("Your DMs appear to be disabled, please enable them and try again.")
-
-    @commands.command()
-    @commands.is_owner()
-    @commands.bot_has_permissions(attach_files=True)
-    async def usersjson(self, ctx: commands.Context):
-        """Get a json file containing all non-bot usernames/ID's in this guild"""
-        members = {str(member.id): member.name for member in ctx.guild.members if not member.bot}
-        file = text_to_file(json.dumps(members))
-        await ctx.send("Here are all usernames and their ID's for this guild", file=file)
 
     @commands.command()
     @commands.guild_only()
