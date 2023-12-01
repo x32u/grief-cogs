@@ -352,7 +352,6 @@ class Fun(commands.Cog):
         Enter multiple users for an accurate comparison!"""
         if not users:
             users = ctx.author
-            return
 
         dongs = {}
         msg = ""
