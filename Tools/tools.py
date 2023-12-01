@@ -12,7 +12,7 @@ from .editvoicechannel import EditVoiceChannel
 # Credits:
 # General repo credits.
 
-_ = Translator("Tools", __file__)
+_ = Translator("tools", __file__)
 
 BASES = [EditGuild, EditTextChannel, EditThread, EditVoiceChannel]  # EditAutoMod
 
