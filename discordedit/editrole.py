@@ -182,6 +182,7 @@ class EditRole(Cog):
                 position=position,
                 reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
             )
+            await ctx.tick()
         except discord.HTTPException as e:
             raise commands.UserFeedbackCheckFailure(
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
@@ -238,6 +239,7 @@ class EditRole(Cog):
                 raise commands.UserFeedbackCheckFailure(_("You don't have the permission {permission_name} in this guild.").format(permission_name=permission))
             setattr(role_permissions, permission, true_or_false)
         try:
+            await ctx.tick()
             await role.edit(
                 permissions=role_permissions,
                 reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
