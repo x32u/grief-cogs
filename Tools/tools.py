@@ -5,7 +5,6 @@ import typing  # isort:skip
 
 # from .editautomod import EditAutoMod
 from .editguild import EditGuild
-from .editrole import EditRole
 from .edittextchannel import EditTextChannel
 from .editthread import EditThread
 from .editvoicechannel import EditVoiceChannel
@@ -13,13 +12,13 @@ from .editvoicechannel import EditVoiceChannel
 # Credits:
 # General repo credits.
 
-_ = Translator("DiscordEdit", __file__)
+_ = Translator("Tools", __file__)
 
-BASES = [EditGuild, EditRole, EditTextChannel, EditThread, EditVoiceChannel]  # EditAutoMod
+BASES = [EditGuild, EditTextChannel, EditThread, EditVoiceChannel]  # EditAutoMod
 
 
 @cog_i18n(_)
-class DiscordEdit(*BASES, Cog):
+class Tools(*BASES, Cog):
     """A cog to edit Discord default objects, like guilds, roles, text channels, voice channels, threads and AutoMod."""
 
     def __init__(self, bot: Red) -> None:
