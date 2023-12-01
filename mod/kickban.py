@@ -282,7 +282,7 @@ class KickBanMixin(MixinMeta):
         guild = ctx.guild
 
         if reason == None:
-            reason = "No reason given"
+            reason = "no reason given"
         
         if author == member:
             await ctx.send(
@@ -318,7 +318,7 @@ class KickBanMixin(MixinMeta):
                 await member.send(embed=em)
         try:
             await guild.kick(member, reason=audit_reason)
-            embed = discord.Embed(description=f"> {ctx.author.mention}: Kicked {member} for {reason}", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Kicked {member.mention} for {reason}", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
         except discord.errors.Forbidden:
             await ctx.send(_("I'm not allowed to do that."))
