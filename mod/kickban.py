@@ -281,6 +281,9 @@ class KickBanMixin(MixinMeta):
         author = ctx.author
         guild = ctx.guild
 
+        if reason == None:
+            reason = "No reason given"
+        
         if author == member:
             await ctx.send(
                 _(_("You cannot kick yourself.")
