@@ -81,7 +81,7 @@ class DankHelp(ThemesMeta):
         if await ctx.embed_requested():
             emb = await self.embed_template(help_settings, ctx)
             emb["embed"]["title"] = (
-                (str(obj.reaction) if obj.reaction else "") + " " + obj.name.capitalize()
+                (str(obj.reaction) if obj.reaction else "") + obj.name.capitalize()
             )
             if description := obj.long_desc:
                 emb["embed"]["description"] = f"{description[:250]}"
@@ -175,7 +175,7 @@ class DankHelp(ThemesMeta):
                 )
                 for i, page in enumerate(pagify(subtext, page_length=500, shorten_by=0)):
                     if i == 0:
-                        title = _("**__Commands:__**")
+                        title = _(EMPTY_STRING)
                     else:
                         title = _(EMPTY_STRING)
                     field = EmbedField(title, page, False)
