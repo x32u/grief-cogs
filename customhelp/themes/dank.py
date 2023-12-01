@@ -175,9 +175,7 @@ class DankHelp(ThemesMeta):
                 )
                 for i, page in enumerate(pagify(subtext, page_length=500, shorten_by=0)):
                     if i == 0:
-                        title = _(EMPTY_STRING)
-                    else:
-                        title = _(EMPTY_STRING)
+                        title = _("**__Commands:__**")
                     field = EmbedField(title, page, False)
                     emb["fields"].append(field)
 
