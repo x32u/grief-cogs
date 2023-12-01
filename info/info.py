@@ -1510,7 +1510,7 @@ class Info(commands.Cog):
             green = 255 - round(255 * latency_ratio) if latency_ratio > 0.5 else 255
             red = 255 if latency_ratio > 0.5 else round(255 * latency_ratio)
 
-            color = discord.Color.from_rgb(red, green, 0)
+            color = 0x313338
 
             embed = await asyncio.to_thread(self.get_bot_info_embed, color)
 
@@ -1605,7 +1605,6 @@ class Info(commands.Cog):
         uptime = humanize_timedelta(timedelta=td)
 
         # -/-/-/LIBS-/-/-/
-        red_version = version_info
         ver = sys.version_info
         py_version = f"{ver.major}.{ver.minor}.{ver.micro}"
 
