@@ -22,6 +22,11 @@ except ImportError:
 
 import aiohttp
 
+from .editguild import EditGuild
+from .edittextchannel import EditTextChannel
+from .editthread import EditThread
+from .editvoicechannel import EditVoiceChannel
+
 
 log = logging.getLogger("grief.admin")
 
