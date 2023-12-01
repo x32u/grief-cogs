@@ -351,7 +351,7 @@ class Fun(commands.Cog):
         This is 100% accurate.
         Enter multiple users for an accurate comparison!"""
         if not users:
-            await ctx.send_help()
+            users = ctx.author
             return
 
         dongs = {}
