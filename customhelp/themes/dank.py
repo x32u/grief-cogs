@@ -177,7 +177,7 @@ class DankHelp(ThemesMeta):
                     if i == 0:
                         title = _("**__Commands:__**")
                     else:
-                        title = None
+                        title = _(None)
                     field = EmbedField(title, page, False)
                     emb["fields"].append(field)
 
