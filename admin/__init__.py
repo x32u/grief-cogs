@@ -1,10 +1,6 @@
 from grief.core.bot import Red
 
-from .admin import Admin
-from .editguild import EditGuild
-from .edittextchannel import EditTextChannel
-from .editthread import EditThread
-from .editvoicechannel import EditVoiceChannel
+from .tools import Admin
 
 
 async def setup(bot: Red) -> None:

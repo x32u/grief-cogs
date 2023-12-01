@@ -12,13 +12,13 @@ from .editvoicechannel import EditVoiceChannel
 # Credits:
 # General repo credits.
 
-_ = Translator("tools", __file__)
+_ = Translator("admin", __file__)
 
 BASES = [EditGuild, EditTextChannel, EditThread, EditVoiceChannel]  # EditAutoMod
 
 
 @cog_i18n(_)
-class Tools(*BASES, Cog):
+class Admin(*BASES, Cog):
     """A cog to edit Discord default objects, like guilds, roles, text channels, voice channels, threads and AutoMod."""
 
     def __init__(self, bot: Red) -> None:
