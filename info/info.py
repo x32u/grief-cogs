@@ -76,6 +76,39 @@ from grief.core.utils.chat_formatting import (
     humanize_timedelta,
 )
 
+
+
+import json
+import logging
+import math
+import os
+import platform
+import random
+import string
+import subprocess
+import sys
+import typing as t
+import unicodedata
+from concurrent.futures import ThreadPoolExecutor
+from time import perf_counter
+
+import cpuinfo
+import discord
+import psutil
+import speedtest
+from grief.cogs.downloader.converters import InstalledCog
+from grief.core import commands, version_info
+from grief.core.bot import Red
+from grief.core.data_manager import cog_data_path
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import (
+    box,
+    humanize_number,
+    humanize_timedelta,
+    pagify,
+    text_to_file,
+)
+
 async def wait_reply(ctx: commands.Context, timeout: int = 60):
     def check(message: discord.Message):
         return message.author == ctx.author and message.channel == ctx.channel
