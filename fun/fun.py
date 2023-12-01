@@ -356,7 +356,8 @@ class Fun(commands.Cog):
         dongs = {}
         msg = ""
         state = random.getstate()
-
+        
+        else:
         for user in users:
             random.seed(str(user.id))
 
