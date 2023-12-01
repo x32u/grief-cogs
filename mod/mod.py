@@ -8,7 +8,7 @@ import discord
 import logging
 
 from copy import copy
-from typing import List, Literal, Optional, Union
+from typing import List, Literal, Optional, Union, TYPE_CHECKING
 
 from grief.core import Config, commands
 from grief.core.bot import Red
@@ -27,7 +27,6 @@ from datetime import timedelta
 from grief.core.utils.chat_formatting import humanize_timedelta
 
 from .converters import ChannelToggle, LockableChannel, LockableRole
-from typing import TYPE_CHECKING, List, Literal, Optional
 
 from AAA3A_utils import Cog, CogsUtils, Settings
 from AAA3A_utils.settings import CustomMessageConverter
@@ -51,7 +50,8 @@ from discord.channel import TextChannel
 
 _ = T_ = Translator("Mod", __file__)
 
-log = (__name__)
+__version__ = "1.2.0"
+log = get_vex_logger(__name__)
 
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):
@@ -150,25 +150,11 @@ class Mod(
                         pass
                     # possible with a context switch between here and getting all guilds
 
-    async def cog_unload(self) -> None:
-        self.loop.cancel()
-        self.bot.remove_dev_env_value("bpoll")
-        for poll in self.polls:
-            poll.view.stop()
-
-        self.plot_executor.shutdown(wait=False)
-
-        log.verbose("buttonpoll successfully unloaded")
-
     async def cog_load(self) -> None:
-        # re-initialise views
-        all_polls = await self.config.all_guilds()
-        for guild_polls in all_polls.values():
-            for poll in guild_polls["poll_settings"].values():
-                obj_poll = Poll.from_dict(poll, self)
-                self.polls.append(obj_poll)
-                self.bot.add_view(obj_poll.view, message_id=obj_poll.message_id)
-                log.debug(f"Re-initialised view for poll {obj_poll.unique_poll_id}")
+        await self._maybe_update_config()
+
+    def cog_unload(self):
+        self.tban_expiry_task.cancel()
     
     async def timeout_user(
         self,
