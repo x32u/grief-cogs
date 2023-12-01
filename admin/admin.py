@@ -10,7 +10,6 @@ from grief.core.utils.chat_formatting import box
 from grief.core.utils.mod import get_audit_reason
 from grief.core.utils.predicates import MessagePredicate
 import importlib
-from .announcer import Announcer
 from .converters import SelfRole
 import typing
 import sys
@@ -71,12 +70,6 @@ ROLE_USER_HIERARCHY_ISSUE = _(
 )
 
 NEED_MANAGE_ROLES = _('I need the "Manage Roles" permission to do that.')
-
-RUNNING_ANNOUNCEMENT = _(
-    "I am already announcing something. If you would like to make a"
-    " different announcement please use `{prefix}announce cancel`"
-    " first."
-)
 
 ERROR_MESSAGE = _("I attempted to do something that Discord denied me permissions for. Your command failed to successfully complete.\n{error}")
 
@@ -363,74 +356,6 @@ class Admin(commands.Cog):
         else:
             log.info(reason)
             await ctx.send(_("Done."))
-
-    @commands.group(invoke_without_command=True)
-    @commands.is_owner()
-    async def announce(self, ctx: commands.Context, *, message: str):
-        """Announce a message to all servers the bot is in."""
-        if not self.is_announcing():
-            announcer = Announcer(ctx, message, config=self.config)
-            announcer.start()
-
-            self.__current_announcer = announcer
-
-            await ctx.send(_("The announcement has begun."))
-        else:
-            prefix = ctx.clean_prefix
-            await ctx.send(_(RUNNING_ANNOUNCEMENT).format(prefix=prefix))
-
-    @announce.command(name="cancel")
-    async def announce_cancel(self, ctx):
-        """Cancel a running announce."""
-        if not self.is_announcing():
-            await ctx.send(_("There is no currently running announcement."))
-            return
-        self.__current_announcer.cancel()
-        await ctx.send(_("The current announcement has been cancelled."))
-
-    @commands.group()
-    @commands.guild_only()
-    @commands.guildowner_or_permissions(administrator=True)
-    async def announceset(self, ctx):
-        """Change how announcements are sent in this guild."""
-        pass
-
-    @announceset.command(name="channel")
-    async def announceset_channel(
-        self,
-        ctx,
-        *,
-        channel: Union[discord.TextChannel, discord.VoiceChannel, discord.StageChannel],
-    ):
-        """Change the channel where the bot will send announcements."""
-        await self.config.guild(ctx.guild).announce_channel.set(channel.id)
-        await ctx.send(
-            _("The announcement channel has been set to {channel.mention}").format(channel=channel)
-        )
-
-    @announceset.command(name="clearchannel")
-    async def announceset_clear_channel(self, ctx):
-        """Unsets the channel for announcements."""
-        await self.config.guild(ctx.guild).announce_channel.clear()
-        await ctx.tick()
-
-    async def _valid_selfroles(self, guild: discord.Guild) -> Tuple[discord.Role]:
-        """
-        Returns a tuple of valid selfroles
-        :param guild:
-        :return:
-        """
-        selfrole_ids = set(await self.config.guild(guild).selfroles())
-        guild_roles = guild.roles
-
-        valid_roles = tuple(r for r in guild_roles if r.id in selfrole_ids)
-        valid_role_ids = set(r.id for r in valid_roles)
-
-        if selfrole_ids != valid_role_ids:
-            await self.config.guild(guild).selfroles.set(list(valid_role_ids))
-
-        # noinspection PyTypeChecker
-        return valid_roles
 
     @commands.guild_only()
     @commands.group(invoke_without_command=True)
