@@ -677,7 +677,7 @@ class Roles(MixinMeta):
             
     @role.command(name="icon")
     @commands.has_guild_permissions(manage_roles=True)
-    async def edit_role_icon(
+    async def role_icon(
         self, ctx: commands.Context, role: discord.Role, display_icon: typing.Optional[EmojiOrUrlConverter] = None) -> None:
         """Edit role display icon.
         """
@@ -722,7 +722,7 @@ class Roles(MixinMeta):
         
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
-    @role.command(name="listt")
+    @role.command(name="list")
     async def role_list(self, ctx: commands.Context,) -> None:
         """List all roles in the current guild."""
         description = "".join(
@@ -763,8 +763,8 @@ class Roles(MixinMeta):
 
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
-    @role.command(name="permissionss")
-    async def editrole_permissionss(
+    @role.command(name="permissions")
+    async def role_permissionss(
         self, ctx: commands.Context, role: discord.Role, true_or_false: bool, permissions: commands.Greedy[PermissionConverter]
     ) -> None:
         """Edit role permissions.
