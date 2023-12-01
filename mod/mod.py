@@ -27,6 +27,7 @@ from datetime import timedelta
 from grief.core.utils.chat_formatting import humanize_timedelta
 
 from .converters import ChannelToggle, LockableChannel, LockableRole
+from typing import TYPE_CHECKING, List, Literal, Optional
 
 from AAA3A_utils import Cog, CogsUtils, Settings
 from AAA3A_utils.settings import CustomMessageConverter
