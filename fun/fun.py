@@ -350,14 +350,12 @@ class Fun(commands.Cog):
 
         This is 100% accurate.
         Enter multiple users for an accurate comparison!"""
-        if not users:
-            users = ctx.author
+        if not users = ctx.author
 
         dongs = {}
         msg = ""
         state = random.getstate()
         
-        else:
         for user in users:
             random.seed(str(user.id))
 
