@@ -1386,27 +1386,6 @@ class Info(commands.Cog):
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command()
-    @commands.is_owner()
-    async def pip(self, ctx, *, command: str):
-        """Run a pip command from within your bots venv"""
-        async with ctx.typing():
-            command = f"pip {command}"
-            res = await self.do_shell_command(command)
-            embeds = []
-            pages = [p for p in pagify(res)]
-            for idx, p in enumerate(pages):
-                embed = discord.Embed(title="Pip Command Results", description=box(p))
-                embed.set_footer(text=f"Page {idx + 1}/{len(pages)}")
-                embeds.append(embed)
-            if len(embeds) > 1:
-                await menu(ctx, embeds, DEFAULT_CONTROLS)
-            else:
-                if embeds:
-                    await ctx.send(embed=embeds[0])
-                else:
-                    await ctx.send("Command ran with no results")
-
-    @commands.command()
     async def getuser(self, ctx, *, user_id: t.Union[int, discord.User]):
         """Find a user by ID"""
         if isinstance(user_id, int):
