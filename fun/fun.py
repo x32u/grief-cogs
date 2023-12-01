@@ -350,7 +350,7 @@ class Fun(commands.Cog):
 
         This is 100% accurate.
         Enter multiple users for an accurate comparison!"""
-        if not users = ctx.author
+        if not users == ctx.author
 
         dongs = {}
         msg = ""
