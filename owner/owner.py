@@ -664,10 +664,9 @@ class Owner(commands.Cog):
     async def botip(self, ctx: commands.Context):
         """Get the bots public IP address (in DMs)"""
         async with ctx.typing():
-            test = speedtest.Speedtest(secure=True)
             embed = discord.Embed(
                 title=f"{self.bot.user.name}'s public IP",
-                description=test.results.dict()["client"]["ip"],
+                description=dict()["client"]["ip"],
             )
             try:
                 await ctx.author.send(embed=embed)
