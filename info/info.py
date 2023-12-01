@@ -22,7 +22,6 @@ import typing as t
 from discord.ui import Button, View
 from discord.ext import tasks
 from discord import Embed, File, TextChannel, Member, User, Role 
-from .dpymenu import DEFAULT_CONTROLS, confirm, menu
 from contextlib import suppress as sps
 from tabulate import tabulate
 from typing import Optional
