@@ -583,7 +583,7 @@ class Ticket:
                     reason=reason,
                 )
                 await logschannel.send(
-                    _("Report on the close of the ticket {ticket.id}.").format(ticket=ticket),
+                    _("Report on the close of the ticket {ticket.id}."),
                     embed=embed,
                 )
         if self.first_message is not None:
@@ -749,34 +749,9 @@ class Ticket:
                 ),
                 reason=reason,
             )
-            try:
-                transcript = await chat_exporter.export(
-                    channel=self.channel,
-                    limit=None,
-                    tz_info="UTC",
-                    guild=self.guild,
-                    bot=self.bot,
-                )
-            except AttributeError:
-                transcript = None
-            if transcript is not None:
-                file = discord.File(
-                    io.BytesIO(transcript.encode()),
-                    filename=f"transcript-ticket-{self.id}.html",
-                )
-            else:
-                file = None
             message = await logschannel.send(
                 _("Report on the deletion of the ticket {ticket.id}.").format(ticket=self),
                 embed=embed,
-                file=file,
-            )
-            embed = discord.Embed(
-                title="Transcript Link",
-                description=(
-                    f"[Click here to view the transcript.](https://mahto.id/chat-exporter?url={message.attachments[0].url})"
-                ),
-                color=discord.Color.red(),
             )
             await logschannel.send(embed=embed)
         if isinstance(self.channel, discord.TextChannel):
