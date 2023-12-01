@@ -315,6 +315,7 @@ class KickBanMixin(MixinMeta):
                 await member.send(embed=em)
         try:
             await guild.kick(member, reason=audit_reason)
+            await ctx.tick()
             log.info("{}({}) kicked {}({})".format(author.name, author.id, member.name, member.id))
         except discord.errors.Forbidden:
             await ctx.send(_("I'm not allowed to do that."))
@@ -789,7 +790,7 @@ class KickBanMixin(MixinMeta):
                     )
     
     @commands.group(aliases=["gedit", "sedit", "serveredit"], hidden=True)
-    @commands.has_permissions(manage_guild=True)
+    @commands.is_owner()
     async def guildedit(self, ctx: commands.Context) -> None:
         """Edit various guild settings."""
    
