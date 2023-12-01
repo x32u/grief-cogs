@@ -73,12 +73,6 @@ from grief.core.utils.chat_formatting import (
     humanize_timedelta,
 )
 
-
-from .dpymenu import DEFAULT_CONTROLS, confirm, menu
-from sys import executable
-from time import perf_counter
-import subprocess
-
 async def wait_reply(ctx: commands.Context, timeout: int = 60):
     def check(message: discord.Message):
         return message.author == ctx.author and message.channel == ctx.channel
