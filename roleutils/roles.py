@@ -719,3 +719,25 @@ class Roles(MixinMeta):
             raise commands.UserFeedbackCheckFailure(
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
+        
+    @commands.guild_only()
+    @commands.has_permissions(manage_roles=True)
+    @role.command(name="listt")
+    async def editrole_list(
+        self,
+        ctx: commands.Context,
+    ) -> None:
+        """List all roles in the current guild."""
+        description = "".join(
+            f"\n**•** **{len(ctx.guild.roles) - role.position}** - {role.mention} ({role.id}) - {len(role.members)} members"
+            for role in sorted(ctx.guild.roles, key=lambda x: x.position, reverse=True)
+        )
+        embed: discord.Embed = discord.Embed(color=await ctx.embed_color())
+        embed.title = _("List of roles in {guild.name} ({guild.id})").format(guild=ctx.guild)
+        embeds = []
+        pages = pagify(description, page_length=4096)
+        for page in pages:
+            e = embed.copy()
+            e.description = page
+            embeds.append(e)
+        await Menu(pages=embeds).start(ctx)
