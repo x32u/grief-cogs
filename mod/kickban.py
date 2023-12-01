@@ -285,10 +285,8 @@ class KickBanMixin(MixinMeta):
             reason = "no reason given"
         
         if author == member:
-            await ctx.send(
-                _(_("You cannot kick yourself.")
-                )
-            )
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You can't kick yourself.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
             return
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, member):
             await ctx.send(
@@ -300,7 +298,8 @@ class KickBanMixin(MixinMeta):
             )
             return
         elif ctx.guild.me.top_role <= member.top_role or member == ctx.guild.owner:
-            await ctx.send(_("I cannot do that due to Discord hierarchy rules."))
+            embed = discord.Embed(description=f"> {ctx.author.mention}: I cannot do that due to Discord hierarchy rules.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             return
         audit_reason = get_audit_reason(author, reason, shorten=True)
         toggle = await self.config.guild(guild).dm_on_kickban()
@@ -318,10 +317,11 @@ class KickBanMixin(MixinMeta):
                 await member.send(embed=em)
         try:
             await guild.kick(member, reason=audit_reason)
-            embed = discord.Embed(description=f"> {ctx.author.mention}: Kicked {member.mention} for {reason}", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Kicked {member.mention} for: {reason}", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
         except discord.errors.Forbidden:
-            await ctx.send(_("I'm not allowed to do that."))
+            embed = discord.Embed(description=f"> I'm not allowed to do that.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         except Exception:
             log.exception(
                 "{}({}) attempted to kick {}({}), but an error occurred.".format(
