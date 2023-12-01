@@ -4,7 +4,7 @@ from grief.core import commands
 from grief.core.bot import Red
 from grief import VersionInfo, version_info
 from grief.core.utils import AsyncIter
-
+import distro
 import os
 import platform
 import psutil
@@ -74,39 +74,6 @@ from grief.core.utils.chat_formatting import (
     italics,
     humanize_number,
     humanize_timedelta,
-)
-
-
-
-import json
-import logging
-import math
-import os
-import platform
-import random
-import string
-import subprocess
-import sys
-import typing as t
-import unicodedata
-from concurrent.futures import ThreadPoolExecutor
-from time import perf_counter
-
-import cpuinfo
-import discord
-import psutil
-import speedtest
-from grief.cogs.downloader.converters import InstalledCog
-from grief.core import commands, version_info
-from grief.core.bot import Red
-from grief.core.data_manager import cog_data_path
-from grief.core.utils import AsyncIter
-from grief.core.utils.chat_formatting import (
-    box,
-    humanize_number,
-    humanize_timedelta,
-    pagify,
-    text_to_file,
 )
 
 async def wait_reply(ctx: commands.Context, timeout: int = 60):
@@ -684,10 +651,10 @@ class Info(commands.Cog):
 
     def _dynamic_time(self, time):
         try:
-            date_join = datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S.%f%z")
+            date_join = datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S.%f%z")
         except ValueError:
             time = f"{str(time)}.0"
-            date_join = datetime.datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S.%f%z")
+            date_join = datetime.strptime(str(time), "%Y-%m-%d %H:%M:%S.%f%z")
         date_now = discord.utils.utcnow()
         since_join = date_now - date_join
 
@@ -1617,11 +1584,9 @@ class Info(commands.Cog):
             osdat = platform.mac_ver()
             ostype = f"Mac OS {osdat[0]} {osdat[1]}"
         elif sys.platform == "linux":
-            import distro
-
             ostype = f"{distro.name()} {distro.version()}"
 
-        td = datetime.datetime.utcnow() - datetime.datetime.fromtimestamp(psutil.boot_time())
+        td = datetime.utcnow() - datetime.fromtimestamp(psutil.boot_time())
         sys_uptime = humanize_timedelta(timedelta=td)
 
         # -/-/-/BOT-/-/-/
@@ -1636,7 +1601,7 @@ class Info(commands.Cog):
             for __ in self.bot.get_cog(cog).walk_commands():
                 commandcount += 1
         commandcount = "{:,}".format(commandcount)
-        td = datetime.datetime.utcnow() - self.bot.uptime
+        td = datetime.utcnow() - self.bot.uptime
         uptime = humanize_timedelta(timedelta=td)
 
         # -/-/-/LIBS-/-/-/
