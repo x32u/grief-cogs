@@ -755,6 +755,7 @@ class Roles(MixinMeta):
                 position=position,
                 reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
             )
+            await ctx.tick()
         except discord.HTTPException as e:
             raise commands.UserFeedbackCheckFailure(
                 _(ERROR_MESSAGE).format(error=box(e, lang="py")))
@@ -815,6 +816,7 @@ class Roles(MixinMeta):
                 permissions=role_permissions,
                 reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
             )
+            await ctx.tick()
         except discord.HTTPException as e:
             raise commands.UserFeedbackCheckFailure(
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
