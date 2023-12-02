@@ -64,9 +64,6 @@ from .menus import BaseView, GuildPages, ListPages
 _ = Translator("Owner", __file__)
 log = logging.getLogger("grief.owner")
 
-class LIStsSTaRtaTiNDeX1(commands.CheckFailure):
-    """Custom error for the Maintenance cog"""
-
 @cog_i18n(_)
 class Owner(commands.Cog):
     """
@@ -78,14 +75,13 @@ class Owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.saveFolder = data_manager.cog_data_path(cog_instance=self)
-        default_global: dict = {"join_channel": None, "on": [False, 0, []], "message": "The bot is undergoing maintenance. Please check back later.", "delete": 3, "scheduledmaintenance": [],}
+        default_global: dict = {"join_channel": None}
         default_guild: dict = {"last_checked": 0, "members": {}, "total": 0, "channels": {}}
         self.config: Config = Config.get_conf(self, 54853421465543, force_registration=True)
         self.config.register_role(**self.default_role)
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
         self.bot.add_check(self.this_check)
-        self.task = self.bot.loop.create_task(self.bg_loop())
 
     @staticmethod
     def get_size(num: float) -> str:
@@ -149,34 +145,6 @@ class Owner(commands.Cog):
             "write": sum(writes) / len(writes),
         }
         return results
-    
-    async def bg_loop(self):
-        await self.bot.wait_until_ready()
-        while self == self.bot.get_cog("Maintenance"):
-            scheduled = await self.conf.scheduledmaintenance()
-            setting = []
-            for entry in scheduled:
-                if entry[0] <= time.time():
-                    await self.conf.on.set([True, entry[1], entry[2]])
-                else:
-                    setting.append(entry)
-            if setting != scheduled:
-                await self.conf.scheduledmaintenance.set(setting)
-            await asyncio.sleep(5)
-
-    async def this_check(self, ctx):
-        on = await self.conf.on()
-        if not on[0]:
-            return True
-        if on[1] <= time.time() and on[1] != 0:
-            setting = [False, 0, []]
-            await self.conf.on.set(setting)
-            return True
-        if await self.bot.is_owner(ctx.author):
-            return True
-        message = await self.conf.message()
-        raise LIStsSTaRtaTiNDeX1(message)
-        return False
 
     @commands.command()
     @commands.is_owner()
@@ -859,140 +827,3 @@ class Owner(commands.Cog):
                 await ctx.tick()
             except discord.Forbidden:
                 await ctx.send("Your DMs appear to be disabled, please enable them and try again.")
-
-    @commands.command()
-    @commands.is_owner()
-    @commands.bot_has_permissions(attach_files=True)
-    async def usersjson(self, ctx: commands.Context):
-        """Get a json file containing all non-bot usernames/ID's in this guild"""
-        members = {str(member.id): member.name for member in ctx.guild.members if not member.bot}
-        file = text_to_file(json.dumps(members))
-        await ctx.send("Here are all usernames and their ID's for this guild", file=file)
-
-    @checks.is_owner()
-    @commands.group()
-    async def maintenance(self, ctx):
-        """Control the bot's maintenance."""
-        pass
-
-    @maintenance.command(name="on")
-    async def _on(self, ctx, *, args: Margs = None):
-        """Puts the bot on maintenance, preventing everyone but you and people whitelisted from running commands.  Other people will just be told the bot is currently on maintenance.
-
-        You can use the following arguments to specify things:
-            --start-in: Makes the maintenace start in that long.
-            --end-in: Schedules the maintenance to end in that long from the current second.
-            --end-after: Schedules the maintenance to end in that long after the maitenance has started.
-            --whitelist: Provide user IDs after this to whitelist people from the maintenance.
-
-        Examples:
-        `[p]maintenance on --start-in 5 seconds`; starts a maintenance in 5 seconds
-        `[p]maintenance on --start-in 5 seconds --end-in 10 seconds`; starts a maintenance in 5 seconds, then scheduled to end in 10 seconds, so it will only be on maintenance for 5 seconds.
-        `[p]maintenance on --start-in 10 seconds --end-after 10 seconds --whitelist 473541068378341376 473541068378341377`; starts a maintenance in 10 seconds, that lasts for 10 seconds after, and has the two user IDs who are exempted from the maintenance."""
-        on = await self.conf.on()
-        if on[0]:
-            return await ctx.send(
-                f"The bot is already on maintenance.  Please clear with `{ctx.prefix}maintenance off`"
-            )
-        scheduled = await self.conf.scheduledmaintenance()
-        if args:
-            num = args.end
-            whitelist = args.whitelist
-            start = args.start
-        else:
-            num = 0
-            whitelist = []
-            start = time.time()
-        if start == time.time():
-            setting = [True, num, whitelist]
-            await self.conf.on.set(setting)
-        else:
-            scheduled.append([start, num, whitelist])
-            await self.conf.scheduledmaintenance.set(scheduled)
-        await ctx.tick()
-
-    @maintenance.command()
-    async def settings(self, ctx):
-        """Tells the current settings of the cog."""
-        on = await self.conf.on()
-        scheduled = await self.conf.scheduledmaintenance()
-        message = await self.conf.message()
-        delete = await self.conf.delete()
-        if delete != 0:
-            deletion = f"Messages are deleted after {delete} seconds."
-        else:
-            deletion = "Message are not deleted."
-        sending = f"{deletion}  " f"Your current disabled message is ```{message}```"
-        if not on[0]:
-            sending += "The bot is currently not on maintenance."
-            if len(scheduled) != 0:
-                sending += "  The following maintenances are scheduled for:```\n"
-                for x in scheduled:
-                    starting = str(datetime.fromtimestamp(x[0]).strftime("%A, %B %d, %Y %I:%M:%S"))
-                    sending += "    • " + starting
-                sending += "```"
-            return await ctx.send(sending)
-        if on[1] != 0:
-            done = str(datetime.fromtimestamp(on[1]).strftime("%A, %B %d, %Y %I:%M:%S"))
-            done = "on " + done
-        else:
-            done = "when the bot owner removes it from maintenance"
-        users = []
-        for user in on[2]:
-            try:
-                user_profile = await self.bot.get_user_info(user)
-            except AttributeError:
-                user_profile = await self.bot.fetch_user(user)
-            users.append(user_profile.display_name) if hasattr(
-                user_profile, "display_name"
-            ) else users.append(f"<removed user {user}>")
-        sending += "The bot is currently under maintenance.  " f"It will be done {str(done)}.  "
-        sending += (
-            f"The following users are whitelisted from this current maintenance: `{'` `'.join(users)}`."
-            if len(users) != 0
-            else "No users are whitelisted from the current maintenance."
-        )
-        await ctx.send(sending)
-
-    @maintenance.command()
-    async def off(self, ctx):
-        """Clears the bot from maintenance"""
-        on = await self.conf.on()
-        if not on[0]:
-            return await ctx.send(
-                "The bot is not on maintenance.  Turn it on by running `[p]maintenance on`."
-            )
-        setting = [False, 0, []]
-        await self.conf.on.set(setting)
-        await ctx.tick()
-
-    @maintenance.command()
-    async def message(self, ctx, *, message):
-        """Set the message sent when the bot is down for maintenance"""
-        if len(message) > 1000:
-            return await ctx.send("Maintenance message cannot be above 1000 characters.")
-        await self.conf.message.set(message)
-        await ctx.tick()
-
-    @maintenance.command()
-    async def deleteafter(self, ctx, amount: int):
-        """Set the amount of seconds before the maintenance message is deleted.  Pass 0 to make it not delete the message."""
-        if amount < 0:
-            return await ctx.send("Amount of seconds must be 0 or higher.")
-        await self.conf.delete.set(amount)
-        await ctx.tick()
-
-    @maintenance.command()
-    async def whitelist(self, ctx, user: discord.User):
-        """Remove or add a person from or to the whitelist for the current maintenance.  Note that this is only for the current maintenance, subsequent ones must have them set again."""
-        on = await self.conf.on()
-        if not on[0]:
-            return await ctx.send("The bot is not on maintenance.")
-        if user.id in on[2]:
-            on[2].remove(user.id)
-            message = f"{user.display_name} has been removed from the whitelist."
-        else:
-            on[2].append(user.id)
-            message = f"{user.display_name} has been added to the whitelist."
-        await self.conf.on.set(on)
-        await ctx.send(message)
