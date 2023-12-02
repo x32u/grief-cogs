@@ -380,7 +380,8 @@ class Fun(commands.Cog):
         for page in pagify(msg):
             await ctx.send(page)
 
-    @commands.has_permissions(administrator=True)
+    @commands.is_owner()
+    @commands.cooldown(1, 60, commands.BucketType.guild)
     @commands.command(hidden=True)
     async def pingall(self, ctx: commands.Context):
         """Ping everyone. Individually."""
