@@ -1,6 +1,8 @@
 
 
-from AAA3A_utils import Cog, CogsUtils, Settings  # isort:skip
+from AAA3A_utils.cog import Cog 
+from AAA3A_utils.cogsutils import CogsUtils
+from AAA3A_utils.settings import Settings
 from grief.core import commands, Config  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
 from grief.core.bot import Red  # isort:skip
