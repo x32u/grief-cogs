@@ -1710,7 +1710,7 @@ class Info(commands.Cog):
 
         return embed
     
-    @commands.is_owner()
+    @commands.is_owner(name="tiktok")
     @commands.command()
     @commands.cooldown(1, 5, commands.BucketType.guild)
     async def fetch_tiktok_profile(self, ctx, username):
