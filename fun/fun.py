@@ -344,18 +344,21 @@ class Fun(commands.Cog):
             uwu_message = uwu.uwuify(message)
             await ctx.reply(uwu_message, mention_author=False)
             
+
     @commands.command()
     async def penis(self, ctx, *users: discord.Member):
         """Detects user's penis length
 
         This is 100% accurate.
         Enter multiple users for an accurate comparison!"""
-        if not users == ctx.author
+        if not users:
+            await ctx.author()
+            return
 
         dongs = {}
         msg = ""
         state = random.getstate()
-        
+
         for user in users:
             random.seed(str(user.id))
 
