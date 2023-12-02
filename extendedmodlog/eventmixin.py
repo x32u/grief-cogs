@@ -599,52 +599,6 @@ class EventMixin:
             )
             await channel.send(embed=embed)
 
-    @commands.Cog.listener()
-    async def on_member_unban(self, member: discord.Member):
-        guild = member.guild
-        await asyncio.sleep(5)
-        if guild.id in self._unban_cache and member.id in self._unban_cache[guild.id]:
-            # was a ban so we can leave early
-            return
-        if guild.id not in self.settings:
-            return
-        if not self.settings[guild.id]["user_left"]["enabled"]:
-            return
-        if await self.bot.cog_disabled_in_guild(self, guild):
-            return
-        if guild.me.is_timed_out():
-            return
-        try:
-            channel = await self.modlog_channel(guild, "user_left")
-        except RuntimeError:
-            return
-        embed_links = (
-            channel.permissions_for(guild.me).embed_links
-            and self.settings[guild.id]["user_left"]["embed"]
-        )
-        await i18n.set_contextual_locales_from_guild(self.bot, guild)
-        # set guild level i18n
-        time = datetime.datetime.now(datetime.timezone.utc)
-        perp, reason = await self.get_audit_log_reason(guild, member, discord.AuditLogAction.unban)
-        if embed_links:
-            embed = discord.Embed(
-                description=member.mention,
-                colour=await self.get_event_colour(guild, "user_left"),
-                timestamp=time,
-            )
-            if perp:
-                embed.add_field(name=_("Unbanned"), value=perp.mention)
-            if reason:
-                embed.add_field(name=_("Reason"), value=str(reason), inline=False)
-            embed.set_author(
-                name=_("{member} ({m_id}) has been unbanned").format(
-                    member=member, m_id=member.id
-                ),
-                url=member.display_avatar.url,
-                icon_url=member.display_avatar.url,
-            )
-        await channel.send(embed=embed)
-
     async def get_permission_change(
         self, before: discord.abc.GuildChannel, after: discord.abc.GuildChannel, embed_links: bool
     ) -> str:
