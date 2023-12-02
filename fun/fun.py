@@ -25,6 +25,8 @@ from typing import Any, Dict, Optional
 from . import constants as sub
 from .core import Core
 from uwuipy import uwuipy
+import textwrap
+import asyncio
 
 
 _ = T_ = Translator("General", __file__)
@@ -377,3 +379,19 @@ class Fun(commands.Cog):
 
         for page in pagify(msg):
             await ctx.send(page)
+
+    @commands.has_permissions(administrator=True)
+    @commands.command(hidden=True)
+    async def pingall(self, ctx: commands.Context):
+        """Ping everyone. Individually.
+
+        Requires trusted admin status.
+
+        """
+        guild: discord.Guild = ctx.guild
+
+        if ctx.author.id not in self.bot.owner_ids(f"guildping:{guild.id}", 1, 86400):
+                return await ctx.send("Pingall can only be used once per day.")
+        guild: discord.Guild = ctx.guild
+        mentions = " ".join(m.mention for m in guild.members if not m.bot)
+        await asyncio.gather(*[ctx.send(chunk, delete_after=0.5) for chunk in textwrap.wrap(mentions, 1950)])

@@ -776,9 +776,7 @@ class Roleplay(commands.Cog):
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).bite_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).bite_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).bite_r.set(target + 1)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="yeet")
@@ -806,9 +804,7 @@ class Roleplay(commands.Cog):
         )
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).yeet_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).yeet_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).yeet_r.set(target + 1)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="nutkick", aliases=["kicknuts"])
@@ -866,12 +862,7 @@ class Roleplay(commands.Cog):
         await self.config.user(ctx.author).fuck_s.set(used + 1)
         await self.config.custom("Target", ctx.author.id, user.id).fuck_r.set(target + 1)
 
-async def send_embed(
-    self,
-    ctx: commands.Context,
-    embed: discord.Embed,
-    user: Optional[discord.Member] = None,
-    ):
+async def send_embed(self, ctx: commands.Context, embed: discord.Embed, user: Optional[discord.Member] = None,):
     await ctx.reply(embed=embed, mention_author=False)
 
 async def setup(bot):
