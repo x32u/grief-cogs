@@ -872,24 +872,16 @@ class KickBanMixin(MixinMeta):
         await ctx.guild.edit(splash=b.getvalue())
         return await ctx.tick()
 
-    @commands.command(name="setbanner", hidden=True)
-    async def guild_banner(self, ctx, image: ImageFinder = None):
-        """Set the banner of the server.
-
-        `<image>` URL to the image or image uploaded with running the
-        command
-
-        """
-        if image is None:
-            image = await ImageFinder().search_for_images(ctx)
-        url = image[0]
-
-        b, mime = await self.bytes_download(url)
-        if not b:
-            return await ctx.send("That's not a valid image.")
-
-        await ctx.guild.edit(banner=b.getvalue())
-        return await ctx.tick()
+    @commands.command(name="setbanner")
+    @commands.has_permissions(administrator=True)
+    async def setbanner(self, ctx, image_url):
+        embed = discord.Embed(
+            title="Server Banner Set",
+            description=f"Server banner has been updated.",
+            color=self.bot.color,
+        )
+        embed.set_image(url=image_url)
+        await ctx.send(embed=embed)
            
     @commands.command(aliases=["invitepurge", "staleinvites"], hidden=True)
     @commands.max_concurrency(1, commands.BucketType.guild)
