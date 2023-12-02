@@ -64,6 +64,9 @@ from .menus import BaseView, GuildPages, ListPages
 _ = Translator("Owner", __file__)
 log = logging.getLogger("grief.owner")
 
+class LIStsSTaRtaTiNDeX1(commands.CheckFailure):
+    """Custom error for the Maintenance cog"""
+
 @cog_i18n(_)
 class Owner(commands.Cog):
     """
