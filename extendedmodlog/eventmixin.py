@@ -632,7 +632,6 @@ class EventMixin:
                 colour=await self.get_event_colour(guild, "user_left"),
                 timestamp=time,
             )
-            embed.add_field(name=_("Total Users:"), value=str(len(guild.members)))
             if perp:
                 embed.add_field(name=_("Unbanned"), value=perp.mention)
             if reason:
