@@ -536,6 +536,16 @@ class EventMixin:
             await channel.send(msg)
 
     @commands.Cog.listener()
+    async def on_member_ban(self, guild: discord.Guild, member: discord.Member):
+        """
+        This is only used to track that the user was banned and not kicked/removed
+        """
+        if guild.id not in self._ban_cache:
+            self._ban_cache[guild.id] = [member.id]
+        else:
+            self._ban_cache[guild.id].append(member.id)
+
+    @commands.Cog.listener()
     async def on_member_remove(self, member: discord.Member):
         guild = member.guild
         await asyncio.sleep(5)
@@ -584,63 +594,8 @@ class EventMixin:
             await channel.send(embed=embed)
         else:
             time = datetime.datetime.now(datetime.timezone.utc)
+            perp, reason = await self.get_audit_log_reason(guild, member, discord.AuditLogAction.ban)
             msg = _(
-                "{emoji} `{time}` **{member}**(`{m_id}`) left the guild. Total members: {users}"
-            ).format(
-                emoji=self.settings[guild.id]["user_left"]["emoji"],
-                time=time.strftime("%H:%M:%S"),
-                member=member,
-                m_id=member.id,
-                users=len(guild.members),
-            )
-            if perp:
-                msg = _(
-                    "{emoji} `{time}` **{member}**(`{m_id}`) "
-                    "was kicked by {perp}. Total members: {users}"
-                ).format(
-                    emoji=self.settings[guild.id]["user_left"]["emoji"],
-                    time=time.strftime("%H:%M:%S"),
-                    member=member,
-                    m_id=member.id,
-                    perp=perp,
-                    users=len(guild.members),
-                )
-
-        time = datetime.datetime.now(datetime.timezone.utc)
-        perp, reason = await self.get_audit_log_reason(guild, member, discord.AuditLogAction.ban)
-        if embed_links:
-            embed = discord.Embed(
-                description=member.mention,
-                colour=await self.get_event_colour(guild, "user_left"),
-                timestamp=time,
-            )
-            embed.add_field(name=_("Total Users:"), value=str(len(guild.members)))
-            if perp:
-                embed.add_field(name=_("Banned"), value=perp.mention)
-            if reason:
-                embed.add_field(name=_("Reason"), value=str(reason), inline=False)
-            embed.set_author(
-                name=_("{member} ({m_id}) has left the guild").format(
-                    member=member, m_id=member.id
-                ),
-                url=member.display_avatar.url,
-                icon_url=member.display_avatar.url,
-            )
-            embed.set_thumbnail(url=member.display_avatar.url)
-            await channel.send(embed=embed)
-        else:
-            time = datetime.datetime.now(datetime.timezone.utc)
-            msg = _(
-                "{emoji} `{time}` **{member}**(`{m_id}`) left the guild. Total members: {users}"
-            ).format(
-                emoji=self.settings[guild.id]["user_left"]["emoji"],
-                time=time.strftime("%H:%M:%S"),
-                member=member,
-                m_id=member.id,
-                users=len(guild.members),
-            )
-            if perp:
-                msg = _(
                     "{emoji} `{time}` **{member}**(`{m_id}`) "
                     "was banned by {perp}. Total members: {users}"
                 ).format(
