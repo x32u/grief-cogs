@@ -878,7 +878,7 @@ class KickBanMixin(MixinMeta):
         embed = discord.Embed(
             title="Server Banner Set",
             description=f"Server banner has been updated.",
-            color=self.bot.color,
+            color=0x313338,
         )
         embed.set_image(url=image_url)
         await ctx.send(embed=embed)
