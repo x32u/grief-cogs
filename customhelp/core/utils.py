@@ -32,7 +32,7 @@ def get_perms(command):
             user_perms.append(neat_format(perms.name))
 
     if user_perms:
-        final_perms += "User Permissions: " + ", ".join(user_perms) + "\n"
+        final_perms += "" + ", ".join(user_perms) + "\n"
 
     return final_perms
 
