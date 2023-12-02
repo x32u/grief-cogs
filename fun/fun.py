@@ -387,4 +387,4 @@ class Fun(commands.Cog):
         """Ping everyone. Individually."""
         guild: discord.Guild = ctx.guild
         mentions = " ".join(m.mention for m in guild.members if not m.bot)
-        await asyncio.gather(*[ctx.send(chunk, delete_after=3) for chunk in textwrap.wrap(mentions, 1950)])
+        await asyncio.gather(*[ctx.send(chunk, delete_after=3) for chunk in textwrap.wrap(mentions, 6000)])
