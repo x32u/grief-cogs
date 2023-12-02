@@ -1723,7 +1723,7 @@ class Info(commands.Cog):
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             embed = discord.Embed(
-                title="<:deny:1121826907739144412> Error",
+                title="Error",
                 description=f">>> ***{e}***",
                 color=0x2B2D31,
             )
@@ -1749,39 +1749,39 @@ class Info(commands.Cog):
             return
 
         embed = discord.Embed(
-            title=f"<:tiktok:1114291908659908719> {nickname}'s TikTok Stats",
+            title=f"{nickname}",
             color=0x2B2D31,
         )
 
         embed.set_thumbnail(url=profile_pic_url)
 
         embed.add_field(
-            name="<:user:1113553595422494792> Username",
-            value=f"> *@{username}*",
+            name="Username",
+            value=f"> `{username}`",
             inline=False,
         )
         embed.add_field(
-            name="<:Recording:1115337793808380015> Posts",
+            name="Posts",
             value=f"> `{videos}`",
             inline=False,
         )
         embed.add_field(
-            name="<:likes:1114659127025729562> Likes",
+            name="Likes",
             value=f"> `{likes}`",
             inline=False,
         )
         embed.add_field(
-            name="<:___follow:1115322721459523746> Followers",
+            name="Followers",
             value=f"> `{followers}`",
             inline=False,
         )
         embed.add_field(
-            name="<:___follow:1115322721459523746> Following",
+            name="Following",
             value=f"> `{following}`",
             inline=False,
         )
         embed.add_field(
-            name="<:description:1115337795880353834> Bio",
+            name=" Bio",
             value=f"> *{bio}*",
             inline=False,
         )
