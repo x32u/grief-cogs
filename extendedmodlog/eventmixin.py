@@ -536,16 +536,6 @@ class EventMixin:
             await channel.send(msg)
 
     @commands.Cog.listener()
-    async def on_member_ban(self, guild: discord.Guild, member: discord.Member):
-        """
-        This is only used to track that the user was banned and not kicked/removed
-        """
-        if guild.id not in self._ban_cache:
-            self._ban_cache[guild.id] = [member.id]
-        else:
-            self._ban_cache[guild.id].append(member.id)
-
-    @commands.Cog.listener()
     async def on_member_remove(self, member: discord.Member):
         guild = member.guild
         await asyncio.sleep(5)
