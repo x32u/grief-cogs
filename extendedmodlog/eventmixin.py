@@ -603,7 +603,7 @@ class EventMixin:
     async def on_member_unban(self, member: discord.Member):
         guild = member.guild
         await asyncio.sleep(5)
-        if guild.id in self._ban_cache and member.id in self._ban_cache[guild.id]:
+        if guild.id in self._unban_cache and member.id in self._unban_cache[guild.id]:
             # was a ban so we can leave early
             return
         if guild.id not in self.settings:
