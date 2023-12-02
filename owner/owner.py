@@ -81,7 +81,6 @@ class Owner(commands.Cog):
         self.config.register_role(**self.default_role)
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
-        self.bot.add_check(self.this_check)
 
     @staticmethod
     def get_size(num: float) -> str:
