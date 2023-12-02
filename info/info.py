@@ -1756,32 +1756,32 @@ class Info(commands.Cog):
         embed.set_thumbnail(url=profile_pic_url)
 
         embed.add_field(
-            name="Username",
+            name="Username:",
             value=f"> `{username}`",
             inline=False,
         )
         embed.add_field(
-            name="Posts",
+            name="Posts:",
             value=f"> `{videos}`",
             inline=False,
         )
         embed.add_field(
-            name="Likes",
+            name="Likes:",
             value=f"> `{likes}`",
             inline=False,
         )
         embed.add_field(
-            name="Followers",
+            name="Followers:",
             value=f"> `{followers}`",
             inline=False,
         )
         embed.add_field(
-            name="Following",
+            name="Following:",
             value=f"> `{following}`",
             inline=False,
         )
         embed.add_field(
-            name=" Bio",
+            name=" Bio:",
             value=f"> *{bio}*",
             inline=False,
         )
