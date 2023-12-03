@@ -871,65 +871,11 @@ class KickBanMixin(MixinMeta):
 
         await ctx.guild.edit(splash=b.getvalue())
         return await ctx.tick()
-           
-    @commands.command(aliases=["invitepurge", "staleinvites"], hidden=True)
-    @commands.max_concurrency(1, commands.BucketType.guild)
-    @commands.is_owner()
-    async def inviteprune(self, ctx: commands.Context):
-        """Remove invites with 0 uses."""
-        guild: discord.Guild = ctx.guild
-
-        invites = await guild.invites()
-
-        not_used = [i for i in invites if i.uses == 0]
-        if not not_used:
-            return await ctx.send("There are no stale invites!")
-
-        confirmed = await ctx.send(f"There are {len(not_used)} invites with 0 uses.", "Can I delete them?")
-
-        if confirmed:
-            return
-
-        status = await ctx.send("Deleted 0/{len(not_used)}")
-
-        try:
-            i: discord.Invite
-            total_errors = 0
-
-            for idx, i in enumerate(not_used, start=1):
-                try:
-                    async with asyncio.timeout(3):
-                        try:
-                            await i.delete()
-                            log.info(f"Deleted {i} from {ctx.guild} OK")
-                            await status.edit("Deleted {idx}/{len(not_used)}")
-                        except discord.HTTPException:
-                            total_errors += 1
-
-                            if total_errors > 9:
-                                log.error(f"Bailing on {ctx.guild}")
-                                return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord", 2)
-                except TimeoutError:
-                    total_errors += 1
-                    log.warning(f"Timeout for {i}")
-                    if total_errors > 9:
-                        log.error(f"Bailing on {ctx.guild}")
-                        return await ctx.send("Bailing on the request to delete invites. Too many errors from Discord", 2)
-
-                await asyncio.sleep(3)
-
-            return await ctx.send("Stale invites deleted!")
-
-        finally:
-            await status.delete()
 
     @commands.command()
     @commands.has_permissions(manage_channels=True)
     async def naughty(self, ctx, channel: discord.TextChannel):
         """Make a channel NSFW for 30 seconds."""
-        if not ctx.message.author.guild_permissions.manage_channels:
-            return await ctx.send(
-                "You don't have the required permissions to manage channels.")
         if channel.is_nsfw():
             return await ctx.send("The channel is already marked as NSFW.")
         await ctx.message.delete()
