@@ -12,7 +12,6 @@ from copy import deepcopy
 from functools import partial
 
 import chat_exporter
-from grief.core import modlog
 from grief.core.utils.chat_formatting import pagify
 
 from .dashboard_integration import DashboardIntegration
@@ -66,18 +65,17 @@ class TicketTool(settings, DashboardIntegration, Cog):
                 "ping_roles": [],
                 "ticket_role": None,
                 "nb_max": 5,
-                "create_modlog": False,
                 "close_on_leave": False,
                 "create_on_react": False,
                 "user_can_close": True,
                 "delete_on_close": False,
-                "color": 0x01D758,
-                "thumbnail": "http://www.quidd.it/wp-content/uploads/2017/10/Ticket-add-icon.png",
+                "color": 0x313338,
+                "thumbnail": "https://api.slit.sh/Ticket-add-icon.png",
                 "audit_logs": False,
                 "close_confirmation": False,
                 "emoji_open": "❓",
                 "emoji_close": "🔒",
-                "dynamic_channel_name": "{emoji}-ticket-{ticket_id}",
+                "dynamic_channel_name": "{owner_display_name}-{owner-id}",
                 "last_nb": 0000,
                 "custom_message": None,
                 "embed_button": {
@@ -175,12 +173,6 @@ class TicketTool(settings, DashboardIntegration, Cog):
                 "description": "Does closing the ticket directly delete it (with confirmation)?",
                 "no_slash": True,
             },
-            "modlog": {
-                "path": ["create_modlog"],
-                "converter": bool,
-                "description": "Does the bot create an action in the bot modlog when a ticket is created?",
-                "no_slash": True,
-            },
             "audit_logs": {
                 "converter": bool,
                 "description": "On all requests to the Discord api regarding the ticket (channel modification), does the bot send the name and id of the user who requested the action as the reason?",
@@ -214,12 +206,6 @@ class TicketTool(settings, DashboardIntegration, Cog):
         await super().cog_load()
         await self.edit_config_schema()
         await self.settings.add_commands()
-        try:
-            await modlog.register_casetype(
-                "ticket_created", default_setting=True, image="🎟️", case_str="New Ticket"
-            )
-        except RuntimeError:  # The case is already registered.
-            pass
         asyncio.create_task(self.load_buttons())
 
     async def red_delete_data_for_user(self, *args, **kwargs) -> None:
@@ -620,22 +606,6 @@ class TicketTool(settings, DashboardIntegration, Cog):
                 del tickets[str(id)]
             await self.config.guild(member.guild).tickets.set(tickets)
         return count <= config["nb_max"]
-
-    async def create_modlog(
-        self, ticket, action: str, reason: str
-    ) -> typing.Optional[modlog.Case]:
-        config = await self.get_config(ticket.guild, ticket.profile)
-        if config["create_modlog"]:
-            return await modlog.create_case(
-                ticket.bot,
-                ticket.guild,
-                ticket.created_at,
-                action_type=action,
-                user=ticket.created_by,
-                moderator=None,
-                reason=reason,
-            )
-        return
 
     def decorator(
         ticket_check: typing.Optional[bool] = False,
