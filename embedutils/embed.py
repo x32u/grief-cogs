@@ -126,7 +126,7 @@ class EmbedUtils(Cog):
         """Post embeds from valid YAML.
 
         This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
-        Here's an example: [**this example**](https://gist.github.com/evincement/54e4433f5af3d633786c08b34372c08c).
+        Here's an example: [**this example**](https://gist.github.com/evincement/54e4433f5af3d633786c08b34372c08c.)
 
         If you provide a message, it will be edited.
         You can use an attachment and the command `[p]embed yamlfile` will be invoked automatically.
