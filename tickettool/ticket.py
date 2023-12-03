@@ -394,8 +394,6 @@ class Ticket:
                             "⚠ At least one user (the ticket owner or a team member) could not be added to the ticket thread. Maybe the user doesn't have access to the parent forum/text channel. If the server uses private threads in a text channel, the bot does not have the `manage_messages` permission in this channel."
                         )
                     )
-            if config["create_modlog"]:
-                await self.cog.create_modlog(self, "ticket_created", _reason)
             if config["custom_message"] is not None:
                 try:
                     embed: discord.Embed = discord.Embed()
