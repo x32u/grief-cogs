@@ -934,15 +934,29 @@ class KickBanMixin(MixinMeta):
         finally:
             await status.delete()
 
-    @commands.is_owner()
-    @commands.command(hidden=True)
-    async def naughty(self, ctx: commands.Context):
-        """Temporarily make the current channel NSFW for 30 seconds."""
-        channel: discord.TextChannel = ctx.channel
-        if not hasattr(channel, "nsfw"):
-            return await ctx.send("This channel cannot be set as NSFW", 3)
-        if channel.nsfw:
-            return await ctx.send("The current channel is already NSFW!")
-        await channel.edit(nsfw=True)
-        self.bot.ioloop.call_later(30, channel.edit, nsfw=False)
-        return await ctx.send("The current channel is NSFW now for 30 seconds")
+    @commands.command()
+    @commands.has_permissions(manage_channels=True)
+    async def naughty(self, ctx, channel: discord.TextChannel):
+        """Make a channel NSFW for 30 seconds."""
+        if not ctx.message.author.guild_permissions.manage_channels:
+            return await ctx.send(
+                "You don't have the required permissions to manage channels."
+            )
+
+        if channel.is_nsfw():
+            return await ctx.send("The channel is already marked as NSFW.")
+
+        await ctx.message.delete()
+
+        try:
+            await channel.edit(nsfw=True)
+            await ctx.send(
+                f"The channel {channel.mention} has been marked as NSFW for 60 seconds."
+            )
+            await asyncio.sleep(60)
+            await channel.edit(nsfw=False)
+            await ctx.send(
+                f"The channel {channel.mention} is no longer marked as NSFW."
+            )
+        except discord.Forbidden:
+            await ctx.send("I don't have the required permissions to manage channels.")
