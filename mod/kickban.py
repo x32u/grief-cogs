@@ -871,17 +871,6 @@ class KickBanMixin(MixinMeta):
 
         await ctx.guild.edit(splash=b.getvalue())
         return await ctx.tick()
-
-    @commands.command(name="setbanner")
-    @commands.has_permissions(administrator=True)
-    async def setbanner(self, ctx, image_url):
-        embed = discord.Embed(
-            title="Server Banner Set",
-            description=f"Server banner has been updated.",
-            color=0x313338,
-        )
-        embed.set_image(url=image_url)
-        await ctx.send(embed=embed)
            
     @commands.command(aliases=["invitepurge", "staleinvites"], hidden=True)
     @commands.max_concurrency(1, commands.BucketType.guild)
@@ -940,14 +929,10 @@ class KickBanMixin(MixinMeta):
         """Make a channel NSFW for 30 seconds."""
         if not ctx.message.author.guild_permissions.manage_channels:
             return await ctx.send(
-                "You don't have the required permissions to manage channels."
-            )
-
+                "You don't have the required permissions to manage channels.")
         if channel.is_nsfw():
             return await ctx.send("The channel is already marked as NSFW.")
-
         await ctx.message.delete()
-
         try:
             await channel.edit(nsfw=True)
             await ctx.send(
@@ -956,7 +941,16 @@ class KickBanMixin(MixinMeta):
             await asyncio.sleep(60)
             await channel.edit(nsfw=False)
             await ctx.send(
-                f"The channel {channel.mention} is no longer marked as NSFW."
-            )
+                f"The channel {channel.mention} is no longer marked as NSFW.")
         except discord.Forbidden:
             await ctx.send("I don't have the required permissions to manage channels.")
+
+    @commands.command()
+    @commands.has_permissions(manage_guild=True)
+    async def clearinvites(self, ctx):
+        """Delete all invites in the server."""
+        invites = await ctx.guild.invites()
+        for invite in invites:
+            await invite.delete()
+        embed = discord.Embed(title="Clear Invites", description="All existing invites have been removed.", color=0x313338)
+        await ctx.send(embed=embed)
