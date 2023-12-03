@@ -895,5 +895,5 @@ class KickBanMixin(MixinMeta):
         invites = await ctx.guild.invites()
         for invite in invites:
             await invite.delete()
-        embed = discord.Embed(title="Clear Invites", description="All existing invites have been removed.", color=0x313338)
+        embed = discord.Embed(description="All existing invites have been removed.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
