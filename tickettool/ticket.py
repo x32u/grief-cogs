@@ -397,7 +397,6 @@ class Ticket:
             if config["custom_message"] is not None:
                 try:
                     embed: discord.Embed = discord.Embed()
-                    embed.title = "Custom Message"
                     to_replace = {
                         "ticket_id": str(self.id),
                         "owner_display_name": self.owner.display_name,
