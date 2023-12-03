@@ -874,20 +874,18 @@ class KickBanMixin(MixinMeta):
 
     @commands.command()
     @commands.has_permissions(manage_channels=True)
-    async def naughty(self, ctx, channel: discord.TextChannel):
+    async def naughty(self, ctx):
         """Make a channel NSFW for 30 seconds."""
+        channel: discord.TextChannel = ctx.channel
         if channel.is_nsfw():
             return await ctx.send("The channel is already marked as NSFW.")
         await ctx.message.delete()
         try:
             await channel.edit(nsfw=True)
-            await ctx.send(
-                f"The channel {channel.mention} has been marked as NSFW for 60 seconds."
-            )
-            await asyncio.sleep(60)
+            await ctx.send(f"The channel {channel.mention} has been marked as NSFW for 60 seconds.")
+            await asyncio.sleep(30)
             await channel.edit(nsfw=False)
-            await ctx.send(
-                f"The channel {channel.mention} is no longer marked as NSFW.")
+            await ctx.send(f"The channel {channel.mention} is no longer marked as NSFW.")
         except discord.Forbidden:
             await ctx.send("I don't have the required permissions to manage channels.")
 
