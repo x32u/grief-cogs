@@ -28,7 +28,7 @@ PASTEBIN_LIST_CONVERTER = PastebinListConverter(conversion_type="json")
 
 @cog_i18n(_)
 class EmbedUtils(Cog):
-    """Create, send, and store embeds.\n Use https://embeds.grief.cloud \n Required Permissions: Manage Messages."""
+    """Create, send, and store embeds.."""
 
     def __init__(self, bot: Red) -> None:
         super().__init__(bot=bot)
@@ -98,8 +98,8 @@ class EmbedUtils(Cog):
         """Post embeds from valid JSON.
 
         This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
-        Here's an example: [**this example**](https://gist.github.com/AAA3A-AAA3A/3c9772b34a8ebc09b3b10018185f4cd4).
-        You can use an [**embeds creator**](https://embedutils.com/) to get a JSON payload.
+        Here's an example: [**this example**](https://gist.github.com/evincement/54e4433f5af3d633786c08b34372c08c4).
+        You can use an [**embeds creator**](https://embeds.grief.cloud) to get a JSON payload.
 
         If you provide a message, it will be edited.
         You can use an attachment and the command `[p]embed yamlfile` will be invoked automatically.
@@ -126,7 +126,7 @@ class EmbedUtils(Cog):
         """Post embeds from valid YAML.
 
         This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
-        Here's an example: [**this example**](https://gist.github.com/AAA3A-AAA3A/3c9772b34a8ebc09b3b10018185f4cd4).
+        Here's an example: [**this example**](https://gist.github.com/evincement/54e4433f5af3d633786c08b34372c08c).
 
         If you provide a message, it will be edited.
         You can use an attachment and the command `[p]embed yamlfile` will be invoked automatically.
@@ -147,8 +147,8 @@ class EmbedUtils(Cog):
         """Post an embed from a valid JSON file (upload it).
 
         This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
-        Here's an example: [**this example**](https://gist.github.com/AAA3A-AAA3A/3c9772b34a8ebc09b3b10018185f4cd4).
-        You can use an [**embeds creator**](https://embedutils.com/) to get a JSON payload.
+        Here's an example: [**this example**](https://gist.github.com/evincement/54e4433f5af3d633786c08b34372c08c).
+        You can use an [**embeds creator**](https://embeds.grief.cloud) to get a JSON payload.
 
         If you provide a message, it will be edited.
         """
@@ -205,7 +205,7 @@ class EmbedUtils(Cog):
         """ Post embeds from a GitHub/Gist/Pastebin/Hastebin link containing valid JSON.
 
         This must be in the format expected by [**this Discord documentation**](https://discord.com/developers/docs/resources/channel#embed-object).
-        Here's an example: [**this example**](https://gist.github.com/AAA3A-AAA3A/3c9772b34a8ebc09b3b10018185f4cd4).
+        Here's an example: [**this example**](https://gist.github.com/evincement/54e4433f5af3d633786c08b34372c08c).
 
         If you provide a message, it will be edited.
         """
