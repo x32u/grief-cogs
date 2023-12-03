@@ -413,7 +413,7 @@ class Ticket:
                         "emoji": config["emoji_open"],
                     }
                     embed.description = config["custom_message"].format(**to_replace)
-                    await self.channel.send(embed=embed, color=0x313338)
+                    await self.channel.send(embed=embed)
                 except (KeyError, AttributeError, discord.HTTPException):
                     pass
             if logschannel is not None:
