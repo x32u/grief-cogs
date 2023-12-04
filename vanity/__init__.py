@@ -45,11 +45,11 @@ class Vanity(commands.Cog):
 
     @commands.Cog.listener(LISTENER_NAME)
     async def on_vanity_trigger(self, ctx: commands.Context, before: discord.Member, after: discord.Member) -> None:
+        if not self.config.guild(ctx.guild).blacklist():
+            return
         if not self.cached:
             await self.update_cache()
         if before.bot:
-            return
-        if not self.config.guild(ctx.guild).blacklist():
             return
         guild: discord.Guild = after.guild
         data = await self.config.guild(guild).all()
