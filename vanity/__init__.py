@@ -44,9 +44,7 @@ class Vanity(commands.Cog):
             )
 
     @commands.Cog.listener(LISTENER_NAME)
-    async def on_vanity_trigger(self, ctx: commands.Context, before: discord.Member, after: discord.Member) -> None:
-        if not self.config.guild(ctx.guild).blacklist():
-            return
+    async def on_vanity_trigger(self, before: discord.Member, after: discord.Member) -> None:
         if not self.cached:
             await self.update_cache()
         if before.bot:
@@ -67,6 +65,8 @@ class Vanity(commands.Cog):
         if not log_channel:
             return
         if role.position >= guild.me.top_role.position:
+            return
+        if not data["blacklisted"]:
             return
         before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
