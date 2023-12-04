@@ -493,7 +493,7 @@ class Mod(
         if vanity:
             await vanity.config.guild(ctx.guild).channel(channel.id)
             await vanity.config.guild(ctx.guild).channel.set(channel.id)
-            await vanity.reset_cache(ctx.guild)
+            await vanity.update_cache()
             reconfigured_svcs.append("vanity channel")
 
         if sticky:
