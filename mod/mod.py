@@ -457,6 +457,7 @@ class Mod(
 
     @commands.command()
     @commands.has_permissions(manage_channels=True)
+    @commands.cooldown(1, 30, commands.BucketType.guild)
     async def nuke(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """Nuke the channel."""
         reconfigured_svcs = []
@@ -489,11 +490,11 @@ class Mod(
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
         
-        if ctx.guild.id in vanity.channel and channel.id == vanity.channel[ctx.guild.id]:
+        if vanity:
             await vanity.config.guild(ctx.guild).channel(channel.id)
             await self.config.guild(ctx.guild).channel.set(channel.id)
             await vanity.reset_cache(ctx.guild)
-            reconfigured_svcs.append("vanity award channel")
+            reconfigured_svcs.append("vanity channel")
 
         if sticky:
             async with sticky.conf.channel(channel).all() as conf:
