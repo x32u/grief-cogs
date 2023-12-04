@@ -163,8 +163,10 @@ class Vanity(commands.Cog):
         """Toggle vanity checker for current server on/off. Do not use "/"."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
+        
         if "VANITY_URL" not in ctx.guild.features:
-            return await ctx.send("This guild does not currently have a vanity URL. This feature is for level 3 vanity servers only.")
+            await ctx.send("This guild does not currently have a vanity URL. This feature is for level 3 vanity servers only.")
+        
         embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
 
