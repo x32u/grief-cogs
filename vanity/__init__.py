@@ -213,14 +213,14 @@ class Vanity(commands.Cog):
             await ctx.send("I'll need a user to ignore or un-ignore. Run this command again with a given server member.")
 
         if member:
-            blacklist = await self.config.guild(ctx.guild).blacklist()
-            if member.id in blacklist:
-                blacklist.remove(member.id)
-                await self.config.guild(ctx.guild).blacklist.set(blacklist)
+            blacklisted = await self.config.guild(ctx.guild).blacklisted()
+            if member.id in blacklisted:
+                blacklisted.remove(member.id)
+                await self.config.guild(ctx.guild).blacklist.set(blacklisted)
                 await ctx.send("This user is currently in the blacklist. I've removed them.")
                 return await self.reset_cache(ctx.guild)
-            blacklist.append(member.id)
-            await self.config.guild(ctx.guild).blacklist.set(blacklist)
+            blacklisted.append(member.id)
+            await self.config.guild(ctx.guild).blacklist.set(blacklisted)
             await ctx.send("Added that user to the blacklist. ")
             await self.reset_cache(ctx.guild)
         
