@@ -498,7 +498,7 @@ class Mod(
         if sticky:
             async with sticky.conf.channel(channel) as conf:
                 if conf["last"]:
-                   async with sticky.conf.channel(new_channel()) as data:
+                   async with sticky.conf.channel(new_channel) as data:
                        data.update(conf)
                 reconfigured_svcs.append("sticky message")
 
