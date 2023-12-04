@@ -150,10 +150,12 @@ class Vanity(commands.Cog):
     @commands.group(name="vanity",)
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(manage_guild=True)
     async def vanity(self, ctx: commands.Context) -> None:
         """Vanity roles for grief."""
-        ...
+
+        vanity = await ctx.guild.vanity_invite()
+        vanity = vanity.url.replace("discord.gg", "")
+        vanity = vanity.replace("https://", "")
 
     @vanity.command(usage="true yor")
     @commands.has_permissions(manage_guild=True)
@@ -161,8 +163,8 @@ class Vanity(commands.Cog):
         """Toggle vanity checker for current server on/off. Do not use "/"."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
-        if "VANITY_URL" in ctx.guild.features:
-            self.vanity_cache[ctx.guild.id] = vanity
+        if "VANITY_URL" not in ctx.guild.features:
+            return await ctx.send("This guild does not currently have a vanity URL. This feature is for level 3 vanity servers only.")
         embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
 
@@ -197,7 +199,7 @@ class Vanity(commands.Cog):
         await self.config.guild(ctx.guild).channel.set(channel.id)
         embed = discord.Embed(description=f"> Vanity log channel has been updated to {channel.mention}", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
-
+        
 
 async def setup(bot: Red):
     cog = Vanity(bot)
