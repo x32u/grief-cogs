@@ -48,7 +48,7 @@ from concurrent.futures import ThreadPoolExecutor
 import discord
 from discord.channel import TextChannel
 
-from vanity.vanity import Vanity
+from vanity.__init__ import Vanity
 from sticky.sticky import Sticky
 from disboardreminder.disboardreminder import DisboardReminder
 
