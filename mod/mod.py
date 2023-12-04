@@ -516,7 +516,7 @@ class Mod(
             body = ""
             for svc in reconfigured_svcs:
                 body = f"{body}\n{svc}"
-            embed = discord.Embed(description=(f"The following settings were updated to the newly created channel: \n {body}"), colour=await ctx.embed_colour(),)
+            embed = discord.Embed(title="Channel nuked", description=(f"grief has updated the following settings: \n {body}"), footer="grief", colour=await ctx.embed_colour(),)
             return await new_channel.send(embed=embed)
         return await new_channel.send("first")
 
