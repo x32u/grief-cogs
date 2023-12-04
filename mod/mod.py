@@ -492,7 +492,7 @@ class Mod(
         
         if ctx.guild.id in vanity.channel_cache and channel.id == vanity.channel_cache[ctx.guild.id]:
             await vanity.config.guild(ctx.guild).channel.set(new_channel.id)
-            vanity.channel_cache[ctx.guild.id] = int(new_channel.id)
+            vanity.update_chace
             reconfigured_svcs.append("vanity channel")
 
         if sticky:
