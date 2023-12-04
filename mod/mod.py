@@ -490,7 +490,7 @@ class Mod(
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
         
-        if ctx.guild.id in vanity.cache and channel.id == vanity.cache[ctx.guild.id]:
+        if ctx.guild.id in vanity.cached and channel.id == vanity.cached[ctx.guild.id]:
             await vanity.config.guild(ctx.guild).channel.set(new_channel.id)
             await vanity.update_cache
             reconfigured_svcs.append("vanity channel")
