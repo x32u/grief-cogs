@@ -48,6 +48,10 @@ from concurrent.futures import ThreadPoolExecutor
 import discord
 from discord.channel import TextChannel
 
+from vanity.vanity import Vanity
+from sticky.sticky import Sticky
+from disboardreminder.disboardreminder import DisboardReminder
+
 _ = T_ = Translator("Mod", __file__)
 
 __version__ = "1.2.0"
@@ -503,20 +507,25 @@ class Mod(
 
         pos = int(channel.position)
         new_channel: discord.TextChannel = await channel.clone(reason=f"Channel nuke requested by {ctx.author}")
+        
         if guild.system_channel and guild.system_channel.id == channel.id:
             await guild.edit(system_channel=new_channel)
             reconfigured_svcs.append("system channel")
+        
         if guild.public_updates_channel and guild.public_updates_channel.id == channel.id:
             await guild.edit(public_updates_channel=new_channel)
             reconfigured_svcs.append("updates channel")
+        
         if guild.rules_channel and guild.rules_channel.id == channel.id:
             await guild.edit(rules_channel=new_channel)
             reconfigured_svcs.append("rules channel")
+        
         if ctx.guild.id in disboard.channel_cache and channel.id == disboard.channel_cache[ctx.guild.id]:
             await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
         notif_channel_id = await vanity.config.guild(ctx.guild).channel()
+        
         if notif_channel_id and int(notif_channel_id) == channel.id:
             await self.config.guild(ctx.guild).channel.set(channel.id)
             await vanity.reset_cache(ctx.guild)
