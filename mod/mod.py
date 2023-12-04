@@ -482,32 +482,77 @@ class Mod(
         else:
             await ctx.send("AutoPublisher setting reset has been cancelled.")
 
-    @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
-    @commands.hybrid_command(name="nuke")
-    async def nuke(self, ctx: commands.Context, confirmation: bool = False) -> None:
-        """Delete all messages from the current channel by duplicating it and then deleting it."""
-        config = await self.config.guild(ctx.guild).all()
-        old_channel = ctx.channel
-        channel_position = old_channel.position
+    @commands.has_permissions(administrator=True)
+    @commands.command()
+    async def nuke(self, ctx: commands.Context, channel: discord.TextChannel = None):
+        """Nuke the channel.
 
-        if not confirmation and not ctx.assume_yes:
-            embed: discord.Embed = discord.Embed()
-            embed.title = ("Nuke")
-            embed.description = ("Nuke channel {old_channel.mention} ({old_channel.id})?\n The channel will be deleted and recreated.").format(old_channel=old_channel)
-            embed.color = 0x313338
-            if not await CogsUtils.ConfirmationAsk(ctx, content=f"{ctx.author.mention}", embed=embed):
-                await CogsUtils.delete_message(ctx.message)
-                return
+        Re-creates it and deletes the current. Can only be ran by
+        trusted admins
 
-        reason = _("Nuke requested by {ctx.author} ({ctx.author.id}).").format(ctx=ctx)
-        new_channel = await old_channel.clone(reason=reason)
-        await old_channel.delete(reason=reason)
-        await new_channel.edit(
-            position=channel_position,
-            reason=reason,
-        ),
-        await new_channel.send("first")
+        """
+        reconfigured_svcs = []
+
+        disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
+        vanity: Vanity = self.bot.get_cog("Vanity")
+        welc: Welc = self.bot.get_cog("Welcome")
+        sticky: Sticky = self.bot.get_cog("Sticky")
+
+        if not channel:
+            channel: discord.TextChannel = ctx.channel
+        guild: discord.Guild = ctx.guild
+
+        pos = int(channel.position)
+        new_channel: discord.TextChannel = await channel.clone(reason=f"Channel nuke requested by {ctx.author}")
+        if guild.system_channel and guild.system_channel.id == channel.id:
+            await guild.edit(system_channel=new_channel)
+            reconfigured_svcs.append("system channel")
+        if guild.public_updates_channel and guild.public_updates_channel.id == channel.id:
+            await guild.edit(public_updates_channel=new_channel)
+            reconfigured_svcs.append("updates channel")
+        if guild.rules_channel and guild.rules_channel.id == channel.id:
+            await guild.edit(rules_channel=new_channel)
+            reconfigured_svcs.append("rules channel")
+        if ctx.guild.id in disboard.channel_cache and channel.id == disboard.channel_cache[ctx.guild.id]:
+            await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
+            disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
+            reconfigured_svcs.append("disboard reminder")
+        notif_channel_id = await vanity.config.guild(ctx.guild).notificationChannel()
+        if notif_channel_id and int(notif_channel_id) == channel.id:
+            await vanity.config.guild(ctx.guild).notificationChannel.set(new_channel.id)
+            await vanity.reset_cache(ctx.guild)
+            reconfigured_svcs.append("vanity award channel")
+
+        welc2_settings = await welc.config.channel(channel).all()
+
+        if welc2_settings["enabled"] or welc2_settings["welcome_msg"]:
+            async with welc.config.channel(channel).all() as _welc3:
+                if _welc3["enabled"]:
+                    async with welc.config.channel(new_channel).all() as _welc2:
+                        _welc2.update(_welc3)
+                    reconfigured_svcs.append("welcome channel (classic)")
+        if welcome := self.bot.get_cog("Welcome"):
+            welc_settings = await welcome.config.guild(guild).CHANNEL()
+            if welc_settings and int(welc_settings) == channel.id:
+                await welcome.config.guild(guild).CHANNEL.set(new_channel.id)
+                reconfigured_svcs.append("welcome channel")
+
+        if sticky:
+            async with sticky.conf.channel(channel).all() as conf:
+                if conf["last"]:
+                    async with sticky.conf.channel(new_channel).all() as data:
+                        data.update(conf)
+                        reconfigured_svcs.append("sticky message")
+
+        await ctx.channel.delete()
+        await asyncio.sleep(0.1)
+        await new_channel.edit(position=pos)
+        if reconfigured_svcs:
+            body = ""
+            for svc in reconfigured_svcs:
+                body = f"{body}\n{svc}"
+            ctx.send("The following settings were updated to the newly created channel:")
+        return await new_channel.send("👍🏿")
 
     @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
