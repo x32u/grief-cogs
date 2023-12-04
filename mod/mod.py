@@ -494,8 +494,6 @@ class Mod(
         reconfigured_svcs = []
 
         disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
-        vanity: Vanity = self.bot.get_cog("Vanity")
-        welc: Welc = self.bot.get_cog("Welcome")
         sticky: Sticky = self.bot.get_cog("Sticky")
 
         if not channel:
@@ -517,25 +515,6 @@ class Mod(
             await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
-        notif_channel_id = await vanity.config.guild(ctx.guild).Channel()
-        if notif_channel_id and int(notif_channel_id) == channel.id:
-            await vanity.config.guild(ctx.guild).Channel.set(new_channel.id)
-            await vanity.reset_cache(ctx.guild)
-            reconfigured_svcs.append("vanity award channel")
-
-        welc2_settings = await welc.config.channel(channel).all()
-
-        if welc2_settings["enabled"] or welc2_settings["welcome_msg"]:
-            async with welc.config.channel(channel).all() as _welc3:
-                if _welc3["enabled"]:
-                    async with welc.config.channel(new_channel).all() as _welc2:
-                        _welc2.update(_welc3)
-                    reconfigured_svcs.append("welcome channel (classic)")
-        if welcome := self.bot.get_cog("Welcome"):
-            welc_settings = await welcome.config.guild(guild).CHANNEL()
-            if welc_settings and int(welc_settings) == channel.id:
-                await welcome.config.guild(guild).CHANNEL.set(new_channel.id)
-                reconfigured_svcs.append("welcome channel")
 
         if sticky:
             async with sticky.conf.channel(channel).all() as conf:
