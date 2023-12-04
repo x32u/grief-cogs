@@ -214,11 +214,9 @@ class Vanity(commands.Cog):
 
         if member:
             blacklisted = await self.config.guild(ctx.guild).blacklisted()
-        if member.id in blacklisted:
-                blacklisted.remove(member.id)
-                await self.config.guild(ctx.guild).blacklist.set(blacklisted)
-                await ctx.send("This user is currently in the blacklist. I've removed them.")
-                return await self.reset_cache(ctx.guild)
+            await self.config.guild(ctx.guild).blacklist.set(blacklisted)
+            await ctx.send("This user is currently in the blacklist. I've removed them.")
+            return await self.reset_cache(ctx.guild)
         blacklisted.append(member.id)
         await self.config.guild(ctx.guild).blacklist.set(blacklisted)
         await ctx.send("Added that user to the blacklist. ")
