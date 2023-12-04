@@ -20,6 +20,7 @@ class Vanity(commands.Cog):
             "toggled": False,
             "channel": None,
             "vanity": None,
+            "blacklisted": None
         }
         self.cached = False
         self.vanity_cache = {}
@@ -47,6 +48,8 @@ class Vanity(commands.Cog):
         if not self.cached:
             await self.update_cache()
         if before.bot:
+            return
+        if not self.config.blacklisted():
             return
         guild: discord.Guild = after.guild
         data = await self.config.guild(guild).all()
