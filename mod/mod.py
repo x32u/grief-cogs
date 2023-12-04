@@ -28,9 +28,6 @@ from grief.core.utils.chat_formatting import humanize_timedelta
 
 from .converters import ChannelToggle, LockableChannel, LockableRole
 
-from AAA3A_utils import Cog, CogsUtils, Settings
-from AAA3A_utils.settings import CustomMessageConverter
-
 from grief.core.utils.predicates import MessagePredicate
 
 from discord.utils import utcnow
@@ -50,7 +47,7 @@ from discord.channel import TextChannel
 
 # from vanity.__init__ import Vanity
 from sticky.sticky import Sticky
-# from disboardreminder.disboardreminder import DisboardReminder
+from disboardreminder.disboardreminder import DisboardReminder
 
 _ = T_ = Translator("Mod", __file__)
 
@@ -469,7 +466,7 @@ class Mod(
         """
         reconfigured_svcs = []
 
-        # disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
+        disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
         # vanity: Vanity = self.bot.get_cog("Vanity")
         sticky: Sticky = self.bot.get_cog("Sticky")
 
@@ -492,10 +489,10 @@ class Mod(
             await guild.edit(rules_channel=new_channel)
             reconfigured_svcs.append("rules channel")
         
-        # if ctx.guild.id in disboard.channel_cache and channel.id == disboard.channel_cache[ctx.guild.id]:
-            # await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
-            # disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
-            # reconfigured_svcs.append("disboard reminder")
+        if ctx.guild.id in disboard.channel_cache and channel.id == disboard.channel_cache[ctx.guild.id]:
+            await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
+            disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
+            reconfigured_svcs.append("disboard reminder")
         
             # await vanity.config.guild(ctx.guild).channel()
             # await self.config.guild(ctx.guild).channel.set(channel.id)
