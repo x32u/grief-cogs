@@ -153,10 +153,6 @@ class Vanity(commands.Cog):
     async def vanity(self, ctx: commands.Context) -> None:
         """Vanity roles for grief."""
 
-        vanity = await ctx.guild.vanity_invite()
-        vanity = vanity.url.replace("discord.gg", "")
-        vanity = vanity.replace("https://", "")
-
     @vanity.command(usage="true yor")
     @commands.has_permissions(manage_guild=True)
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
