@@ -1806,7 +1806,7 @@ class Info(commands.Cog):
 
         async with aiohttp.ClientSession() as session:
             response = await session.get(
-                f"https://lains.life/instagram/profile?username={username}",
+                f"https://dev.lains.life/instagram/profile?username={username}",
                 headers=headers,
             )
             data = await response.json()
