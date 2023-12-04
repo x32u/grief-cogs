@@ -490,7 +490,7 @@ class Mod(
         
         if guild.rules_channel and guild.rules_channel.id == channel.id:
             await guild.edit(rules_channel=new_channel)
-            # reconfigured_svcs.append("rules channel")
+            reconfigured_svcs.append("rules channel")
         
         # if ctx.guild.id in disboard.channel_cache and channel.id == disboard.channel_cache[ctx.guild.id]:
             # await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
