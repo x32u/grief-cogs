@@ -494,6 +494,7 @@ class Mod(
         reconfigured_svcs = []
 
         disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
+        vanity: Vanity = self.bot.get_cog("Vanity")
         sticky: Sticky = self.bot.get_cog("Sticky")
 
         if not channel:
@@ -515,6 +516,11 @@ class Mod(
             await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
+        notif_channel_id = await vanity.config.guild(ctx.guild).channel()
+        if notif_channel_id and int(notif_channel_id) == channel.id:
+            await self.config.guild(ctx.guild).channel.set(channel.id)
+            await vanity.reset_cache(ctx.guild)
+            reconfigured_svcs.append("vanity award channel")
 
         if sticky:
             async with sticky.conf.channel(channel).all() as conf:
@@ -530,8 +536,8 @@ class Mod(
             body = ""
             for svc in reconfigured_svcs:
                 body = f"{body}\n{svc}"
-            ctx.send("The following settings were updated to the newly created channel:")
-        return await new_channel.send("👍🏿")
+            ctx.send(f"The following settings were updated to the newly created channel")
+        return await new_channel.send("first")
 
     @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
