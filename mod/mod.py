@@ -126,34 +126,6 @@ class Mod(
         }
         self.config.register_guild(**default_guild)
 
-    async def red_delete_data_for_user(
-        self,
-        *,
-        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
-        user_id: int,
-    ):
-        if requester != "discord_deleted_user":
-            return
-
-        all_members = await self.config.all_members()
-
-        async for guild_id, guild_data in AsyncIter(all_members.items(), steps=100):
-            if user_id in guild_data:
-                await self.config.member_from_ids(guild_id, user_id).clear()
-
-        await self.config.user_from_id(user_id).clear()
-
-        guild_data = await self.config.all_guilds()
-
-        async for guild_id, guild_data in AsyncIter(guild_data.items(), steps=100):
-            if user_id in guild_data["current_tempbans"]:
-                async with self.config.guild_from_id(guild_id).current_tempbans() as tbs:
-                    try:
-                        tbs.remove(user_id)
-                    except ValueError:
-                        pass
-                    # possible with a context switch between here and getting all guilds
-
     async def cog_load(self) -> None:
         await self._maybe_update_config()
 
@@ -524,9 +496,8 @@ class Mod(
             await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
-        notif_channel_id = await vanity.config.guild(ctx.guild).channel()
         
-        if notif_channel_id and int(notif_channel_id) == channel.id:
+            await vanity.config.guild(ctx.guild).channel()
             await self.config.guild(ctx.guild).channel.set(channel.id)
             await vanity.reset_cache(ctx.guild)
             reconfigured_svcs.append("vanity award channel")
