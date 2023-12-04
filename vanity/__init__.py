@@ -66,7 +66,7 @@ class Vanity(commands.Cog):
             return
         if role.position >= guild.me.top_role.position:
             return
-        if not data["blacklisted"]:
+        if not data["blacklisted"] or not data["channel"]:
             return
         before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
@@ -214,13 +214,15 @@ class Vanity(commands.Cog):
 
         if member:
             blacklisted = await self.config.guild(ctx.guild).blacklisted()
+            if member.id in blacklisted:
+                blacklisted.remove(member.id)
+                await self.config.guild(ctx.guild).blacklist.set(blacklisted)
+                await ctx.send("This user is currently in the blacklist. I've removed them.")
+                return await self.reset_cache(ctx.guild)
+            blacklisted.append(member.id)
             await self.config.guild(ctx.guild).blacklist.set(blacklisted)
-            await ctx.send("This user is currently in the blacklist. I've removed them.")
-            return await self.reset_cache(ctx.guild)
-        blacklisted.append(member.id)
-        await self.config.guild(ctx.guild).blacklist.set(blacklisted)
-        await ctx.send("Added that user to the blacklist. ")
-        await self.reset_cache(ctx.guild)
+            await ctx.send("Added that user to the blacklist. ")
+            await self.reset_cache(ctx.guild)
         
 
 async def setup(bot: Red):
