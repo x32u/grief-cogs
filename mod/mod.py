@@ -49,7 +49,7 @@ import discord
 from discord.channel import TextChannel
 
 # from vanity.__init__ import Vanity
-# from sticky.sticky import Sticky
+from sticky.sticky import Sticky
 # from disboardreminder.disboardreminder import DisboardReminder
 
 _ = T_ = Translator("Mod", __file__)
@@ -471,7 +471,7 @@ class Mod(
 
         # disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
         # vanity: Vanity = self.bot.get_cog("Vanity")
-        # sticky: Sticky = self.bot.get_cog("Sticky")
+        sticky: Sticky = self.bot.get_cog("Sticky")
 
         if not channel:
             channel: discord.TextChannel = ctx.channel
@@ -502,18 +502,23 @@ class Mod(
             # await vanity.reset_cache(ctx.guild)
             # reconfigured_svcs.append("vanity award channel")
 
-        # if sticky:
-            # async with sticky.conf.channel(channel).all() as conf:
-                # if conf["last"]:
-                   # async with sticky.conf.channel(new_channel).all() as data:
-                       # data.update(conf)
-                        # reconfigured_svcs.append("sticky message")
+        if sticky:
+            async with sticky.conf.channel(channel).all() as conf:
+                if conf["last"]:
+                   async with sticky.conf.channel(new_channel).all() as data:
+                       data.update(conf)
+                reconfigured_svcs.append("sticky message")
 
         await ctx.channel.delete()
         await asyncio.sleep(0.1)
         await new_channel.edit(position=pos)
-        # if reconfigured_svcs:
-        await new_channel.send("first")
+        if reconfigured_svcs:
+            body = ""
+            for svc in reconfigured_svcs:
+                body = f"{body}\n{svc}"
+            embed = discord.Embed(description=(f"The following settings were updated to the newly created channel: \n {body}"), colour=await ctx.embed_colour(),)
+            return await new_channel.send(embed=embed)
+        return await new_channel.send("first")
 
     @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
