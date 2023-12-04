@@ -505,14 +505,7 @@ class Mod(
         await ctx.channel.delete()
         await asyncio.sleep(0.1)
         await new_channel.edit(position=pos)
-        if reconfigured_svcs:
-            body = ""
-            for svc in reconfigured_svcs:
-                body = f"{body}\n{svc}"
-            embed = discord.Embed(title="Channel Nuked", description=(f"grief has updated the following settings: \n {body}"), colour=await ctx.embed_colour(),)
-            embed.set_footer(text="grief")
-            return await new_channel.send(embed=embed)
-        return await new_channel.send("first")
+        await new_channel.send("first")
 
     @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
