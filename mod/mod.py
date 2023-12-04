@@ -45,7 +45,7 @@ from concurrent.futures import ThreadPoolExecutor
 import discord
 from discord.channel import TextChannel
 
-# from vanity.__init__ import Vanity
+from vanity.__init__ import Vanity
 from sticky.sticky import Sticky
 from disboardreminder.disboardreminder import DisboardReminder
 
@@ -455,19 +455,14 @@ class Mod(
         else:
             await ctx.send("AutoPublisher setting reset has been cancelled.")
 
-    @commands.has_permissions(administrator=True)
     @commands.command()
+    @commands.has_permissions(manage_channels=True)
     async def nuke(self, ctx: commands.Context, channel: discord.TextChannel = None):
-        """Nuke the channel.
-
-        Re-creates it and deletes the current. Can only be ran by
-        trusted admins
-
-        """
+        """Nuke the channel."""
         reconfigured_svcs = []
 
         disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
-        # vanity: Vanity = self.bot.get_cog("Vanity")
+        vanity: Vanity = self.bot.get_cog("Vanity")
         sticky: Sticky = self.bot.get_cog("Sticky")
 
         if not channel:
@@ -494,10 +489,10 @@ class Mod(
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
         
-            # await vanity.config.guild(ctx.guild).channel()
-            # await self.config.guild(ctx.guild).channel.set(channel.id)
-            # await vanity.reset_cache(ctx.guild)
-            # reconfigured_svcs.append("vanity award channel")
+            await vanity.config.guild(ctx.guild).channel(channel.id)
+            await self.config.guild(ctx.guild).channel.set(channel.id)
+            await vanity.reset_cache(ctx.guild)
+            reconfigured_svcs.append("vanity award channel")
 
         if sticky:
             async with sticky.conf.channel(channel).all() as conf:
