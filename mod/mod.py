@@ -48,9 +48,9 @@ from concurrent.futures import ThreadPoolExecutor
 import discord
 from discord.channel import TextChannel
 
-from vanity.__init__ import Vanity
-from sticky.sticky import Sticky
-from disboardreminder.disboardreminder import DisboardReminder
+# from vanity.__init__ import Vanity
+# from sticky.sticky import Sticky
+# from disboardreminder.disboardreminder import DisboardReminder
 
 _ = T_ = Translator("Mod", __file__)
 
@@ -469,9 +469,9 @@ class Mod(
         """
         reconfigured_svcs = []
 
-        disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
-        vanity: Vanity = self.bot.get_cog("Vanity")
-        sticky: Sticky = self.bot.get_cog("Sticky")
+        # disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
+        # vanity: Vanity = self.bot.get_cog("Vanity")
+        # sticky: Sticky = self.bot.get_cog("Sticky")
 
         if not channel:
             channel: discord.TextChannel = ctx.channel
@@ -490,34 +490,30 @@ class Mod(
         
         if guild.rules_channel and guild.rules_channel.id == channel.id:
             await guild.edit(rules_channel=new_channel)
-            reconfigured_svcs.append("rules channel")
+            # reconfigured_svcs.append("rules channel")
         
-        if ctx.guild.id in disboard.channel_cache and channel.id == disboard.channel_cache[ctx.guild.id]:
-            await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
-            disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
-            reconfigured_svcs.append("disboard reminder")
+        # if ctx.guild.id in disboard.channel_cache and channel.id == disboard.channel_cache[ctx.guild.id]:
+            # await disboard.config.guild(ctx.guild).channel.set(new_channel.id)
+            # disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
+            # reconfigured_svcs.append("disboard reminder")
         
-            await vanity.config.guild(ctx.guild).channel()
-            await self.config.guild(ctx.guild).channel.set(channel.id)
-            await vanity.reset_cache(ctx.guild)
-            reconfigured_svcs.append("vanity award channel")
+            # await vanity.config.guild(ctx.guild).channel()
+            # await self.config.guild(ctx.guild).channel.set(channel.id)
+            # await vanity.reset_cache(ctx.guild)
+            # reconfigured_svcs.append("vanity award channel")
 
-        if sticky:
-            async with sticky.conf.channel(channel).all() as conf:
-                if conf["last"]:
-                    async with sticky.conf.channel(new_channel).all() as data:
-                        data.update(conf)
-                        reconfigured_svcs.append("sticky message")
+        # if sticky:
+            # async with sticky.conf.channel(channel).all() as conf:
+                # if conf["last"]:
+                   # async with sticky.conf.channel(new_channel).all() as data:
+                       # data.update(conf)
+                        # reconfigured_svcs.append("sticky message")
 
         await ctx.channel.delete()
         await asyncio.sleep(0.1)
         await new_channel.edit(position=pos)
-        if reconfigured_svcs:
-            body = ""
-            for svc in reconfigured_svcs:
-                body = f"{body}\n{svc}"
-            ctx.send(f"The following settings were updated to the newly created channel")
-        return await new_channel.send("first")
+        # if reconfigured_svcs:
+        await new_channel.send("first")
 
     @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
