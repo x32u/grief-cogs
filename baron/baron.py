@@ -709,6 +709,11 @@ class Baron(commands.Cog):
                 guild,
                 f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148",
             )
+        if data["whitelist"] < data["whitelist"]:
+            await self.notify_guild(
+                guild,
+                f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148",
+            )
             await guild.leave()
             await self.baron_log("min_member_leave", guild=guild)
         elif data["bot_ratio"] and (
@@ -721,26 +726,3 @@ class Baron(commands.Cog):
             )
             await guild.leave()
             await self.baron_log("botfarm_leave", guild=guild)
-
-
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild: discord.Guild):
-            data = self.settings_cache
-            if guild.id not in data["whitelist"]:
-                return
-            g = guild
-            e = discord.Embed()
-            e.title = "Guild Leave"
-            e.description = f"Guild: {g} / {g.id}"
-            e.set_author(name=str(self.bot.user), icon_url=str(self.bot.user.avatar_url))
-            e.add_field(name="reason", value="whitelist")
-            e.add_field(name="owner", value=f"{str(g.owner).replace('#0', '')} / {g.owner_id}")
-            e.add_field(name="bot user", value=str(self.bot.user))
-            e.add_field(name="member count", value=g.member_count)
-            e.add_field(name="whitelisted", value=False)
-            e.color = 0
-            await self.notify_guild(
-                guild,
-                "Melanie is a premium bot and cannot be added to servers for free. This server is not whitelisted to join. Join https://discord.gg/melaniebot and purchase a server activation.\nI'll automatically leave this server shortly",
-            )
-            await guild.leave()
