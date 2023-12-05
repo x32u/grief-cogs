@@ -683,7 +683,9 @@ class Baron(commands.Cog):
     async def on_guild_join(self, guild: discord.Guild):
         data = self.settings_cache
         if guild.id in data["whitelist"]:
+            await self.notify_guild(guild, f"this server has been blacklisted, please join https://discord.gg/seer for support.",)
             return
+        
         elif guild.id in data["blacklist"]:
             await self.notify_guild(guild, f"this server has been blacklisted, please join https://discord.gg/seer for support.",)
             await guild.leave()
@@ -692,8 +694,7 @@ class Baron(commands.Cog):
         if data["limit"] and len(self.bot.guilds) > data["limit"]:
             await self.notify_guild(
                 guild,
-                f"I have automatically left this server since I am at my server limit. ({data['limit']})",
-            )
+                f"I have automatically left this server since I am at my server limit. ({data['limit']})",)
             await guild.leave()
             await self.baron_log("limit_leave", guild=guild)
             return
@@ -702,24 +703,13 @@ class Baron(commands.Cog):
         if (
             guild.chunked is False
             and self.bot.intents.members
-            and self.bot.shards[shard_meta].is_ws_ratelimited() is False
-        ):  # adds coverage for the case where bot is already pulling chunk
+            and self.bot.shards[shard_meta].is_ws_ratelimited() is False):  # adds coverage for the case where bot is already pulling chunk
             await guild.chunk()
         if data["min_members"] and guild.member_count < data["min_members"]:
             await self.notify_guild(
-                guild,
-                f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148",
-            )
+                guild,f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148"),
         elif guild.id in data["blacklist"]:
             await guild.leave()
             await self.baron_log("min_member_leave", guild=guild)
-        elif data["bot_ratio"] and (
-            len([x async for x in AsyncIter(guild.members, steps=100) if x.bot])
-            / guild.member_count
-        ) > (data["bot_ratio"] / 100):
-            await self.notify_guild(
-                guild,
-                f"I have automatically left this server since it has a high bot to member ratio.",
-            )
             await guild.leave()
             await self.baron_log("botfarm_leave", guild=guild)
