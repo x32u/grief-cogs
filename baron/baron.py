@@ -682,12 +682,13 @@ class Baron(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
         data = self.settings_cache
+        
         if guild.id in data["whitelist"]:
             await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/seer\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>",)
             return
         
         elif guild.id in data["blacklist"]:
-            await self.notify_guild(guild, f"this server has been blacklisted, please join https://discord.gg/seer for support.",)
+            await self.notify_guild(guild, f"This server has been blacklisted, please join https://discord.gg/seer for support.",)
             await guild.leave()
             await self.baron_log("bl_leave", guild=guild)
 
@@ -697,6 +698,11 @@ class Baron(commands.Cog):
             and self.bot.intents.members
             and self.bot.shards[shard_meta].is_ws_ratelimited() is False):  # adds coverage for the case where bot is already pulling chunk
             await guild.chunk()
+        
         if data["min_members"] and guild.member_count < data["min_members"]:
             await self.notify_guild(guild, f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148"),
             await guild.leave()
+
+        if data["min_members"] and guild.member_count > data["min_members"]:
+            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/seer\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>"),
+            return
