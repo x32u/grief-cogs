@@ -692,9 +692,7 @@ class Baron(commands.Cog):
             await self.baron_log("bl_leave", guild=guild)
 
         if data["limit"] and len(self.bot.guilds) > data["limit"]:
-            await self.notify_guild(
-                guild,
-                f"I have automatically left this server since I am at my server limit. ({data['limit']})",)
+            await self.notify_guild(guild, f"I have automatically left this server since I am at my server limit. ({data['limit']})",)
             await guild.leave()
             await self.baron_log("limit_leave", guild=guild)
             return
@@ -706,10 +704,5 @@ class Baron(commands.Cog):
             and self.bot.shards[shard_meta].is_ws_ratelimited() is False):  # adds coverage for the case where bot is already pulling chunk
             await guild.chunk()
         if data["min_members"] and guild.member_count < data["min_members"]:
-            await self.notify_guild(
-                guild,f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148"),
-        elif guild.id in data["blacklist"]:
+            await self.notify_guild(guild, f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148"),
             await guild.leave()
-            await self.baron_log("min_member_leave", guild=guild)
-            await guild.leave()
-            await self.baron_log("botfarm_leave", guild=guild)
