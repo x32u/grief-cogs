@@ -721,3 +721,24 @@ class Baron(commands.Cog):
             )
             await guild.leave()
             await self.baron_log("botfarm_leave", guild=guild)
+
+
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild: discord.Guild):
+        if not await self.settings_cache("guild_whitelist", guild.id):
+            g = guild
+            e = discord.Embed()
+            e.title = "Guild Leave"
+            e.description = f"Guild: {g} / {g.id}"
+            e.set_author(name=str(self.bot.user), icon_url=str(self.bot.user.avatar_url))
+            e.add_field(name="reason", value="whitelist")
+            e.add_field(name="owner", value=f"{str(g.owner).replace('#0', '')} / {g.owner_id}")
+            e.add_field(name="bot user", value=str(self.bot.user))
+            e.add_field(name="member count", value=g.member_count)
+            e.add_field(name="whitelisted", value=False)
+            e.color = 0
+            await self.notify_guild(
+                guild,
+                "Melanie is a premium bot and cannot be added to servers for free. This server is not whitelisted to join. Join https://discord.gg/melaniebot and purchase a server activation.\nI'll automatically leave this server shortly",
+            )
+            await guild.leave()
