@@ -20,7 +20,6 @@ class Vanity(commands.Cog):
             "toggled": False,
             "channel": None,
             "vanity": None,
-            "blacklisted": None
         }
         self.cached = False
         self.vanity_cache = {}
@@ -65,8 +64,6 @@ class Vanity(commands.Cog):
         if not log_channel:
             return
         if role.position >= guild.me.top_role.position:
-            return
-        if not data["blacklisted"] or not data["channel"]:
             return
         before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
@@ -200,29 +197,6 @@ class Vanity(commands.Cog):
         await self.config.guild(ctx.guild).channel.set(channel.id)
         embed = discord.Embed(description=f"> Vanity log channel has been updated to {channel.mention}", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
-    
-    @vanity.command(name="blacklist", aliases=["ignore"])
-    async def _ignore_user(self, ctx: commands.Context, member: discord.Member = None):
-        """Add or remove user from the vanity blacklisted.
-
-        Users added won't be given the awarded role and will be ignored
-        by this feature.
-
-        """
-        if not member:
-            await ctx.send("I'll need a user to ignore or un-ignore. Run this command again with a given server member.")
-
-        if member:
-            blacklisted = await self.config.guild(ctx.guild).blacklisted()
-            if member.id in blacklisted:
-                blacklisted.remove(member.id)
-                await self.config.guild(ctx.guild).blacklist.set(blacklisted)
-                await ctx.send("This user is currently in the blacklist. I've removed them.")
-                return await self.reset_cache(ctx.guild)
-            blacklisted.append(member.id)
-            await self.config.guild(ctx.guild).blacklist.set(blacklisted)
-            await ctx.send("Added that user to the blacklist. ")
-            await self.reset_cache(ctx.guild)
         
 
 async def setup(bot: Red):
