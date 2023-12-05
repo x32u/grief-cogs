@@ -709,11 +709,8 @@ class Baron(commands.Cog):
                 guild,
                 f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148",
             )
-        if data["whitelist"] < data["whitelist"]:
-            await self.notify_guild(
-                guild,
-                f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148",
-            )
+        elif guild.id in data["blacklist"]:
+            await self.notify_guild(guild, f"this server has been blacklisted, please join https://discord.gg/seer for support.",)
             await guild.leave()
             await self.baron_log("min_member_leave", guild=guild)
         elif data["bot_ratio"] and (
