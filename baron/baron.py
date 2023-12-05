@@ -683,19 +683,15 @@ class Baron(commands.Cog):
     async def on_guild_join(self, guild: discord.Guild):
         data = self.settings_cache
         if guild.id in data["whitelist"]:
-            await self.notify_guild(guild, f"this server has been blacklisted, please join https://discord.gg/seer for support.",)
+            await self.notify_guild           
+            e = discord.Embed(title="Thanks for adding me.", description=f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links: Community server — https://discord.gg/yor\n Support Server — https://discord.gg/seer\n Commands — <https://grief.cloud/commands>\n Docs — <https://docs.grief.cloud>")
+            await self.notify_guild(embed=e)
             return
         
         elif guild.id in data["blacklist"]:
             await self.notify_guild(guild, f"this server has been blacklisted, please join https://discord.gg/seer for support.",)
             await guild.leave()
             await self.baron_log("bl_leave", guild=guild)
-
-        if data["limit"] and len(self.bot.guilds) > data["limit"]:
-            await self.notify_guild(guild, f"I have automatically left this server since I am at my server limit. ({data['limit']})",)
-            await guild.leave()
-            await self.baron_log("limit_leave", guild=guild)
-            return
 
         shard_meta = guild.shard_id
         if (
