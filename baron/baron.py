@@ -725,7 +725,9 @@ class Baron(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild: discord.Guild):
-        if not await self.settings_cache("guild_whitelist", guild.id):
+            data = self.settings_cache
+            if guild.id not in data["whitelist"]:
+                return
             g = guild
             e = discord.Embed()
             e.title = "Guild Leave"
