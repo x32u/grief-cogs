@@ -683,7 +683,8 @@ class Baron(commands.Cog):
     async def on_guild_join(self, guild: discord.Guild):
         data = self.settings_cache
         if guild.id in data["whitelist"]:
-            await self.notify_guild(e = discord.Embed(title="Thanks for adding me.", description=f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links: Community server — https://discord.gg/yor\n Support Server — https://discord.gg/seer\n Commands — <https://grief.cloud/commands>\n Docs — <https://docs.grief.cloud>",))
+            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. 
+            Below you can find my links:\n Community server — https://discord.gg/yor\n Support Server — https://discord.gg/seer\n Commands — <https://grief.cloud/commands>\n Docs — <https://docs.grief.cloud>",)
             return
         
         elif guild.id in data["blacklist"]:
