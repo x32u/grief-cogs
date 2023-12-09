@@ -290,42 +290,43 @@ class XCali(commands.Cog):
         await ctx.send(embed=embed, view=view)
 
 
-    @commands.command()
-    async def instaprofile(self, ctx, username):
-        api_key = (
-            "claqz_Qt5c73ExW5pEtjjCknvL4djlPUK6RA1D4Ll4vx8SJcp1HPfFchYiWCarMHtuNCbm"
-        )
+    # @commands.is_owner()
+    # @commands.command()
+    # async def instaprofile(self, ctx, username):
+        # api_key = (
+            # "claqz_Qt5c73ExW5pEtjjCknvL4djlPUK6RA1D4Ll4vx8SJcp1HPfFchYiWCarMHtuNCbm"
+        # )
 
-        headers = {"Authorization": api_key}
+        # headers = {"Authorization": api_key}
 
-        async with aiohttp.ClientSession() as session:
-            response = await session.get(
-                f"https://dev.lains.life/instagram/profile?username={username}",
-                headers=headers,
-            )
-            data = await response.json()
+        # sync with aiohttp.ClientSession() as session:
+            # response = await session.get(
+                # f"https://dev.lains.life/instagram/profile?username={username}",
+                #  headers=headers,
+            # )
+            # data = await response.json()
 
-        if response.status != 200:
-            return await ctx.send("An error occurred while fetching the profile.")
+        # if response.status != 200:
+            # return await ctx.send("An error occurred while fetching the profile.")
 
-        profile = data
+        # profile = data
 
-        embed = discord.Embed(
-            title=f"Instagram Profile - {profile['username']}", color=self.bot.color
-        )
-        embed.set_thumbnail(url=profile["avatar_url"])
-        embed.add_field(name="Full Name", value=profile["display_name"], inline=False)
-        embed.add_field(
-            name="Followers", value=profile["statistics"]["followers"], inline=True
-        )
-        embed.add_field(
-            name="Following", value=profile["statistics"]["following"], inline=True
-        )
-        embed.add_field(name="Posts", value=profile["statistics"]["posts"], inline=True)
-        embed.add_field(name="Bio", value=profile["description"], inline=False)
-        embed.set_footer(text="Api by lain")
+        # embed = discord.Embed(
+            # title=f"Instagram Profile - {profile['username']}", color=self.bot.color
+        # )
+        # embed.set_thumbnail(url=profile["avatar_url"])
+        # embed.add_field(name="Full Name", value=profile["display_name"], inline=False)
+        # embed.add_field(
+            # name="Followers", value=profile["statistics"]["followers"], inline=True
+        # )
+        # embed.add_field(
+            # name="Following", value=profile["statistics"]["following"], inline=True
+        # )
+        # embed.add_field(name="Posts", value=profile["statistics"]["posts"], inline=True)
+        # mbed.add_field(name="Bio", value=profile["description"], inline=False)
+        # embed.set_footer(text="Api by lain")
 
-        await ctx.send(embed=embed)
+        # await ctx.send(embed=embed)
 
 
 async def setup(bot: Grief) -> None:
