@@ -6,6 +6,8 @@ import aiohttp
 import discord
 import pytube
 import yarl
+import requests
+
 from grief.core import Config, commands
 from grief.core.bot import Grief
 
@@ -13,6 +15,16 @@ from .constants import (TIKTOK_DESKTOP_PATTERN, TIKTOK_MOBILE_PATTERN,
                         YOUTUBE_PATTERN, ydl_tok)
 from .utilities import sync_as_async
 
+
+class TikTokLinkBUtton(discord.ui.Button):
+    def __init__(self, username: str, custom_emoji: Union[discord.Emoji, str] = None):
+        self.username = username
+        super().__init__(
+            style=discord.ButtonStyle.link,
+            label=None,
+            url=f"https://www.tiktok.com/@{self.username}?lang=en",
+            emoji=custom_emoji,
+        )
 
 class XCali(commands.Cog):
     """
@@ -192,6 +204,128 @@ class XCali(commands.Cog):
         await self.config.guild(ctx.guild).enabled.set(not old)
         embed = discord.Embed(description=f"> Reposting is now {'enabled' if not old else 'disabled'}.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
+    
+    @commands.is_owner()
+    @commands.command()
+    @commands.cooldown(1, 5, commands.BucketType.guild)
+    async def tiktok(self, ctx, username):
+        url = f"https://www.tiktok.com/@{username}?lang=en"
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+        }
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            embed = discord.Embed(
+                title="Error",
+                description=f">>> ***{e}***",
+                color=0x2B2D31,
+            )
+            await ctx.send(embed=embed)
+            return
+
+        html = response.text
+        try:
+            nickname = html.split('nickname":"')[1].split('"')[0]
+            followers = html.split('followerCount":')[1].split(",")[0]
+            following = html.split('followingCount":')[1].split(",")[0]
+            likes = html.split('heartCount":')[1].split(",")[0]
+            videos = html.split('videoCount":')[1].split(",")[0]
+            bio = html.split('desc":"')[1].split('"')[0]
+            profile_pic_url = html.split('og:image" content="')[1].split('"')[0]
+        except IndexError as e:
+            embed = discord.Embed(
+                title="<:deny:1121826907739144412> Error",
+                description=f">>> ***{e}***",
+                color=0x2B2D31,
+            )
+            await ctx.send(embed=embed)
+            return
+
+        embed = discord.Embed(
+            title=f"{nickname}",
+            color=0x2B2D31,
+        )
+
+        embed.set_thumbnail(url=profile_pic_url)
+
+        embed.add_field(
+            name="Username:",
+            value=f"> `{username}`",
+            inline=False,
+        )
+        embed.add_field(
+            name="Posts:",
+            value=f"> `{videos}`",
+            inline=False,
+        )
+        embed.add_field(
+            name="Likes:",
+            value=f"> `{likes}`",
+            inline=False,
+        )
+        embed.add_field(
+            name="Followers:",
+            value=f"> `{followers}`",
+            inline=False,
+        )
+        embed.add_field(
+            name="Following:",
+            value=f"> `{following}`",
+            inline=False,
+        )
+        embed.add_field(
+            name=" Bio:",
+            value=f"> *{bio}*",
+            inline=False,
+        )
+
+        button = TikTokLinkBUtton(
+            username, custom_emoji="<:tiktok:1114291908659908719>"
+        )
+        view = discord.ui.View()
+        view.add_item(button)
+
+        await ctx.send(embed=embed, view=view)
+
+
+    @commands.command()
+    async def instaprofile(self, ctx, username):
+        api_key = (
+            "claqz_Qt5c73ExW5pEtjjCknvL4djlPUK6RA1D4Ll4vx8SJcp1HPfFchYiWCarMHtuNCbm"
+        )
+
+        headers = {"Authorization": api_key}
+
+        async with aiohttp.ClientSession() as session:
+            response = await session.get(
+                f"https://dev.lains.life/instagram/profile?username={username}",
+                headers=headers,
+            )
+            data = await response.json()
+
+        if response.status != 200:
+            return await ctx.send("An error occurred while fetching the profile.")
+
+        profile = data
+
+        embed = discord.Embed(
+            title=f"Instagram Profile - {profile['username']}", color=self.bot.color
+        )
+        embed.set_thumbnail(url=profile["avatar_url"])
+        embed.add_field(name="Full Name", value=profile["display_name"], inline=False)
+        embed.add_field(
+            name="Followers", value=profile["statistics"]["followers"], inline=True
+        )
+        embed.add_field(
+            name="Following", value=profile["statistics"]["following"], inline=True
+        )
+        embed.add_field(name="Posts", value=profile["statistics"]["posts"], inline=True)
+        embed.add_field(name="Bio", value=profile["description"], inline=False)
+        embed.set_footer(text="Api by lain")
+
+        await ctx.send(embed=embed)
 
 
 async def setup(bot: Grief) -> None:
