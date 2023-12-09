@@ -10,7 +10,7 @@ from discord.ext.commands import Paginator as CommandPaginator
 from redbot.vendored.discord.ext import menus
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
     from grief.core.commands import Context
 
 log = logging.getLogger("grief.paginator")
@@ -136,7 +136,7 @@ class Pages(discord.ui.View, Generic[_PageSource]):
             # An error happened that can be handled, so ignore it.
             pass
 
-    async def interaction_check(self, interaction: discord.Interaction["Red"]) -> bool:
+    async def interaction_check(self, interaction: discord.Interaction["Grief"]) -> bool:
         if interaction.user and interaction.user.id in (
             self.bot.owner_id,
             self.ctx.author.id,

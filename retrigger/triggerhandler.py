@@ -919,7 +919,7 @@ class TriggerHandler(ReTriggerMixin):
     async def convert_parms(
         self, message: discord.Message, raw_response: str, trigger: Trigger, find: List[str]
     ) -> str:
-        # https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/customcom/customcom.py
+        # https://github.com/Cog-Creators/Grief-DiscordBot/blob/V3/develop/redbot/cogs/customcom/customcom.py
         # ctx = await self.bot.get_context(message)
         results = RE_CTX.findall(raw_response)
         for result in results:

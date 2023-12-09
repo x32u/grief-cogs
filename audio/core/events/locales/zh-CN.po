@@ -200,7 +200,7 @@ msgid "Send Voice Messages"
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:82
-msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Red. The default and supported versions are currently Java 17 and 11."
+msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Grief. The default and supported versions are currently Java 17 and 11."
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:88
@@ -212,11 +212,11 @@ msgid "This command will disable the managed Lavalink node, if you toggle this c
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:98
-msgid "This command is used to specify the IP which will be used by Red to connect to an external Lavalink node. "
+msgid "This command is used to specify the IP which will be used by Grief to connect to an external Lavalink node. "
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:101
-msgid "This command is used to specify the authentication password used by Red to connect to an external Lavalink node."
+msgid "This command is used to specify the authentication password used by Grief to connect to an external Lavalink node."
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:105
@@ -224,7 +224,7 @@ msgid "This command is used toggle between secured and unsecured connections to 
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:108
-msgid "This command is used to specify the connection port used by Red to connect to an external Lavalink node."
+msgid "This command is used to specify the connection port used by Grief to connect to an external Lavalink node."
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:111

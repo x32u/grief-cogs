@@ -7,13 +7,13 @@ from discord.utils import get, find
 
 from grief.core import Config, checks, commands
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 
 class Counting(commands.Cog):
     """Setup a counting channel for your server."""
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(
             self, identifier=1564646215646, force_registration=True

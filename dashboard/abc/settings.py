@@ -60,7 +60,7 @@ class DashboardSettingsMixin(MixinMeta):
                     f"[Operating System]       {osver}\n"
                     f"[Python Version]         {pyver}\n"
                     f"[Pip Version]            {pipver}\n"
-                    f"[Red Version]            {redver}\n"
+                    f"[Grief Version]            {redver}\n"
                     f"[D.py Version]           {dpyver}\n"
                     f"[Dashboard Version]      {dbver}\n"
                     "\n"
@@ -77,7 +77,7 @@ class DashboardSettingsMixin(MixinMeta):
     @checks.is_owner()
     @dashboard.group()
     async def settings(self, ctx: commands.Context):
-        """Group command for setting up the web dashboard for this Red bot."""
+        """Group command for setting up the web dashboard for this Grief bot."""
 
     @settings.group()
     async def permissions(self, ctx: commands.Context):
@@ -276,7 +276,7 @@ class DashboardSettingsMixin(MixinMeta):
             f"Support Server:  |  {support}\n"
             f"Default theme:   |  {color}"
         )
-        embed = discord.Embed(title="Red V3 Dashboard Settings", color=0x0000FF)
+        embed = discord.Embed(title="Grief V3 Dashboard Settings", color=0x0000FF)
         embed.description = box(description, lang="ini")
         embed.add_field(name="Dashboard Version", value=box(f"[{self.__version__}]", lang="ini"))
         embed.set_footer(text="Dashboard created by Neuro Assassin.")

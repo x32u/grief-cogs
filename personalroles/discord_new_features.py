@@ -1,5 +1,5 @@
 # NOTE: this file contains backports or unintroduced features of next versions of dpy (as for 1.7.3)
-# TODO: nuke this file when Red is changed its version to support required features
+# TODO: nuke this file when Grief is changed its version to support required features
 # from @fixator10
 from discord import Role
 from discord.http import Route

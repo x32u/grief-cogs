@@ -1,4 +1,4 @@
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import commands
 
 from .utils import rpccheck
@@ -6,7 +6,7 @@ from .utils import rpccheck
 
 class DashboardRPC_Webhooks:
     def __init__(self, cog: commands.Cog):
-        self.bot: Red = cog.bot
+        self.bot: Grief = cog.bot
         self.cog: commands.Cog = cog
 
         self.bot.register_rpc_handler(self.webhook_receive)

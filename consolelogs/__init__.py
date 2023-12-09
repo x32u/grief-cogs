@@ -18,7 +18,7 @@ for module in modules:
         pass
 del AAA3A_utils
 
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 
 from grief.core.utils import get_end_user_data_statement
 
@@ -27,6 +27,6 @@ from .consolelogs import ConsoleLogs
 __red_end_user_data_statement__ = get_end_user_data_statement(file=__file__)
 
 
-async def setup(bot: Red) -> None:
+async def setup(bot: Grief) -> None:
     cog = ConsoleLogs(bot)
     await bot.add_cog(cog)

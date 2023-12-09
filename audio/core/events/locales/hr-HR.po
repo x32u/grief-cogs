@@ -200,7 +200,7 @@ msgid "Send Voice Messages"
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:82
-msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Red. The default and supported versions are currently Java 17 and 11."
+msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Grief. The default and supported versions are currently Java 17 and 11."
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:88
@@ -212,20 +212,20 @@ msgid "This command will disable the managed Lavalink node, if you toggle this c
 msgstr "Ova naredba će onemogućiti upravljani Lavalink čvor, ako uključite ovu naredbu, morate navesti vanjski Lavalink čvor na koji ćete se povezati, ako to ne učinite Audio će prestat raditi."
 
 #: redbot/cogs/audio/core/events/dpy.py:98
-msgid "This command is used to specify the IP which will be used by Red to connect to an external Lavalink node. "
-msgstr "Ova naredba se koristi za određivanje IP adrese koju Red koristi za povezivanje na eksterni Lavalink čvor. "
+msgid "This command is used to specify the IP which will be used by Grief to connect to an external Lavalink node. "
+msgstr "Ova naredba se koristi za određivanje IP adrese koju Grief koristi za povezivanje na eksterni Lavalink čvor. "
 
 #: redbot/cogs/audio/core/events/dpy.py:101
-msgid "This command is used to specify the authentication password used by Red to connect to an external Lavalink node."
-msgstr "Ova naredba se koristi za određivanje lozinke koju Red koristi za povezivanje na eksterni Lavalink čvor."
+msgid "This command is used to specify the authentication password used by Grief to connect to an external Lavalink node."
+msgstr "Ova naredba se koristi za određivanje lozinke koju Grief koristi za povezivanje na eksterni Lavalink čvor."
 
 #: redbot/cogs/audio/core/events/dpy.py:105
 msgid "This command is used toggle between secured and unsecured connections to an external Lavalink node."
 msgstr "Ova naredba se koristi za prebacivanje između sigurnih i nesigurnih veza na eksterni Lavalink čvor."
 
 #: redbot/cogs/audio/core/events/dpy.py:108
-msgid "This command is used to specify the connection port used by Red to connect to an external Lavalink node."
-msgstr "Ova naredba se koristi za određivanje port-a koji Red koristi za spajanje na eksterni Lavalink čvor."
+msgid "This command is used to specify the connection port used by Grief to connect to an external Lavalink node."
+msgstr "Ova naredba se koristi za određivanje port-a koji Grief koristi za spajanje na eksterni Lavalink čvor."
 
 #: redbot/cogs/audio/core/events/dpy.py:111
 msgid "This command specifies which network interface and IP the managed Lavalink node will bind to, by default this is 'localhost', only change this if you want the managed Lavalink node to bind to a specific IP/interface."
@@ -380,7 +380,7 @@ msgstr "Trajanje pjesme: {length} | Zatražio: {user}"
 
 #: redbot/cogs/audio/core/events/lavalink.py:235
 msgid "Queue ended."
-msgstr "Red čekanja prazan."
+msgstr "Grief čekanja prazan."
 
 #: redbot/cogs/audio/core/events/lavalink.py:301
 msgid "Multiple Errors Detected"

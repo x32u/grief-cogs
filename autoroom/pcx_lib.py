@@ -9,7 +9,7 @@ from grief.core import commands
 from grief.core.utils import common_filters
 from grief.core.utils.chat_formatting import box
 
-headers = {"user-agent": "Red-DiscordBot/" + redbot_version}
+headers = {"user-agent": "Grief-DiscordBot/" + redbot_version}
 
 
 def checkmark(text: str) -> str:

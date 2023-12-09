@@ -12,7 +12,7 @@ from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.tunnel import Tunnel
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
 
 log = logging.getLogger("grief.say")
 _ = Translator("Say", __file__)
@@ -25,7 +25,7 @@ ROLE_MENTION_REGEX = re.compile(r"<@&(?P<id>[0-9]{17,19})>")
 class Say(commands.Cog):
     """grief will repeat after you."""
 
-    def __init__(self, bot: "Red"):
+    def __init__(self, bot: "Grief"):
         self.bot = bot
         self.interaction = []
 

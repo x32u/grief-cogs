@@ -8,7 +8,7 @@ from contextlib import suppress
 import discord
 import datetime
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import box
 from grief.vendored.discord.ext import menus  # type:ignore
 
@@ -83,7 +83,7 @@ class Menu(discord.ui.View):
     if TYPE_CHECKING:
         ctx: commands.Context
 
-    def __init__(self, source: Page, bot: Red, ctx: commands.Context):
+    def __init__(self, source: Page, bot: Grief, ctx: commands.Context):
         super().__init__()
         self.bot = bot
         self.ctx = ctx

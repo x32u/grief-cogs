@@ -6,7 +6,7 @@ from typing import List, Union
 
 import discord
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.errors import CogLoadError
 
 from .views import PageSource, PaginatedView
@@ -27,7 +27,7 @@ async def menu(ctx: commands.Context, pages: List[Union[str, discord.Embed]]):
     await view.send_initial_message(ctx)
 
 
-async def validate_tagscriptengine(bot: Red, tse_version: str, *, reloaded: bool = False):
+async def validate_tagscriptengine(bot: Grief, tse_version: str, *, reloaded: bool = False):
     try:
         import TagScriptEngine as tse
     except ImportError as exc:

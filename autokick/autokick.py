@@ -3,7 +3,7 @@ import datetime
 
 import discord
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.config import Config
 from grief.core.utils.menus import start_adding_reactions
 from grief.core.utils.predicates import ReactionPredicate
@@ -12,7 +12,7 @@ from grief.core.utils.predicates import ReactionPredicate
 class AutoKick(commands.Cog):
     """Instead of banning, have grief automatically kick certain users on join."""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(
             self,

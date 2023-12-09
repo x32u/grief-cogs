@@ -5,7 +5,7 @@ from typing import Any, Optional, Union
 import discord
 from discord.ext.commands import CooldownMapping
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 from autoroom.pcx_template import Template
 
@@ -16,7 +16,7 @@ class MixinMeta(ABC):
     Basically, to keep developers sane when not all attributes are defined in each mixin.
     """
 
-    bot: Red
+    bot: Grief
     config: Config
     template: Template
     bucket_autoroom_name: CooldownMapping

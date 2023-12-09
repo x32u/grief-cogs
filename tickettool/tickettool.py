@@ -1,6 +1,6 @@
 from AAA3A_utils import Cog, CogsUtils, Menu, Settings  # isort:skip
 from grief.core import commands, Config  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
@@ -26,7 +26,7 @@ _ = Translator("TicketTool", __file__)
 class TicketTool(settings, DashboardIntegration, Cog):
     """A cog to manage a tickets system!"""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
 
         self.config: Config = Config.get_conf(

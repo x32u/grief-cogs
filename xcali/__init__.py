@@ -7,7 +7,7 @@ import discord
 import pytube
 import yarl
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 from .constants import (TIKTOK_DESKTOP_PATTERN, TIKTOK_MOBILE_PATTERN,
                         YOUTUBE_PATTERN, ydl_tok)
@@ -19,7 +19,7 @@ class XCali(commands.Cog):
     Repost TikTok and YouTube videos.
     """
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=0x28411747)
         self.config.register_guild(enabled=False)
@@ -194,6 +194,6 @@ class XCali(commands.Cog):
         return await ctx.reply(embed=embed, mention_author=False)
 
 
-async def setup(bot: Red) -> None:
+async def setup(bot: Grief) -> None:
     cog = XCali(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)

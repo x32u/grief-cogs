@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from grief.core import Config
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
     from .cache import MemoryCache
     from .api import API
 
@@ -14,11 +14,11 @@ class MixinMeta(ABC):
 
     Basically, to keep developers sane when not all attributes are defined in each mixin.
 
-    Credit to https://github.com/Cog-Creators/Red-DiscordBot (mod cog) for all mixin stuff.
+    Credit to https://github.com/Cog-Creators/Grief-DiscordBot (mod cog) for all mixin stuff.
     """
 
     def __init__(self):
-        self.bot: Red
+        self.bot: Grief
         self.data: Config
         self.cache: MemoryCache
         self.api: API

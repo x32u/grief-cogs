@@ -10,7 +10,7 @@ import aiohttp
 import discord
 import TagScriptEngine as tse
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.config import Config
 from grief.core.utils import AsyncIter
 from grief.core.utils.chat_formatting import humanize_list
@@ -39,7 +39,7 @@ class SlashTags(Commands, Processor, commands.Cog, metaclass=CompositeMetaClass)
             f"{pre_processed}{n}",]
         return "\n".join(text)
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.application_id = None
         self.eval_command = None

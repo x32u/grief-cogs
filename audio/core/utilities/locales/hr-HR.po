@@ -465,7 +465,7 @@ msgstr "zatražio **{user}**\n"
 
 #: grief/cogs/audio/core/utilities/queue.py:80
 msgid "Queue for __{guild_name}__"
-msgstr "Red čekanja za __{guild_name}__"
+msgstr "Grief čekanja za __{guild_name}__"
 
 #: grief/cogs/audio/core/utilities/queue.py:88
 msgid "Page {page_num}/{total_pages} | {num_tracks} tracks, {num_remaining} remaining\n"

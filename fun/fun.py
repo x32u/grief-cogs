@@ -10,7 +10,7 @@ import aiohttp
 import discord
 from grief.core import commands
 from grief.core import Config as RedDB
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.menus import menu
 from grief.core.utils.chat_formatting import (
@@ -91,7 +91,7 @@ class Fun(commands.Cog):
     ]
     _ = T_
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__()
         self.bot = bot
         self.stopwatches = {}

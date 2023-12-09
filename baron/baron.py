@@ -8,7 +8,7 @@ from typing import List, Literal, Optional, Tuple
 import discord
 from matplotlib import pyplot as plt
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import GuildConverter, TimedeltaConverter
 from grief.core.config import Config
 from grief.core.utils import AsyncIter
@@ -45,7 +45,7 @@ class Baron(commands.Cog):
         "blacklist": [],
     }
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(
             self,

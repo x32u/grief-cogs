@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 import discord
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils import chat_formatting as chat
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 from grief.core.utils.predicates import MessagePredicate
@@ -21,8 +21,8 @@ class GlobalBan(commands.Cog):
             return user.avatar_url
         return user.display_avatar.url
 
-    def __init__(self, bot: Red):
-        self.bot: Red = bot
+    def __init__(self, bot: Grief):
+        self.bot: Grief = bot
         self.config = Config.get_conf(self, identifier=0x33039392, force_registration=True)
         self.config.register_global(**{"banned": [], "reasons": {}})
         self.config.register_guild(**{"banned": []})
@@ -198,6 +198,6 @@ class GlobalBan(commands.Cog):
                 return
 
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     cog = GlobalBan(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)

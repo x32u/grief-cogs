@@ -5,7 +5,7 @@ from datetime import timezone
 from typing import Union, Set, Literal, Optional
 
 from grief.core import Config, modlog, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n, set_contextual_locales_from_guild
 from grief.core.utils.predicates import MessagePredicate
 from grief.core.utils import AsyncIter
@@ -23,7 +23,7 @@ class Filter(commands.Cog):
     This can be used to prevent inappropriate language, off-topic discussions, invite links, and more.
     """
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, 4766951341)

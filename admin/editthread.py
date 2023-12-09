@@ -1,7 +1,7 @@
 from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
 from grief.core import commands  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
@@ -64,7 +64,7 @@ class ForumTagConverter(discord.ext.commands.Converter):
 class EditThread(Cog):
     """A cog to edit threads!"""
 
-    def __init__(self, bot: Red) -> None:  # Never executed except manually.
+    def __init__(self, bot: Grief) -> None:  # Never executed except manually.
         super().__init__(bot=bot)
 
     async def check_thread(self, ctx: commands.Context, thread: typing.Optional[discord.Thread]) -> bool:

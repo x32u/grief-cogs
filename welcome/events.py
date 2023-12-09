@@ -7,7 +7,7 @@ from typing import List, Optional, Pattern, Union, cast
 import discord
 from grief import VersionInfo, version_info
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_list
 from grief.core.utils.common_filters import filter_mass_mentions
@@ -21,7 +21,7 @@ log = logging.getLogger("red.trusty-cogs.Welcome")
 @cog_i18n(_)
 class Events:
     def __init__(self):
-        self.bot: Red
+        self.bot: Grief
         self.config: Config
         self.joined: dict
         self.today_count: dict

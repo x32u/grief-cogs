@@ -7,13 +7,13 @@ from discord.utils import get
 from grief.core import Config, checks, commands
 from grief.core.utils.predicates import MessagePredicate
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 
 class Application(commands.Cog):
     """Create staff applications for your server."""
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(
             self, 5641654654621651651, force_registration=True

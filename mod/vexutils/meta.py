@@ -136,7 +136,7 @@ async def format_info(
         GREEN_CIRCLE if utils_updated else RED_CIRCLE,
     )
     main_table.add_row(
-        "Red",
+        "Grief",
         str(current.red),
         str(latest.red),
         GREEN_CIRCLE if red_updated else RED_CIRCLE,
@@ -150,7 +150,7 @@ async def format_info(
             f"To update the bundled utils, use the `{ctx.clean_prefix}cog update` command.\n"
         )
     if not red_updated:
-        update_msg += "To update Red, see https://docs.discord.red/en/stable/update_red.html\n"
+        update_msg += "To update Grief, see https://docs.discord.red/en/stable/update_red.html\n"
 
     extra_table = Table("Key", "Value", title="Extras", box=rich_box.MINIMAL)
 
@@ -219,7 +219,7 @@ async def _get_latest_vers(cogname: str) -> Vers:
             data = await r.json()
             latest_utils = data["utils"][:7]
             latest_cog = VersionInfo.from_str(data.get(cogname, "0.0.0"))
-        async with session.get("https://pypi.org/pypi/Red-DiscordBot/json", timeout=3) as r:
+        async with session.get("https://pypi.org/pypi/Grief-DiscordBot/json", timeout=3) as r:
             data = await r.json()
             latest_red = VersionInfo.from_str(data.get("info", {}).get("version", "0.0.0"))
 

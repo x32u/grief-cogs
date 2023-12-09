@@ -8,7 +8,7 @@ from typing import List, MutableMapping, Optional
 from red_commons.logging import getLogger
 
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator
 from grief.core.utils import AsyncIter
 from grief.core.utils.dbtools import APSWConnectionWrapper
@@ -39,7 +39,7 @@ _ = Translator("Audio", Path(__file__))
 
 
 class PlaylistWrapper:
-    def __init__(self, bot: Red, config: Config, conn: APSWConnectionWrapper):
+    def __init__(self, bot: Grief, config: Config, conn: APSWConnectionWrapper):
         self.bot = bot
         self.database = conn
         self.config = config

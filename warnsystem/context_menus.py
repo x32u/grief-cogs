@@ -11,7 +11,7 @@ from grief.core.commands import BadArgument, Context
 from grief.core.commands.converter import parse_timedelta
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
     from .warnsystem import WarnSystem
 
 _ = Translator("WarnSystem", __file__)
@@ -41,14 +41,14 @@ class ReasonEntry(Modal, title="Member warn"):
     )
 
     def __init__(
-        self, og_interaction: discord.Interaction["Red"], level: int, member: discord.Member
+        self, og_interaction: discord.Interaction["Grief"], level: int, member: discord.Member
     ):
         super().__init__()
         self.og_interaction = og_interaction
         self.level = level
         self.member = member
 
-    async def on_submit(self, interaction: Interaction["Red"]) -> None:
+    async def on_submit(self, interaction: Interaction["Grief"]) -> None:
         cog = cast("WarnSystem", interaction.client.get_cog("WarnSystem"))
 
         duration: Optional[timedelta] = None
@@ -89,7 +89,7 @@ class ReasonEntry(Modal, title="Member warn"):
 
 
 class WarnView(View):
-    def __init__(self, og_interaction: discord.Interaction["Red"], member: discord.Member):
+    def __init__(self, og_interaction: discord.Interaction["Grief"], member: discord.Member):
         self.og_interaction = og_interaction
         self.member = member
         super().__init__(timeout=30)
@@ -100,7 +100,7 @@ class WarnView(View):
             item.disabled = True
         await self.og_interaction.followup.edit_message("@original", view=self)
 
-    async def warn(self, interaction: discord.Interaction["Red"], level: int):
+    async def warn(self, interaction: discord.Interaction["Grief"], level: int):
         await self.on_timeout()
         modal = ReasonEntry(self.og_interaction, level=level, member=self.member)
         if level != 2 and level != 5:
@@ -110,7 +110,7 @@ class WarnView(View):
         await interaction.response.send_modal(modal)
 
     @button(label="Warn", style=discord.ButtonStyle.secondary, emoji="\N{WARNING SIGN}")
-    async def warn_1(self, interaction: discord.Interaction["Red"], button: discord.ui.Button):
+    async def warn_1(self, interaction: discord.Interaction["Grief"], button: discord.ui.Button):
         await self.warn(interaction, 1)
 
     @button(
@@ -118,24 +118,24 @@ class WarnView(View):
         style=discord.ButtonStyle.secondary,
         emoji="\N{SPEAKER WITH CANCELLATION STROKE}",
     )
-    async def warn_2(self, interaction: discord.Interaction["Red"], button: discord.ui.Button):
+    async def warn_2(self, interaction: discord.Interaction["Grief"], button: discord.ui.Button):
         await self.warn(interaction, 2)
 
     @button(label="Kick", style=discord.ButtonStyle.primary, emoji="\N{WOMANS BOOTS}")
-    async def warn_3(self, interaction: discord.Interaction["Red"], button: discord.ui.Button):
+    async def warn_3(self, interaction: discord.Interaction["Grief"], button: discord.ui.Button):
         await self.warn(interaction, 3)
 
     @button(label="Softban", style=discord.ButtonStyle.primary, emoji="\N{WOMANS BOOTS}")
-    async def warn_4(self, interaction: discord.Interaction["Red"], button: discord.ui.Button):
+    async def warn_4(self, interaction: discord.Interaction["Grief"], button: discord.ui.Button):
         await self.warn(interaction, 4)
 
     @button(label="Ban", style=discord.ButtonStyle.danger, emoji="\N{HAMMER}")
-    async def warn_5(self, interaction: discord.Interaction["Red"], button: discord.ui.Button):
+    async def warn_5(self, interaction: discord.Interaction["Grief"], button: discord.ui.Button):
         await self.warn(interaction, 5)
 
 
 @app_commands.context_menu(name="Warn")
-async def context_warn(interaction: discord.Interaction["Red"], member: discord.Member):
+async def context_warn(interaction: discord.Interaction["Grief"], member: discord.Member):
     cog = cast("WarnSystem", interaction.client.get_cog("WarnSystem"))
     if not cog:
         await interaction.response.send_message(

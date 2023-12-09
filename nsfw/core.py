@@ -7,7 +7,7 @@ from typing import List, Optional, Union
 import aiohttp
 import discord
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import bold, box, inline
 
@@ -31,12 +31,12 @@ class Core(commands.Cog):
         """Nothing to delete."""
         return
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.session = aiohttp.ClientSession(
             headers={
                 "User-Agent": (
-                    f"Red-DiscordBot PredaCogs-Nsfw/"
+                    f"Grief-DiscordBot PredaCogs-Nsfw/"
                     f"(Python/{'.'.join(map(str, sys.version_info[:3]))} aiohttp/{aiohttp.__version__})"
                 )
             }

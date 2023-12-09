@@ -6,7 +6,7 @@ import re
 
 import discord
 import markdown2
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import commands
 from grief.core.commands.requires import PrivilegeLevel
 from grief.core.utils import AsyncIter
@@ -33,7 +33,7 @@ class DashboardRPC:
 
     def __init__(self, cog: commands.Cog):
         self.cog: commands.Cog = cog
-        self.bot: Red = cog.bot
+        self.bot: Grief = cog.bot
 
         # Initialize RPC handlers
         self.bot.register_rpc_handler(self.get_variables)
@@ -135,8 +135,8 @@ class DashboardRPC:
         botinfo = await self.bot._config.custom_info()
         if botinfo is None:
             botinfo = (
-                f"Hello, welcome to the Red Discord Bot dashboard for {self.bot.user.name}! "
-                f"{self.bot.user.name} is based off the popular bot Red Discord Bot, an open "
+                f"Hello, welcome to the Grief Discord Bot dashboard for {self.bot.user.name}! "
+                f"{self.bot.user.name} is based off the popular bot Grief Discord Bot, an open "
                 "source, multifunctional bot. It has tons of features including moderation, "
                 "audio, economy, fun and more! Here, you can control and interact with "
                 f"{self.bot.user.name}'s settings. So what are you waiting for? Invite them now!"
@@ -222,7 +222,7 @@ class DashboardRPC:
                             repo = "Unknown (Removed from Downloader)"
                     elif cog.__module__.startswith("redbot."):
                         author = "Cog Creators"
-                        repo = "https://github.com/Cog-Creators/Red-DiscordBot"
+                        repo = "https://github.com/Cog-Creators/Grief-DiscordBot"
                     self.cog_info_cache[name] = {}
                     self.cog_info_cache[name]["author"] = author
                     self.cog_info_cache[name]["repo"] = repo

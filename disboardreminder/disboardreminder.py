@@ -10,7 +10,7 @@ from typing import Coroutine, DefaultDict, Dict, Optional
 import discord
 import TagScriptEngine as tse
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils import AsyncIter
 
 from .converters import FuzzyRole
@@ -38,7 +38,7 @@ class DisboardReminder(commands.Cog):
         "clean": False,
     }
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(
             self, identifier=9765573181940385953309, force_registration=True

@@ -11,7 +11,7 @@ from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import box, pagify
 from grief.core.utils.menus import menu
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from .alias_entry import AliasEntry, AliasCache, ArgParseError
 
 _ = Translator("Alias", __file__)
@@ -42,7 +42,7 @@ class Alias(commands.Cog):
     and append them to the stored alias.
     """
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, 8927348724)
@@ -480,6 +480,6 @@ class Alias(commands.Cog):
         if alias:
             await self.call_alias(message, prefix, alias)
 
-async def setup(bot: Red) -> None:
+async def setup(bot: Grief) -> None:
     cog = Alias(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)

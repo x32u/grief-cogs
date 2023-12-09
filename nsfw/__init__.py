@@ -1,4 +1,4 @@
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from .nsfw import Nsfw
 
 __red_end_user_data_statement__ = (
@@ -6,6 +6,6 @@ __red_end_user_data_statement__ = (
 )
 
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     cog = Nsfw(bot)
     await bot.add_cog(cog)

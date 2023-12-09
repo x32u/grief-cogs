@@ -184,8 +184,8 @@ msgid "Moderate Member"
 msgstr "Moderat medlem"
 
 #: redbot/cogs/audio/core/events/dpy.py:78
-msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Red. The default and supported version is currently Java 11."
-msgstr "Denne kommandoen vil endre den kjørbare filbanen til Java, dette er nyttig hvis du har flere installasjoner av Java, og standard en forårsaker problemer. Vennligst ikke endre dette med mindre du er sikker på at Java-versjonen du spesifiserer støttes av Red. Standard og støttet versjon er for øyeblikket Java 11."
+msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Grief. The default and supported version is currently Java 11."
+msgstr "Denne kommandoen vil endre den kjørbare filbanen til Java, dette er nyttig hvis du har flere installasjoner av Java, og standard en forårsaker problemer. Vennligst ikke endre dette med mindre du er sikker på at Java-versjonen du spesifiserer støttes av Grief. Standard og støttet versjon er for øyeblikket Java 11."
 
 #: redbot/cogs/audio/core/events/dpy.py:84
 msgid "This command will change the maximum RAM allocation for the managed Lavalink node, usually you will never have to change this, before considering changing it please consult our support team."
@@ -196,20 +196,20 @@ msgid "This command will disable the managed Lavalink node, if you toggle this c
 msgstr "Denne kommandoen vil deaktivere den administrerte lavalunk-noden, hvis du slår av og på denne kommandoen må du angi en ekstern Lavalink node for å koble til, hvis du ikke gjør det, vil lyd slutte å virke."
 
 #: redbot/cogs/audio/core/events/dpy.py:94
-msgid "This command is used to specify the IP which will be used by Red to connect to an external Lavalink node. "
+msgid "This command is used to specify the IP which will be used by Grief to connect to an external Lavalink node. "
 msgstr "Denne kommandoen brukes til å angi IP som skal brukes ved Rød for å koble til en ekstern Lavalink node. "
 
 #: redbot/cogs/audio/core/events/dpy.py:97
-msgid "This command is used to specify the authentication password used by Red to connect to an external Lavalink node."
-msgstr "Denne kommandoen brukes til å angi godkjenningspassord som brukes av Red til å koble til en ekstern Lavalink node."
+msgid "This command is used to specify the authentication password used by Grief to connect to an external Lavalink node."
+msgstr "Denne kommandoen brukes til å angi godkjenningspassord som brukes av Grief til å koble til en ekstern Lavalink node."
 
 #: redbot/cogs/audio/core/events/dpy.py:101
 msgid "This command is used toggle between secured and unsecured connections to an external Lavalink node."
 msgstr "Denne kommandoen brukes veksling mellom sikrede og usikrede forbindelser til en ekstern Lavalink node."
 
 #: redbot/cogs/audio/core/events/dpy.py:104
-msgid "This command is used to specify the connection port used by Red to connect to an external Lavalink node."
-msgstr "Denne kommandoen brukes til å angi tilkoblingsporten som brukes av Red til å koble til en ekstern Lavalink node."
+msgid "This command is used to specify the connection port used by Grief to connect to an external Lavalink node."
+msgstr "Denne kommandoen brukes til å angi tilkoblingsporten som brukes av Grief til å koble til en ekstern Lavalink node."
 
 #: redbot/cogs/audio/core/events/dpy.py:107
 msgid "This command specifies which network interface and IP the managed Lavalink node will bind to, by default this is 'localhost', only change this if you want the managed Lavalink node to bind to a specific IP/interface."

@@ -1,5 +1,5 @@
 import discord
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import commands
 
 from .utils import permcheck, rpccheck
@@ -7,7 +7,7 @@ from .utils import permcheck, rpccheck
 
 class DashboardRPC_BotSettings:
     def __init__(self, cog: commands.Cog):
-        self.bot: Red = cog.bot
+        self.bot: Grief = cog.bot
         self.cog: commands.Cog = cog
 
         # Initialize RPC handlers

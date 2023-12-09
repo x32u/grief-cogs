@@ -9,7 +9,7 @@ from discord import app_commands
 from grief.core.errors import CogLoadError
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
 
 log = logging.getLogger("grief.say")
 

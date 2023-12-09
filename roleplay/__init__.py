@@ -5,7 +5,7 @@ from typing import Optional
 
 import discord
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 log = logging.getLogger("grief.roleplay")
 
@@ -15,7 +15,7 @@ class Roleplay(commands.Cog):
     Perform different actions, like cuddle, poke etc.
     """
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(
             self, identifier=8423644625413, force_registration=True

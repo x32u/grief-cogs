@@ -11,7 +11,7 @@ from copy import copy
 from typing import List, Literal, Optional, Union, TYPE_CHECKING
 
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import AsyncIter
 from grief.core.utils._internal_utils import send_to_owners_with_prefix_replaced
@@ -32,7 +32,7 @@ from grief.core.utils.predicates import MessagePredicate
 
 from discord.utils import utcnow
 from grief.core import Config, commands, modlog
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands.converter import TimedeltaConverter
 import datetime
 from typing import Any, Dict, Final, List, Literal, Optional
@@ -100,7 +100,7 @@ class Mod(
 
     default_user_settings = {"past_names": []}
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, 4961522000, force_registration=True)
@@ -1087,7 +1087,7 @@ class Mod(
                 self.polls.remove(poll)
 
 async def is_allowed_by_hierarchy(
-    bot: Red, user: discord.Member, member: discord.Member
+    bot: Grief, user: discord.Member, member: discord.Member
 ) -> bool:
     return (
         user.guild.owner_id == user.id

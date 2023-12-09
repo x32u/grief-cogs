@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, List, Literal, Optional
 import discord
 from discord.channel import TextChannel
 from grief.core import Config, app_commands, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 from .components.setup import SetupModal, StartSetupView
 from .poll import Poll
@@ -19,7 +19,7 @@ log = get_vex_logger(__name__)
 class ButtonPoll(commands.Cog):
     """Create polls using buttons."""
     
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         self.bot = bot
 
         self.config: Config = Config.get_conf(self, 418078199982063626, force_registration=True)

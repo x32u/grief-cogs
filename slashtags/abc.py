@@ -3,7 +3,7 @@
 from abc import ABC
 
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 
 class MixinMeta(ABC):
@@ -15,7 +15,7 @@ class MixinMeta(ABC):
     """
 
     config: Config
-    bot: Red
+    bot: Grief
 
     def __init__(self, *_args):
         super().__init__()

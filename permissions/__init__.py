@@ -1,9 +1,9 @@
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 from .permissions import Permissions
 
 
-async def setup(bot: Red) -> None:
+async def setup(bot: Grief) -> None:
     cog = Permissions(bot)
     await cog.initialize()
     # We should add the rules for the Permissions cog and its own commands *before* adding the cog.

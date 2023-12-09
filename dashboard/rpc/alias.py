@@ -1,7 +1,7 @@
 from html import escape
 
 import discord
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import commands
 from grief.core.utils.chat_formatting import humanize_list
 
@@ -10,7 +10,7 @@ from .utils import permcheck, rpccheck
 
 class DashboardRPC_AliasCC:
     def __init__(self, cog: commands.Cog):
-        self.bot: Red = cog.bot
+        self.bot: Grief = cog.bot
         self.cog: commands.Cog = cog
 
         # Initialize RPC handlers

@@ -1,6 +1,6 @@
 from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
 from grief.core import commands, Config  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
@@ -35,7 +35,7 @@ class MyMessageConverter(commands.MessageConverter):
 class RolesButtons(Cog):
     """A cog to have roles-buttons!"""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
 
         

@@ -2,7 +2,7 @@ from typing import cast
 from html import escape
 
 import discord
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import commands
 from grief.core.utils import AsyncIter
 
@@ -11,7 +11,7 @@ from .utils import FakePermissionsContext, permcheck, rpccheck
 
 class DashboardRPC_Permissions:
     def __init__(self, cog: commands.Cog):
-        self.bot: Red = cog.bot
+        self.bot: Grief = cog.bot
         self.cog: commands.Cog = cog
 
         # Initialize RPC handlers

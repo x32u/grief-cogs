@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 import discord
 from grief.core import Config as RedDB
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Cog as RedCog
 from grief.core.utils.chat_formatting import humanize_timedelta
 
@@ -21,8 +21,8 @@ class AwayFromKeyboard(RedCog):
     """Let your friends know when you are afk, grief will add an autoresponder.
     """
 
-    def __init__(self, bot: Red):
-        self.bot: Red = bot
+    def __init__(self, bot: Grief):
+        self.bot: Grief = bot
         self.db: RedDB = RedDB.get_conf(self, identifier=126875360, force_registration=True)
         self.db.register_user(**DEFAULT_USER)
 
@@ -89,6 +89,6 @@ class AwayFromKeyboard(RedCog):
             )
 
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     cog = AwayFromKeyboard(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)

@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 
 class MixinMeta(ABC):
@@ -14,12 +14,12 @@ class MixinMeta(ABC):
     """
 
     config: Config
-    bot: Red
+    bot: Grief
     cache: dict
 
     def __init__(self, *_args):
         self.config: Config
-        self.bot: Red
+        self.bot: Grief
         self.cache: dict
 
     @abstractmethod

@@ -472,8 +472,8 @@ class Giveaways(commands.Cog):
 
         You can use these integrations to integrate giveaways with other 3rd party services.
 
-        `--level-req`: Integrate with the Red Level system Must be Fixator's leveler.
-        `--rep-req`: Integrate with the Red Level Rep system Must be Fixator's leveler.
+        `--level-req`: Integrate with the Grief Level system Must be Fixator's leveler.
+        `--rep-req`: Integrate with the Grief Level Rep system Must be Fixator's leveler.
         `--tatsu-level`: Integrate with the Tatsumaki's levelling system, must have a valid Tatsumaki API key set.
         `--tatsu-rep`: Integrate with the Tatsumaki's rep system, must have a valid Tatsumaki API key set.
         `--mee6-level`: Integrate with the MEE6 levelling system.

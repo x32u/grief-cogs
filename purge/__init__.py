@@ -2,7 +2,7 @@
 
 from typing import List
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.errors import CogLoadError
 
 from .core import Purge
@@ -10,7 +10,7 @@ from .core import Purge
 conflicting_cogs: List[str] = ["Cleanup"]
 
 
-async def setup(bot: Red) -> None:
+async def setup(bot: Grief) -> None:
     for cog_name in conflicting_cogs:
         if bot.get_cog(cog_name):
             raise CogLoadError(

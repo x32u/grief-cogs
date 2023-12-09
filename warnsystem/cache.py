@@ -4,7 +4,7 @@ import contextlib
 import re
 
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 from typing import Mapping, Optional
 
@@ -17,7 +17,7 @@ class MemoryCache:
     See Github issue #49
     """
 
-    def __init__(self, bot: Red, config: Config):
+    def __init__(self, bot: Grief, config: Config):
         self.bot = bot
         self.data = config
 

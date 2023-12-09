@@ -5,7 +5,7 @@ from typing import Dict, Optional, Union
 
 import discord
 from grief.core import Config, checks, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Cog
 
 # 10 minutes. Rate limit is 2 per 10, so 1 per 6 is safe.
@@ -45,7 +45,7 @@ async def get_channel_counts(category, guild):
 class InfoChannel(Cog):
     """Use channels to display info such as members, boosters, roles, online/offline members, etc."""
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         self.config = Config.get_conf(

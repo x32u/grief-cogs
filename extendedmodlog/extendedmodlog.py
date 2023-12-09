@@ -10,7 +10,7 @@ from grief.core.utils.chat_formatting import humanize_list
 import logging
 import re
 from grief.core import Config, app_commands, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import humanize_list
 
 from .eventmixin import EventChooser, EventMixin

@@ -3,7 +3,7 @@ import importlib.util
 import re
 
 from grief.core.i18n import Translator
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from datetime import datetime, timedelta
 
 try:
@@ -178,7 +178,7 @@ async def update_config(bot, config):
         # phew
 
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     n = WarnSystem(bot)
     # the cog conflicts with the core Warnings cog, we must check that
     if "Warnings" in bot.cogs:
@@ -197,7 +197,7 @@ async def setup(bot: Red):
         raise CogLoadError(
             "After an update, the cog tried to perform changes to the saved data but an error "
             "occured. Read your console output or warnsystem.log (located over "
-            "Red-DiscordBot/cogs/WarnSystem) for more details.\n"
+            "Grief-DiscordBot/cogs/WarnSystem) for more details.\n"
             "**Do not try to load the cog again until the issue is resolved, the data might be"
             "corrupted.** Contacting support is advised (Laggron's support server or official "
             "3rd party cog support server, #support_laggrons-dumb-cogs channel)."

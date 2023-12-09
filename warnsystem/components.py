@@ -18,7 +18,7 @@ from .api import UnavailableMember
 from .paginator import Pages
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
     from .api import API
     from .warnsystem import WarnSystem
 
@@ -82,7 +82,7 @@ def pretty_date(time: datetime):
 
 
 async def prompt_yes_or_no(
-    bot: "Red",
+    bot: "Grief",
     interaction: discord.Interaction,
     content: Optional[str] = None,
     *,
@@ -167,7 +167,7 @@ class WarningEditionModal(Modal, title="Warning reason edition"):
 class WarningEditionView(View):
     def __init__(
         self,
-        bot: "Red",
+        bot: "Grief",
         list: WarningsSelector,
         *,
         user: Union[discord.Member, UnavailableMember],

@@ -1,5 +1,5 @@
 from grief.core import commands  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
@@ -15,7 +15,7 @@ def dashboard_page(*args, **kwargs):
 
 
 class DashboardIntegration:
-    bot: Red
+    bot: Grief
 
     @commands.Cog.listener()
     async def on_dashboard_cog_add(self, dashboard_cog: commands.Cog) -> None:

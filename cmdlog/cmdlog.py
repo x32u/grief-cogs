@@ -8,7 +8,7 @@ import discord
 from discord import Interaction, InteractionType
 from discord.channel import TextChannel
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import humanize_number, humanize_timedelta
 
 from cmdlog.objects import TIME_FORMAT, LoggedAppCom, LoggedComError, LoggedCommand
@@ -28,14 +28,14 @@ class CmdLog(commands.Cog):
     `red.vex.cmdlog`, level INFO.
 
     The internal cache is non persistant and subsequently is lost on cog unload,
-    including bot shutdowns. The logged data will last until Red's custom logging
+    including bot shutdowns. The logged data will last until Grief's custom logging
     rotator deletes old logs.
     """
 
     __author__ = "@vexingvexed"
     __version__ = "1.5.4"
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         self.bot = bot
 
         self.log_cache: Deque[Union[LoggedCommand, LoggedComError, LoggedAppCom]] = deque(

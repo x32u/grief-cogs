@@ -179,7 +179,7 @@ class Welcome(Events, commands.Cog):
         `<set_to>` What to set the allowed mentions to either `True` or `False`.
         `[allowed...]` must be either `everyone`, `users`, or `roles` and can include more than one.
 
-        Note: This will only function on Red 3.4.0 or higher.
+        Note: This will only function on Grief 3.4.0 or higher.
         """
         if not allowed:
             return await ctx.send(
@@ -467,7 +467,7 @@ class Welcome(Events, commands.Cog):
         `<set_to>` What to set the allowed mentions to either `True` or `False`.
         `[allowed...]` must be either `everyone`, `users`, or `roles` and can include more than one.
 
-        Note: This will only function on Red 3.4.0 or higher.
+        Note: This will only function on Grief 3.4.0 or higher.
         """
         if not allowed:
             return await ctx.send(

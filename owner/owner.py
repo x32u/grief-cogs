@@ -14,7 +14,7 @@ import datetime
 from grief.core import checks, commands, data_manager
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.commands.context import Context
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core import Config, commands
 from grief.core.utils.chat_formatting import humanize_list
 from discord.utils import get
@@ -42,7 +42,7 @@ import aiohttp
 import discord
 from grief import VersionInfo, version_info
 from grief.core import Config, checks, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import AsyncIter
 from grief.core.utils.chat_formatting import (
@@ -517,7 +517,7 @@ class Owner(commands.Cog):
         to send the newly unbanned user
         :returns: :class:`Invite`
 
-        https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/mod/mod.py#L771
+        https://github.com/Cog-Creators/Grief-DiscordBot/blob/V3/develop/redbot/cogs/mod/mod.py#L771
         """
         my_perms: discord.Permissions = guild.me.guild_permissions
         if my_perms.manage_guild or my_perms.administrator:

@@ -8,7 +8,7 @@ from discord.ext import tasks
 from discord.ext.commands.converter import Converter
 from discord.ext.commands.errors import BadArgument
 from grief.core import Config, commands, i18n, modlog
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import (
     escape,
     format_perms_list,
@@ -69,7 +69,7 @@ class EventMixin:
     """
 
     config: Config
-    bot: Red
+    bot: Grief
     settings: Dict[int, Any]
     _ban_cache: Dict[int, List[int]]
 
@@ -131,7 +131,7 @@ class EventMixin:
     async def on_raw_message_delete_listener(
         self, payload: discord.RawMessageDeleteEvent, *, check_audit_log: bool = True
     ) -> None:
-        # custom name of method used, because this is only supported in Red 3.1+
+        # custom name of method used, because this is only supported in Grief 3.1+
         guild_id = payload.guild_id
         if guild_id is None:
             return
@@ -490,7 +490,7 @@ class EventMixin:
         # set guild level i18n
         time = datetime.datetime.now(datetime.timezone.utc)
         users = len(guild.members)
-        # https://github.com/Cog-Creators/Red-DiscordBot/blob/develop/cogs/general.py
+        # https://github.com/Cog-Creators/Grief-DiscordBot/blob/develop/cogs/general.py
         user_created = int(member.created_at.timestamp())
 
         created_on = "<t:{user_created}>\n(<t:{user_created}:R>)".format(user_created=user_created)

@@ -5,7 +5,7 @@ import asyncio
 from typing import Any, List, Optional, Union
 
 import discord
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.vendored.discord.ext import menus
 
 import customhelp.core.base_help as base_help
@@ -25,7 +25,7 @@ class BaseMenu(menus.Menu):
         self.hmenu = hmenu
 
         self.message: discord.Message
-        self.bot: Red
+        self.bot: Grief
 
     async def send_initial_message(self, ctx, channel):
         page = self.hmenu.pages[0]

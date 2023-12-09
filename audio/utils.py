@@ -15,7 +15,7 @@ import psutil
 from red_commons.logging import getLogger
 
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator
 
 log = getLogger("red.cogs.Audio.task.callback")
@@ -343,7 +343,7 @@ def has_unmanaged_server():
     return commands.check(pred)
 
 
-async def replace_p_with_prefix(bot: Red, message: str) -> str:
+async def replace_p_with_prefix(bot: Grief, message: str) -> str:
     """Replaces [p] with the bot prefix"""
     prefixes = await bot.get_valid_prefixes()
     prefix = re.sub(rf"<@!?{bot.user.id}>", f"@{bot.user.name}".replace("\\", r"\\"), prefixes[0])

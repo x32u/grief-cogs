@@ -8,7 +8,7 @@ from discord import Embed
 from typing import Any, Optional
 
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import BadArgument, ColourConverter, Context
 
 from grief.core.utils.chat_formatting import bold, box, text_to_file
@@ -623,7 +623,7 @@ class EmbedCreator(commands.Cog):
     """Create embeds using buttons, modals and dropdowns.
     Required Permissions: Manage Messages."""
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
 
     async def red_delete_data_for_user(self, **kwargs):

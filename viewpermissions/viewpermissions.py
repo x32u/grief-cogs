@@ -1,7 +1,7 @@
 
 from AAA3A_utils import Cog  # isort:skip
 from grief.core import commands  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
@@ -27,7 +27,7 @@ class PermissionConverter(commands.Converter):
 class ViewPermissions(Cog):
     """A cog to display permissions for roles and members, at guild level or in a specified channel!"""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
 
     async def red_delete_data_for_user(self, *args, **kwargs) -> None:

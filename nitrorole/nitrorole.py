@@ -7,7 +7,7 @@ from typing import Any, Awaitable, Callable, Dict, Literal, Union, cast
 
 import discord
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import GuildContext, NoParseOptional as Optional
 from grief.core.config import Config
 from grief.core.data_manager import cog_data_path
@@ -24,7 +24,7 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 class NitroRole(commands.Cog):
     """Collection of commands to use for boosters."""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(
             self, identifier=176070082584248320, force_registration=True
@@ -297,7 +297,7 @@ class NitroRole(commands.Cog):
         await ctx.send("Image unset.")
 
     async def cog_disabled_in_guild(self, guild: Optional[discord.Guild]) -> bool:
-        # compatibility layer with Red 3.3.10
+        # compatibility layer with Grief 3.3.10
         func: Optional[
             Callable[[commands.Cog, Optional[discord.Guild]], Awaitable[bool]]
         ] = getattr(self.bot, "cog_disabled_in_guild", None)

@@ -9,7 +9,7 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list
 
@@ -116,7 +116,7 @@ def standardize_scope(scope: str) -> str:
 
 
 def prepare_config_scope(
-    bot: Red,
+    bot: Grief,
     scope,
     author: Union[discord.abc.User, int] = None,
     guild: Union[discord.Guild, int] = None,

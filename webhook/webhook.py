@@ -4,7 +4,7 @@ from AAA3A_utils.cogsutils import CogsUtils
 from AAA3A_utils.menus import Menu  # isort:skip
 from grief.core import commands  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
@@ -83,7 +83,7 @@ class Session:
 class Webhook(Cog):
     """Various webhook commands to create and send messages along webhooks!"""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
         self.__authors__: typing.List[str] = ["PhenoM4n4n", "AAA3A"]
 

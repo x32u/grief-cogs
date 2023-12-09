@@ -5,7 +5,7 @@ from typing import Any, Optional, Union
 
 import discord
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import humanize_timedelta
 
 from .c_autoroom import AutoRoomCommands
@@ -58,7 +58,7 @@ class AutoRoom(
     }
     perms_bot_dest = {**perms_autoroom_owner, "move_members": True}
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         """Set up the cog."""
         super().__init__()
         self.bot = bot
@@ -84,7 +84,7 @@ class AutoRoom(
         )
 
     #
-    # Red methods
+    # Grief methods
     #
 
     async def red_delete_data_for_user(self, **_kwargs: Any) -> None:  # noqa: ANN401

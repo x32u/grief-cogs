@@ -6,7 +6,7 @@ from typing import List, Optional, Union
 import discord
 import TagScriptEngine as tse
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import box, pagify
 
 from .http import (
@@ -267,7 +267,7 @@ class SlashTag:
         self.cog = cog
         self.http: SlashHTTP = cog.http
         self.config: Config = cog.config
-        self.bot: Red = cog.bot
+        self.bot: Grief = cog.bot
         self.tagscript = tagscript
 
         self.command = command

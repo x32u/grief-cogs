@@ -137,7 +137,7 @@ class SuicidePrevention(Exception):
     """
     This is raised when the bot attempts to warn itself.
 
-    Warning Red will cause issues and is not designed for this.
+    Warning Grief will cause issues and is not designed for this.
     """
 
     pass

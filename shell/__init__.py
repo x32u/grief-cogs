@@ -15,13 +15,13 @@
 import json
 from pathlib import Path
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 from .shell import Shell
 
 
 
 
-async def setup(bot: Red) -> None:
+async def setup(bot: Grief) -> None:
     cog = Shell(bot)
     await bot.add_cog(cog)

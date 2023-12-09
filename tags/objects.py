@@ -6,7 +6,7 @@ from typing import List, Optional
 import discord
 import TagScriptEngine as tse
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import box, humanize_list, humanize_number, inline, pagify
 
 from .errors import TagAliasError
@@ -45,7 +45,7 @@ class Tag:
     ):
         self.cog = cog
         self.config: Config = cog.config
-        self.bot: Red = cog.bot
+        self.bot: Grief = cog.bot
         self.name: str = name
         self._aliases = aliases or []
         self.tagscript: str = tagscript

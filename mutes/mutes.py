@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 from .converters import MuteTime
 from .voicemutes import VoiceMutes
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core import commands, i18n, modlog, Config
 from grief.core.utils import AsyncIter, bounded_gather, can_user_react_in
 from grief.core.utils.chat_formatting import (
@@ -80,7 +80,7 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
     Mute users temporarily or indefinitely.
     """
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(self, 49615220001, force_registration=True)
         default_guild = {

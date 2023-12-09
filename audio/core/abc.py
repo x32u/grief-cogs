@@ -24,7 +24,7 @@ import discord
 import lavalink
 
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Context
 from grief.core.utils.antispam import AntiSpam
 from grief.core.utils.dbtools import APSWConnectionWrapper
@@ -44,7 +44,7 @@ class MixinMeta(ABC):
     Basically, to keep developers sane when not all attributes are defined in each mixin.
     """
 
-    bot: Red
+    bot: Grief
     config: Config
     api_interface: Optional["AudioAPIInterface"]
     managed_node_controller: Optional["ServerManager"]

@@ -2,7 +2,7 @@ from typing import Optional
 
 import discord
 from discord.http import Route
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 
 class URLButton:
@@ -25,7 +25,7 @@ class URLButton:
 
 
 async def send_message(
-    bot: Red,
+    bot: Grief,
     channel_id: int,
     *,
     content: Optional[str] = None,

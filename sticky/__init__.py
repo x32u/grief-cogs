@@ -1,11 +1,11 @@
 """Sticky - Sticky messages to a channel."""
 import asyncio
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 from .sticky import Sticky
 
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     """Load Sticky."""
     cog = Sticky(bot)
     if asyncio.iscoroutinefunction(bot.add_cog):

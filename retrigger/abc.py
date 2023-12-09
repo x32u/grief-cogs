@@ -7,7 +7,7 @@ import discord
 
 if TYPE_CHECKING:
     from grief.core import Config, commands
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
 
     from .converters import (
         ChannelUserRole,
@@ -24,7 +24,7 @@ class ReTriggerMixin(ABC):
     def __init__(self, *_args):
         super().__init__()
         self.config: Config
-        self.bot: Red
+        self.bot: Grief
         self.triggers: Dict[int, Dict[str, Trigger]]
 
     @abstractmethod

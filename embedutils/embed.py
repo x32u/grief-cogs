@@ -2,7 +2,7 @@
 from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
 from grief.core import commands, Config  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
@@ -30,7 +30,7 @@ PASTEBIN_LIST_CONVERTER = PastebinListConverter(conversion_type="json")
 class EmbedUtils(Cog):
     """Create, send, and store embeds.."""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
         self.__authors__: typing.List[str] = ["PhenoM4n4n", "AAA3A"]
 

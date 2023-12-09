@@ -7,7 +7,7 @@ import aiohttp
 from red_commons.logging import getLogger
 
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Cog
 from grief.core.i18n import Translator
 
@@ -25,7 +25,7 @@ class YouTubeWrapper:
     """Wrapper for the YouTube Data API."""
 
     def __init__(
-        self, bot: Red, config: Config, session: aiohttp.ClientSession, cog: Union["Audio", Cog]
+        self, bot: Grief, config: Config, session: aiohttp.ClientSession, cog: Union["Audio", Cog]
     ):
         self.bot = bot
         self.config = config

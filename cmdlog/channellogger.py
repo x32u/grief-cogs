@@ -4,7 +4,7 @@ from asyncio import Queue
 from typing import NoReturn, Optional
 
 import discord
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import box, pagify
 
 from cmdlog.objects import Log
@@ -16,7 +16,7 @@ log = get_vex_logger(__name__)
 
 
 class ChannelLogger:
-    def __init__(self, bot: Red, channel: discord.TextChannel) -> None:
+    def __init__(self, bot: Grief, channel: discord.TextChannel) -> None:
         self.bot = bot
         self.channel = channel
         self.task: Optional[asyncio.Task] = None

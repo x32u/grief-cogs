@@ -1,6 +1,6 @@
 from AAA3A_utils import Cog  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 import typing  # isort:skip
 
 # from .editautomod import EditAutoMod
@@ -21,7 +21,7 @@ BASES = [EditGuild, EditTextChannel, EditThread, EditVoiceChannel]  # EditAutoMo
 class Admin(*BASES, Cog):
     """A cog to edit Discord default objects, like guilds, roles, text channels, voice channels, threads and AutoMod."""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
 
     async def red_delete_data_for_user(self, *args, **kwargs) -> None:

@@ -11,12 +11,12 @@ from typing import Any, Final, List, Dict, Optional, TYPE_CHECKING
 import json
 import pathlib
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 import discord
 from discord.ext import tasks
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import humanize_list, humanize_number, pagify
 from grief.core.utils.predicates import MessagePredicate
 
@@ -96,7 +96,7 @@ else:
 
 class CycleStatus(commands.Cog):
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(self, 115849, True)
         self.config.register_global(**_config_structure["global"])
@@ -349,5 +349,5 @@ class CycleStatus(commands.Cog):
         game = discord.Activity(type=await self.config.status_type(), name=status)
         await self.bot.change_presence(activity=game, status=await self.config.status_mode())
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     await bot.add_cog(CycleStatus(bot))

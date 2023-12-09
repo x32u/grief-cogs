@@ -6,7 +6,7 @@ from abc import ABC
 from typing import Coroutine, Literal
 
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.config import Config
 
 from .reactroles import ReactRoles
@@ -31,7 +31,7 @@ class RoleUtils(
     metaclass=CompositeMetaClass,
 ):
     """Useful role commands. Includes massroling, role targeting, and reaction roles."""
-    def __init__(self, bot: Red, *_args) -> None:
+    def __init__(self, bot: Grief, *_args) -> None:
         self.cache = {}
         self.bot = bot
         self.config = Config.get_conf(

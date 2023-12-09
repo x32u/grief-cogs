@@ -200,7 +200,7 @@ msgid "Send Voice Messages"
 msgstr "傳送語音訊息"
 
 #: redbot/cogs/audio/core/events/dpy.py:82
-msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Red. The default and supported versions are currently Java 17 and 11."
+msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Grief. The default and supported versions are currently Java 17 and 11."
 msgstr ""
 
 #: redbot/cogs/audio/core/events/dpy.py:88
@@ -212,20 +212,20 @@ msgid "This command will disable the managed Lavalink node, if you toggle this c
 msgstr "此命令將禁用託管的 Lavalink 節點，如果您切換此命令，則必須指定要連接的外部 Lavalink 節點，否則Audio將停止工作。"
 
 #: redbot/cogs/audio/core/events/dpy.py:98
-msgid "This command is used to specify the IP which will be used by Red to connect to an external Lavalink node. "
-msgstr "此命令用於指定 Red 將用於連接到外部 Lavalink 節點的 IP。 "
+msgid "This command is used to specify the IP which will be used by Grief to connect to an external Lavalink node. "
+msgstr "此命令用於指定 Grief 將用於連接到外部 Lavalink 節點的 IP。 "
 
 #: redbot/cogs/audio/core/events/dpy.py:101
-msgid "This command is used to specify the authentication password used by Red to connect to an external Lavalink node."
-msgstr "該命令用於指定 Red 連接到外部 Lavalink 節點時使用的認證密碼。"
+msgid "This command is used to specify the authentication password used by Grief to connect to an external Lavalink node."
+msgstr "該命令用於指定 Grief 連接到外部 Lavalink 節點時使用的認證密碼。"
 
 #: redbot/cogs/audio/core/events/dpy.py:105
 msgid "This command is used toggle between secured and unsecured connections to an external Lavalink node."
 msgstr "此命令用於在與外部 Lavalink 節點的安全和不安全連接之間切換。"
 
 #: redbot/cogs/audio/core/events/dpy.py:108
-msgid "This command is used to specify the connection port used by Red to connect to an external Lavalink node."
-msgstr "該命令用於指定Red用於連接外部Lavalink節點的連接端口。"
+msgid "This command is used to specify the connection port used by Grief to connect to an external Lavalink node."
+msgstr "該命令用於指定Grief用於連接外部Lavalink節點的連接端口。"
 
 #: redbot/cogs/audio/core/events/dpy.py:111
 msgid "This command specifies which network interface and IP the managed Lavalink node will bind to, by default this is 'localhost', only change this if you want the managed Lavalink node to bind to a specific IP/interface."

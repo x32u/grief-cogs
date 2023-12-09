@@ -82,7 +82,7 @@ DANGEROUS_COMMANDS = {
     "command_llset_java": _(
         "This command will change the executable path of Java, "
         "this is useful if you have multiple installations of Java and the default one is causing issues. "
-        "Please don't change this unless you are certain that the Java version you are specifying is supported by Red. "
+        "Please don't change this unless you are certain that the Java version you are specifying is supported by Grief. "
         "The default and supported versions are currently Java 17 and 11."
     ),
     "command_llset_heapsize": _(
@@ -96,17 +96,17 @@ DANGEROUS_COMMANDS = {
         "if you do not do so Audio will stop working."
     ),
     "command_llset_host": _(
-        "This command is used to specify the IP which will be used by Red to connect to an external Lavalink node. "
+        "This command is used to specify the IP which will be used by Grief to connect to an external Lavalink node. "
     ),
     "command_llset_password": _(
-        "This command is used to specify the authentication password used by Red to connect to an "
+        "This command is used to specify the authentication password used by Grief to connect to an "
         "external Lavalink node."
     ),
     "command_llset_secured": _(
         "This command is used toggle between secured and unsecured connections to an external Lavalink node."
     ),
     "command_llset_wsport": _(
-        "This command is used to specify the connection port used by Red to connect to an external Lavalink node."
+        "This command is used to specify the connection port used by Grief to connect to an external Lavalink node."
     ),
     "command_llset_config_host": _(
         "This command specifies which network interface and IP the managed Lavalink node will bind to, "

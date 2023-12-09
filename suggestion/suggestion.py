@@ -5,13 +5,13 @@ import typing
 from grief.core import Config, checks, commands
 from grief.core.utils.chat_formatting import humanize_list
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 
 class Suggestion(commands.Cog):
     """Setup suggestions in your server."""
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(
             self, identifier=2115656421364, force_registration=True

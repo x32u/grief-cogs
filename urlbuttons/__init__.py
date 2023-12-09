@@ -33,7 +33,7 @@ del AAA3A_utils
 #         "The needed utils to run the cog has a lower version than the one supported by this version of the cog. Please execute the command `[p]pipinstall --upgrade git+https://github.com/AAA3A-AAA3A/AAA3A_utils.git`. A restart of the bot isn't necessary."
 #     )
 
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 from grief.core.utils import get_end_user_data_statement
 
 from .urlbuttons import UrlButtons
@@ -41,6 +41,6 @@ from .urlbuttons import UrlButtons
 __red_end_user_data_statement__ = get_end_user_data_statement(file=__file__)
 
 
-async def setup(bot: Red) -> None:
+async def setup(bot: Grief) -> None:
     cog = UrlButtons(bot)
     await bot.add_cog(cog)

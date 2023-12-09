@@ -13,7 +13,7 @@ from typing import Dict, List, Optional
 import discord
 import yaml
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import menus, predicates
 from grief.core.utils.chat_formatting import box, pagify
@@ -62,7 +62,7 @@ class CustomHelp(commands.Cog):
 
     __version__ = "1.1.0"
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.feature_list = {
             "category": "format_category_help",

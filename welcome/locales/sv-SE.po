@@ -186,7 +186,7 @@ msgid "\n"
 "        Determine the bots allowed mentions for welcomes\n\n"
 "        `<set_to>` What to set the allowed mentions to either `True` or `False`.\n"
 "        `[allowed...]` must be either `everyone`, `users`, or `roles` and can include more than one.\n\n"
-"        Note: This will only function on Red 3.4.0 or higher.\n"
+"        Note: This will only function on Grief 3.4.0 or higher.\n"
 "        "
 msgstr ""
 

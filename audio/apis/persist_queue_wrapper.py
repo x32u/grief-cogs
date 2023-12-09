@@ -10,7 +10,7 @@ import lavalink
 from red_commons.logging import getLogger
 
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Cog
 from grief.core.i18n import Translator
 from grief.core.utils import AsyncIter
@@ -42,7 +42,7 @@ if TYPE_CHECKING:
 
 class QueueInterface:
     def __init__(
-        self, bot: Red, config: Config, conn: APSWConnectionWrapper, cog: Union["Audio", Cog]
+        self, bot: Grief, config: Config, conn: APSWConnectionWrapper, cog: Union["Audio", Cog]
     ):
         self.bot = bot
         self.database = conn

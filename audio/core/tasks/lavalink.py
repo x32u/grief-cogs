@@ -98,7 +98,7 @@ class LavalinkTasks(MixinMeta, metaclass=CompositeMetaClass):
             if self.managed_node_controller is not None:
                 await self.managed_node_controller.shutdown()
             return
-        log.debug("Attempting to initialize Red-Lavalink")
+        log.debug("Attempting to initialize Grief-Lavalink")
         retry_count = 0
         while retry_count < max_retries:
             try:
@@ -108,7 +108,7 @@ class LavalinkTasks(MixinMeta, metaclass=CompositeMetaClass):
                     password=password,
                     port=port,
                     timeout=timeout,
-                    resume_key=f"Red-Core-Audio-{self.bot.user.id}-{data_manager.instance_name()}",
+                    resume_key=f"Grief-Core-Audio-{self.bot.user.id}-{data_manager.instance_name()}",
                     secured=secured,
                 )
             except lavalink.AbortingNodeConnection:

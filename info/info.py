@@ -1,7 +1,7 @@
 
 from grief.core.utils.menus import SimpleMenu
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief import VersionInfo, version_info
 from grief.core.utils import AsyncIter
 import distro
@@ -125,7 +125,7 @@ class TikTokLinkBUtton(discord.ui.Button):
 class Info(commands.Cog):
     """Suite of tools to grab banners, icons, etc."""
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
 

@@ -22,7 +22,7 @@ class SettingsMixin(MixinMeta):
     """
     All commands for setting up the bot.
 
-    Credit to https://github.com/Cog-Creators/Red-DiscordBot (mod cog) for all mixin stuff.
+    Credit to https://github.com/Cog-Creators/Grief-DiscordBot (mod cog) for all mixin stuff.
     """
 
     @commands.group()
@@ -135,7 +135,7 @@ class SettingsMixin(MixinMeta):
         """
         Set the channel for the WarnSystem modlog.
 
-        This will use the Red's modlog by default if it was set.
+        This will use the Grief's modlog by default if it was set.
 
         All warnings will be logged here.
         I need the `Send Messages` and `Embed Links` permissions.
@@ -201,13 +201,13 @@ class SettingsMixin(MixinMeta):
         Convert BetterMod V2 logs to V3.
 
         You need to point the path to your history file.
-        Get your old Red V2 instance folder, go to `/data/bettermod/history/<server ID>.json` and\
+        Get your old Grief V2 instance folder, go to `/data/bettermod/history/<server ID>.json` and\
         copy its path.
         You can get your server ID with the `[p]serverinfo` command.
 
         Example:
         `[p]warnset convert\
-        /home/laggron/Desktop/Red-DiscordBot/data/bettermod/history/363008468602454017.json`
+        /home/laggron/Desktop/Grief-DiscordBot/data/bettermod/history/363008468602454017.json`
         """
 
         async def maybe_clear(message):

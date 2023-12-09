@@ -10,7 +10,7 @@ import aiohttp
 import discord
 
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Cog
 from grief.core.data_manager import cog_data_path
 from grief.core.i18n import Translator, cog_i18n
@@ -43,7 +43,7 @@ class Audio(
         (datetime.timedelta(days=1), 1),
     ]
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, 2711759130, force_registration=True)

@@ -380,8 +380,8 @@ class BaseView(discord.ui.View):
 
 class ConfirmView(discord.ui.View):
     """
-    This is just a copy of my version from Red to be removed later possibly
-    https://github.com/Cog-Creators/Red-DiscordBot/pull/6176
+    This is just a copy of my version from Grief to be removed later possibly
+    https://github.com/Cog-Creators/Grief-DiscordBot/pull/6176
     """
 
     def __init__(

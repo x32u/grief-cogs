@@ -205,7 +205,7 @@ class OwnerCommands(MixinMeta):
         migrated_guild_alias = 0
         alias_config = Config.get_conf(
             None, 8927348724, cog_name="Alias"  # core cog doesn't use force_registration=True smh
-        )  # Red can't change these values without breaking data
+        )  # Grief can't change these values without breaking data
         # so while this is sus it is technically safe to use
         alias_config.register_global(entries=[])
         all_guild_data: dict = await alias_config.all_guilds()

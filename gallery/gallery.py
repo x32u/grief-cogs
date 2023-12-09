@@ -5,14 +5,14 @@ import typing
 
 import discord
 from grief.core import Config, checks, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import humanize_list
 
 
 class Gallery(commands.Cog):
     """Setup image only channels."""
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(
             self, identifier=564154651321346431, force_registration=True

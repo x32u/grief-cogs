@@ -5,7 +5,7 @@ import sqlite3
 from asyncio.events import AbstractEventLoop
 from typing import Optional
 
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.data_manager import cog_data_path
 
 # (comparisons from red config, mainly to make me feel like i didn't waste an evening)
@@ -26,12 +26,12 @@ except ImportError:
 class PandasSQLiteDriver:
     """An asynchronous SQLite driver for Pandas dataframes."""
 
-    def __init__(self, bot: Red, cog_name: str, filename: str, table: str = "main_df") -> None:
+    def __init__(self, bot: Grief, cog_name: str, filename: str, table: str = "main_df") -> None:
         """Get a driver object for interacting with a table in the given cog's datapath.
 
         Parameters
         ----------
-        bot : Red
+        bot : Grief
             Bot object
         cog_name : str
             Full cog name, LikeThis

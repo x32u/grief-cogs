@@ -184,8 +184,8 @@ msgid "Moderate Member"
 msgstr "Moderar miembro"
 
 #: grief/cogs/audio/core/events/dpy.py:78
-msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Red. The default and supported version is currently Java 11."
-msgstr "Este comando cambiará la ruta del ejecutable de Java, es útil si tiene múltiples instalaciones de Java y la predeterminada está causando problemas. Por favor, no cambie esto a menos que esté seguro de que la versión Java que está especificando es soportada por Red. La versión predeterminada y soportada es actualmente Java 11."
+msgid "This command will change the executable path of Java, this is useful if you have multiple installations of Java and the default one is causing issues. Please don't change this unless you are certain that the Java version you are specifying is supported by Grief. The default and supported version is currently Java 11."
+msgstr "Este comando cambiará la ruta del ejecutable de Java, es útil si tiene múltiples instalaciones de Java y la predeterminada está causando problemas. Por favor, no cambie esto a menos que esté seguro de que la versión Java que está especificando es soportada por Grief. La versión predeterminada y soportada es actualmente Java 11."
 
 #: grief/cogs/audio/core/events/dpy.py:84
 msgid "This command will change the maximum RAM allocation for the managed Lavalink node, usually you will never have to change this, before considering changing it please consult our support team."
@@ -196,20 +196,20 @@ msgid "This command will disable the managed Lavalink node, if you toggle this c
 msgstr "Este comando desactivará el nodo Lavalink administrado, si activa este comando debe especificar un nodo Lavalink externo al que conectar, si no lo hace, Audio dejará de funcionar."
 
 #: grief/cogs/audio/core/events/dpy.py:94
-msgid "This command is used to specify the IP which will be used by Red to connect to an external Lavalink node. "
-msgstr "Este comando se utiliza para especificar la IP que será utilizada por Red para conectarse a un nodo Lavalink externo. "
+msgid "This command is used to specify the IP which will be used by Grief to connect to an external Lavalink node. "
+msgstr "Este comando se utiliza para especificar la IP que será utilizada por Grief para conectarse a un nodo Lavalink externo. "
 
 #: grief/cogs/audio/core/events/dpy.py:97
-msgid "This command is used to specify the authentication password used by Red to connect to an external Lavalink node."
-msgstr "Este comando se utiliza para especificar la contraseña de autenticación usada por Red para conectarse a un nodo Lavalink externo."
+msgid "This command is used to specify the authentication password used by Grief to connect to an external Lavalink node."
+msgstr "Este comando se utiliza para especificar la contraseña de autenticación usada por Grief para conectarse a un nodo Lavalink externo."
 
 #: grief/cogs/audio/core/events/dpy.py:101
 msgid "This command is used toggle between secured and unsecured connections to an external Lavalink node."
 msgstr "Este comando se usa para alternar entre conexiones seguras y no seguras a un nodo Lavalink externo."
 
 #: grief/cogs/audio/core/events/dpy.py:104
-msgid "This command is used to specify the connection port used by Red to connect to an external Lavalink node."
-msgstr "Este comando se utiliza para especificar el puerto de conexión utilizado por Red para conectarse a un nodo Lavalink externo."
+msgid "This command is used to specify the connection port used by Grief to connect to an external Lavalink node."
+msgstr "Este comando se utiliza para especificar el puerto de conexión utilizado por Grief para conectarse a un nodo Lavalink externo."
 
 #: grief/cogs/audio/core/events/dpy.py:107
 msgid "This command specifies which network interface and IP the managed Lavalink node will bind to, by default this is 'localhost', only change this if you want the managed Lavalink node to bind to a specific IP/interface."

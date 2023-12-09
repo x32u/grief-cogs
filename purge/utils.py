@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional, Pattern, Tuple, TypeVar,
 
 import discord
 from grief.core import commands, modlog
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import humanize_number
 
 T = TypeVar("T")
@@ -116,7 +116,7 @@ async def _cleanup(
     await ctx.message.delete(delay=10)
 
 
-# https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/grief/cogs/cleanup/cleanup.py#L163
+# https://github.com/Cog-Creators/Grief-DiscordBot/blob/V3/develop/grief/cogs/cleanup/cleanup.py#L163
 async def get_message_from_reference(
     channel: Union[
         discord.TextChannel,
@@ -142,7 +142,7 @@ async def get_message_from_reference(
     return message
 
 
-# https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/grief/cogs/cleanup/cleanup.py#L76
+# https://github.com/Cog-Creators/Grief-DiscordBot/blob/V3/develop/grief/cogs/cleanup/cleanup.py#L76
 async def get_messages_for_deletion(
     *,
     channel: Union[

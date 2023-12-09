@@ -5,7 +5,7 @@ import datetime
 import discord
 from dateutil.parser import ParserError, parse
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import box, warning
 
 from ..consts import MAX_BDAY_MSG_LEN
@@ -13,7 +13,7 @@ from ..utils import format_bday_message
 
 
 class SetupView(discord.ui.View):
-    def __init__(self, author: discord.Member, bot: Red, config: Config):
+    def __init__(self, author: discord.Member, bot: Grief, config: Config):
         super().__init__()
 
         self.author = author
@@ -70,7 +70,7 @@ class SetupModal(discord.ui.Modal):
     #     ],
     # )
 
-    def __init__(self, bot: Red, config: Config):
+    def __init__(self, bot: Grief, config: Config):
         super().__init__(title="Birthday setup")
 
         self.bot = bot

@@ -1,6 +1,6 @@
 ﻿from AAA3A_utils import Cog, CogsUtils, Menu  # isort:skip
 from grief.core import commands, Config  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
@@ -26,7 +26,7 @@ class MyMessageConverter(commands.MessageConverter):
 class UrlButtons(Cog):
     """Setup buttons to place on embeds/messages sent by grief that will send them to a website."""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
 
         self.config: Config = Config.get_conf(
@@ -172,7 +172,7 @@ class UrlButtons(Cog):
     ) -> None:
         """Add a url-button for a message.
 
-        ```[p]urlbuttons bulk <message> :red_circle:|<https://github.com/Cog-Creators/Red-DiscordBot> :smiley:|<https://github.com/Cog-Creators/Red-SmileyBot> :green_circle:|<https://github.com/Cog-Creators/Green-DiscordBot>```
+        ```[p]urlbuttons bulk <message> :red_circle:|<https://github.com/Cog-Creators/Grief-DiscordBot> :smiley:|<https://github.com/Cog-Creators/Grief-SmileyBot> :green_circle:|<https://github.com/Cog-Creators/Green-DiscordBot>```
         """
         if len(url_buttons) == 0:
             raise commands.UserFeedbackCheckFailure(

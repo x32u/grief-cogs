@@ -3,7 +3,7 @@ import logging
 import discord
 import TagScriptEngine as tse
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import box, humanize_list
 
 log = logging.getLogger("grief.joinping")
@@ -22,7 +22,7 @@ class JoinPing(commands.Cog):
     __version__ = "1.1.1"
     __author__ = ["crayyy_zee"]
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=56789, force_registration=True)
         self.config.register_guild(**guild_defaults)

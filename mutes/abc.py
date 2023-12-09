@@ -4,7 +4,7 @@ from datetime import datetime
 
 import discord
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 
 class MixinMeta(ABC):
@@ -16,7 +16,7 @@ class MixinMeta(ABC):
 
     def __init__(self, *_args):
         self.config: Config
-        self.bot: Red
+        self.bot: Grief
         self._mutes_cache: Dict[int, Dict[int, Optional[datetime]]]
 
     @staticmethod

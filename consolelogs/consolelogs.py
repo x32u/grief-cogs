@@ -1,7 +1,7 @@
 ﻿from AAA3A_utils import Cog, CogsUtils, Menu, Loop  # isort:skip
 from grief.core import commands, Config  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
@@ -93,7 +93,7 @@ class ConsoleLog:
 class ConsoleLogs(Cog, DashboardIntegration):
     """A cog to display the console logs, with buttons and filter options, and to send commands errors in configured channels!"""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
         self.__authors__: typing.List[str] = ["AAA3A", "Tobotimus"]
 
@@ -131,7 +131,7 @@ class ConsoleLogs(Cog, DashboardIntegration):
         table_general_info = Table(show_edge=False, show_header=False, box=rich_box.MINIMAL)
         table_general_info.add_row("Prefixes", ", ".join(prefixes))
         table_general_info.add_row("Language", lang)
-        table_general_info.add_row("Red version", red_version)
+        table_general_info.add_row("Grief version", red_version)
         table_general_info.add_row("Discord.py version", dpy_version)
         table_general_info.add_row("Storage type", data_manager.storage_type())
         table_counts = Table(show_edge=False, show_header=False, box=rich_box.MINIMAL)
@@ -205,7 +205,7 @@ class ConsoleLogs(Cog, DashboardIntegration):
             kwargs["exc_info"] = None  # Maybe next lines...
             console_logs.append(ConsoleLog(id=0, **kwargs))
 
-        # Add Red INTRO.
+        # Add Grief INTRO.
         if red_ready_console_log := discord.utils.get(
             console_logs, logger_name="red", message="Connected to Discord. Getting ready..."
         ):

@@ -5,13 +5,13 @@ from typing import Tuple
 import discord
 from rapidfuzz import process
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import BadArgument, RoleConverter
 from unidecode import unidecode
 
 
 async def is_allowed_by_role_hierarchy(
-    bot: Red,
+    bot: Grief,
     bot_me: discord.Member,
     mod: discord.Member,
     role: discord.Role,
@@ -34,7 +34,7 @@ class FuzzyRole(RoleConverter):
 
     Guidance code on how to do this from:
     https://github.com/Rapptz/discord.py/blob/rewrite/discord/ext/commands/converter.py#L85
-    https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/mod/mod.py#L24
+    https://github.com/Cog-Creators/Grief-DiscordBot/blob/V3/develop/redbot/cogs/mod/mod.py#L24
     """
 
     def __init__(self, response: bool = True):

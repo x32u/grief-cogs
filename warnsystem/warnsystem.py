@@ -24,7 +24,7 @@ from .converters import AdvancedMemberSelect
 from .settings import SettingsMixin
 
 if TYPE_CHECKING:
-    from grief.core.bot import Red
+    from grief.core.bot import Grief
 
 log = logging.getLogger("grief.warnsystem")
 _ = Translator("WarnSystem", __file__)
@@ -122,7 +122,7 @@ class WarnSystem(SettingsMixin, commands.Cog, metaclass=CompositeMetaClass):
     }
     default_custom_member = {"x": []}  # cannot set a list as base group
 
-    def __init__(self, bot: "Red"):
+    def __init__(self, bot: "Grief"):
         self.bot = bot
 
         self.data = Config.get_conf(self, 260, force_registration=True)
@@ -195,7 +195,7 @@ class WarnSystem(SettingsMixin, commands.Cog, metaclass=CompositeMetaClass):
                     "Please set up a modlog channel before warning a member.\n\n"
                     "**With WarnSystem**\n"
                     "*Use the `[p]warnset channel` command.*\n\n"
-                    "**With Red Modlog**\n"
+                    "**With Grief Modlog**\n"
                     "*Load the `modlogs` cog and use the `[p]modlogset modlog` command.*"
                 )
             )
@@ -393,7 +393,7 @@ class WarnSystem(SettingsMixin, commands.Cog, metaclass=CompositeMetaClass):
                         "Please set up a modlog channel before warning a member.\n\n"
                         "**With WarnSystem**\n"
                         "*Use the `[p]warnset channel` command.*\n\n"
-                        "**With Red Modlog**\n"
+                        "**With Grief Modlog**\n"
                         "*Load the `modlogs` cog and use the `[p]modlogset modlog` command.*"
                     )
                 )
@@ -596,7 +596,7 @@ class WarnSystem(SettingsMixin, commands.Cog, metaclass=CompositeMetaClass):
 
     async def on_manual_action(self, guild: discord.Guild, member: discord.Member, level: int):
         # most of this code is from Cog-Creators, modlog cog
-        # https://github.com/Cog-Creators/Red-DiscordBot/blob/bc21f779762ec9f460aecae525fdcd634f6c2d85/redbot/core/modlog.py#L68
+        # https://github.com/Cog-Creators/Grief-DiscordBot/blob/bc21f779762ec9f460aecae525fdcd634f6c2d85/redbot/core/modlog.py#L68
         if not guild.me.guild_permissions.view_audit_log:
             return
         if not await self.data.guild(guild).log_manual():

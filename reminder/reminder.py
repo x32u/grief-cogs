@@ -10,7 +10,7 @@ import re
 from typing import List, Literal, Optional
 
 from grief.core import commands, Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Context
 from grief.core.utils.menus import menu, DEFAULT_CONTROLS
 
@@ -40,7 +40,7 @@ class Reminder(commands.Cog):
     ):
         await self.config.user_from_id(user_id).clear()
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         unique_id = int(hashlib.sha512((self.__class__.__name__).encode()).hexdigest(), 16)

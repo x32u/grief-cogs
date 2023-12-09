@@ -5,7 +5,7 @@ from AAA3A_utils.cogsutils import CogsUtils
 from AAA3A_utils.settings import Settings
 from grief.core import commands, Config  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 import colorama
@@ -41,7 +41,7 @@ class LinkQuoterView(discord.ui.View):
 class LinkQuoter(Cog):
     """Quote any Discord message from its link."""
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
         self.__authors__: typing.List[str] = ["PhenoM4n4n", "AAA3A"]
 

@@ -1,6 +1,6 @@
 from grief.core import commands  # isort:skip
 from grief.core.i18n import Translator  # isort:skip
-from grief.core.bot import Red  # isort:skip
+from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
 
@@ -48,7 +48,7 @@ class Ticket:
         save_data,
         first_message,
     ):
-        self.bot: Red = bot
+        self.bot: Grief = bot
         self.cog: commands.Cog = cog
 
         self.profile: str = profile
@@ -123,7 +123,7 @@ class Ticket:
         return ticket
 
     @staticmethod
-    def from_json(json: dict, bot: Red, cog: commands.Cog) -> typing.Any:
+    def from_json(json: dict, bot: Grief, cog: commands.Cog) -> typing.Any:
         ticket: Ticket = Ticket(
             bot=bot,
             cog=cog,

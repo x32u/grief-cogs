@@ -1,6 +1,6 @@
 import discord
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import box, humanize_list
 
 from .listen import Listen
@@ -26,7 +26,7 @@ class AntiNuke(Listen, commands.Cog):
         helpcmd = super().format_help_for_context(ctx)
         return f"{helpcmd}"
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         self.config = Config.get_conf(self, 117, force_registration=True)

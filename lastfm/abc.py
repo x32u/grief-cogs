@@ -1,7 +1,7 @@
 from abc import ABC
 
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 
 class CompositeMetaClass(type(commands.Cog), type(ABC)):
@@ -19,4 +19,4 @@ class MixinMeta(ABC):
 
     def __init__(self, *_args):
         self.config: Config
-        self.bot: Red
+        self.bot: Grief

@@ -5,7 +5,7 @@ from abc import ABC, ABCMeta, abstractmethod
 from typing import Coroutine
 
 import discord
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import CogMeta
 from grief.core.config import Config
 
@@ -22,7 +22,7 @@ class CompositeMetaClass(CogMeta, ABCMeta):
 class MixinMeta(ABC):
     """A wonderful class for typehinting :tada:"""
 
-    bot: Red
+    bot: Grief
     config: Config
 
     loop_meta: VexLoop

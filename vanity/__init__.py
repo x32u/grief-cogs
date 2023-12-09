@@ -4,15 +4,15 @@ from logging import Logger, getLogger
 
 import discord
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
 class Vanity(commands.Cog):
     """For level 3 servers, award your users for advertising the vanity in their status."""
 
-    def __init__(self, bot: Red):
-        self.bot: Red = bot
+    def __init__(self, bot: Grief):
+        self.bot: Grief = bot
         self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
@@ -199,7 +199,7 @@ class Vanity(commands.Cog):
         return await ctx.reply(embed=embed, mention_author=False)
         
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()

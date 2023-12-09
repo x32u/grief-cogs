@@ -8,7 +8,7 @@ from typing import Final, MutableMapping, Optional, Pattern, Tuple, Union
 import discord
 
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator
 from grief.core.utils import AsyncIter
 
@@ -69,7 +69,7 @@ def _match_id(arg: str) -> Optional[int]:
 
 
 async def global_unique_guild_finder(ctx: commands.Context, arg: str) -> discord.Guild:
-    bot: Red = ctx.bot
+    bot: Grief = ctx.bot
     _id = _match_id(arg)
 
     if _id is not None:
@@ -103,7 +103,7 @@ async def global_unique_guild_finder(ctx: commands.Context, arg: str) -> discord
 async def global_unique_user_finder(
     ctx: commands.Context, arg: str, guild: discord.guild = None
 ) -> discord.abc.User:
-    bot: Red = ctx.bot
+    bot: Grief = ctx.bot
     guild = guild or ctx.guild
     _id = _match_id(arg)
 

@@ -7,7 +7,7 @@ from typing import Mapping, Optional
 
 import discord
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Cog as RedCog
 from grief.core.utils import chat_formatting as cf
 from grief.core.utils.views import SimpleMenu as BaseMenu
@@ -67,7 +67,7 @@ class ReactionMsg:
 class Snipe(RedCog):
     """Snipe the last edited/deleted message."""
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.edit_cache = defaultdict(lambda: deque(maxlen=100))
         self.delete_cache = defaultdict(lambda: deque(maxlen=100))
@@ -613,5 +613,5 @@ class Snipe(RedCog):
         await ctx.send(embed=emb)
 
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     await bot.add_cog(Snipe(bot))

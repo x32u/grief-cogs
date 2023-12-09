@@ -801,7 +801,7 @@ class ReTrigger(
         `[set_to]` `True` will reply with a notificaiton, `False` will reply without a notification,
         leaving this blank will clear replies entirely.
 
-        Note: This is only availabe for Red 3.4.6/discord.py 1.6.0 or greater.
+        Note: This is only availabe for Grief 3.4.6/discord.py 1.6.0 or greater.
 
         See https://regex101.com/ for help building a regex pattern.
         See `[p]retrigger explain` or click the link below for more details.

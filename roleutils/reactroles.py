@@ -140,7 +140,7 @@ class ReactRoles(MixinMeta):
         Emoji and role groups should be seperated by a ';' and have no space.
 
         Example:
-            - [p]reactrole create 🎃;@SpookyRole 🅱️;MemeRole #role_channel Red
+            - [p]reactrole create 🎃;@SpookyRole 🅱️;MemeRole #role_channel Grief
         """
         if not emoji_role_groups:
             raise commands.BadArgument

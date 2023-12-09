@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from abc import ABC
 
 # ABC Mixins
@@ -35,7 +35,7 @@ class Dashboard(
 
     __version__ = "0.1.8a"
 
-    def __init__(self, bot: Red, *args, **kwargs):
+    def __init__(self, bot: Grief, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.bot = bot
 

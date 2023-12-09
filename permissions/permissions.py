@@ -8,7 +8,7 @@ import discord
 import yaml
 from schema import And, Or, Schema, SchemaError, Optional as UseOptional
 from grief.core import commands, config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import can_user_react_in
 from grief.core.utils.chat_formatting import box, error, success
@@ -88,7 +88,7 @@ class Permissions(commands.Cog):
     # to prevent the guild owner from ever locking themselves out
     # see ``Permissions.__permissions_hook`` for more details
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
         # Config Schema:

@@ -463,7 +463,7 @@ class ValidRegex(Converter):
 
     Guidance code on how to do this from:
     https://github.com/Rapptz/discord.py/blob/rewrite/discord/ext/commands/converter.py#L85
-    https://github.com/Cog-Creators/Red-DiscordBot/blob/V3/develop/redbot/cogs/mod/mod.py#L24
+    https://github.com/Cog-Creators/Grief-DiscordBot/blob/V3/develop/redbot/cogs/mod/mod.py#L24
 
     This function (and a lot of code related to regex) is made by TrustyJAID
     https://github.com/TrustyJAID/Trusty-cogs/blob/master/retrigger/converters.py#L240

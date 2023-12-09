@@ -13,7 +13,7 @@ from multiprocessing.pool import Pool
 from discord.asset import Asset
 
 from grief.core import Config
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator
 from grief.core.commands import BadArgument, MemberConverter
 
@@ -178,7 +178,7 @@ class API:
             version = bot.get_cog('WarnSystem').__version__
     """
 
-    def __init__(self, bot: Red, config: Config, cache: MemoryCache):
+    def __init__(self, bot: Grief, config: Config, cache: MemoryCache):
         self.bot = bot
         self.data = config
         self.cache = cache
@@ -621,7 +621,7 @@ class API:
 
         #.  Get the modlog channel associated to the type, if provided
         #.  Get the defult modlog channel set with WarnSystem
-        #.  Get the Red's modlog channel associated to the server
+        #.  Get the Grief's modlog channel associated to the server
 
         Parameters
         ----------
@@ -667,7 +667,7 @@ class API:
         Raises
         ------
         ~warnsystem.errors.NotFound
-            There is no modlog channel set with WarnSystem or Red, ask the user to set one.
+            There is no modlog channel set with WarnSystem or Grief, ask the user to set one.
         """
         # raise errors if the arguments are wrong
         if level:
@@ -686,11 +686,11 @@ class API:
             return default_channel
 
         if not default_channel and not channel:
-            # warnsystem default channel doesn't exist, let's try to get Red's one
+            # warnsystem default channel doesn't exist, let's try to get Grief's one
             try:
                 return await get_red_modlog_channel(guild)
             except RuntimeError:
-                raise errors.NotFound("No modlog found from WarnSystem or Red")
+                raise errors.NotFound("No modlog found from WarnSystem or Grief")
 
         return self.bot.get_channel(channel if channel else default_channel)
 

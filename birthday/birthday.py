@@ -4,7 +4,7 @@ import asyncio
 
 import discord
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.config import Config
 
 from .abc import CompositeMetaClass
@@ -27,7 +27,7 @@ class Birthday(
     Set your birthday and get a message and role on your birthday.
     """
 
-    def __init__(self, bot: Red) -> None:
+    def __init__(self, bot: Grief) -> None:
         self.bot = bot
 
         self.config: Config = Config.get_conf(self, 418078199982063626, force_registration=True)

@@ -16,7 +16,7 @@ from red_commons.logging import getLogger
 
 from lavalink.rest_api import LoadResult, LoadType
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Cog, Context
 from grief.core.i18n import Translator
 from grief.core.utils import AsyncIter
@@ -51,7 +51,7 @@ class AudioAPIInterface:
 
     def __init__(
         self,
-        bot: Red,
+        bot: Grief,
         config: Config,
         session: aiohttp.ClientSession,
         conn: APSWConnectionWrapper,
