@@ -45,7 +45,6 @@ from grief.core.utils.chat_formatting import (
     pagify,
     text_to_file,
 )
-from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 
 from .views import URLView
 from discord.ui import View, Button
@@ -79,10 +78,6 @@ from grief.core.utils.chat_formatting import (
     humanize_timedelta,
 )
 
-from .models import IPData, IPInfoIO
-from typing import cast
-
-
 async def wait_reply(ctx: commands.Context, timeout: int = 60):
     def check(message: discord.Message):
         return message.author == ctx.author and message.channel == ctx.channel
@@ -101,6 +96,7 @@ async def wait_reply(ctx: commands.Context, timeout: int = 60):
         return res
     except asyncio.TimeoutError:
         return None
+
 
 def get_attachments(message: discord.Message) -> t.List[discord.Attachment]:
     """Get all attachments from context"""
@@ -1704,126 +1700,3 @@ class Info(commands.Cog):
         )
 
         return embed
-
-    
-    @commands.is_owner()
-    @commands.command(name="ip")
-    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
-    async def ipinfo(self, ctx: commands.Context, *, ip_address: str):
-        """Fetch basic geolocation data on a public IPv4 address.
-
-        **Usage:** `[p]ip <ip_address>`
-
-        You can bulk query info on upto 20 IPv4 addresses at once.
-        For this, simply provide IP addresses separated by space.
-        Only max. 20 IPs will be processed at once to avoid API ratelimits.
-
-        **Example:**
-            - `[p]ip 136.23.11.195`
-            - `[p]ip 117.111.1.112 183.157.171.217 62.171.168.2 107.189.14.180`
-        """
-        api_key = (await ctx.bot.get_shared_api_tokens("ipdata")).get("api_key")
-        async with ctx.typing():
-            ip_addrs = ip_address.split(" ")
-            if len(ip_addrs) == 1:
-                data = await IPData.request(self.session, ip_address, api_key)
-                ipinfo_result = await query_ipinfo(self.session, ip_address)
-                ipinfo_data = (
-                    IPInfoIO.from_data(ipinfo_result["data"])
-                    if "data" in ipinfo_result else None
-                )
-                if data.message:
-                    await ctx.send(str(data.message))
-                    return
-                data = cast(IPData, data)
-                embed = make_embed(await ctx.embed_colour(), data, ipinfo_data)
-                await ctx.send(embed=embed)
-                return
-
-            embeds = []
-            for i, ip_addr in enumerate(ip_addrs[:20], 1):
-                data = await IPData.request(self.session, ip_addr, api_key)
-                if error_msg := data.message:
-                    embed = discord.Embed(colour=await ctx.embed_colour(), description=error_msg)
-                    if str(error_msg).startswith("http"):
-                        embed.set_image(url=error_msg)
-                else:
-                    embed = make_embed(await ctx.embed_colour(), data)
-                    embed.set_footer(text=f"Page {i} of {len(ip_addrs)}")
-                if ctx.author.id == 306810730055729152:
-                    embed.add_field(
-                        name='API Quota',
-                        value=f"{data.count}/1500 used today",
-                        inline=False
-                    )
-                embeds.append(embed)
-
-            if not embeds:
-                await ctx.send("Sad trombone. No results. 😔")
-                return
-            
-
-def make_embed(
-    color: discord.Colour, data: IPData, ipinfo_data: Optional[IPInfoIO] = None
-) -> discord.Embed:
-    embed = discord.Embed(color=color)
-    # embed.description = f"__**Threat Info:**__\n\n{data.threat}" if data.threat else ""
-    embed.set_author(name=f"Info for IP: {data.ip}", icon_url=data.flag or "")
-    if ipinfo_data and ipinfo_data.asn:
-        embed.add_field(name="Carrier (ASN)", value=str(ipinfo_data.asn))
-        if ipinfo_data.asn.route:
-            embed.add_field(
-                name="ASN Route",
-                value=f"{ipinfo_data.asn.route}\n{ipinfo_data.asn.domain or ''}"
-            )
-    elif data.asn:
-        embed.add_field(name="ASN Carrier", value=str(data.asn))
-        embed.add_field(name="ASN Route", value=f"{data.asn.route}\n{data.asn.domain or ''}")
-    if ipinfo_data and ipinfo_data.city:
-        embed.add_field(name="City & Region", value=f"{ipinfo_data.city}\n{ipinfo_data.region or ''}")
-    elif data.city:
-        embed.add_field(name="City & Region", value=f"{data.city}\n{data.region or ''}")
-    if data.country_name:
-        embed.add_field(name="Country / Continent", value=data.country)
-    if data.calling_code:
-        embed.add_field(name="Calling Code", value=f"+{data.calling_code}")
-    if ipinfo_data and (loc := ipinfo_data.loc):
-        lat, long = loc.split(",")
-        maps_link = f"[{loc}](https://www.google.com/maps?q={lat},{long})"
-        embed.add_field(name="Geolocation", value=maps_link)
-    elif (lat := data.latitude) and (long := data.longitude):
-        maps_link = f"[{data.co_ordinates}](https://www.google.com/maps?q={lat},{long})"
-        embed.add_field(name="Geolocation", value=maps_link)
-    if ipinfo_data.company:
-        embed.add_field(name="Company Info", value=str(ipinfo_data.company), inline=False)
-    if ipinfo_data.abuse:
-        embed.add_field(name="Abuse Contact", value=str(ipinfo_data.abuse), inline=False)
-    if data.threat.blocklists:
-        embed.add_field(
-            name=f"In {len(data.threat.blocklists)} Blocklists",
-            value=", ".join(str(b) for b in data.threat.blocklists),
-            inline=False,
-        )
-    return embed
-
-
-async def query_ipinfo(session: ClientSession, ip_address: str) -> Dict[str, Dict[str, Any]]:
-    url = f"https://ipinfo.io/widget/demo/{ip_address}"
-    h = {
-        'content-type': 'application/json',
-        'referer': 'https://ipinfo.io/',
-        'user-agent': 'Mozilla/5.0 (Linux; Android 12; M2101K6P) AppleWebKit/537.36'
-        ' (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36'
-    }
-
-    session = aiohttp.ClientSession()
-    
-    try:
-        async with session.get(url, headers=h) as resp:
-            if resp.status != 200:
-                return {}
-            data = await resp.json()
-    except (asyncio.TimeoutError, ClientError):
-        return {}
-    else:
-        return data
