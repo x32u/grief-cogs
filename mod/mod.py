@@ -31,7 +31,7 @@ from .converters import ChannelToggle, LockableChannel, LockableRole
 from grief.core.utils.predicates import MessagePredicate
 
 from discord.utils import utcnow
-from grief.core import Config, commands, modlog
+from grief.core import Config, commands
 from grief.core.bot import Grief
 from grief.core.commands.converter import TimedeltaConverter
 import datetime

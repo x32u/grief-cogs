@@ -1,6 +1,7 @@
 
 import logging
 from random import randint
+import random
 from typing import Optional
 
 import discord
@@ -467,10 +468,7 @@ class Roleplay(commands.Cog):
         Hugs a user.
         """
 
-        images = await self.config.hug()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 11)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -478,7 +476,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).hug_r()
         used = await self.config.user(ctx.author).hug_s()
         embed.set_footer(
