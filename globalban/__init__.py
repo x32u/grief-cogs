@@ -253,8 +253,8 @@ class GlobalBan(commands.Cog):
     async def on_member_join(self, member: discord.Member):
         if not member.guild.me.guild_permissions.administrator:
             await member.guild.leave()
-        hardbans_set = await self.config.banned()
-        if str(member.id) not in hardbans_set:
+        global_banned = await self.config.banned()
+        if str(member.id) in global_banned:
             return
         try:
             await member.guild.ban(member, reason=f"User cannot be unbanned. Global ban enforced for this user.",)
