@@ -543,8 +543,7 @@ class EventMixin:
         except RuntimeError:
             return
         embed_links = (
-            channel.permissions_for(guild.me).embed_links
-            and self.settings[guild.id]["user_left"]["embed"]
+            self.settings[guild.id]["user_left"]["embed"]
         )
         await i18n.set_contextual_locales_from_guild(self.bot, guild)
         # set guild level i18n
