@@ -174,7 +174,7 @@ class GlobalBan(commands.Cog):
             try:
                 await guild.ban(
                     user,
-                    reason=global_reason if global_reason else "Global banned by bot owner.",
+                    reason=global_reason if global_reason else "User cannot be unbanned. Global ban enforced for this user.",
                 )
             except (discord.HTTPException, discord.Forbidden) as e:
                 logger.exception(e)
@@ -232,7 +232,7 @@ class GlobalBan(commands.Cog):
             try:
                 await guild.ban(
                     user,
-                    reason=global_reason if global_reason else "Global banned by bot owner.",
+                    reason=global_reason if global_reason else "User cannot be unbanned. Global ban enforced for this user.",
                 )
             except (discord.HTTPException, discord.Forbidden) as e:
                 logger.exception(e)
