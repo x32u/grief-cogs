@@ -491,10 +491,10 @@ class Mod(
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
         
-        if ctx.guild.id in vanity.config and channel.id == vanity.config[ctx.guild.id]:
-             await vanity.config.guild(ctx.guild).channel.set(channel.id)
-             await vanity.cog.update_cache
-             reconfigured_svcs.append("vanity channel")
+        if channel.id and int(channel.id) == channel.id:
+            await vanity.config.guild(ctx.guild).channel.set(new_channel.id)
+            await vanity.reset_cache(ctx.guild)
+            reconfigured_svcs.append("vanity award channel")
 
         if sticky:
             async with sticky.conf.channel(channel).all() as conf:
@@ -794,10 +794,6 @@ class Mod(
         Provide a role or member if you would like to unlock it for them.
         If you would like to override-unlock for something, you can do so by pass `true` as the state argument.
         You can only unlock a maximum of 10 things at once.
-
-        **Example:**
-        `[p]unviewlock #hidden-channel true`
-        `[p]unviewlock 746284923572835 @boosters`
         """
         try:
             await ctx.typing()
@@ -843,9 +839,6 @@ class Mod(
         Unlock the server.
 
         Provide a role if you would like to unlock it for that role.
-
-        **Examples:**
-        `[p]unlock server @members`
         """
         if not roles:
             roles = [ctx.guild.default_role]
