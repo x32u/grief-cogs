@@ -7,7 +7,7 @@ import discord
 from discord.ext import tasks
 from discord.ext.commands.converter import Converter
 from discord.ext.commands.errors import BadArgument
-from grief.core import Config, commands, i18n
+from grief.core import Config, commands, i18n, modlog
 from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import (
     escape,
@@ -42,6 +42,7 @@ class EventChooser(Converter):
             "guild_change",
             "emoji_change",
             "stickers_change",
+            "commands_used",
             "invite_created",
             "invite_deleted",
             "thread_create",
@@ -117,6 +118,13 @@ class EventMixin:
         settings = self.settings[guild.id].get(event)
         if "channel" in settings and settings["channel"]:
             channel = guild.get_channel(settings["channel"])
+        if channel is None:
+            try:
+                channel = await modlog.get_modlog_channel(guild)
+            except RuntimeError:
+                raise RuntimeError("No Modlog set")
+        if not channel.permissions_for(guild.me).send_messages:
+            raise RuntimeError("No permission to send messages in channel")
         return channel
 
     @commands.Cog.listener(name="on_raw_message_delete")
@@ -543,7 +551,8 @@ class EventMixin:
         except RuntimeError:
             return
         embed_links = (
-            self.settings[guild.id]["user_left"]["embed"]
+            channel.permissions_for(guild.me).embed_links
+            and self.settings[guild.id]["user_left"]["embed"]
         )
         await i18n.set_contextual_locales_from_guild(self.bot, guild)
         # set guild level i18n
