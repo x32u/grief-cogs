@@ -4,12 +4,12 @@ from collections import defaultdict, deque
 from typing import List, Optional
 
 import discord
-from grief.core import i18n, modlog, commands
+from grief.core import i18n, commands
 from grief.core.utils.mod import is_mod_or_superior
 from .abc import MixinMeta
 
 _ = i18n.Translator("Mod", __file__)
-log = logging.getLogger("red.mod")
+log = logging.getLogger("grief.mod")
 
 
 class Events(MixinMeta):
@@ -61,19 +61,6 @@ class Events(MixinMeta):
                             member=author.id, guild=guild.id
                         )
                     )
-                else:
-                    await modlog.create_case(
-                        self.bot,
-                        guild,
-                        message.created_at,
-                        "ban",
-                        author,
-                        guild.me,
-                        _("Mention spam (Autoban)"),
-                        until=None,
-                        channel=None,
-                    )
-                    return True
 
         if mention_spam["kick"]:
             if mentions >= mention_spam["kick"]:
@@ -85,19 +72,6 @@ class Events(MixinMeta):
                             member=author.id, guild=guild.id
                         )
                     )
-                else:
-                    await modlog.create_case(
-                        self.bot,
-                        guild,
-                        message.created_at,
-                        "kick",
-                        author,
-                        guild.me,
-                        _("Mention spam (Autokick)"),
-                        until=None,
-                        channel=None,
-                    )
-                    return True
 
         if mention_spam["warn"]:
             if mentions >= mention_spam["warn"]:
@@ -117,20 +91,6 @@ class Events(MixinMeta):
                             )
                         )
                         return False
-
-                await modlog.create_case(
-                    self.bot,
-                    guild,
-                    message.created_at,
-                    "warning",
-                    author,
-                    guild.me,
-                    _("Mention spam (Autowarn)"),
-                    until=None,
-                    channel=None,
-                )
-                return True
-        return False
 
     #@commands.Cog.listener()
     #async def on_message(self, message):
