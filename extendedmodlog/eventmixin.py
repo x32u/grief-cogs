@@ -117,8 +117,6 @@ class EventMixin:
         settings = self.settings[guild.id].get(event)
         if "channel" in settings and settings["channel"]:
             channel = guild.get_channel(settings["channel"])
-        if not channel.permissions_for(guild.me).send_messages:
-            raise RuntimeError("No permission to send messages in channel")
         return channel
 
     @commands.Cog.listener(name="on_raw_message_delete")
