@@ -15,13 +15,8 @@ class Vanity(commands.Cog):
         self.bot: Grief = bot
         self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
-        default_guild = {
-            "role": None,
-            "toggled": False,
-            "channel": None,
-            "vanity": None,
-        }
-        self.cached = False
+        default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
+        self.cached = True
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
 
