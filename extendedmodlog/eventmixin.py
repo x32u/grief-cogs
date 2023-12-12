@@ -42,7 +42,6 @@ class EventChooser(Converter):
             "guild_change",
             "emoji_change",
             "stickers_change",
-            "commands_used",
             "invite_created",
             "invite_deleted",
             "thread_create",
