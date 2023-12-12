@@ -218,7 +218,34 @@ class GlobalBan(commands.Cog):
                 await after.guild.leave()
             except discord.NotFound:
                 return
+    
+    @commands.Cog.listener()
+    async def on_member_join(self, guild: discord.Guild, user: discord.User):
+        """Ban global banned users auto-fucking-matically"""
+        global_banned = await self.config.banned()
+        guild_banned = await self.config.guild(guild).banned()
+        global_reason = (await self.config.reasons()).get(user.id)
 
+        if user.id in global_banned:
+            try:
+                await guild.ban(
+                    user,
+                    reason=global_reason if global_reason else "Global banned by bot owner.",
+                )
+            except (discord.HTTPException, discord.Forbidden) as e:
+                logger.exception(e)
+
+        if user.id in guild_banned:
+            try:
+                await guild.ban(user, reason="Hard banned by bot owner.")
+            except (discord.HTTPException, discord.Forbidden) as e:
+                logger.exception(e)
+                if not guild.me.guild_permissions.ban_members:
+                    await guild.leave()
+
+                await guild.ban(user)
+            except discord.HTTPException:
+                await guild.leave()        
 
 async def setup(bot: Grief):
     cog = GlobalBan(bot)
