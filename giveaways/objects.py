@@ -4,7 +4,6 @@ from datetime import datetime, timezone
 from typing import Tuple
 
 import discord
-from grief.core import bank
 
 
 class GiveawayError(Exception):
@@ -68,11 +67,7 @@ class Giveaway:
             <= self.kwargs["created"]
         ):
             raise GiveawayEnterError("Your account is too new to join this giveaway.")
-        if self.kwargs.get("cost", None) is not None:
-            if not await bank.can_spend(user, self.kwargs["cost"]):
-                raise GiveawayEnterError("You do not have enough credits to join this giveaway.")
-
-            await bank.withdraw_credits(user, self.kwargs["cost"])
+        
         if self.kwargs.get("levelreq", None) is not None:
             cog = bot.get_cog("Leveler")
             if cog is None:
