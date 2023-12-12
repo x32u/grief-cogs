@@ -139,28 +139,6 @@ class Roleplay(commands.Cog):
                 "https://api.slit.sh/roleplay/kiss/kiss14.gif",
                 "https://api.slit.sh/roleplay/kiss/kiss15.gif",
             ],
-            "hug": [
-                "https://api.slit.sh/roleplay/hug/hug1.gif",
-                "https://api.slit.sh/roleplay/hug/hug2.gif",
-                "https://api.slit.sh/roleplay/hug/hug3.gif",
-                "https://api.slit.sh/roleplay/hug/hug4.gif",
-                "https://api.slit.sh/roleplay/hug/hug5.gif",
-                "https://api.slit.sh/roleplay/hug/hug6.gif",
-                "https://api.slit.sh/roleplay/hug/hug7.gif",
-                "https://api.slit.sh/roleplay/hug/hug8.gif",
-                "https://api.slit.sh/roleplay/hug/hug9.gif",
-                "https://api.slit.sh/roleplay/hug/hug10.gif",
-                "https://api.slit.sh/roleplay/hug/hug11.gif",
-                "https://api.slit.sh/roleplay/hug/hug12.gif",
-                "https://api.slit.sh/roleplay/hug/hug13.gif",
-                "https://api.slit.sh/roleplay/hug/hug14.gif",
-                "https://api.slit.sh/roleplay/hug/hug15.gif",
-                "https://api.slit.sh/roleplay/hug/hug16.gif",
-                "https://api.slit.sh/roleplay/hug/hug17.gif",
-                "https://api.slit.sh/roleplay/hug/hug18.gif",
-                "https://api.slit.sh/roleplay/hug/hug19.gif",
-                "https://api.slit.sh/roleplay/hug/hug20.gif",
-            ],
             "pat": [
                 "https://api.slit.sh/roleplay/pat/pat1.gif",
                 "https://api.slit.sh/roleplay/pat/pat2.gif",
@@ -468,7 +446,7 @@ class Roleplay(commands.Cog):
         Hugs a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 11)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
