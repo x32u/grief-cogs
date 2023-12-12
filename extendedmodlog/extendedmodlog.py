@@ -22,13 +22,7 @@ logger = logging.getLogger("grief.extendedmodlog")
 
 @cog_i18n(_)
 class ExtendedModLog(EventMixin, commands.Cog):
-    """
-    Extended modlogs
-    Works with core modlogset channel
-    """
-
-    __author__ = ["RePulsar", "TrustyJAID"]
-    __version__ = "2.12.3"
+    """Extended modlogs"""
 
     def __init__(self, bot):
         self.bot = bot
@@ -47,12 +41,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
 
     async def cog_unload(self):
         self.invite_links_loop.stop()
-
-    async def red_delete_data_for_user(self, **kwargs):
-        """
-        Nothing to delete
-        """
-        return
 
     async def initialize(self) -> None:
         all_data = await self.config.all_guilds()
@@ -116,6 +104,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
         disabled = ""
         for settings, name in cur_settings.items():
             msg += f"{name}: **{data[settings]['enabled']}**"
+            msg += "\n" + humanize_list(data[settings]["privs"])
             if data[settings]["channel"]:
                 chn = guild.get_channel(data[settings]["channel"])
                 if chn is None:
@@ -157,6 +146,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             self.settings[ctx.guild.id] = inv_settings
         if await self.config.guild(ctx.message.guild).all() == {}:
             await self.config.guild(ctx.message.guild).set(inv_settings)
+        await self.modlog_settings(ctx)
 
     @_modlog.command(name="toggle")
     async def _set_event_on_or_off(
