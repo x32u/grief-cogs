@@ -157,7 +157,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
             self.settings[ctx.guild.id] = inv_settings
         if await self.config.guild(ctx.message.guild).all() == {}:
             await self.config.guild(ctx.message.guild).set(inv_settings)
-        await self.modlog_settings(ctx)
 
     @_modlog.command(name="toggle")
     async def _set_event_on_or_off(
