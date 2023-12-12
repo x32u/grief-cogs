@@ -21,191 +21,6 @@ class Roleplay(commands.Cog):
         self.config = Config.get_conf(
             self, identifier=8423644625413, force_registration=True
         )
-        default_global = {
-            "feed": [
-                "https://api.slit.sh/roleplay/feed/feed1.gif",
-                "https://api.slit.sh/roleplay/feed/feed2.gif",
-                "https://api.slit.sh/roleplay/feed/feed3.gif",
-                "https://api.slit.sh/roleplay/feed/feed4.gif",
-                "https://api.slit.sh/roleplay/feed/feed5.gif",
-                "https://api.slit.sh/roleplay/feed/feed6.gif",
-                "https://api.slit.sh/roleplay/feed/feed7.gif",
-                "https://api.slit.sh/roleplay/feed/feed8.gif",
-                "https://api.slit.sh/roleplay/feed/feed9.gif",
-                "https://api.slit.sh/roleplay/feed/feed10.gif",
-                "https://api.slit.sh/roleplay/feed/feed11.gif",
-            ],
-            "spank": [
-                "https://api.slit.sh/roleplay/spank/spank1.gif",
-                "https://api.slit.sh/roleplay/spank/spank2.gif",
-                "https://api.slit.sh/roleplay/spank/spank3.gif",
-                "https://api.slit.sh/roleplay/spank/spank4.gif",
-                "https://api.slit.sh/roleplay/spank/spank5.gif",
-                "https://api.slit.sh/roleplay/spank/spank6.gif",
-                "https://api.slit.sh/roleplay/spank/spank7.gif",
-                "https://api.slit.sh/roleplay/spank/spank8.gif",
-                "https://api.slit.sh/roleplay/spank/spank9.gif",
-                "https://api.slit.sh/roleplay/spank/spank10.gif",
-                "https://api.slit.sh/roleplay/spank/spank11.gif",
-                "https://api.slit.sh/roleplay/spank/spank12.gif",
-            ],
-            "cuddle": [
-                "https://api.slit.sh/roleplay/cuddle/cuddle1.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle2.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle3.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle4.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle5.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle6.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle7.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle8.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle9.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle10.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle11.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle12.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle13.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle14.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle15.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle16.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle17.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle18.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle19.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle20.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle21.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle22.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle23.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle24.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle25.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle26.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle26.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle27.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle28.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle29.gif",
-                "https://api.slit.sh/roleplay/cuddle/cuddle30.gif",
-            ],
-            "poke": [
-                "https://api.slit.sh/roleplay/poke/poke1.gif",
-                "https://api.slit.sh/roleplay/poke/poke2.gif",
-                "https://api.slit.sh/roleplay/poke/poke3.gif",
-                "https://api.slit.sh/roleplay/poke/poke4.gif",
-                "https://api.slit.sh/roleplay/poke/poke5.gif",
-                "https://api.slit.sh/roleplay/poke/poke6.gif",
-                "https://api.slit.sh/roleplay/poke/poke7.gif",
-                "https://api.slit.sh/roleplay/poke/poke8.gif",
-                "https://api.slit.sh/roleplay/poke/poke9.gif",
-                "https://api.slit.sh/roleplay/poke/poke10.gif",
-                "https://api.slit.sh/roleplay/poke/poke11.gif",
-                "https://api.slit.sh/roleplay/poke/poke12.gif",
-                "https://api.slit.sh/roleplay/poke/poke13.gif",
-                "https://api.slit.sh/roleplay/poke/poke14.gif",
-                "https://api.slit.sh/roleplay/poke/poke15.gif",
-            ],
-            "kiss": [
-                "https://api.slit.sh/roleplay/kiss/kiss1.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss2.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss3.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss4.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss5.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss6.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss7.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss8.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss9.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss10.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss11.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss12.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss13.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss14.gif",
-                "https://api.slit.sh/roleplay/kiss/kiss15.gif",
-            ],
-            "tickle": [
-                "https://api.slit.sh/roleplay/tickle/tickle1.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle2.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle3.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle4.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle5.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle6.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle7.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle8.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle9.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle10.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle11.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle12.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle13.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle14.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle15.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle16.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle17.gif",
-                "https://api.slit.sh/roleplay/tickle/tickle18.gif",
-            ],
-            "lick": [
-                "https://api.slit.sh/roleplay/lick/lick1.gif",
-                "https://api.slit.sh/roleplay/lick/lick2.gif",
-                "https://api.slit.sh/roleplay/lick/lick3.gif",
-                "https://api.slit.sh/roleplay/lick/lick4.gif",
-                "https://api.slit.sh/roleplay/lick/lick5.gif",
-                "https://api.slit.sh/roleplay/lick/lick6.gif",
-                "https://api.slit.sh/roleplay/lick/lick7.gif",
-                "https://api.slit.sh/roleplay/lick/lick8.gif",
-                "https://api.slit.sh/roleplay/lick/lick9.gif",
-                "https://api.slit.sh/roleplay/lick/lick10.gif",
-                "https://api.slit.sh/roleplay/lick/lick11.gif",
-                "https://api.slit.sh/roleplay/lick/lick12.gif",
-                "https://api.slit.sh/roleplay/lick/lick13.gif",
-                "https://api.slit.sh/roleplay/lick/lick14.gif",
-                "https://api.slit.sh/roleplay/lick/lick15.gif",
-                "https://api.slit.sh/roleplay/lick/lick16.gif",
-            ],
-            "slap": [
-                "https://api.slit.sh/roleplay/slap/slap1.gif",
-                "https://api.slit.sh/roleplay/slap/slap2.gif",
-                "https://api.slit.sh/roleplay/slap/slap3.gif",
-                "https://api.slit.sh/roleplay/slap/slap4.gif",
-                "https://api.slit.sh/roleplay/slap/slap5.gif",
-                "https://api.slit.sh/roleplay/slap/slap6.gif",
-                "https://api.slit.sh/roleplay/slap/slap7.gif",
-                "https://api.slit.sh/roleplay/slap/slap8.gif",
-                "https://api.slit.sh/roleplay/slap/slap9.gif",
-                "https://api.slit.sh/roleplay/slap/slap10.gif",
-                "https://api.slit.sh/roleplay/slap/slap11.gif",
-                "https://api.slit.sh/roleplay/slap/slap12.gif",
-                "https://api.slit.sh/roleplay/slap/slap13.gif",
-                "https://api.slit.sh/roleplay/slap/slap14.gif",
-                "https://api.slit.sh/roleplay/slap/slap15.gif",
-            ],
-            "punch": [
-                "https://api.slit.sh/roleplay/punch/punch1.gif",
-                "https://api.slit.sh/roleplay/punch/punch2.gif",
-                "https://api.slit.sh/roleplay/punch/punch3.gif",
-                "https://api.slit.sh/roleplay/punch/punch4.gif",
-                "https://api.slit.sh/roleplay/punch/punch5.gif",
-                "https://api.slit.sh/roleplay/punch/punch6.gif",
-                "https://api.slit.sh/roleplay/punch/punch7.gif",
-                "https://api.slit.sh/roleplay/punch/punch8.gif",
-                "https://api.slit.sh/roleplay/punch/punch9.gif",
-                "https://api.slit.sh/roleplay/punch/punch10.gif",
-                "https://api.slit.sh/roleplay/punch/punch11.gif",
-                "https://api.slit.sh/roleplay/punch/punch12.gif",
-                "https://api.slit.sh/roleplay/punch/punch13.gif",
-                "https://api.slit.sh/roleplay/punch/punch14.gif",
-                "https://api.slit.sh/roleplay/punch/punch15.gif",
-                "https://api.slit.sh/roleplay/punch/punch16.gif",
-                "https://api.slit.sh/roleplay/punch/punch17.gif",
-                "https://api.slit.sh/roleplay/punch/punch18.gif",
-                "https://api.slit.sh/roleplay/punch/punch19.gif",
-                "https://api.slit.sh/roleplay/punch/punch20.gif",
-            ],
-            "highfive": [
-                "https://api.slit.sh/roleplay/highfive/highfive1.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive2.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive3.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive4.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive5.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive6.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive7.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive8.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive9.gif",
-                "https://api.slit.sh/roleplay/highfive/highfive10.gif",
-            ],
-        }
         default_member = {
             "cuddle_s": 0,
             "poke_s": 0,
@@ -245,7 +60,6 @@ class Roleplay(commands.Cog):
             "nut_r": 0,
             "fuck_r": 0,
         }
-        self.config.register_global(**default_global)
         self.config.register_user(**default_member)
         self.config.init_custom("Target", 2)
         self.config.register_custom("Target", **default_target)
@@ -334,7 +148,7 @@ class Roleplay(commands.Cog):
         Hugs a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 19)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -359,7 +173,7 @@ class Roleplay(commands.Cog):
         Pats a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/pat/pat{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/pat/pat{random.randint(1, 19)}.gif"
         
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -384,7 +198,7 @@ class Roleplay(commands.Cog):
         Tickles a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/tickle/tickle{random.randint(1, 18)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -409,7 +223,7 @@ class Roleplay(commands.Cog):
         Licks a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/lick/lick{random.randint(1, 16)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -434,7 +248,7 @@ class Roleplay(commands.Cog):
         Slaps a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/slap/slap{random.randint(1, 15)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -459,7 +273,7 @@ class Roleplay(commands.Cog):
         Spanks a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/spank/spank{random.randint(1, 13)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -486,7 +300,7 @@ class Roleplay(commands.Cog):
         Feeds a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/feed/feed{random.randint(1, 11)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -513,7 +327,7 @@ class Roleplay(commands.Cog):
         Punch a user.
         """
         
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/punch/punch{random.randint(1, 19)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -540,7 +354,7 @@ class Roleplay(commands.Cog):
         Highfive a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/highfive/highfive{random.randint(1, 10)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -569,23 +383,16 @@ class Roleplay(commands.Cog):
 
         images = f"https://cdn.slit.sh/roleplay/kill/kill{random.randint(1, 13)}.gif"
 
-        embed = discord.Embed(
-            colour=discord.Colour.dark_theme(),
-            description=f"**{ctx.author.mention}** kills {f'**{str(user.mention)}**' if user else 'themselves'}!",
-        )
+        embed = discord.Embed(colour=discord.Colour.dark_theme(), description=f"**{ctx.author.mention}** kills {f'**{str(user.mention)}**' if user else 'themselves'}!",)
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
         embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).kill_r()
         used = await self.config.user(ctx.author).kill_s()
-        embed.set_footer(
-            text=f"{ctx.author.name}'s total kills: {used + 1} | {ctx.author.name} has killed {user.name} {target + 1} times"
-        )
+        embed.set_footer(text=f"{ctx.author.name}'s total kills: {used + 1} | {ctx.author.name} has killed {user.name} {target + 1} times")
         await send_embed(self, ctx, embed, user)
         await self.config.user(ctx.author).kill_s.set(used + 1)
-        await self.config.custom("Target", ctx.author.id, user.id).kill_r.set(
-            target + 1
-        )
+        await self.config.custom("Target", ctx.author.id, user.id).kill_r.set(target + 1)
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command(name="bite")
@@ -594,7 +401,7 @@ class Roleplay(commands.Cog):
         Bite a user.
         """
 
-        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 31)}.gif"
+        images = f"https://cdn.slit.sh/roleplay/bite/bite{random.randint(1, 31)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
