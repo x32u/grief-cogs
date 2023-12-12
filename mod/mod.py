@@ -464,7 +464,7 @@ class Mod(
         reconfigured_svcs = []
 
         disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
-        # vanity: Vanity = self.bot.get_cog("Vanity")
+        vanity: Vanity = self.bot.get_cog("Vanity")
         sticky: Sticky = self.bot.get_cog("Sticky")
 
         if not channel:
@@ -491,10 +491,10 @@ class Mod(
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
         
-        # if ctx.guild.id in vanity.cached and channel.id == vanity.cached[ctx.guild.id]:
-            # await vanity.config.guild(ctx.guild).channel.set(new_channel.id)
-            # await vanity.update_cache
-            # reconfigured_svcs.append("vanity channel")
+        if ctx.guild.id in vanity.cached and channel.id == vanity.cached[ctx.guild.id]:
+             await vanity.config.guild(ctx.guild).channel.set(channel.id)
+             await vanity.cog.update_cache
+             reconfigured_svcs.append("vanity channel")
 
         if sticky:
             async with sticky.conf.channel(channel).all() as conf:
@@ -521,10 +521,6 @@ class Mod(
 
         Provide a role or member if you would like to lock it for them.
         You can only lock a maximum of 10 things at once.
-
-        **Examples:**
-        `[p]lock #general`
-        `[p]lock 737958453905063977 @members`
         """
         try:
             await ctx.typing()
@@ -594,10 +590,6 @@ class Mod(
 
         Provide a role or member if you would like to lock it for them.
         You can only lock a maximum of 10 things at once.
-
-        **Example:**
-        `[p]viewlock #secret-channel`
-        `[p]viewlock 7382395026348520 @nubs`
         """
         try:
             await ctx.typing()
@@ -933,8 +925,7 @@ class Mod(
 
     @commands.command()
     @commands.guild_only()
-    @commands.bot_can_manage_channel()
-    @commands.admin_or_can_manage_channel()
+    @commands.has_permissions(manage_channels=True)
     async def slowmode(
         self,
         ctx,
@@ -986,7 +977,6 @@ class Mod(
             invalid = ""
         return overwrite, valid_perms, invalid, not_allowed
     
-
     @commands.command(aliases=["t"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -1024,24 +1014,9 @@ class Mod(
         embed = discord.Embed(description=f"> Removed the timeout for {member.mention}.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
-    @commands.command()
-    @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
-    async def restartvoice(self, ctx) -> None:
-        """Change server's voice region to random and back.
-
-        Useful to reinitate all voice connections
-
-        """
-        current_region = ctx.guild.region
-        random_region = choice([r for r in discord.VoiceRegion if not r.value.startswith("vip") and current_region != r])
-        await ctx.guild.edit(region=random_region)
-        await ctx.guild.edit(region=current_region, reason=get_audit_reason(ctx.author, "Voice restart"))
-        await ctx.tick()
-
     @commands.guild_only()  # type:ignore
     @commands.bot_has_permissions(embed_links=True)
-    @commands.mod_or_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.hybrid_command(name="poll")
     async def buttonpoll(self, ctx: commands.Context, chan: Optional[TextChannel] = None):
         """
