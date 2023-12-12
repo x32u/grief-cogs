@@ -10,7 +10,7 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from grief.core import bank, commands
+from grief.core import commands
 from grief.core.data_manager import cog_data_path
 from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import box, humanize_number
@@ -749,33 +749,6 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                 true_or_false=_("Enabled") if not prefer_lyrics else _("Disabled")
             ),
         )
-
-    @command_audioset.command(name="jukebox")
-    @commands.guild_only()
-    @commands.mod_or_permissions(administrator=True)
-    async def command_audioset_jukebox(self, ctx: commands.Context, price: int):
-        """Set a price for queueing tracks for non-mods, 0 to disable."""
-        if price < 0:
-            return await self.send_embed_msg(
-                ctx, title=_("Invalid Price"), description=_("Price can't be less than zero.")
-            )
-        if price == 0:
-            jukebox = False
-            await self.send_embed_msg(
-                ctx, title=_("Setting Changed"), description=_("Jukebox mode disabled.")
-            )
-        else:
-            jukebox = True
-            await self.send_embed_msg(
-                ctx,
-                title=_("Setting Changed"),
-                description=_("Track queueing command price set to {price} {currency}.").format(
-                    price=humanize_number(price), currency=await bank.get_currency_name(ctx.guild)
-                ),
-            )
-
-        await self.config.guild(ctx.guild).jukebox_price.set(price)
-        await self.config.guild(ctx.guild).jukebox.set(jukebox)
 
     @command_audioset.command(name="localpath")
     @commands.is_owner()
