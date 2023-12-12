@@ -49,29 +49,6 @@ class Roleplay(commands.Cog):
                 "https://api.slit.sh/roleplay/spank/spank11.gif",
                 "https://api.slit.sh/roleplay/spank/spank12.gif",
             ],
-            "nut": [
-                "https://api.slit.sh/roleplay/nutkick/nutkick1.gif",
-                "https://api.slit.sh/roleplay/nutkick/nutkick2.gif",
-                "https://api.slit.sh/roleplay/nutkick/nutkick3.gif",
-                "https://api.slit.sh/roleplay/nutkick/nutkick4.gif",
-                "https://api.slit.sh/roleplay/nutkick/nutkick5.gif",
-                "https://api.slit.sh/roleplay/nutkick/nutkick6.gif",
-                "https://api.slit.sh/roleplay/nutkick/nutkick7.gif",
-                "https://api.slit.sh/roleplay/nutkick/nutkick8.gif",
-            ],
-            "fuck": [
-                "https://api.slit.sh/roleplay/fuck/fuck1.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck2.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck3.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck4.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck5.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck6.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck7.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck8.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck9.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck10.gif",
-                "https://api.slit.sh/roleplay/fuck/fuck11.gif",
-            ],
             "cuddle": [
                 "https://api.slit.sh/roleplay/cuddle/cuddle1.gif",
                 "https://api.slit.sh/roleplay/cuddle/cuddle2.gif",
@@ -138,28 +115,6 @@ class Roleplay(commands.Cog):
                 "https://api.slit.sh/roleplay/kiss/kiss13.gif",
                 "https://api.slit.sh/roleplay/kiss/kiss14.gif",
                 "https://api.slit.sh/roleplay/kiss/kiss15.gif",
-            ],
-            "pat": [
-                "https://api.slit.sh/roleplay/pat/pat1.gif",
-                "https://api.slit.sh/roleplay/pat/pat2.gif",
-                "https://api.slit.sh/roleplay/pat/pat3.gif",
-                "https://api.slit.sh/roleplay/pat/pat4.gif",
-                "https://api.slit.sh/roleplay/pat/pat5.gif",
-                "https://api.slit.sh/roleplay/pat/pat6.gif",
-                "https://api.slit.sh/roleplay/pat/pat7.gif",
-                "https://api.slit.sh/roleplay/pat/pat8.gif",
-                "https://api.slit.sh/roleplay/pat/pat9.gif",
-                "https://api.slit.sh/roleplay/pat/pat10.gif",
-                "https://api.slit.sh/roleplay/pat/pat11.gif",
-                "https://api.slit.sh/roleplay/pat/pat12.gif",
-                "https://api.slit.sh/roleplay/pat/pat13.gif",
-                "https://api.slit.sh/roleplay/pat/pat14.gif",
-                "https://api.slit.sh/roleplay/pat/pat15.gif",
-                "https://api.slit.sh/roleplay/pat/pat16.gif",
-                "https://api.slit.sh/roleplay/pat/pat17.gif",
-                "https://api.slit.sh/roleplay/pat/pat18.gif",
-                "https://api.slit.sh/roleplay/pat/pat19.gif",
-                "https://api.slit.sh/roleplay/pat/pat20.gif",
             ],
             "tickle": [
                 "https://api.slit.sh/roleplay/tickle/tickle1.gif",
@@ -250,64 +205,6 @@ class Roleplay(commands.Cog):
                 "https://api.slit.sh/roleplay/highfive/highfive9.gif",
                 "https://api.slit.sh/roleplay/highfive/highfive10.gif",
             ],
-            "kill": [
-                "https://api.slit.sh/roleplay/kill/kill1.gif",
-                "https://api.slit.sh/roleplay/kill/kill2.gif",
-                "https://api.slit.sh/roleplay/kill/kill3.gif",
-                "https://api.slit.sh/roleplay/kill/kill4.gif",
-                "https://api.slit.sh/roleplay/kill/kill5.gif",
-                "https://api.slit.sh/roleplay/kill/kill6.gif",
-                "https://api.slit.sh/roleplay/kill/kill7.gif",
-                "https://api.slit.sh/roleplay/kill/kill8.gif",
-                "https://api.slit.sh/roleplay/kill/kill9.gif",
-                "https://api.slit.sh/roleplay/kill/kill10.gif",
-                "https://api.slit.sh/roleplay/kill/kill11.gif",
-                "https://api.slit.sh/roleplay/kill/kill12.gif",
-                "https://api.slit.sh/roleplay/kill/kill13.gif",
-            ],
-            "yeet": [
-                "https://api.slit.sh/roleplay/yeet/yeet1.gif",
-                "https://api.slit.sh/roleplay/yeet/yeet2.gif",
-                "https://api.slit.sh/roleplay/yeet/yeet3.gif",
-                "https://api.slit.sh/roleplay/yeet/yeet4.gif",
-                "https://api.slit.sh/roleplay/yeet/yeet5.gif",
-                "https://api.slit.sh/roleplay/yeet/yeet6.gif",
-                "https://api.slit.sh/roleplay/yeet/yeet7.gif",
-            ],
-            "bite": [
-                "https://api.slit.sh/roleplay/bite/bite1.gif",
-                "https://api.slit.sh/roleplay/bite/bite2.gif",
-                "https://api.slit.sh/roleplay/bite/bite3.gif",
-                "https://api.slit.sh/roleplay/bite/bite4.gif",
-                "https://api.slit.sh/roleplay/bite/bite5.gif",
-                "https://api.slit.sh/roleplay/bite/bite6.gif",
-                "https://api.slit.sh/roleplay/bite/bite7.gif",
-                "https://api.slit.sh/roleplay/bite/bite8.gif",
-                "https://api.slit.sh/roleplay/bite/bite9.gif",
-                "https://api.slit.sh/roleplay/bite/bite10.gif",
-                "https://api.slit.sh/roleplay/bite/bite11.gif",
-                "https://api.slit.sh/roleplay/bite/bite12.gif",
-                "https://api.slit.sh/roleplay/bite/bite13.gif",
-                "https://api.slit.sh/roleplay/bite/bite14.gif",
-                "https://api.slit.sh/roleplay/bite/bite15.gif",
-                "https://api.slit.sh/roleplay/bite/bite16.gif",
-                "https://api.slit.sh/roleplay/bite/bite17.gif",
-                "https://api.slit.sh/roleplay/bite/bite18.gif",
-                "https://api.slit.sh/roleplay/bite/bite19.gif",
-                "https://api.slit.sh/roleplay/bite/bite20.gif",
-                "https://api.slit.sh/roleplay/bite/bite21.gif",
-                "https://api.slit.sh/roleplay/bite/bite22.gif",
-                "https://api.slit.sh/roleplay/bite/bite23.gif",
-                "https://api.slit.sh/roleplay/bite/bite24.gif",
-                "https://api.slit.sh/roleplay/bite/bite25.gif",
-                "https://api.slit.sh/roleplay/bite/bite26.gif",
-                "https://api.slit.sh/roleplay/bite/bite26.gif",
-                "https://api.slit.sh/roleplay/bite/bite27.gif",
-                "https://api.slit.sh/roleplay/bite/bite28.gif",
-                "https://api.slit.sh/roleplay/bite/bite29.gif",
-                "https://api.slit.sh/roleplay/bite/bite30.gif",
-                "https://api.slit.sh/roleplay/bite/bite31.gif",
-            ],
         }
         default_member = {
             "cuddle_s": 0,
@@ -362,10 +259,7 @@ class Roleplay(commands.Cog):
         Cuddles a user.
         """
 
-        images = await self.config.cuddle()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/cuddle/cuddle{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -373,7 +267,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).cuddle_r()
         used = await self.config.user(ctx.author).fuck_s()
         embed.set_footer(
@@ -390,10 +284,7 @@ class Roleplay(commands.Cog):
         Pokes a user.
         """
 
-        images = await self.config.poke()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/poke/poke{random.randint(1, 15)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -401,7 +292,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).poke_r()
         used = await self.config.user(ctx.author).poke_s()
         embed.set_footer(
@@ -418,10 +309,7 @@ class Roleplay(commands.Cog):
         Kiss a user.
         """
 
-        images = await self.config.kiss()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/kiss/kiss{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -429,7 +317,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).kiss_r()
         used = await self.config.user(ctx.author).kiss_s()
         embed.set_footer(
@@ -471,18 +359,15 @@ class Roleplay(commands.Cog):
         Pats a user.
         """
 
-        images = await self.config.pat()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
-
+        images = f"https://cdn.slit.sh/roleplay/pat/pat{random.randint(1, 20)}.gif"
+        
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
             description=f"**{ctx.author.mention}** just patted {f'**{str(user.mention)}**' if user else 'themselves'}!",
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).hug_r()
         used = await self.config.user(ctx.author).pat_s()
         embed.set_footer(
@@ -499,10 +384,7 @@ class Roleplay(commands.Cog):
         Tickles a user.
         """
 
-        images = await self.config.tickle()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -510,7 +392,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).hug_r()
         used = await self.config.user(ctx.author).tickle_s()
         embed.set_footer(
@@ -527,10 +409,7 @@ class Roleplay(commands.Cog):
         Licks a user.
         """
 
-        images = await self.config.lick()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -538,7 +417,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).lick_r()
         used = await self.config.user(ctx.author).lick_s()
         embed.set_footer(
@@ -555,10 +434,7 @@ class Roleplay(commands.Cog):
         Slaps a user.
         """
 
-        images = await self.config.slap()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -566,7 +442,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).slap_r()
         used = await self.config.user(ctx.author).lick_s()
         embed.set_footer(
@@ -583,10 +459,7 @@ class Roleplay(commands.Cog):
         Spanks a user.
         """
 
-        images = await self.config.spank()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -594,7 +467,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).spank_r()
         used = await self.config.user(ctx.author).spank_s()
         embed.set_footer(
@@ -613,10 +486,7 @@ class Roleplay(commands.Cog):
         Feeds a user.
         """
 
-        images = await self.config.feed()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -624,7 +494,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).feed_r()
         used = await self.config.user(ctx.author).feed_s()
         embed.set_footer(
@@ -642,11 +512,8 @@ class Roleplay(commands.Cog):
         """
         Punch a user.
         """
-
-        images = await self.config.punch()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -654,7 +521,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).feed_r()
         used = await self.config.user(ctx.author).punch_s()
         embed.set_footer(
@@ -673,10 +540,7 @@ class Roleplay(commands.Cog):
         Highfive a user.
         """
 
-        images = await self.config.highfive()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 20)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -684,7 +548,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).highfive_r()
         used = await self.config.user(ctx.author).highfive_s()
         embed.set_footer(
@@ -703,10 +567,7 @@ class Roleplay(commands.Cog):
         Kill a user.
         """
 
-        images = await self.config.kill()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/kill/kill{random.randint(1, 13)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -714,7 +575,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).kill_r()
         used = await self.config.user(ctx.author).kill_s()
         embed.set_footer(
@@ -733,10 +594,7 @@ class Roleplay(commands.Cog):
         Bite a user.
         """
 
-        images = await self.config.bite()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/hug/hug{random.randint(1, 31)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -744,7 +602,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).bite_r()
         used = await self.config.user(ctx.author).bite_s()
         embed.set_footer(
@@ -761,10 +619,7 @@ class Roleplay(commands.Cog):
         Yeet a user.
         """
 
-        images = await self.config.yeet()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/yeet/yeet{random.randint(1, 7)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -772,7 +627,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).yeet_r()
         used = await self.config.user(ctx.author).yeet_s()
         embed.set_footer(
@@ -789,10 +644,7 @@ class Roleplay(commands.Cog):
         Kick a user in the balls.
         """
 
-        images = await self.config.nut()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/nutkick/nutkick{random.randint(1, 8)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -800,7 +652,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).nut_r()
         used = await self.config.user(ctx.author).nut_s()
         embed.set_footer(
@@ -817,10 +669,7 @@ class Roleplay(commands.Cog):
         Fuck a user.
         """
 
-        images = await self.config.fuck()
-
-        mn = len(images)
-        i = randint(0, mn - 1)
+        images = f"https://cdn.slit.sh/roleplay/fuck/fuck{random.randint(1, 11)}.gif"
 
         embed = discord.Embed(
             colour=discord.Colour.dark_theme(),
@@ -828,7 +677,7 @@ class Roleplay(commands.Cog):
         )
 
         embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
-        embed.set_image(url=images[i])
+        embed.set_image(url=images)
         target = await self.config.custom("Target", ctx.author.id, user.id).fuck_r()
         used = await self.config.user(ctx.author).fuck_s()
         embed.set_footer(
