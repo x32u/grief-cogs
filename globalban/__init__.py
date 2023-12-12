@@ -50,6 +50,28 @@ class GlobalBan(commands.Cog):
             finally:
                 banned_guilds.append(guild)
         await ctx.send(embed=discord.Embed(description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
+        
+    @commands.command()
+    @commands.is_owner()
+    @commands.guild_only()
+    async def globalkick(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
+        """Kick a user globally from all servers grief is in."""
+        if not reason:
+            reason = f"Global kick by {ctx.author} (ID: {ctx.author.id})"
+        async with self.config.banned() as f:
+            if user.id not in f:
+                f.append(user.id)
+        old_conf = await self.config.reasons()
+        old_conf[user.id] = reason
+        await self.config.reasons.set(old_conf)
+        banned_guilds: List[discord.Guild] = []
+        couldnt_ban: List[discord.Guild] = []
+        for guild in self.bot.guilds:
+            try:
+                await guild.kick(user, reason=reason)
+            finally:
+                banned_guilds.append(guild)
+        await ctx.send(embed=discord.Embed(description=f"Kicked {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
 
     @commands.command()
     @commands.is_owner()
@@ -169,17 +191,6 @@ class GlobalBan(commands.Cog):
             except discord.HTTPException:
                 await guild.leave()
                 
-    @commands.command()
-    @commands.is_owner()
-    @commands.guild_only()
-    async def globalkick(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
-        """Ban a user globally from all servers grief is in."""
-        guild = ctx.guild
-        if not reason:
-            reason = f"Global kick by {ctx.author} (ID: {ctx.author.id})"
-            try:
-                await guild.kick(user, reason=reason)
-
     @commands.Cog.listener()
     async def on_guild_role_update(self, before: discord.Role, after: discord.Role) -> None:
         if not after.is_bot_managed():
