@@ -104,7 +104,8 @@ class ExtendedModLog(EventMixin, commands.Cog):
         disabled = ""
         for settings, name in cur_settings.items():
             msg += f"{name}: **{data[settings]['enabled']}**"
-            msg += "\n" + humanize_list(data[settings]["privs"])
+            if settings == "commands_used":
+                msg += "\n" + humanize_list(data[settings]["privs"])
             if data[settings]["channel"]:
                 chn = guild.get_channel(data[settings]["channel"])
                 if chn is None:
