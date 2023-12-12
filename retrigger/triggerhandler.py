@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Literal, Optional, Pattern, Tuple, cast
 import aiohttp
 import discord
 from grief import VersionInfo, version_info
-from grief.core import commands, modlog
+from grief.core import commands
 from grief.core.data_manager import cog_data_path
 from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import escape, humanize_list
@@ -984,110 +984,3 @@ class TriggerHandler(ReTriggerMixin):
         else:
             return raw_result
         return str(getattr(first, second, raw_result))
-
-    async def modlog_action(
-        self, message: discord.Message, trigger: Trigger, find: List[str], action: str
-    ) -> None:
-        modlogs = await self.config.guild(message.guild).modlog()
-        guild: discord.Guild = cast(discord.Guild, message.guild)
-        author: discord.Member = cast(discord.Member, message.author)
-        channel: discord.TextChannel = cast(discord.TextChannel, message.channel)
-        if modlogs:
-            if modlogs == "default":
-                # We'll get the default modlog channel setup
-                # with modlogset
-                try:
-                    modlog_channel = await modlog.get_modlog_channel(guild)
-                except RuntimeError:
-                    log.debug("Error getting modlog channel", exc_info=True)
-                    # Return early if no modlog channel exists
-                    return
-            else:
-                modlog_channel = guild.get_channel(modlogs)
-                if modlog_channel is None:
-                    return
-            infomessage = f"{author} - {action}\n"
-            embed = discord.Embed(
-                description=message.content,
-                colour=discord.Colour.dark_red(),
-                timestamp=datetime.now(tz=timezone.utc),
-            )
-            found_regex = humanize_list(find)
-            embed.add_field(name=_("Channel"), value=channel.mention)
-            embed.add_field(name=_("Trigger Name"), value=trigger.name)
-            if found_regex:
-                embed.add_field(name=_("Found Triggers"), value=found_regex[:1024])
-            embed.add_field(name=_("Trigger author"), value=f"<@{trigger.author}>")
-            if message.attachments:
-                files = ", ".join(a.filename for a in message.attachments)
-                embed.add_field(name=_("Attachments"), value=files)
-            embed.set_footer(text=_("User ID: ") + str(message.author.id))
-            embed.set_author(name=infomessage, icon_url=author.avatar.url)
-            try:
-                if modlog_channel.permissions_for(guild.me).embed_links:
-                    await modlog_channel.send(embed=embed)
-                else:
-                    infomessage += _(
-                        "Channel: {channel}\n"
-                        "Trigger Name: {trigger}\n"
-                        "Trigger author: {t_author}\n"
-                        "Found Triggers: {found_triggers}\n"
-                    ).format(
-                        channel=channel.mention,
-                        trigger=trigger.name,
-                        t_author=f"{trigger.author}",
-                        found_triggers=humanize_list(find)[:1024],
-                    )
-                    msg = escape(
-                        infomessage.replace("@&", ""), mass_mentions=True, formatting=True
-                    )
-                    await modlog_channel.send(msg)
-            except Exception:
-                log.error("Error posting modlog message", exc_info=True)
-
-    async def red_delete_data_for_user(
-        self,
-        *,
-        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
-        user_id: int,
-    ):
-        """
-        Method for finding users data inside the cog and deleting it.
-        """
-        all_guilds = await self.config.all_guilds()
-        for guild_id, data in all_guilds.items():
-            for trigger_name, trigger in data["trigger_list"].items():
-                if trigger["author"] == user_id:
-                    await self.remove_trigger(guild_id, trigger_name)
-
-    async def remove_trigger(self, guild_id: int, trigger_name: str) -> bool:
-        """Returns true or false if the trigger was removed"""
-        async with self.config.guild_from_id(int(guild_id)).trigger_list() as trigger_list:
-            for triggers in trigger_list:
-                # trigger = Trigger.from_json(trigger_list[triggers])
-                if triggers == trigger_name:
-                    if trigger_list[triggers]["image"] is not None:
-                        image = trigger_list[triggers]["image"]
-                        if isinstance(image, list):
-                            for i in image:
-                                path = str(cog_data_path(self)) + f"/{guild_id}/{i}"
-                                try:
-                                    os.remove(path)
-                                except Exception:
-                                    msg = _("Error deleting saved image in {guild}").format(
-                                        guild=guild_id
-                                    )
-                                    log.error(msg, exc_info=True)
-                        else:
-                            path = str(cog_data_path(self)) + f"/{guild_id}/{image}"
-                            try:
-                                os.remove(path)
-                            except Exception:
-                                msg = _("Error deleting saved image in {guild}").format(
-                                    guild=guild_id
-                                )
-                                log.error(msg, exc_info=True)
-                    del trigger_list[triggers]
-                    del self.triggers[guild_id][trigger_name]
-                    return True
-        return False

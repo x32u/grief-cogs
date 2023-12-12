@@ -17,7 +17,7 @@ try:
 except ImportError:
     import re
 
-log = logging.getLogger("red.Trusty-cogs.retrigger")
+log = logging.getLogger("grief.retrigger")
 _ = Translator("ReTrigger", __file__)
 
 

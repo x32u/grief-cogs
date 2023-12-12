@@ -3,7 +3,7 @@ import logging
 from typing import Union
 
 import discord
-from grief.core import Config, checks, commands, modlog
+from grief.core import Config, checks, commands
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_list
 ### FROM REACTLOG
@@ -77,11 +77,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
 
     async def modlog_settings(self, ctx: commands.Context) -> None:
         guild = ctx.message.guild
-        try:
-            _modlog_channel = await modlog.get_modlog_channel(guild)
-            modlog_channel = _modlog_channel.mention
-        except Exception:
-            modlog_channel = _("Not Set")
         cur_settings = {
             "message_edit": _("Message edits"),
             "message_delete": _("Message delete"),
@@ -104,9 +99,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
             "thread_delete": _("Thread deleted"),
             "thread_change": _("Thread changed"),
         }
-        msg = _("Setting for {guild}\n Modlog Channel {channel}\n\n").format(
-            guild=guild.name, channel=modlog_channel
-        )
         if guild.id not in self.settings:
             self.settings[guild.id] = inv_settings
 

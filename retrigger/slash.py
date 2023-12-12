@@ -19,7 +19,7 @@ except ImportError:
 from .converters import Trigger
 
 _ = Translator("ReTrigger", __file__)
-log = logging.getLogger("red.trusty-cogs.ReTrigger")
+log = logging.getLogger("grief.retrigger")
 
 
 class PartialEmojiTransformer(app_commands.Transformer):

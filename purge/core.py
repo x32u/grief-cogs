@@ -8,7 +8,7 @@ from typing import Annotated, Any, Callable, Coroutine, Dict, Final, List, Optio
 import arrow
 import discord
 from grief.cogs.cleanup import Cleanup as CleanupCog
-from grief.core import app_commands, commands, modlog
+from grief.core import app_commands, commands
 from grief.core.bot import Grief
 from grief.core.utils import mod
 from grief.core.utils.chat_formatting import humanize_list, humanize_number

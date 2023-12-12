@@ -4,7 +4,7 @@ import re
 from datetime import timezone
 from typing import Union, Set, Literal, Optional
 
-from grief.core import Config, modlog, commands
+from grief.core import Config, commands
 from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n, set_contextual_locales_from_guild
 from grief.core.utils.predicates import MessagePredicate
@@ -58,25 +58,6 @@ class Filter(commands.Cog):
 
     async def cog_load(self) -> None:
         await self.register_casetypes()
-
-    @staticmethod
-    async def register_casetypes() -> None:
-        await modlog.register_casetypes(
-            [
-                {
-                    "name": "filterban",
-                    "default_setting": False,
-                    "image": "\N{FILE CABINET}\N{VARIATION SELECTOR-16} \N{HAMMER}",
-                    "case_str": "Filter ban",
-                },
-                {
-                    "name": "filterhit",
-                    "default_setting": False,
-                    "image": "\N{FILE CABINET}\N{VARIATION SELECTOR-16}",
-                    "case_str": "Filter hit",
-                },
-            ]
-        )
 
     @commands.group()
     @commands.guild_only()
@@ -506,54 +487,6 @@ class Filter(commands.Cog):
                         user_count = 0
                         member_data["filter_count"] = user_count
 
-        hits = await self.filter_hits(message.content, message.channel)
-
-        if hits:
-            # modlog doesn't accept PartialMessageable
-            channel = (
-                None
-                if isinstance(message.channel, discord.PartialMessageable)
-                else message.channel
-            )
-            await modlog.create_case(
-                bot=self.bot,
-                guild=guild,
-                created_at=created_at,
-                action_type="filterhit",
-                user=author,
-                moderator=guild.me,
-                reason=(
-                    _("Filtered words used: {words}").format(words=humanize_list(list(hits)))
-                    if len(hits) > 1
-                    else _("Filtered word used: {word}").format(word=list(hits)[0])
-                ),
-                channel=channel,
-            )
-            try:
-                await message.delete()
-            except discord.HTTPException:
-                pass
-            else:
-                self.bot.dispatch("filter_message_delete", message, hits)
-                if filter_count > 0 and filter_time > 0:
-                    user_count += 1
-                    await self.config.member(author).filter_count.set(user_count)
-                    if user_count >= filter_count and created_at.timestamp() < next_reset_time:
-                        reason = _("Autoban (too many filtered messages.)")
-                        try:
-                            await guild.ban(author, reason=reason)
-                        except discord.HTTPException:
-                            pass
-                        else:
-                            await modlog.create_case(
-                                self.bot,
-                                guild,
-                                message.created_at,
-                                "filterban",
-                                author,
-                                guild.me,
-                                reason,
-                            )
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):

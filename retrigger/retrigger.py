@@ -7,7 +7,7 @@ from typing import Dict, Optional, Union
 
 import discord
 from discord.ext import tasks
-from grief.core import Config, checks, commands, modlog
+from grief.core import Config, checks, commands
 from grief.core.commands import TimedeltaConverter
 from grief.core.i18n import Translator, cog_i18n
 
@@ -436,45 +436,6 @@ class ReTrigger(
         else:
             await self.config.guild(ctx.guild).remove_role_logs.set(True)
             msg = _("Custom remove role events will now appear in the modlog if it's setup.")
-        await ctx.send(msg)
-
-    @_modlog.command(name="channel")
-    @checks.mod_or_permissions(manage_channels=True)
-    async def modlog_channel(
-        self, ctx: commands.Context, channel: Union[discord.TextChannel, str, None]
-    ) -> None:
-        """
-        Set the modlog channel for filtered words
-
-        `<channel>` The channel you would like filtered word notifications to go
-        Use `none` or `clear` to not show any modlogs
-        User `default` to use the built in modlog channel
-
-        See https://regex101.com/ for help building a regex pattern.
-        See `[p]retrigger explain` or click the link below for more details.
-        [For more details click here.](https://github.com/TrustyJAID/Trusty-cogs/blob/master/retrigger/README.md)
-        """
-        if isinstance(channel, discord.TextChannel):
-            await self.config.guild(ctx.guild).modlog.set(channel.id)
-        else:
-            if channel in ["none", "clear"]:
-                channel = None
-            elif channel in ["default"]:
-                channel = "default"
-                try:
-                    channel = await modlog.get_modlog_channel()
-                except RuntimeError:
-                    msg = _(
-                        "No modlog channel has been setup yet. "
-                        "Do `[p]modlogset modlog #channel` to setup the default modlog channel"
-                    )
-                    await ctx.send(msg)
-                    return
-            else:
-                await ctx.send(_('Channel "{channel}" not found.').format(channel=channel))
-                return
-            await self.config.guild(ctx.guild).modlog.set(channel)
-        msg = _("Modlog set to {channel}").format(channel=channel)
         await ctx.send(msg)
 
     @_edit.command()

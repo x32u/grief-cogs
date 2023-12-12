@@ -12,7 +12,7 @@ from grief.core.i18n import Translator
 from grief.core.utils.menus import start_adding_reactions
 from grief.core.utils.predicates import ReactionPredicate
 
-log = logging.getLogger("red.trusty-cogs.ReTrigger")
+log = logging.getLogger("grief.retrigger")
 _ = Translator("ReTrigger", __file__)
 
 try:
