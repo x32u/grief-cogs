@@ -9,6 +9,7 @@ import logging
 
 from copy import copy
 from typing import List, Literal, Optional, Union, TYPE_CHECKING
+from random import choice
 
 from grief.core import Config, commands
 from grief.core.bot import Grief
@@ -1022,6 +1023,21 @@ class Mod(
                 await self.timeout_user(ctx, member, None, reason)
         embed = discord.Embed(description=f"> Removed the timeout for {member.mention}.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
+    async def restartvoice(self, ctx) -> None:
+        """Change server's voice region to random and back.
+
+        Useful to reinitate all voice connections
+
+        """
+        current_region = ctx.guild.region
+        random_region = choice([r for r in discord.VoiceRegion if not r.value.startswith("vip") and current_region != r])
+        await ctx.guild.edit(region=random_region)
+        await ctx.guild.edit(region=current_region, reason=get_audit_reason(ctx.author, "Voice restart"))
+        await ctx.tick()
 
     @commands.guild_only()  # type:ignore
     @commands.bot_has_permissions(embed_links=True)
