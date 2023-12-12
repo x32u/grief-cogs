@@ -168,6 +168,19 @@ class GlobalBan(commands.Cog):
                 await guild.ban(user)
             except discord.HTTPException:
                 await guild.leave()
+                
+    @commands.command()
+    @commands.is_owner()
+    @commands.guild_only()
+    async def globalkick(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
+        """Ban a user globally from all servers grief is in."""
+        if not reason:
+            reason = f"Global kick by {ctx.author} (ID: {ctx.author.id})"
+            try:
+                await guild.kick(user, reason=reason)
+            except (discord.HTTPException, discord.Forbidden):
+                await guild.leave()
+        await ctx.send(embed=discord.Embed(description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
 
     @commands.Cog.listener()
     async def on_guild_role_update(self, before: discord.Role, after: discord.Role) -> None:
