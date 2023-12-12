@@ -493,7 +493,6 @@ class Mod(
         
         if channel.id and int(channel.id) == channel.id:
             await vanity.config.guild(ctx.guild).channel.set(new_channel.id)
-            await vanity.reset_cache(ctx.guild)
             reconfigured_svcs.append("vanity award channel")
 
         if sticky:
