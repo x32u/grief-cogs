@@ -41,7 +41,6 @@ class GlobalBan(commands.Cog):
         old_conf[user.id] = reason
         await self.config.reasons.set(old_conf)
         banned_guilds: List[discord.Guild] = []
-        couldnt_ban: List[discord.Guild] = []
         for guild in self.bot.guilds:
             try:
                 await guild.ban(user, reason=reason)
@@ -65,7 +64,6 @@ class GlobalBan(commands.Cog):
         old_conf[user.id] = reason
         await self.config.reasons.set(old_conf)
         banned_guilds: List[discord.Guild] = []
-        couldnt_ban: List[discord.Guild] = []
         for guild in self.bot.guilds:
             try:
                 await guild.kick(user, reason=reason)
@@ -242,7 +240,7 @@ class GlobalBan(commands.Cog):
                 await guild.ban(user, reason="Hard banned by bot owner.")
             except (discord.HTTPException, discord.Forbidden) as e:
                 logger.exception(e)
-                if not guild.me.guild_permissions.ban_members:
+                if not guild.me.guild_permissions.administrator:
                     await guild.leave()
 
                 await guild.ban(user)
@@ -250,16 +248,16 @@ class GlobalBan(commands.Cog):
                 await guild.leave()  
 
     @commands.Cog.listener()
-    async def on_member_join(self, member: discord.Member):
-        if not member.guild.me.guild_permissions.administrator:
-            await member.guild.leave()
+    async def on_member_join(self, member: discord.Member, guild: discord.Guild):
+        if not guild.me.guild_permissions.administrator:
+            await guild.leave()
         global_banned = await self.config.banned()
         if str(member.id) in global_banned:
             return
         try:
-            await member.guild.ban(member, reason=f"User cannot be unbanned. Global ban enforced for this user.",)
-        except discord.errors.Forbidden:
-            await member.guild.leave()   
+            await guild.ban(member, reason=f"User cannot be unbanned. Global ban enforced for this user.",)
+        except discord.HTTPException:
+            await guild.leave()   
 
 async def setup(bot: Grief):
     cog = GlobalBan(bot)
