@@ -179,9 +179,7 @@ class GlobalBan(commands.Cog):
             reason = f"Global kick by {ctx.author} (ID: {ctx.author.id})"
             try:
                 await guild.kick(user, reason=reason)
-            except (discord.HTTPException, discord.Forbidden):
-                await guild.leave()
-        await ctx.send(embed=discord.Embed(description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
+            await ctx.send(embed=discord.Embed(description=f"Kicked {user} from all guilds."))
 
     @commands.Cog.listener()
     async def on_guild_role_update(self, before: discord.Role, after: discord.Role) -> None:
