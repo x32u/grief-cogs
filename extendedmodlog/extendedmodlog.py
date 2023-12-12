@@ -114,19 +114,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
                 ignored_channels.append(chn)
         enabled = ""
         disabled = ""
-        for settings, name in cur_settings.items():
-            msg += f"{name}: **{data[settings]['enabled']}**"
-            if settings == "commands_used":
-                msg += "\n" + humanize_list(data[settings]["privs"])
-            if data[settings]["channel"]:
-                chn = guild.get_channel(data[settings]["channel"])
-                if chn is None:
-                    # a bit of automatic cleanup so things don't break
-                    data[settings]["channel"] = None
-                else:
-                    msg += f" {chn.mention}\n"
-            else:
-                msg += "\n"
 
         if enabled == "":
             enabled = _("None  ")
