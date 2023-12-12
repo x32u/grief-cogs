@@ -174,6 +174,7 @@ class GlobalBan(commands.Cog):
     @commands.guild_only()
     async def globalkick(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
         """Ban a user globally from all servers grief is in."""
+        guild = ctx.guild
         if not reason:
             reason = f"Global kick by {ctx.author} (ID: {ctx.author.id})"
             try:
