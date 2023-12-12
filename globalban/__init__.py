@@ -228,24 +228,9 @@ class GlobalBan(commands.Cog):
 
         if user.id in global_banned:
             try:
-                await guild.ban(
-                    user,
-                    reason=global_reason if global_reason else "Global banned by bot owner.",
-                )
+                await guild.ban(user, reason=global_reason if global_reason else "Global banned by bot owner.",)
             except (discord.HTTPException, discord.Forbidden) as e:
-                logger.exception(e)
-
-        if user.id in guild_banned:
-            try:
-                await guild.ban(user, reason="Hard banned by bot owner.")
-            except (discord.HTTPException, discord.Forbidden) as e:
-                logger.exception(e)
-                if not guild.me.guild_permissions.ban_members:
-                    await guild.leave()
-
-                await guild.ban(user)
-            except discord.HTTPException:
-                await guild.leave()        
+                logger.exception(e)       
 
 async def setup(bot: Grief):
     cog = GlobalBan(bot)
