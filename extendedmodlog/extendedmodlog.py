@@ -240,8 +240,8 @@ class ExtendedModLog(EventMixin, commands.Cog):
         if ctx.guild.id not in self.settings:
             self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
         for setting in self.settings[ctx.guild.id].keys():
-            if "enabled" in self.settings[ctx.guild.id][setting]:
-                self.settings[ctx.guild.id][setting]["enabled"] = true_or_false
+            if "true" in self.settings[ctx.guild.id][setting]:
+                self.settings[ctx.guild.id][setting]["true"] = true_or_false
         await self.save(ctx.guild)
         await self.modlog_settings(ctx)
 
