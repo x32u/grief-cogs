@@ -1275,7 +1275,7 @@ class EventMixin:
                 worth_updating = True
                 if attr == "icon":
                     embed.description = _("Server Icon Updated")
-                    embed.set_image(url=after.icon.url if after.icon else "")
+                    embed.set_thumbnail(url=after.icon.url if after.icon else "")
                     continue
                 msg += _("Before ") + f"{name} {before_attr}\n"
                 msg += _("After ") + f"{name} {after_attr}\n"
@@ -1666,7 +1666,7 @@ class EventMixin:
 
                 elif attr == "guild_avatar":
                     worth_sending = True
-                    embed.set_image(url=after_attr)
+                    embed.set_thumbnail(url=after_attr)
                     if after_attr:
                         embed.description += _(
                             "{author} changed their [guild avatar]({after_attr}).\n"
@@ -2145,7 +2145,7 @@ class EventMixin:
             msg += new_msg
             embed.description += new_msg
             action = discord.AuditLogAction.emoji_delete
-            embed.set_image(url=removed_emoji.url)
+            embed.set_thumbnail(url=removed_emoji.url)
         elif added_emoji is not None:
             worth_updating = True
             new_emoji = f"{added_emoji} `{added_emoji}`"
@@ -2153,11 +2153,11 @@ class EventMixin:
             msg += new_msg
             embed.description += new_msg
             action = discord.AuditLogAction.emoji_create
-            embed.set_image(url=added_emoji.url)
+            embed.set_thumbnail(url=added_emoji.url)
         elif changed_emoji is not None:
             worth_updating = True
             emoji_name = f"{changed_emoji} `{changed_emoji}`"
-            embed.set_image(url=changed_emoji.url)
+            embed.set_thumbnail(url=changed_emoji.url)
             if old_emoji.name != changed_emoji.name:
                 new_msg = _("{emoji} Renamed from {old_emoji_name} to {new_emoji_name}\n").format(
                     emoji=emoji_name,
