@@ -10,15 +10,43 @@ from discord.ext.commands.errors import BadArgument
 from grief.core import Config, commands, i18n, modlog
 from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import (
-    escape,
+    box,
     format_perms_list,
     humanize_list,
     humanize_timedelta,
+    inline,
     pagify,
+    escape,
 )
+from enum import Enum
 
 _ = i18n.Translator("ExtendedModLog", __file__)
 logger = logging.getLogger("red.trusty-cogs.ExtendedModLog")
+
+
+class MemberUpdateEnum(Enum):
+    # map config keys to member attributes
+    # using an enum just makes it easier to add more items down the road
+    nicknames = "nick"
+    roles = "roles"
+    pending = "pending"
+    timeout = "timed_out_until"
+    avatar = "guild_avatar"
+    flags = "flags"
+
+    @staticmethod
+    def names():
+        return {
+            MemberUpdateEnum.nicknames: _("Nickname"),
+            MemberUpdateEnum.roles: _("Roles"),
+            MemberUpdateEnum.pending: _("Pending"),
+            MemberUpdateEnum.timeout: _("Timeout"),
+            MemberUpdateEnum.avatar: _("Guild Avatar"),
+            MemberUpdateEnum.flags: _("Flags"),
+        }
+
+    def get_name(self) -> str:
+        return self.names().get(self, _("Unknown"))
 
 class EventChooser(Converter):
     """
@@ -42,7 +70,6 @@ class EventChooser(Converter):
             "guild_change",
             "emoji_change",
             "stickers_change",
-            "commands_used",
             "invite_created",
             "invite_deleted",
             "thread_create",
@@ -126,12 +153,12 @@ class EventMixin:
         if not channel.permissions_for(guild.me).send_messages:
             raise RuntimeError("No permission to send messages in channel")
         return channel
-
+    
     @commands.Cog.listener(name="on_raw_message_delete")
     async def on_raw_message_delete_listener(
         self, payload: discord.RawMessageDeleteEvent, *, check_audit_log: bool = True
     ) -> None:
-        # custom name of method used, because this is only supported in Grief 3.1+
+        # custom name of method used, because this is only supported in Red 3.1+
         guild_id = payload.guild_id
         if guild_id is None:
             return
@@ -144,7 +171,6 @@ class EventMixin:
             return
         if guild.me.is_timed_out():
             return
-        # settings = await self.config.guild(guild).message_delete()
         settings = self.settings[guild.id]["message_delete"]
         if not settings["enabled"]:
             return
@@ -168,7 +194,6 @@ class EventMixin:
         if message is None:
             if settings["cached_only"]:
                 return
-            message_channel = guild.get_channel_or_thread(channel_id)
             if embed_links:
                 embed = discord.Embed(
                     description=_("*Message's content unknown.*"),
@@ -176,18 +201,26 @@ class EventMixin:
                 )
                 embed.add_field(name=_("Channel"), value=message_channel.mention)
                 embed.set_author(name=_("Deleted Message"))
-                await channel.send(embed=embed)
+                embed.add_field(name=_("Message ID"), value=box(str(payload.message_id)))
+                await channel.send(embed=embed, allowed_mentions=self.allowed_mentions)
             else:
-                infomessage = _("{emoji} `{time}` A message was deleted in {channel}").format(
+                infomessage = _(
+                    "{emoji} {time} A message ({message_id}) was deleted in {channel}"
+                ).format(
                     emoji=settings["emoji"],
                     time=datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S"),
+                    message_id=box(str(payload.message_id)),
                     channel=message_channel.mention,
                 )
-                await channel.send(f"{infomessage}\n> *Message's content unknown.*")
+                await channel.send(
+                    f"{infomessage}\n> *Message's content unknown.*",
+                    allowed_mentions=self.allowed_mentions,
+                )
             return
         await self._cached_message_delete(
             message, guild, settings, channel, check_audit_log=check_audit_log
         )
+
 
     async def _cached_message_delete(
         self,
@@ -1570,31 +1603,33 @@ class EventMixin:
         embed = discord.Embed(
             timestamp=time, colour=await self.get_event_colour(guild, "user_change")
         )
-        msg = _("{emoji} `{time}` Member updated **{member}** (`{m_id}`)\n").format(
+        msg = _("{emoji} {time} Member updated **{member}** (`{m_id}`)\n").format(
             emoji=self.settings[guild.id]["user_change"]["emoji"],
-            time=time.strftime("%H:%M:%S"),
+            time=discord.utils.format_dt(time),
             member=before,
             m_id=before.id,
         )
         embed.description = ""
         emb_msg = _("{member} ({m_id}) updated").format(member=before, m_id=before.id)
-        embed.set_author(name=emb_msg, icon_url=before.display_avatar.url)
-        member_updates = {"nick": _("Nickname:"), "roles": _("Roles:")}
+        embed.set_author(name=emb_msg, icon_url=before.display_avatar)
         perp = None
         reason = None
         worth_sending = False
-        for attr, name in member_updates.items():
-            if attr == "nick" and not self.settings[guild.id]["user_change"]["nicknames"]:
+        before_text = ""
+        after_text = ""
+        for update_type in MemberUpdateEnum:
+            attr = update_type.value
+            if not self.settings[guild.id]["user_change"][update_type.name]:
                 continue
-            before_attr = getattr(before, attr)
-            after_attr = getattr(after, attr)
+            before_attr = getattr(before, attr, None)
+            after_attr = getattr(after, attr, None)
             if before_attr != after_attr:
                 if attr == "roles":
                     b = set(before.roles)
                     a = set(after.roles)
                     before_roles = list(b - a)
                     after_roles = list(a - b)
-                    logger.debug(after_roles)
+                    logger.debug("on_member_update after_roles: %s", after_roles)
                     if before_roles:
                         for role in before_roles:
                             msg += _("{author} had the {role} role removed.").format(
@@ -1616,18 +1651,52 @@ class EventMixin:
                     perp, reason = await self.get_audit_log_reason(
                         guild, before, discord.AuditLogAction.member_role_update
                     )
+                elif attr == "flags":
+                    changed_flags = [
+                        key.replace("_", " ").title()
+                        for key, value in dict(before.flags ^ after.flags).items()
+                        if value
+                    ]
+                    flags_str = "\n".join(f"- {flag}" for flag in changed_flags)
+                    add_str = _("{author} had the following flag changes:\n{flag_str}").format(
+                        author=after.mention, flag_str=flags_str
+                    )
+                    msg += add_str
+                    embed.description += add_str
+
+                elif attr == "guild_avatar":
+                    worth_sending = True
+                    embed.set_image(url=after_attr)
+                    if after_attr:
+                        embed.description += _(
+                            "{author} changed their [guild avatar]({after_attr}).\n"
+                        ).format(author=after.mention, after_attr=after_attr)
+                    else:
+                        embed.description += _("{author} removed their guild avatar.\n").format(
+                            author=after.mention, after_attr=after_attr
+                        )
+
                 else:
                     perp, reason = await self.get_audit_log_reason(
                         guild, before, discord.AuditLogAction.member_update
                     )
                     worth_sending = True
-                    msg += _("Before ") + f"{name} {before_attr}\n"
-                    msg += _("After ") + f"{name} {after_attr}\n"
-                    embed.description = _("{author} changed their nickname.").format(
-                        author=after.mention
-                    )
-                    embed.add_field(name=_("Before ") + name, value=str(before_attr)[:1024])
-                    embed.add_field(name=_("After ") + name, value=str(after_attr)[:1024])
+                    if isinstance(before_attr, datetime.datetime):
+                        before_attr = discord.utils.format_dt(before_attr)
+                    if isinstance(after_attr, datetime.datetime):
+                        after_attr = discord.utils.format_dt(after_attr)
+                    msg += _("Before ") + f"{update_type.get_name()} {before_attr}\n"
+                    msg += _("After ") + f"{update_type.get_name()} {after_attr}\n"
+                    embed.description = _("{author} has updated.").format(author=after.mention)
+                    before_text += f"{update_type.get_name()} {before_attr}\n"
+                    after_text += f"{update_type.get_name()} {after_attr}\n"
+                    # embed.add_field(name=_("Before ") + name, value=str(before_attr)[:1024])
+                    # embed.add_field(name=_("After ") + name, value=str(after_attr)[:1024])
+        if before_text and after_text:
+            for page in pagify(before_text, page_length=1024):
+                embed.add_field(name=_("Before"), value=page)
+            for page in pagify(after_text, page_length=1024):
+                embed.add_field(name=_("After"), value=page)
         if not worth_sending:
             return
         if perp:
@@ -1636,10 +1705,11 @@ class EventMixin:
         if reason:
             msg += _("Reason: ") + f"{reason}\n"
             embed.add_field(name=_("Reason"), value=reason, inline=False)
+        embed.add_field(name=_("Member ID"), value=box(str(after.id)))
         if embed_links:
-            await channel.send(embed=embed)
+            await channel.send(embed=embed, allowed_mentions=self.allowed_mentions)
         else:
-            await channel.send(msg)
+            await channel.send(msg, allowed_mentions=self.allowed_mentions)
 
     @commands.Cog.listener()
     async def on_invite_create(self, invite: discord.Invite) -> None:
