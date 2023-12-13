@@ -144,9 +144,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
         Show the servers current ExtendedModlog settings
         """
         if ctx.guild.id not in self.settings:
-            self.settings[ctx.guild.id] = inv_settings
-        if await self.config.guild(ctx.message.guild).all() == {}:
-            await self.config.guild(ctx.message.guild).set(inv_settings)
+            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
         await self.modlog_settings(ctx)
 
     @_modlog.command(name="toggle")
@@ -296,16 +294,16 @@ class ExtendedModLog(EventMixin, commands.Cog):
     @_modlog.command(name="all", aliaes=["all_settings", "toggle_all"])
     async def _toggle_all_logs(self, ctx: commands.Context, true_or_false: bool) -> None:
         """
-        Turn all logging options on or off
+        Turn all logging options on or off.
 
-        `<true_or_false>` what to set all logging settings to must be `true`, `false`, `yes`, `no`.
+        - `<true_or_false>` True of False, what to set all loggable settings to.
         """
         if ctx.guild.id not in self.settings:
-            self.settings[ctx.guild.id] = inv_settings
-        for setting in inv_settings.keys():
+            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
+        for setting in self.settings[ctx.guild.id].keys():
             if "enabled" in self.settings[ctx.guild.id][setting]:
                 self.settings[ctx.guild.id][setting]["enabled"] = true_or_false
-        await self.config.guild(ctx.guild).set(self.settings[ctx.guild.id])
+        await self.save(ctx.guild)
         await self.modlog_settings(ctx)
 
     @_modlog.command(name="botedits", aliases=["botedit"])
