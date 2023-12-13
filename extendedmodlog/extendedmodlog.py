@@ -6,11 +6,11 @@ from grief.core import Config, checks, commands, modlog
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_list
 
-from .eventmixin import EventChooser, EventMixin, MemberUpdateEnum
+from .eventmixin import CommandPrivs, EventChooser, EventMixin, MemberUpdateEnum
 from .settings import inv_settings
 
 _ = Translator("ExtendedModLog", __file__)
-logger = getLogger("grief.modlogs")
+logger = getLogger("red.trusty-cogs.ExtendedModLog")
 
 
 def wrapped_additional_help():
@@ -25,6 +25,7 @@ def wrapped_additional_help():
      - `channel_change` - Updates to channel name, etc.
      - `channel_create`
      - `channel_delete`
+     - `commands_used`  - Bot command usage
      - `emoji_change`   - Emojis added or deleted
      - `guild_change`   - Server settings changed
      - `message_edit`
@@ -57,7 +58,11 @@ def wrapped_additional_help():
 class ExtendedModLog(EventMixin, commands.Cog):
     """
     Extended modlogs
+    Works with core modlogset channel
     """
+
+    __author__ = ["RePulsar", "TrustyJAID"]
+    __version__ = "2.12.3"
 
     def __init__(self, bot):
         self.bot = bot
@@ -70,15 +75,48 @@ class ExtendedModLog(EventMixin, commands.Cog):
         self.allowed_mentions = discord.AllowedMentions(users=False, roles=False, everyone=False)
 
     def format_help_for_context(self, ctx: commands.Context):
+        """
+        Thanks Sinbad!
+        """
         pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}"
+        return f"{pre_processed}\n\nCog Version: {self.__version__}"
 
     async def cog_unload(self):
         self.invite_links_loop.stop()
 
+    async def red_delete_data_for_user(self, **kwargs):
+        """
+        Nothing to delete
+        """
+        return
+
     async def cog_load(self) -> None:
-       for guild_id in await self.config.all_guilds():
+        if await self.config.version() < "2.8.5":
+            await self.migrate_2_8_5_settings()
+        for guild_id in await self.config.all_guilds():
             self.settings[int(guild_id)] = await self.config.guild_from_id(guild_id).all()
+
+    async def migrate_2_8_5_settings(self):
+        all_data = await self.config.all_guilds()
+        for guild_id, data in all_data.items():
+            guild = discord.Object(id=guild_id)
+            for entry, default in inv_settings.items():
+                if entry not in data:
+                    all_data[guild_id][entry] = inv_settings[entry]
+                if type(default) == dict:
+                    for key, _default in inv_settings[entry].items():
+                        if not isinstance(all_data[guild_id][entry], dict):
+                            all_data[guild_id][entry] = default
+                        try:
+                            if key not in all_data[guild_id][entry]:
+                                all_data[guild_id][entry][key] = _default
+                        except TypeError:
+                            # del all_data[guild_id][entry]
+                            logger.error("Somehow your dict was invalid.")
+                            continue
+            logger.info("Saving guild %s data to new version type", guild_id)
+            await self.config.guild(guild).set(all_data[guild_id])
+        await self.config.version.set("2.8.5")
 
     async def modlog_settings(self, ctx: commands.Context) -> None:
         guild = ctx.message.guild
@@ -103,6 +141,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             "guild_change": _("Guild changes"),
             "emoji_change": _("Emoji changes"),
             "stickers_change": _("Stickers changes"),
+            "commands_used": _("Commands"),
             "invite_created": _("Invite created"),
             "invite_deleted": _("Invite deleted"),
             "thread_create": _("Thread created"),
@@ -129,6 +168,8 @@ class ExtendedModLog(EventMixin, commands.Cog):
         disabled = ""
         for settings, name in cur_settings.items():
             msg += f"{name}: **{data[settings]['enabled']}**"
+            if settings == "commands_used":
+                msg += "\n" + humanize_list(data[settings]["privs"])
             if data[settings]["channel"]:
                 chn = guild.get_channel(data[settings]["channel"])
                 if chn is None:
@@ -175,6 +216,92 @@ class ExtendedModLog(EventMixin, commands.Cog):
         if ctx.guild.id not in self.settings:
             self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
         await self.modlog_settings(ctx)
+
+    @_modlog.command(name="colour", aliases=["color"])
+    @wrapped_additional_help()
+    async def _set_event_colours(
+        self, ctx: commands.Context, colour: discord.Colour, *events: EventChooser
+    ):
+        """
+        Set custom colours for modlog events
+
+        - `<colour>` must be a hex code or a [built colour.](https://discordpy.readthedocs.io/en/latest/api.html#colour)
+        """
+        if len(events) == 0:
+            return await ctx.send(_("You must provide which events should be included."))
+        if ctx.guild.id not in self.settings:
+            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
+        if colour:
+            new_colour = colour.value
+        else:
+            new_colour = colour
+        for event in events:
+            self.settings[ctx.guild.id][event]["colour"] = new_colour
+        await self.save(ctx.guild)
+        await ctx.send(
+            _("{event} has been set to {colour}").format(
+                event=humanize_list([e.replace("user_", "member_") for e in events]),
+                colour=str(colour),
+            )
+        )
+
+    @_modlog.command(name="embeds", aliases=["embed"])
+    @wrapped_additional_help()
+    async def _set_embds(
+        self, ctx: commands.Context, true_or_false: bool, *events: EventChooser
+    ) -> None:
+        """
+        Set modlog events to use embeds or text
+
+        - `<true_or_false>` The desired embed setting either on or off.
+        """
+        if len(events) == 0:
+            return await ctx.send(_("You must provide which events should be included."))
+        if ctx.guild.id not in self.settings:
+            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
+        for event in events:
+            self.settings[ctx.guild.id][event]["embed"] = true_or_false
+        await self.save(ctx.guild)
+        await ctx.send(
+            _("{event} embed logs have been set to {true_or_false}").format(
+                event=humanize_list([e.replace("user_", "member_") for e in events]),
+                true_or_false=str(true_or_false),
+            )
+        )
+
+    @_modlog.command(name="emojiset", send_help=True)
+    @commands.bot_has_permissions(add_reactions=True)
+    @wrapped_additional_help()
+    async def _set_event_emoji(
+        self,
+        ctx: commands.Context,
+        emoji: Union[discord.Emoji, str],
+        *events: EventChooser,
+    ) -> None:
+        """
+        Set the emoji used in text modlogs.
+
+        - `<new_emoji>` can be any discord emoji or unicode emoji the bot has access to use.
+        """
+        if len(events) == 0:
+            return await ctx.send(_("You must provide which events should be included."))
+        if ctx.guild.id not in self.settings:
+            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
+        if isinstance(emoji, str):
+            try:
+                await ctx.message.add_reaction(emoji)
+            except discord.errors.HTTPException:
+                return await ctx.send(_("{emoji} is not a valid emoji.").format(emoji=emoji))
+        new_emoji = str(emoji)
+        for event in events:
+            self.settings[ctx.guild.id][event]["emoji"] = new_emoji
+        await self.save(ctx.guild)
+        await ctx.send(
+            _("{event} emoji has been set to {new_emoji}").format(
+                event=humanize_list([e.replace("user_", "member_") for e in events]),
+                new_emoji=str(new_emoji),
+            )
+        )
 
     @_modlog.command(name="toggle")
     @wrapped_additional_help()
@@ -230,6 +357,27 @@ class ExtendedModLog(EventMixin, commands.Cog):
             )
         )
 
+    @_modlog.command(name="resetchannel")
+    @wrapped_additional_help()
+    async def _reset_event_channel(
+        self,
+        ctx: commands.Context,
+        *events: EventChooser,
+    ) -> None:
+        """
+        Reset the modlog event to the default modlog channel.
+        """
+        if len(events) == 0:
+            return await ctx.send(_("You must provide which events should be included."))
+        if ctx.guild.id not in self.settings:
+            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
+        for event in events:
+            self.settings[ctx.guild.id][event]["channel"] = None
+        await self.save(ctx.guild)
+        await ctx.send(
+            _("{event} logs channel have been reset.").format(event=humanize_list(events))
+        )
+
     @_modlog.command(name="all", aliaes=["all_settings", "toggle_all"])
     async def _toggle_all_logs(self, ctx: commands.Context, true_or_false: bool) -> None:
         """
@@ -240,8 +388,8 @@ class ExtendedModLog(EventMixin, commands.Cog):
         if ctx.guild.id not in self.settings:
             self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
         for setting in self.settings[ctx.guild.id].keys():
-            if "true" in self.settings[ctx.guild.id][setting]:
-                self.settings[ctx.guild.id][setting]["true"] = true_or_false
+            if "enabled" in self.settings[ctx.guild.id][setting]:
+                self.settings[ctx.guild.id][setting]["enabled"] = true_or_false
         await self.save(ctx.guild)
         await self.modlog_settings(ctx)
 
@@ -486,6 +634,31 @@ class ExtendedModLog(EventMixin, commands.Cog):
         await self.save(ctx.guild)
         # user_change[update_type.name] = set_to
         await self._members_settings(ctx)
+
+    @_modlog.command(name="commandlevel", aliases=["commandslevel"])
+    async def _command_level(self, ctx: commands.Context, *level: CommandPrivs) -> None:
+        """
+        Set the level of commands to be logged.
+
+        - `[level...]` must include all levels you want from:
+         - `NONE`
+         - `MOD`
+         - `ADMIN`
+         - `GUILD_OWNER`
+         - `BOT_OWNER`
+
+        These are the basic levels commands check for in permissions.
+        `NONE` is a command anyone has permission to use, where as `MOD`
+        can be `mod or permissions`
+        """
+        if ctx.guild.id not in self.settings:
+            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
+        if len(level) == 0:
+            return await ctx.send_help()
+        msg = _("Command logs set to: ")
+        self.settings[ctx.guild.id]["commands_used"]["privs"] = list(level)
+        await self.save(ctx.guild)
+        await ctx.send(msg + humanize_list(level))
 
     @_modlog.command()
     async def ignore(
