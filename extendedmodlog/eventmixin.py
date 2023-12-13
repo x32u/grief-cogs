@@ -1705,7 +1705,6 @@ class EventMixin:
         if reason:
             msg += _("Reason: ") + f"{reason}\n"
             embed.add_field(name=_("Reason"), value=reason, inline=False)
-        embed.add_field(name=_("Member ID"), value=box(str(after.id)))
         if embed_links:
             await channel.send(embed=embed, allowed_mentions=self.allowed_mentions)
         else:
