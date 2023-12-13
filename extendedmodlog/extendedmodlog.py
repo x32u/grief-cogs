@@ -6,7 +6,7 @@ from grief.core import Config, checks, commands, modlog
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_list
 
-from .eventmixin import CommandPrivs, EventChooser, EventMixin, MemberUpdateEnum
+from .eventmixin import EventChooser, EventMixin, MemberUpdateEnum
 from .settings import inv_settings
 
 _ = Translator("ExtendedModLog", __file__)
@@ -634,31 +634,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
         await self.save(ctx.guild)
         # user_change[update_type.name] = set_to
         await self._members_settings(ctx)
-
-    @_modlog.command(name="commandlevel", aliases=["commandslevel"])
-    async def _command_level(self, ctx: commands.Context, *level: CommandPrivs) -> None:
-        """
-        Set the level of commands to be logged.
-
-        - `[level...]` must include all levels you want from:
-         - `NONE`
-         - `MOD`
-         - `ADMIN`
-         - `GUILD_OWNER`
-         - `BOT_OWNER`
-
-        These are the basic levels commands check for in permissions.
-        `NONE` is a command anyone has permission to use, where as `MOD`
-        can be `mod or permissions`
-        """
-        if ctx.guild.id not in self.settings:
-            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
-        if len(level) == 0:
-            return await ctx.send_help()
-        msg = _("Command logs set to: ")
-        self.settings[ctx.guild.id]["commands_used"]["privs"] = list(level)
-        await self.save(ctx.guild)
-        await ctx.send(msg + humanize_list(level))
 
     @_modlog.command()
     async def ignore(
