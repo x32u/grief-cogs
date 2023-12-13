@@ -76,12 +76,6 @@ class ExtendedModLog(EventMixin, commands.Cog):
     async def cog_unload(self):
         self.invite_links_loop.stop()
 
-    async def red_delete_data_for_user(self, **kwargs):
-        """
-        Nothing to delete
-        """
-        return
-
     async def cog_load(self) -> None:
        for guild_id in await self.config.all_guilds():
             self.settings[int(guild_id)] = await self.config.guild_from_id(guild_id).all()
@@ -115,6 +109,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             "thread_create": _("Thread created"),
             "thread_delete": _("Thread deleted"),
             "thread_change": _("Thread changed"),
+            "commands_used": _("Commands used")
         }
         msg = _("Setting for {guild}\n Modlog Channel {channel}\n\n").format(
             guild=guild.name, channel=modlog_channel
