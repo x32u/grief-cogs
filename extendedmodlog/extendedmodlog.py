@@ -82,6 +82,11 @@ class ExtendedModLog(EventMixin, commands.Cog):
 
     async def modlog_settings(self, ctx: commands.Context) -> None:
         guild = ctx.message.guild
+        try:
+            _modlog_channel = await modlog.get_modlog_channel(guild)
+            modlog_channel = _modlog_channel.mention
+        except Exception:
+            modlog_channel = _("Not Set")
         cur_settings = {
             "message_edit": _("Message edits"),
             "message_delete": _("Message delete"),
@@ -98,15 +103,14 @@ class ExtendedModLog(EventMixin, commands.Cog):
             "guild_change": _("Guild changes"),
             "emoji_change": _("Emoji changes"),
             "stickers_change": _("Stickers changes"),
-            "commands_used": _("Commands"),
             "invite_created": _("Invite created"),
             "invite_deleted": _("Invite deleted"),
             "thread_create": _("Thread created"),
             "thread_delete": _("Thread deleted"),
             "thread_change": _("Thread changed"),
-            "commands_used": _("Commands used")
         }
         msg = _("Setting for {guild}\n Modlog Channel {channel}\n\n").format(
+            guild=guild.name, channel=modlog_channel
         )
         if guild.id not in self.settings:
             self.settings[guild.id] = await self.config.guild(guild).all()
