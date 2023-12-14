@@ -333,7 +333,7 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
+    async def ban(self, ctx: commands.Context, member: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
         """
         Ban a user.
         """
