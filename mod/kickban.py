@@ -119,6 +119,7 @@ class KickBanMixin(MixinMeta):
     ) -> Tuple[bool, str]:
         author = ctx.author
         guild = ctx.guild
+        member = discord.Member
 
         removed_temp = False
 
@@ -198,7 +199,7 @@ class KickBanMixin(MixinMeta):
                         author.name, author.id, ban_type, username, user.id, str(days)
                     )
                 )
-                success_message = _("User has been banned.")
+                success_message = discord.Embed(description=f"> {ctx.author.mention}: Banned {member.mention}.", color=0x313338)
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
@@ -353,7 +354,7 @@ class KickBanMixin(MixinMeta):
             user=user, ctx=ctx, days=days, reason=reason
         )
 
-        await ctx.send(message)
+        await ctx.reply(message, mention_author=False)
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
