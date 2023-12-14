@@ -86,7 +86,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             _modlog_channel = await modlog.get_modlog_channel(guild)
             modlog_channel = _modlog_channel.mention
         except Exception:
-            modlog_channel = _("Deprecated")
+            modlog_channel = _()
         cur_settings = {
             "message_edit": _("Message edits"),
             "message_delete": _("Message delete"),
