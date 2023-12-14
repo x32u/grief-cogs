@@ -233,23 +233,19 @@ class ExtendedModLog(EventMixin, commands.Cog):
         )
 
     @_modlog.command(name="all", aliaes=["all_settings", "toggle_all"])
-    @wrapped_additional_help()
-    async def _toggle_all_logs(self, ctx: commands.Context, true_or_false: bool, *events: EventChooser) -> None:
+    async def _toggle_all_logs(self, ctx: commands.Context, true_or_false: bool) -> None:
         """
-        Set the channel for modlogs.
+        Turn all logging options on or off.
 
-        - `<channel>` The text channel to send the events to.
+        - `<true_or_false>` True of False, what to set all loggable settings to.
         """
         if ctx.guild.id not in self.settings:
             self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
-        for event in events:
-            self.settings[ctx.guild.id]["message_delete", "message_edit"]["enabled"] = true_or_false
+        for setting in self.settings[ctx.guild.id].keys():
+            if "enabled" in self.settings[ctx.guild.id][setting]:
+                self.settings[ctx.guild.id][setting]["enabled"] = true_or_false
         await self.save(ctx.guild)
-        await ctx.send(
-            _("all logs have been set to {true_or_false}").format(
-                true_or_false=str(true_or_false),
-            )
-        )
+        await self.modlog_settings(ctx)
 
 
    # @_modlog.command(name="resetchannel")
@@ -513,22 +509,22 @@ class ExtendedModLog(EventMixin, commands.Cog):
 
     # For whatever reason trying to toggle all these settings causes all of the guilds
     # config to reset and I have no clue why so this will be unsupported for now
-    @_members.command(name="all")
-    async def _user_all_logging(self, ctx: commands.Context, set_to: bool) -> None:
-        """
-        Set all member update settings.
+    # @_members.command(name="all")
+    # async def _user_all_logging(self, ctx: commands.Context, set_to: bool) -> None:
+        # """
+        # Set all member update settings.
 
-        - `<set_to>` True or False what to set all the member update settings to.
-        """
-        if ctx.guild.id not in self.settings:
-            self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
-            logger.debug("Adding %s to cache", ctx.guild.id)
+        # - `<set_to>` True or False what to set all the member update settings to.
+        # """
+        # if ctx.guild.id not in self.settings:
+            # self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
+            # logger.debug("Adding %s to cache", ctx.guild.id)
         # async with self.config.guild(ctx.guild).user_change() as user_change:
-        for update_type in MemberUpdateEnum:
-            self.settings[ctx.guild.id]["user_change"][update_type.name] = set_to
-        await self.save(ctx.guild)
+        # for update_type in MemberUpdateEnum:
+            # self.settings[ctx.guild.id]["user_change"][update_type.name] = set_to
+        # await self.save(ctx.guild)
         # user_change[update_type.name] = set_to
-        await self._members_settings(ctx)
+        # await self._members_settings(ctx)
 
     @_modlog.command()
     async def ignore(
