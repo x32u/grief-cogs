@@ -329,52 +329,31 @@ class KickBanMixin(MixinMeta):
                 )
             )
 
-    @commands.command(autohelp=True, aliases=["b"])
+    @commands.command()
     @commands.guild_only()
-    @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx: commands.Context, member: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
+    @commands.bot_has_permissions(ban_members=True)
+    @commands.admin_or_permissions(ban_members=True)
+    async def ban(
+        self,
+        ctx: commands.Context,
+        user: Union[discord.Member, RawUserIdConverter],
+        days: Optional[int] = None,
+        *,
+        reason: str = None,
+    ):
+        """Ban a user from this server and optionally delete days of messages.
         """
-        Ban a user.
-        """
-        author = ctx.author
         guild = ctx.guild
-
-        if reason == None:
-            reason = "No reason given"
-        
+        if days is None:
+            days = await self.config.guild(guild).default_days()
         if isinstance(user, int):
-                user = self.bot.get_user(user) or discord.Object(id=user)
+            user = self.bot.get_user(user) or discord.Object(id=user)
 
-        audit_reason = get_audit_reason(author, reason, shorten=True)
-        toggle = await self.config.guild(guild).dm_on_kickban()
-        if toggle:
-            with contextlib.suppress(discord.HTTPException):
-                em = discord.Embed(
-                    title=bold(_("You have been banned from {guild}.").format(guild=guild)),
-                    color=await self.bot.get_embed_color(member),
-                )
-                em.add_field(
-                    name=_("**Reason**"),
-                    value=reason if reason is not None else _("No reason was given."),
-                    inline=False,
-                )
-            
-            await member.send(embed=em)
-            return
-        try:
-            await guild.ban(member, reason=audit_reason)
-            embed = discord.Embed(description=f"> {ctx.author.mention}: Banned {member.mention}.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
-        except discord.errors.Forbidden:
-            embed = discord.Embed(description=f"> I'm not allowed to do that.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
-        except Exception:
-            log.exception(
-                "{}({}) attempted to ban {}({}), but an error occurred.".format(
-                    author.name, author.id, member.name, member.id
-                )
-            )
+        success_, message = await self.ban_user(
+            user=user, ctx=ctx, days=days, reason=reason
+        )
+
+        await ctx.send(message)
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
