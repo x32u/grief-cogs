@@ -360,6 +360,7 @@ class KickBanMixin(MixinMeta):
             if isinstance(user, int):
                 user = self.bot.get_user(user) or discord.Object(id=user)
             await member.send(embed=em)
+            return
         try:
             await guild.ban(member, reason=audit_reason)
             embed = discord.Embed(description=f"> {ctx.author.mention}: Banned {member.mention}.", color=0x313338)
