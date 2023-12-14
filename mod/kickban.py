@@ -341,12 +341,11 @@ class KickBanMixin(MixinMeta):
         guild = ctx.guild
 
         if reason == None:
-            reason = "no reason given"
+            reason = "No reason given"
         
         if author == member:
             embed = discord.Embed(description=f"> {ctx.author.mention}: You can't ban yourself.", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
-            return
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, member):
             embed = discord.Embed(description=f"> {ctx.author.mention}: I cannot let you do that. You are not higher than the user in the role hierarchy.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
@@ -371,7 +370,7 @@ class KickBanMixin(MixinMeta):
                 await member.send(embed=em)
         try:
             await guild.ban(member, reason=audit_reason)
-            embed = discord.Embed(description=f"> {ctx.author.mention}: Banned {member.mention} for: {reason}", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Banned {member.mention}.", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
         except discord.errors.Forbidden:
             embed = discord.Embed(description=f"> I'm not allowed to do that.", color=0x313338)
