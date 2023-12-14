@@ -394,6 +394,7 @@ class Ticket:
                             "⚠ At least one user (the ticket owner or a team member) could not be added to the ticket thread. Maybe the user doesn't have access to the parent forum/text channel. If the server uses private threads in a text channel, the bot does not have the `manage_messages` permission in this channel."
                         )
                     )
+
             if config["custom_message"] is not None:
                 try:
                     embed: discord.Embed = discord.Embed()
@@ -580,7 +581,7 @@ class Ticket:
                     reason=reason,
                 )
                 await logschannel.send(
-                    _("Report on the close of the ticket {ticket.id}."),
+                    _("Report on the close of the ticket {ticket.id}.").format(ticket=self),
                     embed=embed,
                 )
         if self.first_message is not None:
@@ -745,6 +746,35 @@ class Ticket:
                     ticket=self
                 ),
                 reason=reason,
+            )
+            try:
+                transcript = await chat_exporter.export(
+                    channel=self.channel,
+                    limit=None,
+                    tz_info="UTC",
+                    guild=self.guild,
+                    bot=self.bot,
+                )
+            except AttributeError:
+                transcript = None
+            if transcript is not None:
+                file = discord.File(
+                    io.BytesIO(transcript.encode()),
+                    filename=f"transcript-ticket-{self.id}.html",
+                )
+            else:
+                file = None
+            message = await logschannel.send(
+                _("Report on the deletion of the ticket {ticket.id}.").format(ticket=self),
+                embed=embed,
+                file=file,
+            )
+            embed = discord.Embed(
+                title="Transcript Link",
+                description=(
+                    f"[Click here to view the transcript.](https://mahto.id/chat-exporter?url={message.attachments[0].url})"
+                ),
+                color=discord.Color.red(),
             )
             await logschannel.send(embed=embed)
         if isinstance(self.channel, discord.TextChannel):
