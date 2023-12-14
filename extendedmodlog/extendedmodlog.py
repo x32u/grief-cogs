@@ -243,11 +243,10 @@ class ExtendedModLog(EventMixin, commands.Cog):
         if ctx.guild.id not in self.settings:
             self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
         for event in events:
-            self.settings[ctx.guild.id][event]["enabled"] = true_or_false
+            self.settings[ctx.guild.id]["message_delete", "message_edit"]["enabled"] = true_or_false
         await self.save(ctx.guild)
         await ctx.send(
-            _("{event} logs have been set to {true_or_false}").format(
-                event=humanize_list([e.replace("guild_change", "member_change", ) for e in events]),
+            _("all logs have been set to {true_or_false}").format(
                 true_or_false=str(true_or_false),
             )
         )
