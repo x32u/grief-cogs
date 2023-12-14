@@ -747,28 +747,6 @@ class Ticket:
                 ),
                 reason=reason,
             )
-            try:
-                transcript = await chat_exporter.export(
-                    channel=self.channel,
-                    limit=None,
-                    tz_info="UTC",
-                    guild=self.guild,
-                    bot=self.bot,
-                )
-            except AttributeError:
-                transcript = None
-            if transcript is not None:
-                file = discord.File(
-                    io.BytesIO(transcript.encode()),
-                    filename=f"transcript-ticket-{self.id}.html",
-                )
-            else:
-                file = None
-            message = await logschannel.send(
-                _("Report on the deletion of the ticket {ticket.id}.").format(ticket=self),
-                embed=embed,
-                file=file,
-            )
             await logschannel.send(embed=embed)
         if isinstance(self.channel, discord.TextChannel):
             _reason = await self.cog.get_audit_reason(
