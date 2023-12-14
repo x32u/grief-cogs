@@ -342,6 +342,9 @@ class KickBanMixin(MixinMeta):
 
         if reason == None:
             reason = "No reason given"
+        
+        if isinstance(user, int):
+                user = self.bot.get_user(user) or discord.Object(id=user)
 
         audit_reason = get_audit_reason(author, reason, shorten=True)
         toggle = await self.config.guild(guild).dm_on_kickban()
@@ -357,8 +360,6 @@ class KickBanMixin(MixinMeta):
                     inline=False,
                 )
             
-            if isinstance(user, int):
-                user = self.bot.get_user(user) or discord.Object(id=user)
             await member.send(embed=em)
             return
         try:
