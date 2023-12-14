@@ -232,26 +232,47 @@ class ExtendedModLog(EventMixin, commands.Cog):
             )
         )
 
-    @_modlog.command(name="resetchannel")
+    @_modlog.command(name="all", aliaes=["all_settings", "toggle_all"])
     @wrapped_additional_help()
-    async def _reset_event_channel(
-        self,
-        ctx: commands.Context,
-        *events: EventChooser,
-    ) -> None:
+    async def _toggle_all_logs(self, ctx: commands.Context,  *events: EventChooser, true_or_false: bool) -> None:
         """
-        Reset the modlog event to the default modlog channel.
+        Set the channel for modlogs.
+
+        - `<channel>` The text channel to send the events to.
         """
-        if len(events) == 0:
-            return await ctx.send(_("You must provide which events should be included."))
         if ctx.guild.id not in self.settings:
             self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
         for event in events:
-            self.settings[ctx.guild.id][event]["channel"] = None
+            self.settings[ctx.guild.id][event]["enabled"] = true_or_false
         await self.save(ctx.guild)
         await ctx.send(
-            _("{event} logs channel have been reset.").format(event=humanize_list(events))
+            _("{event} logs have been set to {true_or_false}").format(
+                event=humanize_list([e.replace("guild_change", "member_change", ) for e in events]),
+                true_or_false=str(true_or_false),
+            )
         )
+
+
+   # @_modlog.command(name="resetchannel")
+    # @wrapped_additional_help()
+    #async def _reset_event_channel(
+     #   self,
+      #  ctx: commands.Context,
+       # *events: EventChooser,
+    #-> None:
+       # """
+       # Reset the modlog event to the default modlog channel.
+       # """
+        #if len(events) == 0:
+        #    return await ctx.send(_("You must provide which events should be included."))
+        #if ctx.guild.id not in self.settings:
+         #   self.settings[ctx.guild.id] = await self.config.guild(ctx.guild).all()
+        #or event in events:
+         #   self.settings[ctx.guild.id][event]["channel"] = None
+        # await self.save(ctx.guild)
+        # await ctx.send(
+            # _("{event} logs channel have been reset.").format(event=humanize_list(events))
+        # )
 
     # @_modlog.command(name="all", aliaes=["all_settings", "toggle_all"])
     # async def _toggle_all_logs(self, ctx: commands.Context, true_or_false: bool) -> None:
