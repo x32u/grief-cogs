@@ -119,7 +119,7 @@ class KickBanMixin(MixinMeta):
     ) -> Tuple[bool, str]:
         author = ctx.author
         guild = ctx.guild
-        member = discord.Member
+        member = ctx.member
 
         removed_temp = False
 
