@@ -234,7 +234,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
 
     @_modlog.command(name="all", aliaes=["all_settings", "toggle_all"])
     @wrapped_additional_help()
-    async def _toggle_all_logs(self, ctx: commands.Context,  *events: EventChooser, true_or_false: bool) -> None:
+    async def _toggle_all_logs(self, ctx: commands.Context, true_or_false: bool, *events: EventChooser) -> None:
         """
         Set the channel for modlogs.
 
