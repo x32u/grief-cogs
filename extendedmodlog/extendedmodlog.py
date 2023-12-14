@@ -86,7 +86,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             _modlog_channel = await modlog.get_modlog_channel(guild)
             modlog_channel = _modlog_channel.mention
         except Exception:
-            modlog_channel = _("Not Set")
+            modlog_channel = _("Deprecated")
         cur_settings = {
             "message_edit": _("Message edits"),
             "message_delete": _("Message delete"),
@@ -109,7 +109,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
             "thread_delete": _("Thread deleted"),
             "thread_change": _("Thread changed"),
         }
-        msg = _("Setting for {guild}\n Modlog Channel {channel}\n\n").format(
+        msg = _("Setting for {guild}\n Modlog Channel {channel} (Deprecated)\n\n").format(
             guild=guild.name, channel=modlog_channel
         )
         if guild.id not in self.settings:

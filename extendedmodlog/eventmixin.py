@@ -21,7 +21,7 @@ from grief.core.utils.chat_formatting import (
 from enum import Enum
 
 _ = i18n.Translator("ExtendedModLog", __file__)
-logger = logging.getLogger("red.trusty-cogs.ExtendedModLog")
+logger = logging.getLogger("grief.modlog")
 
 
 class MemberUpdateEnum(Enum):
