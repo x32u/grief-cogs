@@ -342,18 +342,7 @@ class KickBanMixin(MixinMeta):
 
         if reason == None:
             reason = "No reason given"
-        
-        if author == member:
-            embed = discord.Embed(description=f"> {ctx.author.mention}: You can't ban yourself.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
-        elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, member):
-            embed = discord.Embed(description=f"> {ctx.author.mention}: I cannot let you do that. You are not higher than the user in the role hierarchy.", color=0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
-            return
-        elif ctx.guild.me.top_role <= member.top_role or member == ctx.guild.owner:
-            embed = discord.Embed(description=f"> {ctx.author.mention}: I cannot do that due to Discord hierarchy rules.", color=0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
-            return
+
         audit_reason = get_audit_reason(author, reason, shorten=True)
         toggle = await self.config.guild(guild).dm_on_kickban()
         if toggle:
