@@ -119,7 +119,7 @@ class KickBanMixin(MixinMeta):
     ) -> Tuple[bool, str]:
         author = ctx.author
         guild = ctx.guild
-        member = ctx.member
+        member = discord.Member
 
         removed_temp = False
 
@@ -199,7 +199,8 @@ class KickBanMixin(MixinMeta):
                         author.name, author.id, ban_type, username, user.id, str(days)
                     )
                 )
-                success_message = discord.Embed(description=f"> {ctx.author.mention}: Banned {member.mention}.", color=0x313338)
+
+                success_message = discord.Embed(description=f"> {ctx.author.mention}: That user has been banned.", color=0x313338)
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
