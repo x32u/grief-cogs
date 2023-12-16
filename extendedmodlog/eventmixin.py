@@ -10,29 +10,16 @@ from discord.ext.commands.errors import BadArgument
 from grief.core import Config, commands, i18n, modlog
 from grief.core.bot import Grief
 from grief.core.utils.chat_formatting import (
-    box,
+    escape,
     format_perms_list,
     humanize_list,
     humanize_timedelta,
-    inline,
     pagify,
-    escape,
 )
-from enum import Enum
 
 _ = i18n.Translator("ExtendedModLog", __file__)
-logger = logging.getLogger("grief.modlog")
+logger = logging.getLogger("red.trusty-cogs.ExtendedModLog")
 
-
-class MemberUpdateEnum(Enum):
-    # map config keys to member attributes
-    # using an enum just makes it easier to add more items down the road
-    nicknames = "nick"
-    roles = "roles"
-    pending = "pending"
-    timeout = "timed_out_until"
-    avatar = "guild_avatar"
-    flags = "flags"
 
 class EventChooser(Converter):
     """
@@ -68,11 +55,7 @@ class EventChooser(Converter):
         if argument.lower() in options:
             result = argument.lower()
         if not result:
-            raise BadArgument(
-                _(
-                    "`{arg}` is not an available event option. Please choose from {options}."
-                ).format(arg=argument, options=humanize_list([f"`{i}`" for i in options]))
-            )
+            raise BadArgument(_("`{arg}` is not an available event option.").format(arg=argument))
         return result
 
 
@@ -91,9 +74,9 @@ class EventMixin:
     ) -> discord.Colour:
         defaults = {
             "message_edit": discord.Colour.orange(),
-            "message_delete": discord.Colour.dark_teal(),
+            "message_delete": discord.Colour.dark_red(),
             "user_change": discord.Colour.greyple(),
-            "role_change": discord.Colour.teal(),
+            "role_change": changed_object.colour if changed_object else discord.Colour.blue(),
             "role_create": discord.Colour.blue(),
             "role_delete": discord.Colour.dark_blue(),
             "voice_change": discord.Colour.magenta(),
@@ -139,7 +122,7 @@ class EventMixin:
         if not channel.permissions_for(guild.me).send_messages:
             raise RuntimeError("No permission to send messages in channel")
         return channel
-    
+
     @commands.Cog.listener(name="on_raw_message_delete")
     async def on_raw_message_delete_listener(
         self, payload: discord.RawMessageDeleteEvent, *, check_audit_log: bool = True
@@ -157,6 +140,7 @@ class EventMixin:
             return
         if guild.me.is_timed_out():
             return
+        # settings = await self.config.guild(guild).message_delete()
         settings = self.settings[guild.id]["message_delete"]
         if not settings["enabled"]:
             return
@@ -180,6 +164,7 @@ class EventMixin:
         if message is None:
             if settings["cached_only"]:
                 return
+            message_channel = guild.get_channel_or_thread(channel_id)
             if embed_links:
                 embed = discord.Embed(
                     description=_("*Message's content unknown.*"),
@@ -187,26 +172,18 @@ class EventMixin:
                 )
                 embed.add_field(name=_("Channel"), value=message_channel.mention)
                 embed.set_author(name=_("Deleted Message"))
-                embed.add_field(name=_("Message ID"), value=box(str(payload.message_id)))
-                await channel.send(embed=embed, allowed_mentions=self.allowed_mentions)
+                await channel.send(embed=embed)
             else:
-                infomessage = _(
-                    "{emoji} {time} A message ({message_id}) was deleted in {channel}"
-                ).format(
+                infomessage = _("{emoji} `{time}` A message was deleted in {channel}").format(
                     emoji=settings["emoji"],
                     time=datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S"),
-                    message_id=box(str(payload.message_id)),
                     channel=message_channel.mention,
                 )
-                await channel.send(
-                    f"{infomessage}\n> *Message's content unknown.*",
-                    allowed_mentions=self.allowed_mentions,
-                )
+                await channel.send(f"{infomessage}\n> *Message's content unknown.*")
             return
         await self._cached_message_delete(
             message, guild, settings, channel, check_audit_log=check_audit_log
         )
-
 
     async def _cached_message_delete(
         self,
@@ -301,11 +278,7 @@ class EventMixin:
                 name=_("{member} ({m_id})- Deleted Message").format(member=author, m_id=author.id),
                 icon_url=str(message.author.display_avatar.url),
             )
-            if message.attachments:
-                files = [await a.to_file() for a in message.attachments]
-                await channel.send(embed=embed, files=files)
-            else:
-                await channel.send(embed=embed)
+            await channel.send(embed=embed)
         else:
             clean_msg = escape(message.clean_content, mass_mentions=True)[
                 : (1990 - len(infomessage))
@@ -395,6 +368,7 @@ class EventMixin:
             return False
         for invite in await guild.invites():
             try:
+
                 created_at = getattr(
                     invite, "created_at", datetime.datetime.now(datetime.timezone.utc)
                 )
@@ -509,7 +483,7 @@ class EventMixin:
         # set guild level i18n
         time = datetime.datetime.now(datetime.timezone.utc)
         users = len(guild.members)
-        # https://github.com/Cog-Creators/Grief-DiscordBot/blob/develop/cogs/general.py
+        # https://github.com/Cog-Creators/Red-DiscordBot/blob/develop/cogs/general.py
         user_created = int(member.created_at.timestamp())
 
         created_on = "<t:{user_created}>\n(<t:{user_created}:R>)".format(user_created=user_created)
@@ -953,6 +927,7 @@ class EventMixin:
             await channel.send(escape(msg, mass_mentions=True))
 
     async def get_role_permission_change(self, before: discord.Role, after: discord.Role) -> str:
+
         p_msg = ""
         changed_perms = dict(after.permissions).items() - dict(before.permissions).items()
 
@@ -985,7 +960,7 @@ class EventMixin:
         await i18n.set_contextual_locales_from_guild(self.bot, guild)
         # set guild level i18n
         time = datetime.datetime.now(datetime.timezone.utc)
-        embed = discord.Embed(description=after.mention, colour=0x71368A, timestamp=time)
+        embed = discord.Embed(description=after.mention, colour=after.colour, timestamp=time)
         msg = _("{emoji} `{time}` Updated role **{role}**\n").format(
             emoji=self.settings[guild.id]["role_change"]["emoji"],
             time=time.strftime("%H:%M:%S"),
@@ -1261,7 +1236,7 @@ class EventMixin:
                 worth_updating = True
                 if attr == "icon":
                     embed.description = _("Server Icon Updated")
-                    embed.set_thumbnail(url=after.icon.url if after.icon else "")
+                    embed.set_image(url=after.icon.url if after.icon else "")
                     continue
                 msg += _("Before ") + f"{name} {before_attr}\n"
                 msg += _("After ") + f"{name} {after_attr}\n"
@@ -1589,33 +1564,31 @@ class EventMixin:
         embed = discord.Embed(
             timestamp=time, colour=await self.get_event_colour(guild, "user_change")
         )
-        msg = _("{emoji} {time} Member updated **{member}** (`{m_id}`)\n").format(
+        msg = _("{emoji} `{time}` Member updated **{member}** (`{m_id}`)\n").format(
             emoji=self.settings[guild.id]["user_change"]["emoji"],
-            time=discord.utils.format_dt(time),
+            time=time.strftime("%H:%M:%S"),
             member=before,
             m_id=before.id,
         )
         embed.description = ""
         emb_msg = _("{member} ({m_id}) updated").format(member=before, m_id=before.id)
-        embed.set_author(name=emb_msg, icon_url=before.display_avatar)
+        embed.set_author(name=emb_msg, icon_url=before.display_avatar.url)
+        member_updates = {"nick": _("Nickname:"), "roles": _("Roles:")}
         perp = None
         reason = None
-        worth_sending = True
-        before_text = ""
-        after_text = ""
-        for update_type in MemberUpdateEnum:
-            attr = update_type.value
-            if not self.settings[guild.id]["user_change"][update_type.name]:
+        worth_sending = False
+        for attr, name in member_updates.items():
+            if attr == "nick" and not self.settings[guild.id]["user_change"]["nicknames"]:
                 continue
-            before_attr = getattr(before, attr, None)
-            after_attr = getattr(after, attr, None)
+            before_attr = getattr(before, attr)
+            after_attr = getattr(after, attr)
             if before_attr != after_attr:
                 if attr == "roles":
                     b = set(before.roles)
                     a = set(after.roles)
                     before_roles = list(b - a)
                     after_roles = list(a - b)
-                    logger.debug("on_member_update after_roles: %s", after_roles)
+                    logger.debug(after_roles)
                     if before_roles:
                         for role in before_roles:
                             msg += _("{author} had the {role} role removed.").format(
@@ -1637,52 +1610,18 @@ class EventMixin:
                     perp, reason = await self.get_audit_log_reason(
                         guild, before, discord.AuditLogAction.member_role_update
                     )
-                elif attr == "flags":
-                    changed_flags = [
-                        key.replace("_", " ").title()
-                        for key, value in dict(before.flags ^ after.flags).items()
-                        if value
-                    ]
-                    flags_str = "\n".join(f"- {flag}" for flag in changed_flags)
-                    add_str = _("{author} had the following flag changes:\n{flag_str}").format(
-                        author=after.mention, flag_str=flags_str
-                    )
-                    msg += add_str
-                    embed.description += add_str
-
-                elif attr == "guild_avatar":
-                    worth_sending = True
-                    embed.set_thumbnail(url=after_attr)
-                    if after_attr:
-                        embed.description += _(
-                            "{author} changed their [guild avatar]({after_attr}).\n"
-                        ).format(author=after.mention, after_attr=after_attr)
-                    else:
-                        embed.description += _("{author} removed their guild avatar.\n").format(
-                            author=after.mention, after_attr=after_attr
-                        )
-
                 else:
                     perp, reason = await self.get_audit_log_reason(
                         guild, before, discord.AuditLogAction.member_update
                     )
                     worth_sending = True
-                    if isinstance(before_attr, datetime.datetime):
-                        before_attr = discord.utils.format_dt(before_attr)
-                    if isinstance(after_attr, datetime.datetime):
-                        after_attr = discord.utils.format_dt(after_attr)
-                    msg += _("Before ") + f"{update_type.get_name()} {before_attr}\n"
-                    msg += _("After ") + f"{update_type.get_name()} {after_attr}\n"
-                    embed.description = _("{author} has updated.").format(author=after.mention)
-                    before_text += f"{update_type.get_name()} {before_attr}\n"
-                    after_text += f"{update_type.get_name()} {after_attr}\n"
-                    # embed.add_field(name=_("Before ") + name, value=str(before_attr)[:1024])
-                    # embed.add_field(name=_("After ") + name, value=str(after_attr)[:1024])
-        if before_text and after_text:
-            for page in pagify(before_text, page_length=1024):
-                embed.add_field(name=_("Before"), value=page)
-            for page in pagify(after_text, page_length=1024):
-                embed.add_field(name=_("After"), value=page)
+                    msg += _("Before ") + f"{name} {before_attr}\n"
+                    msg += _("After ") + f"{name} {after_attr}\n"
+                    embed.description = _("{author} changed their nickname.").format(
+                        author=after.mention
+                    )
+                    embed.add_field(name=_("Before ") + name, value=str(before_attr)[:1024])
+                    embed.add_field(name=_("After ") + name, value=str(after_attr)[:1024])
         if not worth_sending:
             return
         if perp:
@@ -1692,9 +1631,9 @@ class EventMixin:
             msg += _("Reason: ") + f"{reason}\n"
             embed.add_field(name=_("Reason"), value=reason, inline=False)
         if embed_links:
-            await channel.send(embed=embed, allowed_mentions=self.allowed_mentions)
+            await channel.send(embed=embed)
         else:
-            await channel.send(msg, allowed_mentions=self.allowed_mentions)
+            await channel.send(msg)
 
     @commands.Cog.listener()
     async def on_invite_create(self, invite: discord.Invite) -> None:
@@ -2130,7 +2069,7 @@ class EventMixin:
             msg += new_msg
             embed.description += new_msg
             action = discord.AuditLogAction.emoji_delete
-            embed.set_thumbnail(url=removed_emoji.url)
+            embed.set_image(url=removed_emoji.url)
         elif added_emoji is not None:
             worth_updating = True
             new_emoji = f"{added_emoji} `{added_emoji}`"
@@ -2138,11 +2077,11 @@ class EventMixin:
             msg += new_msg
             embed.description += new_msg
             action = discord.AuditLogAction.emoji_create
-            embed.set_thumbnail(url=added_emoji.url)
+            embed.set_image(url=added_emoji.url)
         elif changed_emoji is not None:
             worth_updating = True
             emoji_name = f"{changed_emoji} `{changed_emoji}`"
-            embed.set_thumbnail(url=changed_emoji.url)
+            embed.set_image(url=changed_emoji.url)
             if old_emoji.name != changed_emoji.name:
                 new_msg = _("{emoji} Renamed from {old_emoji_name} to {new_emoji_name}\n").format(
                     emoji=emoji_name,
