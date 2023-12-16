@@ -18,7 +18,6 @@ from .exclusive import RoleToolsExclusive
 from .inclusive import RoleToolsInclusive
 from .menus import BaseMenu, ConfirmView, RolePages
 from .messages import RoleToolsMessages
-from .requires import RoleToolsRequires
 from .select import RoleToolsSelect
 from .settings import RoleToolsSettings
 
@@ -70,7 +69,6 @@ class RoleTools(
     RoleToolsExclusive,
     RoleToolsInclusive,
     RoleToolsMessages,
-    RoleToolsRequires,
     RoleToolsSettings,
     RoleToolsSelect,
     commands.Cog,
