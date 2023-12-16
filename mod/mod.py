@@ -463,7 +463,7 @@ class Mod(
         reconfigured_svcs = []
 
         disboard: DisboardReminder = self.bot.get_cog("DisboardReminder")
-        vanity: Vanity = self.bot.get_cog("Vanity")
+        # vanity: Vanity = self.bot.get_cog("Vanity")
         sticky: Sticky = self.bot.get_cog("Sticky")
 
         if not channel:
@@ -490,10 +490,10 @@ class Mod(
             disboard.channel_cache[ctx.guild.id] = int(new_channel.id)
             reconfigured_svcs.append("disboard reminder")
         
-        if vanity:
-            if channel.id and int(channel.id) == channel.id:
-                await vanity.config.guild(ctx.guild).channel.set(new_channel.id)
-            reconfigured_svcs.append("vanity award channel")
+        # if vanity:
+            # if channel.id and int(channel.id) == channel.id:
+               # await vanity.config.guild(ctx.guild).channel.set(new_channel.id)
+            # reconfigured_svcs.append("vanity award channel")
 
         if sticky:
             async with sticky.conf.channel(channel).all() as conf:
