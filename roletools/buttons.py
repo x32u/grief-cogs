@@ -62,7 +62,7 @@ class RoleToolsButtons(RoleToolsMixin):
                             )
 
     @roletools.group(name="buttons", aliases=["button"], with_app_command=False)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def buttons(self, ctx: Context) -> None:
         """
         Setup role buttons
@@ -261,7 +261,7 @@ class RoleToolsButtons(RoleToolsMixin):
         ).start(ctx=ctx)
 
     @buttons.command(name="cleanup")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(read_message_history=True)
     async def button_cleanup(self, ctx: commands.Context):
         """

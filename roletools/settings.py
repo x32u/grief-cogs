@@ -18,7 +18,7 @@ class RoleToolsSettings(RoleToolsMixin):
     """This class handles setting the roletools role settings."""
 
     @roletools.command()
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def selfadd(
         self,
         ctx: Context,
@@ -58,7 +58,7 @@ class RoleToolsSettings(RoleToolsMixin):
             await ctx.send(msg)
 
     @roletools.command()
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def selfrem(
         self,
         ctx: Context,
@@ -215,7 +215,7 @@ class RoleToolsSettings(RoleToolsMixin):
         await ctx.send(msg)
 
     @roletools.command(aliases=["auto"])
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def autorole(
         self,
         ctx: Context,
