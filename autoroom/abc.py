@@ -38,18 +38,6 @@ class MixinMeta(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def is_admin_or_admin_role(
-        self, who: Union[discord.Role, discord.Member]
-    ) -> bool:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def is_mod_or_mod_role(
-        self, who: Union[discord.Role, discord.Member]
-    ) -> bool:
-        raise NotImplementedError()
-
-    @abstractmethod
     def check_perms_source_dest(
         self,
         autoroom_source: discord.VoiceChannel,
