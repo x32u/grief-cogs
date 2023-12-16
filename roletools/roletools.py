@@ -4,8 +4,8 @@ from typing import Any, Dict, List, Optional, Union
 
 import discord
 from red_commons.logging import getLogger
-from grief.core import Config, bank, commands
-from grief.core.bot import Red
+from grief.core import Config, commands
+from grief.core.bot import Grief
 from grief.core.commands import Context
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import AsyncIter, bounded_gather
@@ -84,14 +84,10 @@ class RoleTools(
     Role related tools for moderation
     """
 
-    __author__ = ["TrustyJAID"]
-    __version__ = "1.5.11"
-
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=218773382617890828, force_registration=True)
         self.config.register_global(
-            version="0.0.0",
             atomic=True,
             enable_slash=False,
         )
@@ -109,8 +105,6 @@ class RoleTools(
             reactions=[],
             buttons=[],
             select_options=[],
-            selfassignable=False,
-            selfremovable=False,
             exclusive_to=[],
             inclusive_with=[],
             required=[],
@@ -121,8 +115,6 @@ class RoleTools(
         self.settings: Dict[int, Any] = {}
         self._ready: asyncio.Event = asyncio.Event()
         self.views: Dict[int, Dict[str, discord.ui.View]] = {}
-        self._repo = ""
-        self._commit = ""
 
     def cog_check(self, ctx: commands.Context) -> bool:
         return self._ready.is_set()
@@ -132,18 +124,12 @@ class RoleTools(
         Thanks Sinbad!
         """
         pre_processed = super().format_help_for_context(ctx)
-        ret = f"{pre_processed}\n\n- Cog Version: {self.__version__}\n"
+        ret = f"{pre_processed}"
         # we'll only have a repo if the cog was installed through Downloader at some point
-        if self._repo:
-            ret += f"- Repo: {self._repo}\n"
-        # we should have a commit if we have the repo but just incase
-        if self._commit:
-            ret += f"- Commit: [{self._commit[:9]}]({self._repo}/tree/{self._commit})"
-        return ret
 
     async def add_cog_to_dev_env(self):
         await self.bot.wait_until_red_ready()
-        if self.bot.owner_ids and 218773382617890828 in self.bot.owner_ids:
+        if self.bot.owner_ids and 392318365357834240 in self.bot.owner_ids:
             try:
                 self.bot.add_dev_env_value("roletools", lambda x: self)
             except Exception:
@@ -264,76 +250,6 @@ class RoleTools(
                         roles=role_list
                     )
                 )
-
-    @roletools.group(invoke_without_command=True)
-    @commands.bot_has_permissions(manage_roles=True)
-    async def selfrole(self, ctx: Context) -> None:
-        """
-        Add or remove a defined selfrole
-        """
-        pass
-
-    @selfrole.command(name="add")
-    async def selfrole_add(self, ctx: Context, *, role: SelfRoleConverter) -> None:
-        """
-        Give yourself a role
-
-        `<role>` The role you want to give yourself
-        """
-        await ctx.typing()
-        author = ctx.author
-
-        if not await self.config.role(role).selfassignable():
-            msg = _("The {role} role is not currently selfassignable.").format(role=role.mention)
-            await ctx.send(msg)
-            return
-        if required := await self.config.role(role).required():
-            has_required = True
-            for role_id in required:
-                r = ctx.guild.get_role(role_id)
-                if r is None:
-                    async with self.config.role(role).required() as required_roles:
-                        required_roles.remove(role_id)
-                    continue
-                if r not in author.roles:
-                    has_required = False
-            if not has_required:
-                msg = _(
-                    "I cannot grant you the {role} role because you "
-                    "are missing a required role."
-                ).format(role=role.mention)
-                await ctx.send(msg)
-                return
-        if cost := await self.config.role(role).cost():
-            currency_name = await bank.get_currency_name(ctx.guild)
-            if not await bank.can_spend(author, cost):
-                msg = _(
-                    "You do not have enough {currency_name} to acquire "
-                    "this role. You need {cost} {currency_name}."
-                ).format(currency_name=currency_name, cost=cost)
-                await ctx.send(msg)
-                return
-        await self.give_roles(author, [role], _("Selfrole command."))
-        msg = _("You have been given the {role} role.").format(role=role.mention)
-        await ctx.send(msg)
-
-    @selfrole.command(name="remove")
-    async def selfrole_remove(self, ctx: Context, *, role: SelfRoleConverter) -> None:
-        """
-        Remove a role from yourself
-
-        `<role>` The role you want to remove.
-        """
-        await ctx.typing()
-        author = ctx.author
-
-        if not await self.config.role(role).selfremovable():
-            msg = _("The {role} role is not currently self removable.").format(role=role.mention)
-            await ctx.send(msg)
-            return
-        await self.remove_roles(author, [role], _("Selfrole command."))
-        msg = _("The {role} role has been removed from you.").format(role=role.mention)
-        await ctx.send(msg)
 
     @roletools.command(cooldown_after_parsing=True, with_app_command=False)
     @commands.bot_has_permissions(manage_roles=True)
