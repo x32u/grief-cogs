@@ -107,7 +107,7 @@ class InfoChannel(Cog):
         self.stop_all_queues()
 
     @commands.command()
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     async def infochannel(self, ctx: commands.Context):
         """
         Toggle info channel for this server
@@ -157,7 +157,7 @@ class InfoChannel(Cog):
             await ctx.maybe_send_embed("Done!")
 
     @commands.group(aliases=["icset"])
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     async def infochannelset(self, ctx: commands.Context):
         """
         Toggle different types of infochannels
