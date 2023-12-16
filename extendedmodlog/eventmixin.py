@@ -34,20 +34,6 @@ class MemberUpdateEnum(Enum):
     avatar = "guild_avatar"
     flags = "flags"
 
-    @staticmethod
-    def names():
-        return {
-            MemberUpdateEnum.nicknames: _("Nickname"),
-            MemberUpdateEnum.roles: _("Roles"),
-            MemberUpdateEnum.pending: _("Pending"),
-            MemberUpdateEnum.timeout: _("Timeout"),
-            MemberUpdateEnum.avatar: _("Guild Avatar"),
-            MemberUpdateEnum.flags: _("Flags"),
-        }
-
-    def get_name(self) -> str:
-        return self.names().get(self, _("Unknown"))
-
 class EventChooser(Converter):
     """
     Converter for command privliges
