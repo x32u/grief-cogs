@@ -306,7 +306,7 @@ class Webhook(Cog):
         except discord.HTTPException as error:
             await self.webhook_error(ctx, "Webhook Sending Error", error)
 
-        @commands.has_permissions(manage_webhooks=True)
+    @commands.has_permissions(manage_webhooks=True)
     @webhook.command("permissions", aliases=["perms"])
     async def webhook_permissions(self, ctx: commands.Context) -> None:
         """Show all members in the server that have the permission `manage_webhooks`."""

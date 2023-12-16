@@ -38,8 +38,6 @@ from grief.core.utils import get_end_user_data_statement
 
 from .rolesbuttons import RolesButtons
 
-__red_end_user_data_statement__ = get_end_user_data_statement(file=__file__)
-
 
 async def setup(bot: Grief) -> None:
     cog = RolesButtons(bot)

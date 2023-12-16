@@ -12,12 +12,6 @@ from grief.core.utils.chat_formatting import pagify
 
 from .converters import Emoji, EmojiRoleConverter
 
-# Credits:
-# General repo credits.
-# Thanks to TrustyJAID for the two converter for the bulk command arguments! (https://github.com/TrustyJAID/Trusty-cogs/blob/main/roletools/converter.py)
-# Thanks to Yami for the technique in the init file of some cogs to load the interaction client only if it is not already loaded! Before this fix, when a user clicked a button, the actions would be run about 10 times, causing a huge spam and loop in the channel.
-# Thanks to Kuro for the emoji converter (https://canary.discord.com/channels/133049272517001216/133251234164375552/1014520590239019048)!
-
 _ = Translator("RolesButtons", __file__)
 
 
@@ -222,8 +216,7 @@ class RolesButtons(Cog):
         await self.config.guild(message.guild).roles_buttons.set(config)
 
     @commands.guild_only()
-        @commands.has_permissions(manage_messages=True)
-    # @commands.bot_has_permissions(manage_roles=True, embed_links=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.hybrid_group()
     async def rolesbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use RolesButtons."""
@@ -444,7 +437,6 @@ class RolesButtons(Cog):
         await self.config.guild(ctx.guild).modes.clear_raw(f"{message.channel.id}-{message.id}")
         await ctx.send(_("Roles-buttons cleared for this message."))
 
-    @commands.bot_has_permissions(embed_links=True)
     @rolesbuttons.command()
     async def list(self, ctx: commands.Context, message: MyMessageConverter = None) -> None:
         """List all roles-buttons of this server or display the settings for a specific one."""
