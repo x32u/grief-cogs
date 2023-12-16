@@ -27,7 +27,7 @@ class AutoKick(commands.Cog):
         self.config.register_guild(**default_guild)
 
     @commands.group(name="autokickset", aliases=["aks"])
-        @commands.has_permissions(kick_members=True)
+    @commands.has_permissions(kick_members=True)
     @commands.guild_only()
     async def autokickset(self, ctx):
         """
@@ -124,7 +124,6 @@ class AutoKick(commands.Cog):
             await self.config.guild(ctx.guild).blacklisted_ids.clear()
         await ctx.send("Auto kick list has been cleared.")
 
-    @commands.bot_has_permissions(kick_members=True)
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
         if await self.config.guild(member.guild).enabled():

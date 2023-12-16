@@ -6,9 +6,6 @@ from grief.core.bot import Grief
 
 from .autoroom import AutoRoom
 
-
-
-
 async def setup(bot: Grief) -> None:
     """Load AutoRoom cog."""
     cog = AutoRoom(bot)

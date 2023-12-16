@@ -548,20 +548,6 @@ class AutoRoom(
                 return await self.bot.is_admin(who)
         return False
 
-    async def is_mod_or_mod_role(
-        self, who: Union[discord.Role, discord.Member]
-    ) -> bool:
-        """Check if a member (or role) is a mod (role).
-
-        Also takes into account if the setting is enabled.
-        """
-        if await self.config.guild(who.guild).mod_access():
-            if isinstance(who, discord.Role):
-                return who in await self.bot.get_mod_roles(who.guild)
-            if isinstance(who, discord.Member):
-                return await self.bot.is_mod(who)
-        return False
-
     def check_perms_source_dest(
         self,
         autoroom_source: discord.VoiceChannel,
