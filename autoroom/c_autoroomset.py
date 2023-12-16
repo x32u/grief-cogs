@@ -23,7 +23,7 @@ class AutoRoomSetCommands(MixinMeta, ABC):
 
     @commands.group()
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     async def autoroomset(self, ctx: commands.Context) -> None:
         """Configure the AutoRoom cog.
 

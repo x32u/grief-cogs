@@ -863,7 +863,7 @@ class KickBanMixin(MixinMeta):
             await ctx.send("I don't have the required permissions to manage channels.")
 
     @commands.command()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     async def clearinvites(self, ctx):
         """Delete all invites in the server."""
         invites = await ctx.guild.invites()

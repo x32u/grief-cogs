@@ -61,7 +61,7 @@ class Filter(commands.Cog):
 
     @commands.group()
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     async def filterset(self, ctx: commands.Context):
         """Base command to manage filter settings."""
         pass

@@ -325,7 +325,7 @@ class Info(commands.Cog):
     
     @commands.guild_only()
     @commands.command()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     async def bans(self, ctx):
         """Displays the server's banlist."""
         try:
@@ -376,7 +376,7 @@ class Info(commands.Cog):
 
     @commands.guild_only()
     @commands.command()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     async def inrole(self, ctx, *, rolename: str):
         """Check members in the role specified."""
         guild = ctx.guild
@@ -512,7 +512,7 @@ class Info(commands.Cog):
 
     @commands.guild_only()
     @commands.command(aliases=["listroles", "rolelist"])
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     async def roles(self, ctx):
         """Displays the server's roles."""
         form = "`{rpos:0{zpadding}}` - `{rid}` - `{rcolor}` - {rment} "
@@ -762,7 +762,7 @@ class Info(commands.Cog):
         
     @commands.command()
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @commands.bot_has_permissions(embed_links=True)
     async def invites(self, ctx: commands.Context, *, server: commands.GuildConverter = None):
         """Get invites from server by id"""

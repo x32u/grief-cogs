@@ -41,7 +41,7 @@ class EditGuild(Cog):
         super().__init__(bot=bot)
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     @commands.hybrid_group()
     async def editguild(self, ctx: commands.Context) -> None:
         """Commands for edit a guild."""
@@ -49,7 +49,7 @@ class EditGuild(Cog):
 
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="name")
     async def editguild_name(self, ctx: commands.Context, *, name: str) -> None:
         """Edit guild name."""
@@ -65,7 +65,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="description")
     async def editguild_description(
         self, ctx: commands.Context, *, description: typing.Optional[str] = None
@@ -83,7 +83,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="community")
     async def editguild_community(self, ctx: commands.Context, community: bool) -> None:
         """Edit guild community state."""
@@ -99,7 +99,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="afkchannel")
     async def editguild_afk_channel(
         self, ctx: commands.Context, *, afk_channel: typing.Optional[discord.VoiceChannel] = None
@@ -117,7 +117,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="afktimeout")
     async def editguild_afk_timeout(self, ctx: commands.Context, afk_timeout: int) -> None:
         """Edit guild afktimeout."""
@@ -133,7 +133,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="verificationlevel")
     async def editguild_verification_level(
         self, ctx: commands.Context, verification_level: discord.VerificationLevel
@@ -151,7 +151,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="defaultnotifications", aliases=["notificationslevel"])
     async def editguild_default_notifications(
         self, ctx: commands.Context, default_notifications: typing.Literal["0", "1"]
@@ -170,7 +170,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="explicitcontentfilter")
     async def editguild_explicit_content_filter(
         self, ctx: commands.Context, explicit_content_filter: discord.ContentFilter
@@ -188,7 +188,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="systemchannel")
     async def editguild_system_channel(
         self, ctx: commands.Context, system_channel: typing.Optional[discord.TextChannel] = None
@@ -206,7 +206,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="systemchannelflags")
     async def editguild_system_channel_flags(
         self, ctx: commands.Context, system_channel_flags: int
@@ -226,7 +226,7 @@ class EditGuild(Cog):
             )
         
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="ruleschannel")
     async def editguild_rules_channel(
         self, ctx: commands.Context, rules_channel: typing.Optional[discord.TextChannel] = None
@@ -244,7 +244,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="publicupdateschannel")
     async def editguild_public_updates_channel(
         self,
@@ -264,7 +264,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="premiumprogressbarenabled")
     async def editguild_premium_progress_bar_enabled(
         self, ctx: commands.Context, premium_progress_bar_enabled: bool = None
@@ -284,7 +284,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="discoverable")
     async def editguild_discoverable(self, ctx: commands.Context, discoverable: bool) -> None:
         """Edit guild discoverable state."""
@@ -300,7 +300,7 @@ class EditGuild(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     @editguild.command(name="invitesdisabled")
     async def editguild_invites_disabled(
         self, ctx: commands.Context, invites_disabled: bool

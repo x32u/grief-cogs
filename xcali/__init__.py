@@ -197,7 +197,7 @@ class XCali(commands.Cog):
             await message.delete()
 
     @commands.command()
-        @commands.has_permissions(manage_guild=True)
+    @commands.has_permissions
     async def rpst(self, ctx: commands.Context) -> None:
         """Toggle reposting."""
         old = await self.config.guild(ctx.guild).enabled()
