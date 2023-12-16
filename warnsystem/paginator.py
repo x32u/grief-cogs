@@ -7,7 +7,7 @@ import discord
 import logging
 from discord.ext.commands import Paginator as CommandPaginator
 
-from redbot.vendored.discord.ext import menus
+from grief.vendored.discord.ext import menus
 
 if TYPE_CHECKING:
     from grief.core.bot import Grief

@@ -17,7 +17,7 @@ import asyncio
 import aiohttp
 
 try:
-    from redbot import json  # support of Draper's branch
+    from grief import json  # support of Draper's branch
 except ImportError:
     import json
 

@@ -12,7 +12,7 @@ from typing import Optional, Union, List, Tuple, TYPE_CHECKING, cast
 from grief.core.i18n import Translator
 from grief.core.utils import mod
 from grief.core.commands import Context
-from redbot.vendored.discord.ext import menus
+from grief.vendored.discord.ext import menus
 
 from .api import UnavailableMember
 from .paginator import Pages

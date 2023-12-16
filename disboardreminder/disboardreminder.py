@@ -127,7 +127,7 @@ class DisboardReminder(commands.Cog):
             await self.bump_check_guild(guild, guild_data)
 
     async def bump_check_guild(self, guild: discord.Guild, guild_data: dict):
-        # task logic taken from redbot.cogs.mutes
+        # task logic taken from grief.cogs.mutes
         end_time = guild_data["nextBump"]
         if not end_time:
             return
