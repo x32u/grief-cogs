@@ -12,7 +12,7 @@ from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list, pagify
 from grief.vendored.discord.ext import menus
 
-log = getLogger("red.Trusty-cogs.RoleTools")
+log = getLogger("grief.roletools")
 _ = Translator("RoleTools", __file__)
 
 

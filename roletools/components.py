@@ -11,7 +11,7 @@ from grief.core.utils.chat_formatting import humanize_list
 if TYPE_CHECKING:
     from .abc import RoleToolsMixin
 
-log = getLogger("red.Trusty-cogs.RoleTools")
+log = getLogger("grief.roletools")
 _ = Translator("RoleTools", __file__)
 
 

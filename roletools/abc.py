@@ -8,7 +8,7 @@ import discord
 from aiohttp.abc import AbstractMatchInfo
 from red_commons.logging import getLogger
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.commands import Context
 from grief.core.i18n import Translator
 
@@ -25,7 +25,7 @@ if TYPE_CHECKING:
     from .select import SelectOptionRoleConverter, SelectRole, SelectRoleConverter
 
 
-log = getLogger("red.trusty-cogs.ReTrigger")
+log = getLogger("grief.roletools")
 _ = Translator("Roletools", __file__)
 
 
@@ -39,7 +39,7 @@ class RoleToolsMixin(ABC):
     def __init__(self, *_args):
         super().__init__()
         self.config: Config
-        self.bot: Red
+        self.bot: Grief
         self.settings: Dict[Any, Any]
         self._ready: asyncio.Event
         self.views: Dict[int, Dict[str, discord.ui.View]]

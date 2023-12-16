@@ -14,7 +14,7 @@ from .converter import ButtonRoleConverter, SelectRoleConverter
 
 roletools = RoleToolsMixin.roletools
 
-log = getLogger("red.Trusty-cogs.RoleTools")
+log = getLogger("grief.roletools")
 _ = Translator("RoleTools", __file__)
 
 

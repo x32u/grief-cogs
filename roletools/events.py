@@ -9,7 +9,7 @@ from grief.core.i18n import Translator
 
 from .abc import RoleToolsMixin
 
-log = getLogger("red.Trusty-cogs.RoleTools")
+log = getLogger("grief.roletools")
 
 _ = Translator("Roletools", __file__)
 

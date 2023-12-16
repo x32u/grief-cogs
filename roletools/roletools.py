@@ -26,7 +26,7 @@ from .settings import RoleToolsSettings
 
 roletools = RoleToolsMixin.roletools
 
-log = getLogger("red.Trusty-cogs.RoleTools")
+log = getLogger("grief.roletools")
 _ = Translator("RoleTools", __file__)
 
 
