@@ -41,24 +41,6 @@ class Filter(commands.Cog):
         self.config.register_channel(**default_channel_settings)
         self.pattern_cache = {}
 
-    async def red_delete_data_for_user(
-        self,
-        *,
-        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
-        user_id: int,
-    ):
-        if requester != "discord_deleted_user":
-            return
-
-        all_members = await self.config.all_members()
-
-        async for guild_id, guild_data in AsyncIter(all_members.items(), steps=100):
-            if user_id in guild_data:
-                await self.config.member_from_ids(guild_id, user_id).clear()
-
-    async def cog_load(self) -> None:
-        await self.register_casetypes()
-
     @commands.group()
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
