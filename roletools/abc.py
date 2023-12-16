@@ -172,34 +172,6 @@ class RoleToolsMixin(ABC):
         raise NotImplementedError()
 
     #######################################################################
-    # requires.py                                                         #
-    #######################################################################
-
-    @abstractmethod
-    async def required_roles(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def required_add(
-        self,
-        ctx: commands.Context,
-        role: RoleHierarchyConverter,
-        *,
-        required: commands.Greedy[RoleHierarchyConverter],
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def required_remove(
-        self,
-        ctx: commands.Context,
-        role: RoleHierarchyConverter,
-        *,
-        required: commands.Greedy[RoleHierarchyConverter],
-    ) -> None:
-        raise NotImplementedError()
-
-    #######################################################################
     # settings.py                                                         #
     #######################################################################
 

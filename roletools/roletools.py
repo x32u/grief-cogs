@@ -135,6 +135,26 @@ class RoleTools(
                     self._repo = cog.repo.clean_url
                 self._commit = cog.commit
 
+    async def load_views(self):
+        self.settings = await self.config.all_guilds()
+        await self.bot.wait_until_red_ready()
+        try:
+            await self.initialize_select()
+        except Exception:
+            log.exception("Error initializing Select")
+        try:
+            await self.initialize_buttons()
+        except Exception:
+            log.exception("Error initializing Buttons")
+        for guild_id, guild_views in self.views.items():
+            for msg_ids, view in guild_views.items():
+                log.trace("Adding view %r to %s", view, guild_id)
+                channel_id, message_id = msg_ids.split("-")
+                self.bot.add_view(view, message_id=int(message_id))
+                # These should be unique messages containing views
+                # and we should track them seperately
+        self._ready.set()
+
     async def cog_load(self) -> None:
         if await self.config.version() < "1.0.1":
             sticky_role_config = Config.get_conf(
