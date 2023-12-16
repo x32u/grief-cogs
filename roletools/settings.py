@@ -17,85 +17,84 @@ _ = Translator("RoleTools", __file__)
 class RoleToolsSettings(RoleToolsMixin):
     """This class handles setting the roletools role settings."""
 
-    @roletools.command()
-    @commands.has_permissions(manage_roles=True)
-    async def selfadd(
-        self,
-        ctx: Context,
-        true_or_false: Optional[bool] = None,
-        *,
-        role: RoleHierarchyConverter,
-    ) -> None:
-        """
-        Set whether or not a user can apply the role to themselves.
+        # @roletools.command()
+        # @commands.has_permissions(manage_roles=True)
+        # async def selfadd(
+           #  self,
+            # ctx: Context,
+        #     true_or_false: Optional[bool] = None,
+    #      #    *,
+        #     role: RoleHierarchyConverter,
+       #  ) -> None:
+          #   """
+          #   Set whether or not a user can apply the role to themselves.
+    # 
+           #  `[true_or_false]` optional boolean of what to set the setting to.
+         #    If not provided the current setting will be shown instead.
+         #    `<role>` The role you want to set.
+         #        """
+        #     await ctx.typing()
 
-        `[true_or_false]` optional boolean of what to set the setting to.
-        If not provided the current setting will be shown instead.
-        `<role>` The role you want to set.
-        """
-        await ctx.typing()
+        #     cur_setting = await self.config.role(role).selfassignable()
+        #         if true_or_false is None:
+       #          if cur_setting:
+       #              msg = _("The {role} role is self assignable.").format(role=role.mention)
+       #              await ctx.send(msg)
+       #          else:
+       #              command = f"`{ctx.clean_prefix}roletools selfadd yes {role.name}`"
+       #              msg = _(
+            #                 "The {role} role is not self assignable. Run the command "
+           #              "{command} to make it self assignable."
+          #           ).format(role=role.mention, command=command)
+          #           await ctx.send(msg)
+         #        return
+        #     if true_or_false is True:
+       #              await self.config.role(role).selfassignable.set(True)
+      #           msg = _("The {role} role is now self assignable.").format(role=role.mention)
+       #          await ctx.send(msg)
+      #       if true_or_false is False:
+      #           await self.config.role(role).selfassignable.set(False)
+      #           msg = _("The {role} role is no longer self assignable.").format(role=role.mention)
+      #           await ctx.send(msg)
 
-        cur_setting = await self.config.role(role).selfassignable()
-        if true_or_false is None:
-            if cur_setting:
-                msg = _("The {role} role is self assignable.").format(role=role.mention)
-                await ctx.send(msg)
-            else:
-                command = f"`{ctx.clean_prefix}roletools selfadd yes {role.name}`"
-                msg = _(
-                    "The {role} role is not self assignable. Run the command "
-                    "{command} to make it self assignable."
-                ).format(role=role.mention, command=command)
-                await ctx.send(msg)
-            return
-        if true_or_false is True:
-            await self.config.role(role).selfassignable.set(True)
-            msg = _("The {role} role is now self assignable.").format(role=role.mention)
-            await ctx.send(msg)
-        if true_or_false is False:
-            await self.config.role(role).selfassignable.set(False)
-            msg = _("The {role} role is no longer self assignable.").format(role=role.mention)
-            await ctx.send(msg)
-
-    @roletools.command()
-    @commands.has_permissions(manage_roles=True)
-    async def selfrem(
-        self,
-        ctx: Context,
-        true_or_false: Optional[bool] = None,
-        *,
-        role: RoleHierarchyConverter,
-    ) -> None:
-        """
-        Set whether or not a user can remove the role from themselves.
-
-        `[true_or_false]` optional boolean of what to set the setting to.
-        If not provided the current setting will be shown instead.
-        `<role>` The role you want to set.
-        """
-        await ctx.typing()
-
-        cur_setting = await self.config.role(role).selfremovable()
-        if true_or_false is None:
-            if cur_setting:
-                msg = _("The {role} role is self removeable.").format(role=role.mention)
-                await ctx.send(msg)
-            else:
-                command = f"`{ctx.clean_prefix}roletools selfrem yes {role.name}`"
-                msg = _(
-                    "The {role} role is not self removable. Run the command "
-                    "{command} to make it self removeable."
-                ).format(role=role.mention, command=command)
-                await ctx.send(msg)
-            return
-        if true_or_false is True:
-            await self.config.role(role).selfremovable.set(True)
-            msg = _("The {role} role is now self removeable.").format(role=role.mention)
-            await ctx.send(msg)
-        if true_or_false is False:
-            await self.config.role(role).selfremovable.set(False)
-            msg = _("The {role} role is no longer self removeable.").format(role=role.mention)
-            await ctx.send(msg)
+      #   @roletools.command()
+       #  @commands.has_permissions(manage_roles=True)
+      #   async def selfrem(
+      #       self,    #     #       ctx: Context,
+      #       true_or_false: Optional[bool] = None,
+     #       *,
+     #        role: RoleHierarchyConverter,
+     #    ) -> None:
+     #        """
+     #        Set whether or not a user can remove the role from themselves.
+    # 
+     #        `[true_or_false]` optional boolean of what to set the setting to.
+     #        If not provided the current setting will be shown instead.
+     #        `<role>` The role you want to set.
+     #        """
+     #        await ctx.typing()
+    # 
+     #        cur_setting = await self.config.role(role).selfremovable()
+     #        if true_or_false is None:
+     #            if cur_setting:
+     #                msg = _("The {role} role is self removeable.").format(role=role.mention)
+     #                await ctx.send(msg)
+     #            else:
+      #               command = f"`{ctx.clean_prefix}roletools selfrem yes {role.name}`"
+         #            msg = _(
+      #                   "The {role} role is not self removable. Run the command "
+      #                   "{command} to make it self removeable."
+      #               ).format(role=role.mention, command=command)
+      #               await ctx.send(msg)
+      #           return
+      #       if true_or_false is True:
+         #        await self.config.role(role).selfremovable.set(True)
+    #           msg = _("The {role} role is now self removeable.").format(role=role.mention)
+      #           await ctx.send(msg)
+         #    if true_or_false is False:
+        #         await self.config.role(role).selfremovable.set(False)
+        #             msg = _("The {role} role is no longer self removeable.").format(role=role.mention)
+           #      await ctx.send(msg)
 
     # @roletools.command(with_app_command=False)
     # @commands.admin_or_permissions(manage_roles=True)
@@ -139,41 +138,41 @@ class RoleToolsSettings(RoleToolsMixin):
             # msg = _("RoleTools will now default to the global atomic setting.")
         # await ctx.send(msg)
 
-    @roletools.command(with_app_command=False)
-    @commands.is_owner()
-    @commands.command(hidden=True)
-    async def globalatomic(self, ctx: Context, true_or_false: Optional[bool] = None) -> None:
-        """
-        Set the atomicity of role assignment.
-        What this means is that when this is `True` roles will be
-        applied inidvidually and not cause any errors. When this
-        is set to `False` roles will be grouped together into one call.
+    # @roletools.command(with_app_command=False)
+        # @commands.is_owner()
+        # @commands.command(hidden=True)
+        # async def globalatomic(self, ctx: Context, true_or_false: Optional[bool] = None) -> None:
+            # """
+            # Set the atomicity of role assignment.
+            # What this means is that when this is `True` roles will be
+            # applied inidvidually and not cause any errors. When this
+            # is set to `False` roles will be grouped together into one call.
 
-        This can cause race conditions if you have other methods of applying
-        roles setup when set to `False`.
+            # This can cause race conditions if you have other methods of applying
+            # roles setup when set to `False`.
 
-        `[true_or_false]` optional boolean of what to set the setting to.
-        If not provided the current setting will be shown instead.
-        """
-        cur_setting = await self.config.atomic()
-        if true_or_false is None:
-            if cur_setting:
-                await ctx.send(_("I am currently using atomic role assignment"))
-            else:
-                command = f"`{ctx.clean_prefix}roletools globalatomic yes`"
-                await ctx.send(
-                    _(
-                        "I am not currently using atomic role assignment. Do "
-                        "{command} to atomically assign roles."
-                    ).format(command=command)
-                )
-            return
-        if true_or_false is True:
-            await self.config.atomic.clear()
-            await ctx.send(_("RoleTools will now atomically assign roles."))
-        if true_or_false is False:
-            await self.config.atomic.set(False)
-            await ctx.send(_("RoleTools will no longer atomically assign roles."))
+            # [true_or_false]` optional boolean of what to set the setting to.
+            # If not provided the current setting will be shown instead.
+            # """
+            # cur_setting = await self.config.atomic()
+            # if true_or_false is None:
+                # if cur_setting:
+                   #  await ctx.send(_("I am currently using atomic role assignment"))
+               #  else:
+                   #  command = f"`{ctx.clean_prefix}roletools globalatomic yes`"
+                   #  await ctx.send(
+                   #      _(
+                   #              "I am not currently using atomic role assignment. Do "
+                         #        "{command} to atomically assign roles."
+                         #    ).format(command=command)
+                  #   )
+              #   return
+            #     if true_or_false is True:
+             #    await self.config.atomic.clear()
+             #    await ctx.send(_("RoleTools will now atomically assign roles."))
+            # if true_or_false is False:
+            #    await self.config.atomic.set(False)
+            #     await ctx.send(_("RoleTools will no longer atomically assign roles."))
 
     @roletools.command()
     @commands.has_permissions(manage_roles=True)
