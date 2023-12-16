@@ -260,7 +260,7 @@ class Mod(
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def massunban(self, ctx: commands.Context, *, ban_reason: Optional[str] = None):
         """
         Mass unban everyone, or specific people.
@@ -416,7 +416,6 @@ class Mod(
         )  # This needs menus to be able to show all channels if there are more than 25 channels.
         await ctx.send(embed=embed)
 
-    @commands.bot_has_permissions(embed_links=True)
     @autopublisher.command(aliases=["view"])
     async def settings(self, ctx: commands.Context) -> None:
         """Show AutoPublisher setting."""
@@ -457,7 +456,7 @@ class Mod(
             await ctx.send("AutoPublisher setting reset has been cancelled.")
 
     @commands.command()
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.cooldown(1, 30, commands.BucketType.guild)
     async def nuke(self, ctx: commands.Context, channel: discord.TextChannel = None):
         """Nuke the channel."""
@@ -507,7 +506,7 @@ class Mod(
         await new_channel.edit(position=pos)
         await new_channel.send("first")
 
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
     async def lock(
         self,
@@ -576,7 +575,7 @@ class Mod(
         if msg:
             await ctx.send(msg)
 
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.command()
     async def viewlock(
         self,
@@ -707,7 +706,7 @@ class Mod(
         if msg:
             await ctx.send(msg)
 
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
     async def unlock(
         self,
@@ -778,7 +777,7 @@ class Mod(
         if msg:
             await ctx.send(msg)
 
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.group(invoke_without_command=True)
     async def unviewlock(
         self,
@@ -917,7 +916,7 @@ class Mod(
 
     @commands.command()
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     async def slowmode(
         self,
         ctx,
@@ -972,7 +971,7 @@ class Mod(
     @commands.command(aliases=["t"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(moderate_members=True)
+    @commands.has_permissions(moderate_members=True)
     async def timeout(self, ctx: commands.Context, member: discord.Member, time: TimedeltaConverter(minimum=datetime.timedelta(minutes=1), maximum=datetime.timedelta(days=28), default_unit="minutes", allowed_units=["minutes", "seconds", "hours", "days"],) = None, *, reason: Optional[str] = None,):
         """Timeout users."""
         if not time:
@@ -995,7 +994,7 @@ class Mod(
     @commands.command(aliases=["ut"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(moderate_members=True)
+    @commands.has_permissions(moderate_members=True)
     async def untimeout(self, ctx: commands.Context, member: discord.Member, *, reason: Optional[str] = None,):
         """Untimeout users."""
         if isinstance(member, discord.Member):
@@ -1008,7 +1007,7 @@ class Mod(
 
     @commands.guild_only()  # type:ignore
     @commands.bot_has_permissions(embed_links=True)
-        @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.hybrid_command(name="poll")
     async def buttonpoll(self, ctx: commands.Context, chan: Optional[TextChannel] = None):
         """

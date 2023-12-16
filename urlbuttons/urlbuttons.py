@@ -98,7 +98,7 @@ class UrlButtons(Cog):
         await self.config.guild(message.guild).url_buttons.set(config)
 
     @commands.guild_only()
-        @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @commands.hybrid_group()
     async def urlbuttons(self, ctx: commands.Context) -> None:
         """Group of commands to use UrlButtons."""
@@ -259,7 +259,7 @@ class UrlButtons(Cog):
         await self.config.guild(ctx.guild).url_buttons.set(config)
         await ctx.send(_("Url-buttons cleared for this message."))
 
-        @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     @urlbuttons.command()
     async def list(self, ctx: commands.Context, message: MyMessageConverter = None) -> None:
         """List all url-buttons of this server or display the settings for a specific one."""

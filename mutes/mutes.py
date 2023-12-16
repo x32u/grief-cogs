@@ -11,7 +11,7 @@ from .converters import MuteTime
 from .voicemutes import VoiceMutes
 
 from grief.core.bot import Grief
-from grief.core import commands, i18n, modlog, Config
+from grief.core import commands, i18n, Config
 from grief.core.utils import AsyncIter, bounded_gather, can_user_react_in
 from grief.core.utils.chat_formatting import (
     bold,
@@ -133,31 +133,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
 
         self._init_task = asyncio.create_task(self.initialize())
         self._init_task.add_done_callback(_done_callback)
-
-    async def red_delete_data_for_user(
-        self,
-        *,
-        requester: Literal["discord_deleted_user", "owner", "user", "user_strict"],
-        user_id: int,
-    ):
-        """Mutes are considered somewhat critical
-        Therefore the only data that we should delete
-        is that which comes from discord requesting us to
-        remove data about a user
-        """
-        if requester != "discord_deleted_user":
-            return
-
-        await self._ready.wait()
-        if self._ready_raised:
-            raise RuntimeError(
-                "Mutes cog is in a bad state, can't proceed with data deletion request."
-            )
-        all_members = await self.config.all_members()
-        for g_id, data in all_members.items():
-            for m_id, mutes in data.items():
-                if m_id == user_id:
-                    await self.config.member_from_ids(g_id, m_id).clear()
 
     async def initialize(self):
         await self.bot.wait_until_red_ready()
@@ -332,16 +307,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
             if str(member.id) in muted_users:
                 del muted_users[str(member.id)]
         if success["success"]:
-            await modlog.create_case(
-                self.bot,
-                guild,
-                datetime.now(timezone.utc),
-                "sunmute",
-                member,
-                author,
-                _("Automatic unmute"),
-                until=None,
-            )
             await self._send_dm_notification(
                 member, author, guild, _("Server unmute"), _("Automatic unmute")
             )
@@ -440,16 +405,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
         if channel_list:
             modlog_reason += _("\nUnmuted in channels: ") + channel_list
 
-        await modlog.create_case(
-            self.bot,
-            guild,
-            datetime.now(timezone.utc),
-            "sunmute",
-            member,
-            author,
-            modlog_reason,
-            until=None,
-        )
         await self._send_dm_notification(
             member, author, guild, _("Server unmute"), _("Automatic unmute")
         )
@@ -518,17 +473,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
                 else:
                     unmute_type = "cunmute"
                     notification_title = _("Channel unmute")
-                await modlog.create_case(
-                    self.bot,
-                    channel.guild,
-                    datetime.now(timezone.utc),
-                    unmute_type,
-                    member,
-                    channel.guild.me,
-                    _("Automatic unmute"),
-                    until=None,
-                    channel=channel,
-                )
                 await self._send_dm_notification(
                     member, author, channel.guild, notification_title, _("Automatic unmute")
                 )
@@ -640,15 +584,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
                 # they weren't a tracked mute so we can return early
                 return
             if after.id in self._server_mutes[guild.id]:
-                await modlog.create_case(
-                    self.bot,
-                    guild,
-                    datetime.now(timezone.utc),
-                    "sunmute",
-                    after,
-                    None,
-                    _("Manually removed mute role"),
-                )
                 del self._server_mutes[guild.id][after.id]
                 should_save = True
                 await self._send_dm_notification(
@@ -660,15 +595,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
                 # initialize the guild in the cache to prevent keyerrors
                 self._server_mutes[guild.id] = {}
             if after.id not in self._server_mutes[guild.id]:
-                await modlog.create_case(
-                    self.bot,
-                    guild,
-                    datetime.now(timezone.utc),
-                    "smute",
-                    after,
-                    None,
-                    _("Manually applied mute role"),
-                )
                 self._server_mutes[guild.id][after.id] = {
                     "author": None,
                     "member": after.id,
@@ -741,18 +667,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
                             notification_title,
                             _("Manually removed channel overwrites"),
                         )
-                    await modlog.create_case(
-                        self.bot,
-                        after.guild,
-                        datetime.now(timezone.utc),
-                        unmute_type,
-                        user,
-                        None,
-                        _("Manually removed channel overwrites"),
-                        until=None,
-                        channel=after,
-                    )
-                    log.debug("created case")
             if to_del:
                 for u_id in to_del:
                     del self._channel_mutes[after.id][u_id]
@@ -1232,17 +1146,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
                     if success["channels"]:
                         # incase we only muted a user in 1 channel not all
                         issue_list.append(success)
-                    await modlog.create_case(
-                        self.bot,
-                        guild,
-                        ctx.message.created_at,
-                        "smute",
-                        user,
-                        author,
-                        reason,
-                        until=until,
-                        channel=None,
-                    )
                     await self._send_dm_notification(
                         user, author, guild, _("Server mute"), reason, duration
                     )
@@ -1383,17 +1286,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
                 if success["success"]:
                     success_list.append(user)
 
-                    await modlog.create_case(
-                        self.bot,
-                        guild,
-                        ctx.message.created_at,
-                        "cmute",
-                        user,
-                        author,
-                        reason,
-                        until=until,
-                        channel=channel,
-                    )
                     await self._send_dm_notification(
                         user, author, guild, _("Channel mute"), reason, duration
                     )
@@ -1453,16 +1345,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
 
                 if success["success"]:
                     success_list.append(user)
-                    await modlog.create_case(
-                        self.bot,
-                        guild,
-                        ctx.message.created_at,
-                        "sunmute",
-                        user,
-                        author,
-                        reason,
-                        until=None,
-                    )
                     await self._send_dm_notification(
                         user, author, guild, _("Server unmute"), reason
                     )
@@ -1521,17 +1403,6 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
 
                 if success["success"]:
                     success_list.append(user)
-                    await modlog.create_case(
-                        self.bot,
-                        guild,
-                        ctx.message.created_at,
-                        "cunmute",
-                        user,
-                        author,
-                        reason,
-                        until=None,
-                        channel=channel,
-                    )
                     await self._send_dm_notification(
                         user, author, guild, _("Channel unmute"), reason
                     )

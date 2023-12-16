@@ -149,7 +149,7 @@ class Vanity(commands.Cog):
         """Vanity roles for grief."""
 
     @vanity.command(usage="true yor")
-    @commands.has_permissions
+    @commands.has_permissions(manage_guild=True)
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
         """Toggle vanity checker for current server on/off. Do not use "/"."""
         await self.config.guild(ctx.guild).toggled.set(on)
@@ -164,7 +164,7 @@ class Vanity(commands.Cog):
     @vanity.command()
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions
+    @commands.has_permissions(manage_guild=True)
     async def role(self, ctx: commands.Context, role: discord.Role) -> None:
         """Setup the role to be rewarded."""
         if role.position >= ctx.author.top_role.position:
@@ -180,7 +180,7 @@ class Vanity(commands.Cog):
     @vanity.command()
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions
+    @commands.has_permissions(manage_guild=True)
     async def channel(self, ctx: commands.Context, channel: discord.TextChannel) -> None:
         """Setup the log channel."""
         if not channel.permissions_for(ctx.guild.me).send_messages:

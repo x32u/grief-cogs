@@ -62,7 +62,7 @@ class Starboard(StarboardEvents, commands.Cog):
         return self.ready.is_set()
 
     @commands.group()
-        @commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.guild_only()
     async def starboard(self, ctx: commands.Context) -> None:
         """
@@ -95,7 +95,6 @@ class Starboard(StarboardEvents, commands.Cog):
         )
 
     @starboard.command(name="info")
-    @commands.bot_has_permissions(read_message_history=True, embed_links=True)
     async def starboard_info(self, ctx: commands.Context) -> None:
         """
         Display info on starboards setup on the server.

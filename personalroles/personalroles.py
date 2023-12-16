@@ -68,7 +68,7 @@ class PersonalRoles(commands.Cog):
 
     @myrole.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def assign(self, ctx, user: discord.Member, *, role: discord.Role):
         """Assign personal role to someone"""
         await self.config.member(user).role.set(role.id)
@@ -76,7 +76,7 @@ class PersonalRoles(commands.Cog):
 
     @myrole.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def unassign(self, ctx, *, user: discord.Member):
         """Unassign personal role from someone"""
 
@@ -97,7 +97,7 @@ class PersonalRoles(commands.Cog):
 
     @myrole.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def list(self, ctx):
         """Assigned roles list"""
         members_data = await self.config.all_members(ctx.guild)
@@ -126,7 +126,7 @@ class PersonalRoles(commands.Cog):
 
     @myrole.group(name="auto")
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def myrole_auto(self, ctx):
         """
         Manage Auto role creation settings
@@ -202,14 +202,14 @@ class PersonalRoles(commands.Cog):
     @myrole.group()
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def blacklist(self, ctx):
         """Manage blacklisted names"""
         pass
 
     @blacklist.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def add(self, ctx, *, rolename: str):
         """Add rolename to blacklist
         Members will be not able to change name of role to blacklisted names"""
@@ -223,7 +223,7 @@ class PersonalRoles(commands.Cog):
 
     @blacklist.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def remove(self, ctx, *, rolename: str):
         """Remove rolename from blacklist"""
         rolename = rolename.casefold()
@@ -236,7 +236,7 @@ class PersonalRoles(commands.Cog):
                 
     @blacklist.command(name="list")
     @commands.cooldown(1, 3, commands.BucketType.user)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     async def bl_list(self, ctx):
         """List of blacklisted role names"""
         blacklist = await self.config.guild(ctx.guild).blacklist()
@@ -250,7 +250,6 @@ class PersonalRoles(commands.Cog):
     @myrole.command(aliases=["color"])
     @commands.guild_only()
     @commands.check(has_assigned_role)
-    @commands.bot_has_permissions(manage_roles=True)
     async def colour(self, ctx, *, colour: discord.Colour = discord.Colour.default()):
         """Change color of personal role"""
 
@@ -354,7 +353,6 @@ class PersonalRoles(commands.Cog):
     @myrole.group()
     @commands.check(has_assigned_role)
     @commands.check(role_icons_feature)
-    @commands.bot_has_permissions(manage_roles=True)
     async def icon(self, ctx):
         """Change icon of personal role"""
         pass

@@ -40,16 +40,6 @@ class NitroRole(commands.Cog):
         self.guild_cache: Dict[int, GuildData] = {}
         # TODO: possibly load guild data in cache on load?
 
-    async def red_get_data_for_user(self, *, user_id: int) -> Dict[str, Any]:
-        # this cog does not story any data
-        return {}
-
-    async def red_delete_data_for_user(
-        self, *, requester: RequestType, user_id: int
-    ) -> None:
-        # this cog does not story any data
-        pass
-
     async def get_guild_data(self, guild: discord.Guild) -> GuildData:
         try:
             return self.guild_cache[guild.id]
@@ -63,7 +53,7 @@ class NitroRole(commands.Cog):
         return data
 
     @commands.guild_only()
-        @commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.group()
     async def nitrorole(self, ctx: GuildContext) -> None:
         """Settings for NitroRole cog."""

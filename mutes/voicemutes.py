@@ -3,7 +3,7 @@ from datetime import timezone, timedelta, datetime
 from .abc import MixinMeta
 
 import discord
-from grief.core import commands, i18n, modlog
+from grief.core import commands, i18n
 from grief.core.utils.chat_formatting import (
     humanize_timedelta,
     humanize_list,
@@ -131,17 +131,6 @@ class VoiceMutes(MixinMeta):
                         issue_list.append((user, success["reason"]))
                     else:
                         success_list.append(user)
-                    await modlog.create_case(
-                        self.bot,
-                        guild,
-                        ctx.message.created_at,
-                        "vmute",
-                        user,
-                        author,
-                        reason,
-                        until=until,
-                        channel=channel,
-                    )
                     await self._send_dm_notification(
                         user, author, guild, _("Voice mute"), reason, duration
                     )
@@ -207,17 +196,6 @@ class VoiceMutes(MixinMeta):
                         issue_list.append((user, success["reason"]))
                     else:
                         success_list.append(user)
-                    await modlog.create_case(
-                        self.bot,
-                        guild,
-                        ctx.message.created_at,
-                        "vunmute",
-                        user,
-                        author,
-                        reason,
-                        until=None,
-                        channel=channel,
-                    )
                     await self._send_dm_notification(
                         user, author, guild, _("Voice unmute"), reason
                     )
