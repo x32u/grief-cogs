@@ -1614,7 +1614,7 @@ class EventMixin:
         embed.set_author(name=emb_msg, icon_url=before.display_avatar)
         perp = None
         reason = None
-        worth_sending = False
+        worth_sending = True
         before_text = ""
         after_text = ""
         for update_type in MemberUpdateEnum:
