@@ -218,7 +218,7 @@ class BirthdayAdminCommands(MixinMeta):
 
     @commands.group()
     @commands.guild_only()  # type:ignore
-    @commands.has_permissions
+    @commands.has_permissions(manage_channels=True, manage_roles=True)
     async def bdset(self, ctx: commands.Context):
         """
         Birthday management commands for admins.
@@ -226,7 +226,6 @@ class BirthdayAdminCommands(MixinMeta):
         Looking to set your own birthday? Use `[p]birthday set` or `[p]bday set`.
         """
 
-    @commands.bot_has_permissions(manage_roles=True)
     @bdset.command()
     async def interactive(self, ctx: commands.Context):
         """Start interactive setup"""
