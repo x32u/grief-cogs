@@ -144,7 +144,6 @@ class DisboardReminder(commands.Cog):
         self.bump_tasks[guild.id][task_name] = task
         await asyncio.sleep(0.2)
 
-    @commands.bot_has_permissions(manage_channels=True)
     @commands.group(aliases=["bprm"])
     async def bumpreminder(self, ctx):
         """
@@ -179,7 +178,7 @@ class DisboardReminder(commands.Cog):
         else:
             raise commands.BadArgument
 
-        @commands.has_permissions(mention_everyone=True)
+    @commands.has_permissions(mention_everyone=True)
     @bumpreminder.command("pingrole")
     async def bumpreminder_pingrole(self, ctx: commands.Context, role: FuzzyRole = None):
         """
@@ -248,7 +247,7 @@ class DisboardReminder(commands.Cog):
         else:
             await ctx.send("I will no longer clean the bump channel.")
 
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     @bumpreminder.command("lock")
     async def bumpreminder_lock(self, ctx, true_or_false: bool = None):
         """Toggle whether the bot should automatically lock/unlock the bump channel."""
