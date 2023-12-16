@@ -25,13 +25,6 @@ class Hellohook(commands.Cog):
         self.config.register_guild(**default_guild)
         bot.loop.create_task(self.inviteSync())
 
-    # This cog does not store any End User Data
-    async def red_get_data_for_user(self, *, user_id: int):
-        return {}
-
-    async def red_delete_data_for_user(self, *, requester, user_id: int) -> None:
-        pass
-
     # Utility Commands
 
     async def hellohookSender(self, webhook, userObj: discord.Member, greetMessage):
@@ -158,7 +151,7 @@ class Hellohook(commands.Cog):
 
     @commands.guild_only()
     @commands.group()
-    @commands.has_permissions
+    @commands.has_permissions(manage_webhooks=True)
     async def hellohook(self, ctx: commands.Context):
         """Hellohook settings
 

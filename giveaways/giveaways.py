@@ -165,8 +165,7 @@ class Giveaways(commands.Cog):
         return
 
     @commands.group(aliases=["gw"])
-    @commands.bot_has_permissions(add_reactions=True, embed_links=True)
-    @commands.has_permissions
+    @commands.has_permissions(manage_guild=True)
     async def giveaway(self, ctx: commands.Context):
         """
         Manage the giveaway system
@@ -431,7 +430,6 @@ class Giveaways(commands.Cog):
         `--roles`: Roles that the giveaway will be restricted to. If the role contains a space, use their ID.
         `--multiplier`: Multiplier for those in specified roles. Must be a positive number.
         `--multi-roles`: Roles that will receive the multiplier. If the role contains a space, use their ID.
-        `--cost`: Cost of credits to enter the giveaway. Must be a positive number.
         `--joined`: How long the user must be a member of the server for to enter the giveaway. Must be a positive number of days.
         `--created`: How long the user has been on discord for to enter the giveaway. Must be a positive number of days.
         `--blacklist`: Blacklisted roles that cannot enter the giveaway. If the role contains a space, use their ID.

@@ -61,7 +61,7 @@ class Filter(commands.Cog):
 
     @commands.group()
     @commands.guild_only()
-    @commands.has_permissions
+    @commands.has_permissions(manage_messages=True)
     async def filterset(self, ctx: commands.Context):
         """Base command to manage filter settings."""
         pass
@@ -125,7 +125,7 @@ class Filter(commands.Cog):
 
     @commands.group(name="filter")
     @commands.guild_only()
-        @commands.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     async def _filter(self, ctx: commands.Context):
         """Base command to add or remove words from the server filter.
 

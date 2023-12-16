@@ -42,7 +42,7 @@ class EmojiTools(commands.Cog):
             raise commands.UserFeedbackCheckFailure(f"Invalid emoji: {emoji}")
 
     @commands.guild_only()
-        @commands.has_permissions(manage_expressions=True)
+    @commands.has_permissions(manage_expressions=True)
     @commands.group(name="emojitools")
     async def _emojitools(self, ctx: commands.Context):
         """
@@ -54,7 +54,6 @@ class EmojiTools(commands.Cog):
         `[p]emojitools save` allows you to save emojis to folders **in the cog data path**: this requires storage!
         """
 
-    @commands.bot_has_permissions(embed_links=True)
     @_emojitools.command(name="info")
     async def _info(self, ctx: commands.Context, emoji: discord.Emoji):
         """Get info about a custom emoji from this server."""
@@ -95,7 +94,7 @@ class EmojiTools(commands.Cog):
         )
         return await ctx.send(embed=embed)
 
-        @commands.has_permissions(administrator=True)
+    @commands.is_owner()
     @_emojitools.group(name="save")
     async def _save(self, ctx: commands.Context):
         """
@@ -165,7 +164,6 @@ class EmojiTools(commands.Cog):
         await self.bot.loop.run_in_executor(None, lambda: shutil.rmtree((os.path.join(f"{data_manager.cog_data_path(self)}", f"{to_remove}"))))
         return await ctx.send(f"`{to_remove}` has been removed.")
 
-    @commands.bot_has_permissions(attach_files=True)
     @commands.cooldown(rate=1, per=30)
     @_save.command(name="getzip")
     async def _get_zip(self, ctx: commands.Context, folder_number: int):
@@ -203,11 +201,11 @@ class EmojiTools(commands.Cog):
         except discord.HTTPException:
             return await ctx.send(FILE_SIZE)
 
-    @commands.bot_has_permissions(manage_expressions=True)
     @_emojitools.group(name="delete", aliases=["remove"])
     async def _delete(self, ctx: commands.Context):
         """Delete Server Custom Emojis"""
 
+    @commands.has_permissions(manage_expressions=True)
     @commands.cooldown(rate=1, per=15)
     @_delete.command(name="emojis", aliases=["emoji"], require_var_positional=True)
     async def _delete_emojis(self, ctx: commands.Context, *emoji_names: typing.Union[discord.Emoji, str]):
@@ -237,7 +235,6 @@ class EmojiTools(commands.Cog):
 
         return await ctx.send(f"All {counter} custom emojis have been removed from this server.")
 
-    @commands.bot_has_permissions(manage_expressions=True)
     @_emojitools.group(name="add")
     async def _add(self, ctx: commands.Context):
         """Add Custom Emojis to Server"""
@@ -354,7 +351,7 @@ class EmojiTools(commands.Cog):
         return await ctx.send(f"{len(added_emojis)} emojis were added to this server: {' '.join([str(e) for e in added_emojis])}")
 
     @commands.cooldown(rate=1, per=15)
-        @commands.has_permissions(manage_expressions=True)
+    @commands.has_permissions(manage_expressions=True)
     @_add.command(name="fromimage")
     async def _add_from_image(self, ctx: commands.Context, name: str = None):
         """
@@ -394,7 +391,7 @@ class EmojiTools(commands.Cog):
         return await ctx.send(f"{new} has been added to this server!")
 
     @commands.cooldown(rate=1, per=60)
-        @commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     @_add.command(name="fromzip")
     async def _add_from_zip(self, ctx: commands.Context):
         """
@@ -470,7 +467,6 @@ class EmojiTools(commands.Cog):
         await emoji.edit(roles=roles, reason=f"EmojiTools: edit requested by {ctx.author}")
         return await ctx.tick()
 
-    @commands.bot_has_permissions(attach_files=True)
     @_emojitools.group(name="tozip")
     async def _to_zip(self, ctx: commands.Context):
         """Get a `.zip` Archive of Emojis"""
