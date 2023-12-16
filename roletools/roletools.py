@@ -88,6 +88,7 @@ class RoleTools(
         self.bot = bot
         self.config = Config.get_conf(self, identifier=218773382617890828, force_registration=True)
         self.config.register_global(
+            version="0.0.0",
             atomic=True,
             enable_slash=False,
         )
