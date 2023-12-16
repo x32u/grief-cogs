@@ -1,7 +1,7 @@
 from typing import Optional, Union
 
 from red_commons.logging import getLogger
-from grief.core import bank, commands
+from grief.core import commands
 from grief.core.commands import Context
 from grief.core.i18n import Translator
 
@@ -173,65 +173,6 @@ class RoleToolsSettings(RoleToolsMixin):
         if true_or_false is False:
             await self.config.atomic.set(False)
             await ctx.send(_("RoleTools will no longer atomically assign roles."))
-
-    @roletools.command()
-    @commands.admin_or_permissions(manage_roles=True)
-    async def cost(
-        self,
-        ctx: Context,
-        cost: Optional[int] = None,
-        *,
-        role: RoleHierarchyConverter,
-    ) -> None:
-        """
-        Set the cost to acquire a role.
-
-        `[cost]` The price you want to set the role at in bot credits.
-        Setting this to 0 or lower will remove the cost.
-        If not provided the current setting will be shown instead.
-        `<role>` The role you want to set.
-        """
-        await ctx.typing()
-
-        if await bank.is_global() and not await self.bot.is_owner(ctx.author):
-            msg = _("This command is locked to bot owner only while the bank is set to global.")
-            await ctx.send(msg)
-            return
-        if cost is not None and cost >= await bank.get_max_balance(ctx.guild):
-            msg = _("You cannot set a cost higher than the maximum credits balance.")
-            await ctx.send(msg)
-            return
-
-        cur_setting = await self.config.role(role).cost()
-        currency_name = await bank.get_currency_name(ctx.guild)
-        if cost is None:
-            if cur_setting:
-                msg = _("The role {role} currently costs {cost} {currency_name}.").format(
-                    role=role, cost=cost, currency_name=currency_name
-                )
-                await ctx.send(msg)
-            else:
-                command = f"`{ctx.clean_prefix} roletools cost SOME_NUMBER {role.name}`"
-                msg = _(
-                    "The role {role} does not currently cost any {currency_name}. "
-                    "Run the command {command} to allow this role to require credits."
-                ).format(role=role.mention, command=command, currency_name=currency_name)
-                await ctx.send(msg)
-            return
-        else:
-            if cost <= 0:
-                await self.config.role(role).cost.clear()
-                msg = _("The {role} will not require any {currency_name} to acquire.").format(
-                    role=role.mention, currency_name=currency_name
-                )
-                await ctx.send(msg)
-                return
-            else:
-                await self.config.role(role).cost.set(cost)
-                msg = _("The {role} will now cost {cost} {currency_name} to acquire.").format(
-                    role=role.mention, cost=cost, currency_name=currency_name
-                )
-                await ctx.send(msg)
 
     @roletools.command()
     @commands.admin_or_permissions(manage_roles=True)
