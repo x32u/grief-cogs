@@ -70,8 +70,7 @@ class EditVoiceChannel(Cog):
         return True
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.hybrid_group(aliases=["editvoiceroom"])
     async def editvoicechannel(self, ctx: commands.Context) -> None:
         """Commands for edit a voice channel."""
@@ -98,9 +97,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(embed_links=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="list")
     async def editvoicechannel_list(
         self,
@@ -124,8 +121,7 @@ class EditVoiceChannel(Cog):
         await Menu(pages=embeds).start(ctx)
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="clone")
     async def editvoicechannel_clone(
         self, ctx: commands.Context, channel: discord.VoiceChannel, *, name: str
@@ -143,8 +139,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="invite")
     async def editvoicechannel_invite(
         self,
@@ -179,8 +174,7 @@ class EditVoiceChannel(Cog):
             await ctx.send(invite.url)
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="name")
     async def editvoicechannel_name(
         self, ctx: commands.Context, channel: discord.VoiceChannel, name: str
@@ -198,8 +192,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="bitrate")
     async def editvoicechannel_bitrate(
         self, ctx: commands.Context, channel: discord.VoiceChannel, bitrate: int
@@ -226,8 +219,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="nsfw")
     async def editvoicechannel_nsfw(
         self, ctx: commands.Context, channel: discord.VoiceChannel, nsfw: bool = None
@@ -247,8 +239,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="userlimit")
     async def editvoicechannel_user_limit(
         self, ctx: commands.Context, channel: discord.VoiceChannel, user_limit: int
@@ -272,8 +263,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="position")
     async def editvoicechannel_position(
         self, ctx: commands.Context, channel: discord.VoiceChannel, *, position: PositionConverter
@@ -295,8 +285,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="syncpermissions")
     async def editvoicechannel_sync_permissions(
         self, ctx: commands.Context, channel: discord.VoiceChannel, sync_permissions: bool = None
@@ -316,8 +305,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="category")
     async def editvoicechannel_category(
         self,
@@ -338,8 +326,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="videoqualitymode")
     async def editvoicechannel_video_quality_mode(
         self,
@@ -365,10 +352,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
-        @commands.has_permissions(administrator=True)
-    @commands.bot_has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="overwrites", aliases=["permissions", "perms"])
     async def editvoicechannel_overwrites(
         self,
@@ -466,8 +450,7 @@ class EditVoiceChannel(Cog):
             )
 
     @commands.guild_only()
-        @commands.has_permissions(manage_channels=True)
-    @commands.bot_has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @editvoicechannel.command(name="delete")
     async def editvoicechannel_delete(
         self,
