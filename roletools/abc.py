@@ -20,10 +20,6 @@ from .converter import (
     SelfRoleConverter,
 )
 
-if TYPE_CHECKING:
-    from .buttons import ButtonRole, ButtonRoleConverter
-    from .select import SelectOptionRoleConverter, SelectRole, SelectRoleConverter
-
 
 log = getLogger("grief.roletools")
 _ = Translator("Roletools", __file__)
@@ -258,65 +254,6 @@ class RoleToolsMixin(ABC):
         raise NotImplementedError()
 
     #######################################################################
-    # reactions.py                                                        #
-    #######################################################################
-
-    @abstractmethod
-    async def react_coms(self, ctx: Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def cleanup(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def ownercleanup(self, ctx: Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def reactroles(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def clearreact(
-        self,
-        ctx: commands.Context,
-        message: discord.Message,
-        *emojis: Optional[Union[discord.Emoji, str]],
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def make_react(
-        self,
-        ctx: commands.Context,
-        message: discord.Message,
-        emoji: Union[discord.Emoji, str],
-        *,
-        role: RoleHierarchyConverter,
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def remreact(
-        self,
-        ctx: commands.Context,
-        message: discord.Message,
-        *,
-        role_or_emoji: Union[RoleHierarchyConverter, discord.Emoji, str],
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def bulkreact(
-        self,
-        ctx: Context,
-        message: discord.Message,
-        *role_emoji: RoleEmojiConverter,
-    ) -> None:
-        raise NotImplementedError()
-
-    #######################################################################
     # events.py                                                           #
     #######################################################################
 
@@ -372,89 +309,8 @@ class RoleToolsMixin(ABC):
         raise NotImplementedError()
 
     #######################################################################
-    # buttons.py                                                          #
-    #######################################################################
-
-    @abstractmethod
-    async def initialize_buttons(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def buttons(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def create_button(
-        self,
-        ctx: commands.Context,
-        name: str,
-        role: RoleHierarchyConverter,
-        label: Optional[str] = None,
-        emoji: Optional[Union[discord.PartialEmoji, str]] = None,
-        style: Optional[ButtonStyleConverter] = discord.ButtonStyle.primary,
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def delete_button(self, ctx: commands.Context, *, name: str) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def button_roles_view(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    #######################################################################
     # select.py                                                           #
     #######################################################################
-
-    @abstractmethod
-    async def initialize_select(self) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def select(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def create_select_menu(
-        self,
-        ctx: commands.Context,
-        name: str,
-        options: commands.Greedy[SelectOptionRoleConverter],
-        min_values: Optional[int] = None,
-        max_values: Optional[int] = None,
-        *,
-        placeholder: Optional[str] = None,
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def delete_select_menu(self, ctx: commands.Context, *, name: str) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def create_select_option(
-        self,
-        ctx: commands.Context,
-        name: str,
-        role: RoleHierarchyConverter,
-        label: Optional[str] = None,
-        description: Optional[str] = None,
-        emoji: Optional[Union[discord.PartialEmoji, str]] = None,
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def delete_select_option(self, ctx: commands.Context, *, name: str) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def select_menus_view(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def select_options_view(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
 
     #######################################################################
     # messages.py                                                         #
@@ -464,11 +320,7 @@ class RoleToolsMixin(ABC):
     async def save_settings(
         self,
         guild: discord.Guild,
-        message_key: str,
-        *,
-        buttons: List[ButtonRole] = [],
-        select_menus: List[SelectRole] = [],
-    ):
+        message_key: str):
         raise NotImplementedError()
 
     @abstractmethod
@@ -476,8 +328,6 @@ class RoleToolsMixin(ABC):
         self,
         ctx: Context,
         channel: discord.TextChannel,
-        buttons: commands.Greedy[ButtonRoleConverter],
-        menus: commands.Greedy[SelectRoleConverter],
         *,
         message: str,
     ) -> None:
@@ -492,47 +342,5 @@ class RoleToolsMixin(ABC):
         self,
         ctx: Context,
         message: discord.Message,
-        buttons: commands.Greedy[ButtonRoleConverter],
-        menus: commands.Greedy[SelectRoleConverter],
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def send_select(
-        self,
-        ctx: commands.Context,
-        channel: discord.TextChannel,
-        menus: commands.Greedy[SelectRoleConverter],
-        *,
-        message: str,
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def edit_with_select(
-        self,
-        ctx: commands.Context,
-        message: discord.Message,
-        menus: commands.Greedy[SelectRoleConverter],
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def send_buttons(
-        self,
-        ctx: commands.Context,
-        channel: discord.TextChannel,
-        buttons: commands.Greedy[ButtonRoleConverter],
-        *,
-        message: str,
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def edit_with_buttons(
-        self,
-        ctx: commands.Context,
-        message: discord.Message,
-        buttons: commands.Greedy[ButtonRoleConverter],
     ) -> None:
         raise NotImplementedError()
