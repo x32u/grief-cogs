@@ -296,11 +296,8 @@ class RolePages(menus.ListPageSource):
             "# RoleTools settings\n"
             "Sticky          {sticky}\n"
             "Auto            {auto}\n"
-            "Selfassignable  {selfassign}\n"
-            "Selfremovable   {selfrem}\n"
-            "# Core Bot settings\n"
-            "Mod             {mod}\n"
-            "Admin           {admin}\n\n"
+                # "Selfassignable  {selfassign}\n"
+                # "Selfremovable   {selfrem}\n"
             "```"
         ).format(
             role=role.mention,
@@ -312,11 +309,9 @@ class RolePages(menus.ListPageSource):
             hoisted=role.hoist,
             sticky=role_settings["sticky"],
             auto=role_settings["auto"],
-            selfassign=role_settings["selfassignable"],
-            selfrem=role_settings["selfremovable"],
+                # selfassign=role_settings["selfassignable"],
+                # selfrem=role_settings["selfremovable"],
             colour=str(role.colour),
-            mod=role in mod_roles,
-            admin=role in admin_roles,
         )
         settings += _("**Created:** {created_at}\n").format(
             created_at=discord.utils.format_dt(role.created_at)
