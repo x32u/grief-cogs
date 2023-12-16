@@ -62,14 +62,6 @@ class RoleToolsMixin(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def selfrole(self, ctx: commands.Context, *, role: SelfRoleConverter) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def selfrole_remove(self, ctx: commands.Context, *, role: SelfRoleConverter) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
     async def giverole(
         self,
         ctx: commands.Context,
@@ -243,16 +235,6 @@ class RoleToolsMixin(ABC):
 
     @abstractmethod
     async def globalatomic(self, ctx: Context, true_or_false: Optional[bool] = None) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def cost(
-        self,
-        ctx: commands.Context,
-        cost: Optional[int] = None,
-        *,
-        role: RoleHierarchyConverter,
-    ) -> None:
         raise NotImplementedError()
 
     @abstractmethod
