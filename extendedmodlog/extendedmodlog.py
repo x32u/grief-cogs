@@ -6,7 +6,7 @@ from grief.core import Config, checks, commands, modlog
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.chat_formatting import humanize_list
 
-from .eventmixin import EventChooser, EventMixin, MemberUpdateEnum
+from .eventmixin import EventChooser, EventMixin
 from .settings import inv_settings
 
 _ = Translator("ExtendedModLog", __file__)
