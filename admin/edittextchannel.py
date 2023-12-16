@@ -79,14 +79,14 @@ class EditTextChannel(Cog):
         return True
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @commands.hybrid_group()
     async def edittextchannel(self, ctx: commands.Context) -> None:
         """Commands for edit a text channel."""
         pass
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="create")
     async def edittextchannel_create(
         self,
@@ -108,7 +108,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="list")
     async def edittextchannel_list(
         self,
@@ -132,7 +132,7 @@ class EditTextChannel(Cog):
         await Menu(pages=embeds).start(ctx)
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="clone")
     async def edittextchannel_clone(
         self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel], *, name: str
@@ -152,7 +152,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="invite")
     async def edittextchannel_invite(
         self,
@@ -189,7 +189,7 @@ class EditTextChannel(Cog):
             await ctx.send(invite.url)
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="name")
     async def edittextchannel_name(
         self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel], name: str
@@ -209,7 +209,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="topic")
     async def edittextchannel_topic(
         self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel], *, topic: str
@@ -229,7 +229,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="position")
     async def edittextchannel_position(
         self,
@@ -257,7 +257,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="nsfw")
     async def edittextchannel_nsfw(
         self, ctx: commands.Context, channel: typing.Optional[discord.TextChannel], nsfw: bool = None
@@ -279,7 +279,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="syncpermissions")
     async def edittextchannel_sync_permissions(
         self,
@@ -304,7 +304,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="category")
     async def edittextchannel_category(
         self,
@@ -327,7 +327,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="slowmodedelay")
     async def edittextchannel_slowmode_delay(
         self,
@@ -357,7 +357,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="type")
     async def edittextchannel_type(
         self,
@@ -386,7 +386,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="defaultautoarchiveduration")
     async def edittextchannel_default_auto_archive_duration(
         self,
@@ -412,7 +412,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="defaultthreadslowmodedelay")
     async def edittextchannel_default_thread_slowmode_delay(
         self,
@@ -437,7 +437,7 @@ class EditTextChannel(Cog):
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
 
-    @commands.has_permissions(administrator=True)
+        @commands.has_permissions(administrator=True)
     @edittextchannel.command(name="overwrites", aliases=["permissions", "perms"])
     async def edittextchannel_overwrites(
         self,
@@ -537,7 +537,7 @@ class EditTextChannel(Cog):
             )
 
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @edittextchannel.command(name="delete")
     async def edittextchannel_delete(
         self,

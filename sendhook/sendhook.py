@@ -66,7 +66,7 @@ class Sendhook(commands.Cog):
 
     @commands.guild_only()
     @commands.group()
-    @commands.has_permissions(manage_webhooks=True)
+        @commands.has_permissions(manage_webhooks=True)
     async def aliashook(self, ctx: commands.Context):
         """Configure aliases for webhooks in your server"""
         if not ctx.invoked_subcommand:
@@ -116,7 +116,7 @@ class Sendhook(commands.Cog):
         await ctx.send("```"+webhookData+"```")
 
     @commands.command()
-    @commands.has_permissions(manage_webhooks=True)
+        @commands.has_permissions(manage_webhooks=True)
     async def sendhook(self, ctx, webhookUrl, *, webhookText=None):
         """Send a webhook
         
@@ -141,7 +141,7 @@ class Sendhook(commands.Cog):
 
 
     @commands.command()
-    @commands.has_permissions(manage_webhooks=True)
+        @commands.has_permissions(manage_webhooks=True)
     async def sendhookself(self, ctx, webhookUrl, *, webhookText=None):
         """Send a webhook as yourself
         
@@ -166,7 +166,7 @@ class Sendhook(commands.Cog):
 
 
     @commands.command()
-    @commands.has_permissions(manage_webhooks=True)
+        @commands.has_permissions(manage_webhooks=True)
     async def edithook(self, ctx, webhookUrl, messageId, *, webhookText):
         """Edit a message sent by a webhook
         
@@ -208,7 +208,7 @@ class Sendhook(commands.Cog):
 
 
     @commands.command()
-    @commands.has_permissions(manage_webhooks=True)
+        @commands.has_permissions(manage_webhooks=True)
     async def newhook(self, ctx, webhookName, webhookImage, channel: discord.TextChannel=None):
         """Create a webhook"""
         if channel == None:
@@ -230,7 +230,7 @@ class Sendhook(commands.Cog):
 
     
     @commands.command()
-    @commands.has_permissions(manage_webhooks=True)
+        @commands.has_permissions(manage_webhooks=True)
     async def listhooks(self, ctx, channel: discord.TextChannel=None):
         """List the webhooks in a channel"""
         if channel == None:

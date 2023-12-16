@@ -519,7 +519,7 @@ class VoiceMaster(commands.Cog):
         aliases=['create'],
         extras={'perms': 'Manage Channels'}
     )
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     async def setup(self, ctx, category: discord.CategoryChannel=None):
         data = await self.bot.db.fetch('SELECT * FROM voicemaster WHERE guild_id = $1', ctx.guild.id)
         if not data:
@@ -573,7 +573,7 @@ class VoiceMaster(commands.Cog):
         usage='Syntax: ',
         extras={'perms': 'Manage Channels'}
     )
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     async def reset(self, ctx):
         data = await self.bot.db.fetch('SELECT * FROM voicemaster WHERE guild_id = $1', ctx.guild.id)
         if data:

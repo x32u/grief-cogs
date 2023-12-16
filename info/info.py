@@ -325,7 +325,7 @@ class Info(commands.Cog):
     
     @commands.guild_only()
     @commands.command()
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     async def bans(self, ctx):
         """Displays the server's banlist."""
         try:
@@ -376,7 +376,7 @@ class Info(commands.Cog):
 
     @commands.guild_only()
     @commands.command()
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     async def inrole(self, ctx, *, rolename: str):
         """Check members in the role specified."""
         guild = ctx.guild
@@ -512,7 +512,7 @@ class Info(commands.Cog):
 
     @commands.guild_only()
     @commands.command(aliases=["listroles", "rolelist"])
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     async def roles(self, ctx):
         """Displays the server's roles."""
         form = "`{rpos:0{zpadding}}` - `{rid}` - `{rcolor}` - {rment} "
@@ -554,7 +554,7 @@ class Info(commands.Cog):
             await ctx.send(cf.box(data, lang="ini"))
     
     @commands.command()
-    @commands.has_permissions(read_message_history=True)
+        @commands.has_permissions(read_message_history=True)
     async def firstmessage(
         self,
         ctx: commands.Context,
@@ -762,7 +762,7 @@ class Info(commands.Cog):
         
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     @commands.bot_has_permissions(embed_links=True)
     async def invites(self, ctx: commands.Context, *, server: commands.GuildConverter = None):
         """Get invites from server by id"""
@@ -782,7 +782,7 @@ class Info(commands.Cog):
             
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(embed_links=True)
     async def channels(self, ctx, *, server: commands.GuildConverter = None):
         """Get all channels on server"""
@@ -832,7 +832,7 @@ class Info(commands.Cog):
 
     @commands.command(aliases=["cperms"])
     @commands.guild_only()
-    @commands.has_permissions(administrator=True)
+        @commands.has_permissions(administrator=True)
     async def chanperms(
         self,
         ctx,
@@ -1084,7 +1084,7 @@ class Info(commands.Cog):
     # -------- IMPORTED FROM FRESHMEAT
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_members=True)
+        @commands.has_permissions(manage_members=True)
     async def freshmembers(self, ctx, hours: int = 24):
         """Show the members who joined in the specified timeframe
 

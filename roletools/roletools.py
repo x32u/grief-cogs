@@ -253,7 +253,7 @@ class RoleTools(
 
     @roletools.command(cooldown_after_parsing=True, with_app_command=False)
     @commands.bot_has_permissions(manage_roles=True)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.max_concurrency(1, commands.BucketType.guild)
     @commands.dynamic_cooldown(custom_cooldown, commands.BucketType.guild)
     async def giverole(
@@ -339,7 +339,7 @@ class RoleTools(
 
     @roletools.command(with_app_command=False)
     @commands.bot_has_permissions(manage_roles=True)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.max_concurrency(1, commands.BucketType.guild)
     @commands.dynamic_cooldown(custom_cooldown, commands.BucketType.guild)
     async def removerole(
@@ -422,7 +422,7 @@ class RoleTools(
         await ctx.send(msg)
 
     @roletools.command()
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def forcerole(
         self,
         ctx: Context,
@@ -468,7 +468,7 @@ class RoleTools(
             await ctx.channel.send("".join([e for e in errors]))
 
     @roletools.command()
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def forceroleremove(
         self,
         ctx: Context,

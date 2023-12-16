@@ -91,7 +91,7 @@ class Welcome(Events, commands.Cog):
             await self.bot.wait_until_ready()
 
     @commands.group()
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     @commands.guild_only()
     async def welcomeset(self, ctx: commands.Context) -> None:
         """Sets welcome module settings"""
@@ -169,7 +169,7 @@ class Welcome(Events, commands.Cog):
         pass
 
     @welcomeset_greeting.command()
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     async def allowedmentions(
         self, ctx: commands.Context, set_to: bool, *allowed
     ) -> None:
@@ -457,7 +457,7 @@ class Welcome(Events, commands.Cog):
         pass
 
     @welcomeset_goodbye.command(name="allowedmentions")
-    @commands.has_permissions(mention_everyone=True)
+        @commands.has_permissions(mention_everyone=True)
     async def goodbye_allowedmentions(
         self, ctx: commands.Context, set_to: bool, *allowed
     ) -> None:

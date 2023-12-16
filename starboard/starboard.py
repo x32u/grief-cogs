@@ -62,7 +62,7 @@ class Starboard(StarboardEvents, commands.Cog):
         return self.ready.is_set()
 
     @commands.group()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     @commands.guild_only()
     async def starboard(self, ctx: commands.Context) -> None:
         """

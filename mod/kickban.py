@@ -275,7 +275,7 @@ class KickBanMixin(MixinMeta):
     @commands.command(autohelp=True, aliases=["k"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(kick_members=True)
+        @commands.has_permissions(kick_members=True)
     async def kick(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """
         Kick a user.
@@ -334,7 +334,7 @@ class KickBanMixin(MixinMeta):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(ban_members=True)
-@commands.has_permissions(ban_members=True)
+    @commands.has_permissions(ban_members=True)
     async def ban(
         self,
         ctx: commands.Context,
@@ -360,7 +360,7 @@ class KickBanMixin(MixinMeta):
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(ban_members=True)
+        @commands.has_permissions(ban_members=True)
     async def massban(
         self,
         ctx: commands.Context,
@@ -511,7 +511,7 @@ class KickBanMixin(MixinMeta):
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(ban_members=True)
+        @commands.has_permissions(ban_members=True)
     async def tempban(
         self,
         ctx: commands.Context,
@@ -587,7 +587,7 @@ class KickBanMixin(MixinMeta):
     @commands.command(autohelp=True, aliases=["sbn"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(ban_members=True)
+        @commands.has_permissions(ban_members=True)
     async def softban(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """Kick a user and delete 1 day's worth of their messages."""
         guild = ctx.guild
@@ -653,7 +653,7 @@ class KickBanMixin(MixinMeta):
 
     @commands.command(autohelp=True, aliases=["vk"])
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(move_members=True)
+        @commands.has_permissions(move_members=True)
     async def voicekick(
         self, ctx: commands.Context, member: discord.Member, *, reason: str = None
     ):
@@ -687,7 +687,7 @@ class KickBanMixin(MixinMeta):
     @commands.command()
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(mute_members=True, deafen_members=True)
+        @commands.has_permissions(mute_members=True, deafen_members=True)
     async def voiceunban(
         self, ctx: commands.Context, member: discord.Member, *, reason: str = None
     ):
@@ -718,7 +718,7 @@ class KickBanMixin(MixinMeta):
     @commands.command(autohelp=True, aliases=["vb"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(mute_members=True, deafen_members=True)
+        @commands.has_permissions(mute_members=True, deafen_members=True)
     async def voiceban(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """Ban a user from speaking and listening in the server's voice channels."""
         user_voice_state: discord.VoiceState = member.voice
@@ -749,7 +749,7 @@ class KickBanMixin(MixinMeta):
     @commands.command(autohelp=True, aliases=["ub"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    @commands.has_permissions(ban_members=True)
+        @commands.has_permissions(ban_members=True)
     async def unban(
         self, ctx: commands.Context, user_id: RawUserIdConverter, *, reason: str = None
     ):
@@ -847,7 +847,7 @@ class KickBanMixin(MixinMeta):
         return await ctx.tick()
 
     @commands.command()
-    @commands.has_permissions(manage_channels=True)
+        @commands.has_permissions(manage_channels=True)
     async def naughty(self, ctx):
         """Make a channel NSFW for 30 seconds."""
         channel: discord.TextChannel = ctx.channel
@@ -863,7 +863,7 @@ class KickBanMixin(MixinMeta):
             await ctx.send("I don't have the required permissions to manage channels.")
 
     @commands.command()
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     async def clearinvites(self, ctx):
         """Delete all invites in the server."""
         invites = await ctx.guild.invites()

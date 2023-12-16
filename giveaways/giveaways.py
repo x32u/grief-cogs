@@ -166,7 +166,7 @@ class Giveaways(commands.Cog):
 
     @commands.group(aliases=["gw"])
     @commands.bot_has_permissions(add_reactions=True, embed_links=True)
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     async def giveaway(self, ctx: commands.Context):
         """
         Manage the giveaway system

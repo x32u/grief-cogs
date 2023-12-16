@@ -27,7 +27,7 @@ class AutoKick(commands.Cog):
         self.config.register_guild(**default_guild)
 
     @commands.group(name="autokickset", aliases=["aks"])
-    @commands.has_permissions(kick_members=True)
+        @commands.has_permissions(kick_members=True)
     @commands.guild_only()
     async def autokickset(self, ctx):
         """

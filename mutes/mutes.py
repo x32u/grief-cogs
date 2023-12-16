@@ -860,7 +860,7 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
         await ctx.maybe_send_embed(msg)
 
     @muteset.command(name="notification")
-@commands.has_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     async def notification_channel_set(
         self,
         ctx: commands.Context,
@@ -884,7 +884,7 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
             )
 
     @muteset.command(name="role")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.bot_has_guild_permissions(manage_roles=True)
     async def mute_role(self, ctx: commands.Context, *, role: discord.Role = None):
         """Sets the role to be applied when muting a user.
@@ -922,7 +922,7 @@ class Mutes(VoiceMutes, commands.Cog, metaclass=CompositeMetaClass):
             )
 
     @muteset.command(name="makerole")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.bot_has_guild_permissions(manage_roles=True)
     @commands.max_concurrency(1, commands.BucketType.guild)
     async def make_mute_role(self, ctx: commands.Context, *, name: str):

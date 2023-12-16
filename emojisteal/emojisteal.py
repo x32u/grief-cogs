@@ -115,7 +115,7 @@ class EmojiSteal(commands.Cog):
 
     @commands.command(name="steal")
     @commands.guild_only()
-    @commands.has_permissions(manage_expressions=True)
+        @commands.has_permissions(manage_expressions=True)
     async def steal_upload_command(self, ctx: commands.Context, *names: str):
         """Steals emojis and stickers you reply to and uploads them to this server."""
         if not (emojis := await self.steal_ctx(ctx)):
@@ -213,7 +213,7 @@ class EmojiSteal(commands.Cog):
         await ctx.send('\n'.join(emoji.url for emoji in emojis))
 
     @commands.command()
-    @commands.has_permissions(manage_expressions=True)
+        @commands.has_permissions(manage_expressions=True)
     async def uploadsticker(self, ctx: commands.Context, *, name: str = None):
         """Uploads a sticker to the server, useful for mobile."""
         if len(ctx.guild.stickers) >= ctx.guild.sticker_limit:

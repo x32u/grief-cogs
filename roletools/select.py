@@ -93,7 +93,7 @@ class RoleToolsSelect(RoleToolsMixin):
                             )
 
     @roletools.group(name="select", aliases=["selects"], with_app_command=False)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def select(self, ctx: Context) -> None:
         """
         Setup role select menus
@@ -348,7 +348,7 @@ class RoleToolsSelect(RoleToolsMixin):
                 await ctx.send(msg)
 
     @select.command(name="view", aliases=["list"])
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(read_message_history=True)
     async def select_menus_view(self, ctx: Context) -> None:
         """
@@ -407,7 +407,7 @@ class RoleToolsSelect(RoleToolsMixin):
         ).start(ctx=ctx)
 
     @select.command(name="viewoptions", aliases=["listoptions", "viewoption", "listoption"])
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(read_message_history=True)
     async def select_options_view(self, ctx: Context) -> None:
         """
@@ -453,7 +453,7 @@ class RoleToolsSelect(RoleToolsMixin):
         ).start(ctx=ctx)
 
     @select.command(name="cleanup")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(read_message_history=True)
     async def select_cleanup(self, ctx: commands.Context):
         """

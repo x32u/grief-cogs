@@ -218,7 +218,7 @@ class BirthdayAdminCommands(MixinMeta):
 
     @commands.group()
     @commands.guild_only()  # type:ignore
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     async def bdset(self, ctx: commands.Context):
         """
         Birthday management commands for admins.

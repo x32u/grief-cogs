@@ -23,7 +23,7 @@ class RoleToolsExclusive(RoleToolsMixin):
         """
 
     @exclusive.command(name="add")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def exclusive_add(
         self,
         ctx: Context,
@@ -60,7 +60,7 @@ class RoleToolsExclusive(RoleToolsMixin):
         await ctx.send(msg)
 
     @exclusive.command(name="mutual", with_app_command=False)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def mutual_exclusive_add(self, ctx: Context, *roles: RoleHierarchyConverter) -> None:
         """
         Allow setting roles mutually exclusive to eachother
@@ -93,7 +93,7 @@ class RoleToolsExclusive(RoleToolsMixin):
         )
 
     @exclusive.command(name="remove")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def exclusive_remove(
         self,
         ctx: Context,

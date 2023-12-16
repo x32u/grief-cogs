@@ -26,7 +26,7 @@ class RoleToolsReactions(RoleToolsMixin):
         pass
 
     @react_coms.command(with_app_command=False)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def cleanup(self, ctx: Context) -> None:
         """
         Cleanup old/missing reaction roles and settings.
@@ -116,7 +116,7 @@ class RoleToolsReactions(RoleToolsMixin):
         await ctx.send(_("I am finished deleting old settings."))
 
     @react_coms.command(aliases=["reactionroles", "reactrole"])
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(read_message_history=True, add_reactions=True)
     async def reactroles(self, ctx: Context) -> None:
         """
@@ -161,7 +161,7 @@ class RoleToolsReactions(RoleToolsMixin):
         ).start(ctx=ctx)
 
     @react_coms.command(aliases=["clearreacts"], with_app_command=False)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_messages=True)
     async def clearreact(
         self,
@@ -219,7 +219,7 @@ class RoleToolsReactions(RoleToolsMixin):
         await ctx.send(_("Finished clearing reactions on that message."))
 
     @react_coms.command(name="create", aliases=["make", "setup"], with_app_command=False)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def make_react(
         self,
         ctx: Context,
@@ -271,7 +271,7 @@ class RoleToolsReactions(RoleToolsMixin):
         await self.confirm_selfassignable(ctx, [role])
 
     @react_coms.command(name="remove", aliases=["rem"], with_app_command=False)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def remreact(
         self,
         ctx: Context,
@@ -345,7 +345,7 @@ class RoleToolsReactions(RoleToolsMixin):
             await ctx.send(msg)
 
     @react_coms.command(name="bulk", aliases=["bulkcreate", "bulkmake"], with_app_command=False)
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def bulkreact(
         self,
         ctx: Context,

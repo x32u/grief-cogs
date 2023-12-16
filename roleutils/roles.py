@@ -177,7 +177,7 @@ class Roles(MixinMeta):
         return True
 
     @commands.guild_only()
-    @commands.has_permissions(manage_roles=True)
+        @commands.has_permissions(manage_roles=True)
     @commands.group(invoke_without_command=True)
     async def role(
         self, ctx: commands.Context, member: TouchableMember(False), *, role: StrictRole(False)
@@ -691,7 +691,7 @@ class Roles(MixinMeta):
             )
         
     @commands.guild_only()
-    @commands.has_permissions(manage_roles=True)
+        @commands.has_permissions(manage_roles=True)
     @role.command(name="list")
     async def role_list(self, ctx: commands.Context,) -> None:
         """List all roles in the current guild."""
@@ -710,7 +710,7 @@ class Roles(MixinMeta):
         await Menu(pages=embeds).start(ctx)
 
     @commands.guild_only()
-    @commands.has_permissions(manage_roles=True)
+        @commands.has_permissions(manage_roles=True)
     @role.command(name="position")
     async def role_position(
         self, ctx: commands.Context, role: discord.Role, position: PositionConverter
@@ -732,7 +732,7 @@ class Roles(MixinMeta):
         
 
     @commands.guild_only()
-    @commands.has_permissions(manage_roles=True)
+        @commands.has_permissions(manage_roles=True)
     @role.command(name="permissions")
     async def role_permissionss(
         self, ctx: commands.Context, role: discord.Role, true_or_false: bool, permissions: commands.Greedy[PermissionConverter]

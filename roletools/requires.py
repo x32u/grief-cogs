@@ -27,7 +27,7 @@ class RoleToolsRequires(RoleToolsMixin):
         """
 
     @required_roles.command(name="any")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def required_any(self, ctx: Context, role: RoleHierarchyConverter, require_any: bool):
         """
         Set the required roles to require any of the roles instead of all of them
@@ -50,7 +50,7 @@ class RoleToolsRequires(RoleToolsMixin):
         await ctx.send(msg)
 
     @required_roles.command(name="add")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def required_add(
         self,
         ctx: Union[Context, Interaction],
@@ -82,7 +82,7 @@ class RoleToolsRequires(RoleToolsMixin):
         await ctx.send(msg)
 
     @required_roles.command(name="remove")
-@commands.has_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def required_remove(
         self,
         ctx: Union[Context, Interaction],

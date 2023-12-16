@@ -268,7 +268,7 @@ class LinkQuoter(Cog):
         self.views[view._message] = view
 
     @commands.guild_only()
-    @commands.has_permissions(manage_guild=True)
+        @commands.has_permissions(manage_guild=True)
     @commands.hybrid_group()
     async def setlinkquoter(self, ctx: commands.Context) -> None:
         """Commands to configure LinkQuoter."""

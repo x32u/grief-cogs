@@ -32,7 +32,7 @@ class MyMessageConverter(commands.MessageConverter):
 @cog_i18n(_)
 class settings(Cog):
     @commands.guild_only()
-@commands.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     @commands.hybrid_group(name="settickettool", aliases=["tickettoolset"])
     async def configuration(self, ctx: commands.Context) -> None:
         """Configure TicketTool for your server."""

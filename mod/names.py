@@ -34,7 +34,7 @@ class ModInfo(MixinMeta):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(manage_nicknames=True)
-@commands.has_permissions(manage_nicknames=True)
+    @commands.has_permissions(manage_nicknames=True)
     async def nick(self, ctx: commands.Context, member: discord.Member, *, nickname: str = ""):
         """Change a member's server nickname.
 
