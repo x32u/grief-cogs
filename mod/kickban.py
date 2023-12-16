@@ -331,7 +331,7 @@ class KickBanMixin(MixinMeta):
                 )
             )
 
-    @commands.command()
+    @commands.group(aliases=["b"])
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     async def ban(
