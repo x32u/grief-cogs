@@ -999,7 +999,7 @@ class EventMixin:
         await i18n.set_contextual_locales_from_guild(self.bot, guild)
         # set guild level i18n
         time = datetime.datetime.now(datetime.timezone.utc)
-        embed = discord.Embed(description=after.mention, colour=discord.Colour.dark_theme(), timestamp=time)
+        embed = discord.Embed(description=after.mention, colour=discord.Colour.blurple(), timestamp=time)
         msg = _("{emoji} `{time}` Updated role **{role}**\n").format(
             emoji=self.settings[guild.id]["role_change"]["emoji"],
             time=time.strftime("%H:%M:%S"),
