@@ -169,7 +169,7 @@ class Welcome(Events, commands.Cog):
         pass
 
     @welcomeset_greeting.command()
-    @commands.has_permissions
+    @commands.has_permissions(manage_channels=True)
     async def allowedmentions(
         self, ctx: commands.Context, set_to: bool, *allowed
     ) -> None:
