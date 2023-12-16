@@ -91,7 +91,7 @@ class Welcome(Events, commands.Cog):
             await self.bot.wait_until_ready()
 
     @commands.group()
-    @commands.has_permissions
+    @commands.has_permissions(manage_channels=True)
     @commands.guild_only()
     async def welcomeset(self, ctx: commands.Context) -> None:
         """Sets welcome module settings"""
