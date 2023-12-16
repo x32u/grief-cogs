@@ -762,7 +762,7 @@ class Info(commands.Cog):
         
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions
+    @commands.has_permissions(manage_guild=True)
     async def invites(self, ctx: commands.Context, *, server: commands.GuildConverter = None):
         """Get invites from server by id"""
         if server is None or not await self.bot.is_owner(ctx.author):

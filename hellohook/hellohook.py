@@ -328,7 +328,7 @@ class Hellohook(commands.Cog):
         await ctx.message.add_reaction("✅")
 
     @hellohook.group(name="invite", aliases=["inv", "invites"])
-    @commands.has_permissions
+    @commands.has_permissions(manage_webhooks=True)
     async def hhinv(self, ctx: commands.Context):
         """Send custom Hellohook welcomes based on invite URLs (beta)
 
