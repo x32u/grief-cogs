@@ -149,7 +149,7 @@ class Application(commands.Cog):
             "Your application has been sent to the Admins, thank you!"
         )
 
-    @commands.has_permissions
+    @commands.has_permissions(manage_guild=True)
     @commands.group(autohelp=True, aliases=["setapply", "applicationset"])
     @commands.guild_only()
     async def applyset(self, ctx: commands.Context):
