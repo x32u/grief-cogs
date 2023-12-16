@@ -52,36 +52,6 @@ class ReTriggerMixin(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def modlog_settings(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def modlog_bans(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def modlog_kicks(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def modlog_filter(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def modlog_addroles(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def modlog_removeroles(self, ctx: commands.Context) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def modlog_channel(
-        self, ctx: commands.Context, channel: Union[discord.TextChannel, str, None]
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
     async def cooldown(
         self, ctx: commands.Context, trigger: TriggerExists, time: int, style="guild"
     ) -> None:
@@ -297,14 +267,6 @@ class ReTriggerMixin(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def ban(self, ctx: commands.Context, name: str, regex: ValidRegex) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def kick(self, ctx: commands.Context, name: str, regex: ValidRegex) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
     async def react(
         self,
         ctx: commands.Context,
@@ -338,35 +300,5 @@ class ReTriggerMixin(ABC):
         check_filenames: Optional[bool] = False,
         *,
         regex: str,
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def addrole(
-        self,
-        ctx: commands.Context,
-        name: str,
-        regex: ValidRegex,
-        roles: commands.Greedy[discord.Role],
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def removerole(
-        self,
-        ctx: commands.Context,
-        name: str,
-        regex: ValidRegex,
-        roles: commands.Greedy[discord.Role],
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def multi(
-        self,
-        ctx: commands.Context,
-        name: str,
-        regex: ValidRegex,
-        multi_response: commands.Greedy[MultiResponse],
     ) -> None:
         raise NotImplementedError()
