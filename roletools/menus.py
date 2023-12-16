@@ -6,7 +6,6 @@ import discord
 from red_commons.logging import getLogger
 
 # from discord.ext.commands.errors import BadArgument
-from grief.core import bank
 from grief.core.commands import commands
 from grief.core.i18n import Translator
 from grief.core.utils.chat_formatting import humanize_list, pagify
@@ -322,11 +321,6 @@ class RolePages(menus.ListPageSource):
         settings += _("**Created:** {created_at}\n").format(
             created_at=discord.utils.format_dt(role.created_at)
         )
-        if cost := role_settings.get("cost"):
-            currency_name = await bank.get_currency_name(menu.ctx.guild)
-            settings += _("**Cost:** {cost} {currency_name}\n").format(
-                cost=cost, currency_name=currency_name
-            )
         if buttons:
             settings += _("**Buttons:** {button_names}\n").format(button_names=buttons)
         if select_options:
