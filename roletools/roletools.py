@@ -167,7 +167,7 @@ class RoleTools(
         self._ready.set()
 
     async def cog_load(self) -> None:
-        if await self.config.version() < "1.0.1":
+        if await self.config():
             sticky_role_config = Config.get_conf(
                 None, identifier=1358454876, cog_name="StickyRoles"
             )
@@ -201,7 +201,6 @@ class RoleTools(
                         ).auto_roles() as auto_roles:
                             if role.id not in auto_roles:
                                 auto_roles.append(role.id)
-            await self.config.version.set("1.0.1")
         loop = asyncio.get_running_loop()
         loop.create_task(self.load_views())
         loop.create_task(self.add_cog_to_dev_env())
