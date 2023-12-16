@@ -17,7 +17,6 @@ from .events import RoleToolsEvents
 from .exclusive import RoleToolsExclusive
 from .inclusive import RoleToolsInclusive
 from .menus import BaseMenu, ConfirmView, RolePages
-from .messages import RoleToolsMessages
 from .settings import RoleToolsSettings
 
 roletools = RoleToolsMixin.roletools
@@ -67,7 +66,6 @@ class RoleTools(
     RoleToolsEvents,
     RoleToolsExclusive,
     RoleToolsInclusive,
-    RoleToolsMessages,
     RoleToolsSettings,
     commands.Cog,
     metaclass=CompositeMetaClass,
