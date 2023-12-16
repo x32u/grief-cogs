@@ -12,14 +12,12 @@ from grief.core.utils import AsyncIter, bounded_gather
 from grief.core.utils.chat_formatting import humanize_list
 
 from .abc import RoleToolsMixin
-from .buttons import RoleToolsButtons
 from .converter import RawUserIds, RoleHierarchyConverter, SelfRoleConverter
 from .events import RoleToolsEvents
 from .exclusive import RoleToolsExclusive
 from .inclusive import RoleToolsInclusive
 from .menus import BaseMenu, ConfirmView, RolePages
 from .messages import RoleToolsMessages
-from .reactions import RoleToolsReactions
 from .requires import RoleToolsRequires
 from .select import RoleToolsSelect
 from .settings import RoleToolsSettings
@@ -69,11 +67,9 @@ def custom_cooldown(ctx: commands.Context) -> Optional[discord.app_commands.Cool
 @cog_i18n(_)
 class RoleTools(
     RoleToolsEvents,
-    RoleToolsButtons,
     RoleToolsExclusive,
     RoleToolsInclusive,
     RoleToolsMessages,
-    RoleToolsReactions,
     RoleToolsRequires,
     RoleToolsSettings,
     RoleToolsSelect,
@@ -93,7 +89,6 @@ class RoleTools(
             enable_slash=False,
         )
         self.config.register_guild(
-            reaction_roles={},
             auto_roles=[],
             atomic=None,
             buttons={},
@@ -103,14 +98,11 @@ class RoleTools(
         self.config.register_role(
             sticky=False,
             auto=False,
-            reactions=[],
-            buttons=[],
             select_options=[],
             exclusive_to=[],
             inclusive_with=[],
             required=[],
             require_any=False,
-            cost=0,
         )
         self.config.register_member(sticky_roles=[])
         self.settings: Dict[int, Any] = {}
