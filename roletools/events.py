@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 
 import discord
 from red_commons.logging import getLogger
-from grief.core import bank, commands
+from grief.core import commands
 from grief.core.i18n import Translator
 
 from .abc import RoleToolsMixin
@@ -324,30 +324,6 @@ class RoleToolsEvents(RoleToolsMixin):
                             )
                         )
                         continue
-            if (cost := await self.config.role(role).cost()) and check_cost:
-                if await bank.can_spend(member, cost):
-                    try:
-                        await bank.withdraw_credits(member, cost)
-                    except Exception:
-                        log.info(
-                            "Could not assign %s to %s as they don't have enough credits.",
-                            role,
-                            member,
-                        )
-                        ret.append(
-                            RoleChangeResponse(role, _("You do not have enough credits."), False)
-                        )
-                        continue
-                else:
-                    log.info(
-                        "Could not assign %s to %s as they don't have enough credits.",
-                        role,
-                        member,
-                    )
-                    ret.append(
-                        RoleChangeResponse(role, _("You do not have enough credits."), False)
-                    )
-                    continue
             if (inclusive := await self.config.role(role).inclusive_with()) and check_inclusive:
                 inclusive_roles = []
                 for role_id in inclusive:
