@@ -1229,7 +1229,7 @@ class TicketTool(settings, DashboardIntegration, Cog):
         members = list(members)
         await ticket.remove_member(members, ctx.author)
 
-    @commands.admin_or_permissions(administrator=True)
+@commands.has_permissions(administrator=True)
     @ticket.command(name="list")
     async def command_list(
         self,

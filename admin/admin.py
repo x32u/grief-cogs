@@ -414,7 +414,7 @@ class Admin(commands.Cog):
         await ctx.send(box(msg, "diff"))
 
     @commands.group()
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def selfroleset(self, ctx: commands.Context):
         """Manage selfroles."""
         pass

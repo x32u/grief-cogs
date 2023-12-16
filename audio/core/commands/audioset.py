@@ -635,7 +635,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="dj")
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def command_audioset_dj(self, ctx: commands.Context):
         """Toggle DJ mode.
 
@@ -908,7 +908,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="role")
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def command_audioset_role(self, ctx: commands.Context, *, role_name: discord.Role):
         """Set the role to use for DJ mode."""
         await self.config.guild(ctx.guild).dj_role.set(role_name.id)
@@ -1446,7 +1446,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(usage="<maximum volume>", name="maxvolume")
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def command_audioset_maxvolume(self, ctx: commands.Context, max_volume: int):
         """Set the maximum volume allowed in this server."""
         if max_volume < 1:

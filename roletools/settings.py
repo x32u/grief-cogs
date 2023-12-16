@@ -18,7 +18,7 @@ class RoleToolsSettings(RoleToolsMixin):
     """This class handles setting the roletools role settings."""
 
     @roletools.command()
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def selfadd(
         self,
         ctx: Context,
@@ -58,7 +58,7 @@ class RoleToolsSettings(RoleToolsMixin):
             await ctx.send(msg)
 
     @roletools.command()
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def selfrem(
         self,
         ctx: Context,
@@ -97,50 +97,51 @@ class RoleToolsSettings(RoleToolsMixin):
             msg = _("The {role} role is no longer self removeable.").format(role=role.mention)
             await ctx.send(msg)
 
-    @roletools.command(with_app_command=False)
-    @commands.admin_or_permissions(manage_roles=True)
-    async def atomic(self, ctx: Context, true_or_false: Optional[Union[bool, str]] = None) -> None:
-        """
-        Set the atomicity of role assignment.
-        What this means is that when this is `True` roles will be
-        applied inidvidually and not cause any errors. When this
-        is set to `False` roles will be grouped together into one call.
+    # @roletools.command(with_app_command=False)
+    # @commands.admin_or_permissions(manage_roles=True)
+    # async def atomic(self, ctx: Context, true_or_false: Optional[Union[bool, str]] = None) -> None:
+        # """
+        # Set the atomicity of role assignment.
+        # What this means is that when this is `True` roles will be
+        # applied inidvidually and not cause any errors. When this
+        # is set to `False` roles will be grouped together into one call.
 
-        This can cause race conditions if you have other methods of applying
-        roles setup when set to `False`.
+        # This can cause race conditions if you have other methods of applying
+        # roles setup when set to `False`.
 
-        `[true_or_false]` optional boolean of what to set the setting to.
-        To reset back to the default global rules use `clear`.
-        If not provided the current setting will be shown instead.
-        """
-        cur_setting = await self.config.guild(ctx.guild).atomic()
-        if true_or_false is None or true_or_false not in ["clear", True, False]:
-            if cur_setting is True:
-                msg = _("This server is currently using atomic role assignment")
-            elif cur_setting is False:
-                msg = _("This server is not currently using atomic role assignment.")
-            else:
-                msg = _(
-                    "This server currently using the global atomic "
-                    "role assignment setting `{current_global}`."
-                ).format(current_global=await self.config.atomic())
-            command = f"`{ctx.clean_prefix}roletools atomic yes`"
-            cmd_msg = _("Do {command} to atomically assign roles.").format(command=command)
-            await ctx.send(f"{msg} {cmd_msg}")
-            return
-        elif true_or_false is True:
-            await self.config.guild(ctx.guild).atomic.set(True)
-            msg = _("RoleTools will now atomically assign roles.")
-        elif true_or_false is False:
-            await self.config.guild(ctx.guild).atomic.set(False)
-            msg = _("RoleTools will no longer atomically assign roles.")
-        else:
-            await self.config.guild(ctx.guild).atomic.clear()
-            msg = _("RoleTools will now default to the global atomic setting.")
-        await ctx.send(msg)
+        # [true_or_false ]` optional boolean of what to set the setting to.
+       # To reset back to the default global rules use `clear`.
+        # If not provided the current setting will be shown instead.
+       #  """
+       # cur_setting = await self.config.guild(ctx.guild).atomic()
+       # if true_or_false is None or true_or_false not in ["clear", True, False]:
+        #    if cur_setting is True:
+         #       msg = _("This server is currently using atomic role assignment")
+          #  elif cur_setting is False:
+           #     msg = _("This server is not currently using atomic role assignment.")
+           # else:
+            #    msg = _(
+             #       "This server currently using the global atomic "
+              #      "role assignment setting `{current_global}`."
+               # ).format(current_global=await self.config.atomic())
+            # command = f"`{ctx.clean_prefix}roletools atomic yes`"
+            # cmd_msg = _("Do {command} to atomically assign roles.").format(command=command)
+            # await ctx.send(f"{msg} {cmd_msg}")
+            # return
+        # elif true_or_false is True:
+            # await self.config.guild(ctx.guild).atomic.set(True)
+            # msg = _("RoleTools will now atomically assign roles.")
+        # elif true_or_false is False:
+            # await self.config.guild(ctx.guild).atomic.set(False)
+            # msg = _("RoleTools will no longer atomically assign roles.")
+        # else:
+            # await self.config.guild(ctx.guild).atomic.clear()
+            # msg = _("RoleTools will now default to the global atomic setting.")
+        # await ctx.send(msg)
 
     @roletools.command(with_app_command=False)
     @commands.is_owner()
+    @commands.command(hidden=True)
     async def globalatomic(self, ctx: Context, true_or_false: Optional[bool] = None) -> None:
         """
         Set the atomicity of role assignment.
@@ -175,7 +176,7 @@ class RoleToolsSettings(RoleToolsMixin):
             await ctx.send(_("RoleTools will no longer atomically assign roles."))
 
     @roletools.command()
-    @commands.admin_or_permissions(manage_roles=True)
+    @commands.has_permissions(manage_roles=True)
     async def sticky(
         self,
         ctx: Context,
@@ -214,7 +215,7 @@ class RoleToolsSettings(RoleToolsMixin):
         await ctx.send(msg)
 
     @roletools.command(aliases=["auto"])
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def autorole(
         self,
         ctx: Context,

@@ -334,7 +334,7 @@ class KickBanMixin(MixinMeta):
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(ban_members=True)
-    @commands.admin_or_permissions(ban_members=True)
+@commands.has_permissions(ban_members=True)
     async def ban(
         self,
         ctx: commands.Context,

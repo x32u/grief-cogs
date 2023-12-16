@@ -23,7 +23,7 @@ class RoleToolsInclusive(RoleToolsMixin):
         """
 
     @inclusive.command(name="add")
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def inclusive_add(
         self,
         ctx: Context,
@@ -60,7 +60,7 @@ class RoleToolsInclusive(RoleToolsMixin):
         await ctx.send(msg)
 
     @inclusive.command(name="mutual", with_app_command=False)
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def mutual_inclusive_add(self, ctx: Context, *roles: RoleHierarchyConverter) -> None:
         """
         Allow setting roles mutually inclusive to eachother
@@ -93,7 +93,7 @@ class RoleToolsInclusive(RoleToolsMixin):
         )
 
     @inclusive.command(name="remove")
-    @commands.admin_or_permissions(manage_roles=True)
+@commands.has_permissions(manage_roles=True)
     async def inclusive_remove(
         self,
         ctx: Context,

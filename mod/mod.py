@@ -329,7 +329,7 @@ class Mod(
 
     @commands.group(aliases=["aph", "autopub"])
     @commands.guild_only()
-    @commands.admin_or_permissions(manage_guild=True)
+@commands.has_permissions(manage_guild=True)
     async def autopublisher(self, ctx: commands.Context) -> None:
         """Manage AutoPublisher setting."""
 
