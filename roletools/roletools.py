@@ -725,7 +725,7 @@ class RoleTools(
         try:
             await role.edit(display_icon=display_icon,reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",)
             embed = discord.Embed(description=f"> {ctx.author.mention}: Updated **{role}** role icon.", color=0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
+            return await ctx.reply(embed=embed, mention_author=False)
         except discord.HTTPException as e:
             raise commands.UserFeedbackCheckFailure(_(ERROR_MESSAGE).format(error=box(e, lang="py")))
 
