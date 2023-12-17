@@ -245,7 +245,7 @@ class Roles(MixinMeta):
         hoisted = hoisted if hoisted is not None else not role.hoist
         await role.edit(hoist=hoisted)
         now = "now" if hoisted else "no longer"
-        await ctx.send(f"**{role}** is {now} hoisted.", embed=await self.get_info(role))
+        await ctx.send(f"**{role}** is {now} hoisted.")
 
     @commands.has_guild_permissions(manage_roles=True)
     @role.command("name")
