@@ -662,7 +662,7 @@ class RoleTools(
             return
         reason = get_audit_reason(ctx.author)
         await member.add_roles(role, reason=reason)
-        embed = discord.Embed(description=f"> Added **{role.name}** to **{member}**.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: Added **{role.name}** to **{member}**.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
