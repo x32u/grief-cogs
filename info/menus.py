@@ -242,11 +242,7 @@ class ChannelsMenu(menus.MenuPages, inherit_buttons=True):
     async def switch_voice(self, payload):
         await self.set_source("voice")
 
-    @menus.button(
-        "\N{SATELLITE ANTENNA}",
-        position=menus.First(3),
-        skip_if=check_channels("stage"),
-    )
+    @menus.button("\N{SATELLITE ANTENNA}", position=menus.First(3), skip_if=check_channels("stage"),)
     async def switch_stage(self, payload):
         await self.set_source("stage")
 
