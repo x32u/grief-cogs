@@ -48,7 +48,7 @@ class BaseView(discord.ui.View):
         self.back_button = BackButton(discord.ButtonStyle.grey, 0)
         self.first_item = FirstItemButton(discord.ButtonStyle.grey, 0)
         self.last_item = LastItemButton(discord.ButtonStyle.grey, 0)
-        self.stop_button = StopButton(discord.ButtonStyle.red, 0)
+        self.stop_button = StopButton(discord.ButtonStyle.grey, 0)
         self.add_item(self.stop_button)
         self.add_item(self.first_item)
         self.add_item(self.back_button)
@@ -59,7 +59,7 @@ class BaseView(discord.ui.View):
             and self.ctx
             and self.ctx.author.id in self.ctx.bot.owner_ids
         ):
-            self.leave_guild_button = LeaveGuildButton(discord.ButtonStyle.red, 1)
+            self.leave_guild_button = LeaveGuildButton(discord.ButtonStyle.grey, 1)
             self.join_guild_button = JoinGuildButton(discord.ButtonStyle.green, 1)
             self.add_item(self.leave_guild_button)
             self.add_item(self.join_guild_button)
@@ -227,7 +227,7 @@ class ChannelsMenu(menus.MenuPages, inherit_buttons=False):
         self.channel_type = channel_type
         await self.change_source(self.sources[channel_type])
 
-    def should_add_reactions(self):
+    def should_add_buttons(self):
         return True
 
     @menus.button("\N{BOOKMARK TABS}", position=menus.First(0), skip_if=check_channels("category"))
