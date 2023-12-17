@@ -703,9 +703,7 @@ class RoleTools(
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command(require_var_positional=True)
-    async def removemulti(
-        self, ctx: commands.Context, role: StrictRole, *members: TouchableMember
-    ):
+    async def removemulti(self, ctx: commands.Context, role: StrictRole, *members: TouchableMember):
         """Remove a role from multiple members."""
         reason = get_audit_reason(ctx.author)
         already_members = []
@@ -718,10 +716,10 @@ class RoleTools(
                 already_members.append(member)
         msg = []
         if success_members:
-            msg.append(f"Removed **{role}** from {humanize_roles(success_members)}.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Removed **{role}** from {humanize_roles(success_members)}.", color=0x313338)
         if already_members:
-            msg.append(f"{humanize_roles(already_members)} didn't have **{role}**.")
-        await ctx.send("\n".join(msg))
+            embed = discord.Embed(description=f"> {ctx.author.mention}: {humanize_roles(already_members)} didn't have **{role}**.", color=0x313338)
+        await ctx.reply("\n".join(msg), embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -743,21 +741,17 @@ class RoleTools(
         msg = []
         if to_add:
             await member.add_roles(*to_add, reason=reason)
-            msg.append(f"Added {humanize_roles(to_add)} to **{member}**.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Added {humanize_roles(to_add)} to **{member}**.", color=0x313338)
         if already_added:
-            msg.append(f"**{member}** already had {humanize_roles(already_added)}.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{member}** already had {humanize_roles(already_added)}.", color=0x313338)
         if not_allowed:
-            msg.append(
-                f"You do not have permission to assign the roles {humanize_roles(not_allowed)}."
-            )
-        await ctx.send("\n".join(msg))
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You do not have permission to assign the roles {humanize_roles(not_allowed)}.", color=0x313338)
+        await ctx.reply("\n".join(msg), embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @multirole.command("remove", require_var_positional=True)
-    async def multirole_remove(
-        self, ctx: commands.Context, member: TouchableMember, *roles: StrictRole
-    ):
+    async def multirole_remove(self, ctx: commands.Context, member: TouchableMember, *roles: StrictRole):
         """Remove multiple roles from a member."""
         not_allowed = []
         not_added = []
@@ -774,14 +768,12 @@ class RoleTools(
         msg = []
         if to_rm:
             await member.remove_roles(*to_rm, reason=reason)
-            msg.append(f"Removed {humanize_roles(to_rm)} from **{member}**.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Removed {humanize_roles(to_rm)} from **{member}**.", color=0x313338)
         if not_added:
-            msg.append(f"**{member}** didn't have {humanize_roles(not_added)}.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{member}** didn't have {humanize_roles(not_added)}.", color=0x313338)
         if not_allowed:
-            msg.append(
-                f"You do not have permission to assign the roles {humanize_roles(not_allowed)}."
-            )
-        await ctx.send("\n".join(msg))
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You do not have permission to assign the roles {humanize_roles(not_allowed)}.", color=0x313338)
+        await ctx.reply("\n".join(msg), embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -796,88 +788,49 @@ class RoleTools(
     async def rall(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all members of the server."""
         member_list = self.get_member_list(ctx.guild.members, role, False)
-        await self.super_massrole(
-            ctx, member_list, role, "No one on the server has this role.", False
-        )
+        await self.super_massrole(ctx, member_list, role, "No one on the server has this role.", False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def humans(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all humans (non-bots) in the server."""
-        await self.super_massrole(
-            ctx,
-            [member for member in ctx.guild.members if not member.bot],
-            role,
-            "Every human in the server has this role.",
-        )
+        await self.super_massrole(ctx, [member for member in ctx.guild.members if not member.bot], role, "Every human in the server has this role.",)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def rhumans(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all humans (non-bots) in the server."""
-        await self.super_massrole(
-            ctx,
-            [member for member in ctx.guild.members if not member.bot],
-            role,
-            "None of the humans in the server have this role.",
-            False,
-        )
+        await self.super_massrole(ctx, [member for member in ctx.guild.members if not member.bot], role, "None of the humans in the server have this role.", False,)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def bots(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all bots in the server."""
-        await self.super_massrole(
-            ctx,
-            [member for member in ctx.guild.members if member.bot],
-            role,
-            "Every bot in the server has this role.",
-        )
+        await self.super_massrole(ctx, [member for member in ctx.guild.members if member.bot], role, "Every bot in the server has this role.",)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command()
     async def rbots(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all bots in the server."""
-        await self.super_massrole(
-            ctx,
-            [member for member in ctx.guild.members if member.bot],
-            role,
-            "None of the bots in the server have this role.",
-            False,
-        )
+        await self.super_massrole(ctx, [member for member in ctx.guild.members if member.bot], role, "None of the bots in the server have this role.", False,)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("in")
-    async def role_in(
-        self, ctx: commands.Context, target_role: FuzzyRole, *, add_role: StrictRole
-    ):
+    async def role_in(self, ctx: commands.Context, target_role: FuzzyRole, *, add_role: StrictRole):
         """Add a role to all members of a another role."""
-        await self.super_massrole(
-            ctx,
-            [member for member in target_role.members],
-            add_role,
-            f"Every member of **{target_role}** has this role.",
-        )
+        await self.super_massrole(ctx, [member for member in target_role.members], add_role, f"Every member of **{target_role}** has this role.",)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("rin")
-    async def role_rin(
-        self, ctx: commands.Context, target_role: FuzzyRole, *, remove_role: StrictRole
-    ):
+    async def role_rin(self, ctx: commands.Context, target_role: FuzzyRole, *, remove_role: StrictRole):
         """Remove a role from all members of a another role."""
-        await self.super_massrole(
-            ctx,
-            [member for member in target_role.members],
-            remove_role,
-            f"No one in **{target_role}** has this role.",
-            False,
-        )
+        await self.super_massrole(ctx, [member for member in target_role.members], remove_role, f"No one in **{target_role}** has this role.", False,)
 
     @commands.check(targeter_cog)
     @commands.has_guild_permissions(manage_roles=True)
@@ -919,14 +872,7 @@ class RoleTools(
             False,
         )
 
-    async def super_massrole(
-        self,
-        ctx: commands.Context,
-        members: list,
-        role: discord.Role,
-        fail_message: str = "Everyone in the server has this role.",
-        adding: bool = True,
-    ) -> None:
+    async def super_massrole(self, ctx: commands.Context, members: list, role: discord.Role, fail_message: str = "Everyone in the server has this role.", adding: bool = True,) -> None:
         if guild_roughly_chunked(ctx.guild) is False and self.bot.intents.members:
             await ctx.guild.chunk()
         member_list = self.get_member_list(members, role, adding)
@@ -935,21 +881,12 @@ class RoleTools(
             return
         verb = "add" if adding else "remove"
         word = "to" if adding else "from"
-        await ctx.send(
-            f"Beginning to {verb} **{role.name}** {word} **{len(member_list)}** members."
-        )
+        embed = discord.Embed(description=f"> {ctx.author.mention}: Beginning to {verb} **{role.name}** {word} **{len(member_list)}** members.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
         async with ctx.typing():
             result = await self.massrole(member_list, [role], get_audit_reason(ctx.author), adding)
-            result_text = f"{verb.title()[:5]}ed **{role.name}** {word} **{len(result['completed'])}** members."
-            if result["skipped"]:
-                result_text += (
-                    f"\nSkipped {verb[:5]}ing roles for **{len(result['skipped'])}** members."
-                )
-            if result["failed"]:
-                result_text += (
-                    f"\nFailed {verb[:5]}ing roles for **{len(result['failed'])}** members."
-                )
-        await ctx.send(result_text)
+            result_text = discord.Embed(description=f"> {ctx.author.mention}: {verb.title()[:5]}ed **{role.name}** {word} **{len(result['completed'])}** members.", color=0x313338)
+        await ctx.reply(result_text, mention_author=False)
 
     def get_member_list(
         self, members: List[discord.Member], role: discord.Role, adding: bool = True
