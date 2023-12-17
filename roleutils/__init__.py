@@ -772,4 +772,4 @@ class Roles(MixinMeta):
         
 async def setup(bot: Grief):
     cog = RoleUtils(bot)
-    await bot.add_cog, cog
+    await discord.utils.maybe_coroutine(bot.add_cog, cog)
