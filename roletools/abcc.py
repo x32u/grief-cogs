@@ -1,6 +1,6 @@
 
 
-from abcc import ABC, ABCMeta, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 from typing import Any, Dict
 
 from grief.core import Config, commands
