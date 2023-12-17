@@ -705,9 +705,7 @@ class RoleTools(
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command(require_var_positional=True)
-    async def removemulti(
-        self, ctx: commands.Context, role: StrictRole, *members: TouchableMember
-    ):
+    async def removemulti(self, ctx: commands.Context, role: StrictRole, *members: TouchableMember):
         """Remove a role from multiple members."""
         reason = get_audit_reason(ctx.author)
         already_members = []
@@ -715,9 +713,9 @@ class RoleTools(
         for member in members:
             if role in member.roles:
                 await member.remove_roles(role, reason=reason)
-                success_members.append(member)
+                success_members.append
             else:
-                already_members.append(member)
+                already_members.append
         msg = []
         if success_members:
             msg.append(f"Removed **{role}** from {humanize_roles(success_members)}.")
