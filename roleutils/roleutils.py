@@ -8,7 +8,6 @@ from typing import List, Optional
 
 import discord
 from grief.core import commands
-from grief import Grief
 from grief.core.utils.chat_formatting import humanize_number as hn
 from grief.core.utils.chat_formatting import pagify, text_to_file
 from grief.core.utils.mod import get_audit_reason
@@ -39,8 +38,7 @@ log = logging.getLogger("grief.roleutils")
 
 _ = lambda s: s
 
-class RoleUtils(commands.Cog):
-        """RoleUtils for your community."""
+
 
 GENERIC_FORBIDDEN = _(
     "I attempted to do something that Discord denied me permissions for."
@@ -105,6 +103,7 @@ def chunks(l, n):
     """
     for i in range(0, len(l), n):
         yield l[i : i + n]
+
 
 class EmojiOrUrlConverter(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str):
@@ -767,7 +766,3 @@ class Roles(MixinMeta):
             raise commands.UserFeedbackCheckFailure(
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
-        
-async def setup(bot: Grief):
-    cog = RoleUtils(bot)
-    await discord.utils.maybe_coroutine(bot.add_cog, cog)
