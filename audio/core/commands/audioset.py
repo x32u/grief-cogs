@@ -31,12 +31,12 @@ _ = Translator("Audio", Path(__file__))
 
 class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
     @commands.group(name="audioset")
-    @commands.has_permissions
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset(self, ctx: commands.Context):
         """Music configuration options."""
 
     @command_audioset.group(name="restrictions")
-    @commands.has_permissions
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_perms(self, ctx: commands.Context):
         """Manages the keyword whitelist and blacklist."""
 
@@ -427,7 +427,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.group(name="autoplay")
     @commands.guild_only()
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_autoplay(self, ctx: commands.Context):
         """Change auto-play setting."""
 
@@ -591,7 +591,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="dailyqueue")
     @commands.guild_only()
-    @commands.admin()
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_historical_queue(self, ctx: commands.Context):
         """Toggle daily queues.
 
@@ -612,7 +612,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="dc")
     @commands.guild_only()
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_dc(self, ctx: commands.Context):
         """Toggle the bot auto-disconnecting when done playing.
 
@@ -677,7 +677,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="emptydisconnect")
     @commands.guild_only()
-    @commands.mod_or_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_emptydisconnect(self, ctx: commands.Context, seconds: int):
         """Auto-disconnect from channel when bot is alone in it for x seconds, 0 to disable.
 
@@ -709,7 +709,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="emptypause")
     @commands.guild_only()
-    @commands.mod_or_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_emptypause(self, ctx: commands.Context, seconds: int):
         """Auto-pause after x seconds when room is empty, 0 to disable."""
         if seconds < 0:
@@ -737,7 +737,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="lyrics")
     @commands.guild_only()
-    @commands.mod_or_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_lyrics(self, ctx: commands.Context):
         """Prioritise tracks with lyrics."""
         prefer_lyrics = await self.config.guild(ctx.guild).prefer_lyrics()
@@ -829,7 +829,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="maxlength")
     @commands.guild_only()
-    @commands.mod_or_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_maxlength(self, ctx: commands.Context, seconds: Union[int, str]):
         """Max length of a track to queue in seconds, 0 to disable.
 
@@ -858,7 +858,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="notify")
     @commands.guild_only()
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_notify(self, ctx: commands.Context):
         """Toggle track announcement and other bot messages."""
         notify = await self.config.guild(ctx.guild).notify()
@@ -873,7 +873,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="autodeafen")
     @commands.guild_only()
-    @commands.mod_or_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_auto_deafen(self, ctx: commands.Context):
         """Toggle whether the bot will be auto deafened upon joining the voice channel."""
         auto_deafen = await self.config.guild(ctx.guild).auto_deafen()
@@ -1174,7 +1174,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="thumbnail")
     @commands.guild_only()
-    @commands.mod_or_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_thumbnail(self, ctx: commands.Context):
         """Toggle displaying a thumbnail on audio messages."""
         thumbnail = await self.config.guild(ctx.guild).thumbnail()
@@ -1189,7 +1189,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="vote")
     @commands.guild_only()
-    @commands.mod_or_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_vote(self, ctx: commands.Context, percent: int):
         """Percentage needed for non-mods to skip tracks, 0 to disable."""
         if percent < 0:
@@ -1254,7 +1254,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
     @command_audioset.command(name="countrycode")
     @commands.guild_only()
-    @commands.mod_or_permissions(administrator=True)
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_countrycode(self, ctx: commands.Context, country: str):
         """Set the country code for Spotify searches."""
         if len(country) != 2:
@@ -1402,7 +1402,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         await self.send_embed_msg(ctx, title=_("Setting Changed"), description=msg)
 
     @command_audioset.command(name="persistqueue")
-    @commands.admin()
+    @commands.has_permissions(manage_guild=True)
     async def command_audioset_persist_queue(self, ctx: commands.Context):
         """Toggle persistent queues.
 
