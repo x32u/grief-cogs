@@ -258,15 +258,12 @@ class ChannelsMenu(menus.MenuPages, inherit_buttons=False):
     async def switch_stage(self, payload):
         await self.set_source("stage")
 
-    @menus.button(
-        "\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\ufe0f",
-        position=menus.First(3),
-    )
+    @menus.button("<:grief_force_arrow_L:1107472953362370650>",position=menus.First(3),)
     async def go_to_first_page(self, payload):
         """go to the first page"""
         await self.show_page(0)
 
-    @menus.button("\N{BLACK LEFT-POINTING TRIANGLE}\ufe0f", position=menus.First(4))
+    @menus.button("<:grief_arrow_L:1107472938069921852> ", position=menus.First(4))
     async def go_to_previous_page(self, payload):
         """go to the previous page"""
         if self.current_page == 0:
@@ -274,7 +271,7 @@ class ChannelsMenu(menus.MenuPages, inherit_buttons=False):
         else:
             await self.show_checked_page(self.current_page - 1)
 
-    @menus.button("\N{BLACK RIGHT-POINTING TRIANGLE}\ufe0f", position=menus.Last(0))
+    @menus.button("<:grief_arrow_R:1107472965580365836> ", position=menus.Last(0))
     async def go_to_next_page(self, payload):
         """go to the next page"""
         if self.current_page == self._source.get_max_pages() - 1:
@@ -282,10 +279,7 @@ class ChannelsMenu(menus.MenuPages, inherit_buttons=False):
         else:
             await self.show_checked_page(self.current_page + 1)
 
-    @menus.button(
-        "\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\ufe0f",
-        position=menus.Last(1),
-    )
+    @menus.button("<:grief_force_arrow_R:1107472947758780456> ", position=menus.Last(1),)
     async def go_to_last_page(self, payload):
         """go to the last page"""
         # The call here is safe because it's guarded by skip_if
