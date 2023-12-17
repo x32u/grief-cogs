@@ -482,7 +482,7 @@ class StopButton(discord.ui.Button):
         row: Optional[int],
     ):
         super().__init__(style=style, row=row)
-        self.style = style
+        self.style = discord.ButtonStyle.grey
         self.emoji = "<:grief_x:1107472962333978655>"
 
     async def callback(self, interaction: discord.Interaction):
