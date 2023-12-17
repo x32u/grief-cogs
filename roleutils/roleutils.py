@@ -5,7 +5,7 @@ import logging
 from typing import Any, Coroutine, Dict, Final, List, Literal, Optional, TypeAlias, Union
 
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.config import Config
 from grief.core.modlog import register_casetype
 from grief.core.utils.chat_formatting import humanize_list
@@ -31,20 +31,15 @@ class RoleUtils(
     Includes massroling, role targeting, and reaction roles.
     """
 
-    __author__: Final[List[str]] = ["inthedark.org", "PhenoM4n4n"]
-    __version__: Final[str] = "1.5.0"
-
     def format_help_for_context(self, ctx: commands.Context) -> str:
         pre_processed = super().format_help_for_context(ctx)
         n = "\n" if "\n\n" not in pre_processed else ""
         return (
-            f"{pre_processed}{n}\n"
-            f"Version: {self.__version__}\n"
-            f"Author: {humanize_list(self.__author__)}"
+            f"{pre_processed}{n}"
         )
 
-    def __init__(self, bot: Red, *_args: Any) -> None:
-        self.bot: Red = bot
+    def __init__(self, bot: Grief, *_args: Any) -> None:
+        self.bot: Grief = bot
         self.config: Config = Config.get_conf(
             self,
             identifier=326235423452394523,
