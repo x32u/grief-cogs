@@ -75,9 +75,6 @@ class RoleUtils(
 
         super().__init__(*_args)
 
-    async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
-        return
-
     async def initialize(self) -> None:
         log.debug("RoleUtils initialize")
         await super().initialize()
