@@ -692,12 +692,7 @@ class RoleTools(
         await ctx.reply(embed=embed, mention_author=False)
 
     @role.command(name="displayicon", aliases=["icon", "display_icon"])
-    async def role_display_icon(
-        self,
-        ctx: commands.Context,
-        role: discord.Role,
-        display_icon: EmojiOrUrlConverter = None,
-    ) -> None:
+    async def role_display_icon(self, ctx: commands.Context, role: discord.Role, display_icon: EmojiOrUrlConverter = None,) -> None:
         """Edit role display icon.
 
         `display_icon` can be an Unicode emoji, a custom emoji or an url. You can also upload an attachment.
@@ -708,7 +703,6 @@ class RoleTools(
                     "This server doesn't have the `ROLE_ICONS` feature. This server needs more boosts to perform this action."
                 )
             )
-        await self.check_role(ctx, role)
         if len(ctx.message.attachments) > 0:
             display_icon = await ctx.message.attachments[0].read()  # Read an optional attachment.
         elif display_icon is not None:
