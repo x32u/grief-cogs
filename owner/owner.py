@@ -576,8 +576,12 @@ class Owner(commands.Cog):
                 if guild:
                     page = ctx.bot.guilds.index(guild)
 
-        BaseView(source=GuildPages(guilds=guilds), cog=self, page_start=page,)
-        await ctx.reply(BaseView, mention_author=False)
+        await BaseView(
+            source=GuildPages(guilds=guilds),
+            cog=self,
+            page_start=page,
+            ctx=ctx,
+        ).start(ctx=ctx)
 
     @commands.is_owner()
     @commands.hybrid_command()

@@ -325,7 +325,7 @@ class BaseView(discord.ui.View):
             self.disable_navigation()
         page = await self._source.get_page(self.page_start)
         kwargs = await self._get_kwargs_from_page(page)
-        self.message = await ctx.send(**kwargs, view=self)
+        self.message = await ctx.reply(**kwargs, view=self, mention_author=False)
         return self.message
 
     async def _get_kwargs_from_page(self, page):
