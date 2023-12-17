@@ -1,4 +1,5 @@
 
+
 from abc import ABC, ABCMeta, abstractmethod
 from typing import Any, Dict
 
@@ -11,21 +12,21 @@ class MixinMeta(ABC):
     Base class for well behaved type hint detection with composite class.
     Basically, to keep developers sane when not all attributes are defined in each mixin.
 
-    Strategy borrowed from grief.cogs.mutes.abc
+    Strategy borrowed from redbot.cogs.mutes.abc
     """
 
     config: Config
     bot: Grief
-    cache: dict
+    cache: Dict[str, Any]
 
-    def __init__(self, *_args):
+    def __init__(self, *_args: Any) -> None:
         self.config: Config
         self.bot: Grief
-        self.cache: dict
+        self.cache: Dict[str, Any]
 
     @abstractmethod
-    async def initialize(self):
-        ...
+    async def initialize(self) -> None:
+        raise NotImplementedError()
 
 
 class CompositeMetaClass(commands.CogMeta, ABCMeta):

@@ -5,12 +5,13 @@ import logging
 from typing import Any, Coroutine, Dict, Final, List, Literal, Optional, TypeAlias, Union
 
 from grief.core import commands
-from grief.core.bot import Grief
+from grief.core.bot import Red
 from grief.core.config import Config
 from grief.core.modlog import register_casetype
 from grief.core.utils.chat_formatting import humanize_list
 
 from .abc import CompositeMetaClass
+from .reactroles import ReactRoles
 from .roles import Roles
 
 log: logging.Logger = logging.getLogger("red.seina.roleutils")
@@ -20,6 +21,7 @@ RequestType: TypeAlias = Literal["discord_deleted_user", "owner", "user", "user_
 
 class RoleUtils(
     Roles,
+    ReactRoles,
     commands.Cog,
     metaclass=CompositeMetaClass,
 ):
@@ -29,15 +31,20 @@ class RoleUtils(
     Includes massroling, role targeting, and reaction roles.
     """
 
+    __author__: Final[List[str]] = ["inthedark.org", "PhenoM4n4n"]
+    __version__: Final[str] = "1.5.0"
+
     def format_help_for_context(self, ctx: commands.Context) -> str:
         pre_processed = super().format_help_for_context(ctx)
         n = "\n" if "\n\n" not in pre_processed else ""
         return (
-            f"{pre_processed}{n}"
+            f"{pre_processed}{n}\n"
+            f"Version: {self.__version__}\n"
+            f"Author: {humanize_list(self.__author__)}"
         )
 
-    def __init__(self, bot: Grief, *_args: Any) -> None:
-        self.bot: Grief = bot
+    def __init__(self, bot: Red, *_args: Any) -> None:
+        self.bot: Red = bot
         self.config: Config = Config.get_conf(
             self,
             identifier=326235423452394523,
@@ -74,6 +81,9 @@ class RoleUtils(
         self.cache: Dict[str, Any] = {}
 
         super().__init__(*_args)
+
+    async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
+        return
 
     async def initialize(self) -> None:
         log.debug("RoleUtils initialize")

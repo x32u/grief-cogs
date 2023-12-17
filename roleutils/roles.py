@@ -105,38 +105,6 @@ def chunks(l, n):
         yield l[i : i + n]
 
 
-class Roles(MixinMeta):
-    """
-    Useful role commands.
-    """
-
-    def __init__(self):
-        self.interpreter = Interpreter([LooseVariableGetterBlock()])
-        super().__init__()
-
-    async def initialize(self):
-        log.debug("Roles Initialize")
-        await super().initialize()
-
-    async def check_role(self, ctx: commands.Context, role: discord.Role) -> bool:
-        if (
-            not ctx.author.top_role > role
-            and ctx.author.id != ctx.guild.owner.id
-            and ctx.author.id not in ctx.bot.owner_ids
-        ):
-            raise commands.UserFeedbackCheckFailure(
-                (
-                    "I can not let you edit @{role.name} ({role.id}) because that role is higher than or equal to your highest role in the Discord hierarchy."
-                ).format(role=role),
-            )
-        if not ctx.me.top_role > role:
-            raise commands.UserFeedbackCheckFailure(
-                (
-                    "I can not edit @{role.name} ({role.id}) because that role is higher than or equal to my highest role in the Discord hierarchy."
-                ).format(role=role),
-            )
-        return True
-
 class EmojiOrUrlConverter(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str):
         try:
@@ -177,6 +145,38 @@ class PermissionConverter(commands.Converter):
         if argument not in permissions:
             raise commands.BadArgument(_("This permission is invalid."))
         return argument
+
+class Roles(MixinMeta):
+    """
+    Useful role commands.
+    """
+
+    def __init__(self):
+        self.interpreter = Interpreter([LooseVariableGetterBlock()])
+        super().__init__()
+
+    async def initialize(self):
+        log.debug("Roles Initialize")
+        await super().initialize()
+
+    async def check_role(self, ctx: commands.Context, role: discord.Role) -> bool:
+        if (
+            not ctx.author.top_role > role
+            and ctx.author.id != ctx.guild.owner.id
+            and ctx.author.id not in ctx.bot.owner_ids
+        ):
+            raise commands.UserFeedbackCheckFailure(
+                (
+                    "I can not let you edit @{role.name} ({role.id}) because that role is higher than or equal to your highest role in the Discord hierarchy."
+                ).format(role=role),
+            )
+        if not ctx.me.top_role > role:
+            raise commands.UserFeedbackCheckFailure(
+                (
+                    "I can not edit @{role.name} ({role.id}) because that role is higher than or equal to my highest role in the Discord hierarchy."
+                ).format(role=role),
+            )
+        return True
 
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
