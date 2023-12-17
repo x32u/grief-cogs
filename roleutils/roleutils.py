@@ -7,16 +7,13 @@ from typing import Any, Coroutine, Dict, Final, List, Literal, Optional, TypeAli
 from grief.core import commands
 from grief.core.bot import Grief
 from grief.core.config import Config
-from grief.core.modlog import register_casetype
 from grief.core.utils.chat_formatting import humanize_list
 
 from .abc import CompositeMetaClass
 from .reactroles import ReactRoles
 from .roles import Roles
 
-log: logging.Logger = logging.getLogger("red.seina.roleutils")
-
-RequestType: TypeAlias = Literal["discord_deleted_user", "owner", "user", "user_strict"]
+log: logging.Logger = logging.getLogger("grief.roleutils")
 
 
 class RoleUtils(
@@ -77,29 +74,9 @@ class RoleUtils(
 
         super().__init__(*_args)
 
-    async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
-        return
-
     async def initialize(self) -> None:
         log.debug("RoleUtils initialize")
         await super().initialize()
-
-    async def _register_cases(self) -> None:
-        await self.bot.wait_until_red_ready()
-        await self._register_casetype()
-
-    @staticmethod
-    async def _register_casetype() -> None:
-        autorole: Dict[str, Union[str, bool]] = {
-            "name": "autorole",
-            "default_setting": True,
-            "image": "✔️",
-            "case_str": "Auto Role",
-        }
-        try:
-            await register_casetype(**autorole)
-        except RuntimeError:
-            pass
 
     @staticmethod
     def task_done_callback(task: asyncio.Task) -> None:
