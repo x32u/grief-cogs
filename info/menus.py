@@ -291,7 +291,7 @@ class ChannelsMenu(menus.MenuPages, inherit_buttons=False):
         # The call here is safe because it's guarded by skip_if
         await self.show_page(self._source.get_max_pages() - 1)
 
-    @menus.button("\<:grief_x:1107472962333978655>", position=menus.First(5))
+    @menus.button("<:grief_x:1107472962333978655>", position=menus.First(5))
     async def stop_pages(self, payload: discord.RawReactionActionEvent) -> None:
         self.stop()
 
@@ -483,7 +483,7 @@ class StopButton(discord.ui.Button):
     ):
         super().__init__(style=style, row=row)
         self.style = style
-        self.emoji = "\<:grief_x:1107472962333978655>"
+        self.emoji = "<:grief_x:1107472962333978655>"
 
     async def callback(self, interaction: discord.Interaction):
         self.view.stop()
