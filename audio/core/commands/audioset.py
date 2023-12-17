@@ -35,20 +35,24 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
     async def command_audioset(self, ctx: commands.Context):
         """Music configuration options."""
 
+    @commands.command(hidden=True)
     @command_audioset.group(name="restrictions")
     @commands.has_permissions(manage_guild=True)
     async def command_audioset_perms(self, ctx: commands.Context):
         """Manages the keyword whitelist and blacklist."""
 
+    @commands.command(hidden=True)
     @commands.is_owner()
     @command_audioset_perms.group(name="global")
     async def command_audioset_perms_global(self, ctx: commands.Context):
         """Manages the global keyword whitelist/blacklist."""
 
+    @commands.command(hidden=True)
     @command_audioset_perms_global.group(name="whitelist")
     async def command_audioset_perms_global_whitelist(self, ctx: commands.Context):
         """Manages the global keyword whitelist."""
 
+    @commands.command(hidden=True)
     @command_audioset_perms_global_whitelist.command(name="add")
     async def command_audioset_perms_global_whitelist_add(
         self, ctx: commands.Context, *, keyword: str
@@ -77,6 +81,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ),
             )
 
+    @commands.command(hidden=True)
     @command_audioset_perms_global_whitelist.command(name="list")
     @commands.bot_can_react()
     async def command_audioset_perms_global_whitelist_list(self, ctx: commands.Context):
@@ -104,6 +109,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         )
         await menu(ctx, pages)
 
+    @commands.command(hidden=True)
     @command_audioset_perms_global_whitelist.command(name="clear")
     async def command_audioset_perms_global_whitelist_clear(self, ctx: commands.Context):
         """Clear all keywords from the whitelist."""
@@ -117,6 +123,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             description=_("All entries have been removed from the whitelist."),
         )
 
+    @commands.command(hidden=True)
     @command_audioset_perms_global_whitelist.command(name="delete", aliases=["del", "remove"])
     async def command_audioset_perms_global_whitelist_delete(
         self, ctx: commands.Context, *, keyword: str
@@ -142,10 +149,12 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ),
             )
 
+    @commands.command(hidden=True)
     @command_audioset_perms_global.group(name="blacklist")
     async def command_audioset_perms_global_blacklist(self, ctx: commands.Context):
         """Manages the global keyword blacklist."""
-
+    
+    @commands.command(hidden=True)
     @command_audioset_perms_global_blacklist.command(name="add")
     async def command_audioset_perms_global_blacklist_add(
         self, ctx: commands.Context, *, keyword: str
@@ -170,7 +179,8 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                     blacklisted=keyword
                 ),
             )
-
+    
+    @commands.command(hidden=True)
     @command_audioset_perms_global_blacklist.command(name="list")
     @commands.bot_can_react()
     async def command_audioset_perms_global_blacklist_list(self, ctx: commands.Context):
@@ -198,6 +208,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         )
         await menu(ctx, pages)
 
+    @commands.command(hidden=True)
     @command_audioset_perms_global_blacklist.command(name="clear")
     async def command_audioset_perms_global_blacklist_clear(self, ctx: commands.Context):
         """Clear all keywords added to the blacklist."""
@@ -211,6 +222,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             description=_("All entries have been removed from the blacklist."),
         )
 
+    @commands.command(hidden=True)
     @command_audioset_perms_global_blacklist.command(name="delete", aliases=["del", "remove"])
     async def command_audioset_perms_global_blacklist_delete(
         self, ctx: commands.Context, *, keyword: str
@@ -236,11 +248,13 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ),
             )
 
+    @commands.command(hidden=True)
     @command_audioset_perms.group(name="whitelist")
     @commands.guild_only()
     async def command_audioset_perms_whitelist(self, ctx: commands.Context):
         """Manages the keyword whitelist."""
 
+    @commands.command(hidden=True)
     @command_audioset_perms_whitelist.command(name="add")
     async def command_audioset_perms_whitelist_add(self, ctx: commands.Context, *, keyword: str):
         """Adds a keyword to the whitelist.
@@ -267,6 +281,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ),
             )
 
+    @commands.command(hidden=True)
     @command_audioset_perms_whitelist.command(name="list")
     @commands.bot_can_react()
     async def command_audioset_perms_whitelist_list(self, ctx: commands.Context):
@@ -294,6 +309,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         )
         await menu(ctx, pages)
 
+    @commands.command(hidden=True)
     @command_audioset_perms_whitelist.command(name="clear")
     async def command_audioset_perms_whitelist_clear(self, ctx: commands.Context):
         """Clear all keywords from the whitelist."""
@@ -307,6 +323,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             description=_("All entries have been removed from the whitelist."),
         )
 
+    @commands.command(hidden=True)
     @command_audioset_perms_whitelist.command(name="delete", aliases=["del", "remove"])
     async def command_audioset_perms_whitelist_delete(
         self, ctx: commands.Context, *, keyword: str
@@ -332,11 +349,13 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ),
             )
 
+    @commands.command(hidden=True)
     @command_audioset_perms.group(name="blacklist")
     @commands.guild_only()
     async def command_audioset_perms_blacklist(self, ctx: commands.Context):
         """Manages the keyword blacklist."""
 
+    @commands.command(hidden=True)
     @command_audioset_perms_blacklist.command(name="add")
     async def command_audioset_perms_blacklist_add(self, ctx: commands.Context, *, keyword: str):
         """Adds a keyword to the blacklist."""
@@ -360,6 +379,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ),
             )
 
+    @commands.command(hidden=True)
     @command_audioset_perms_blacklist.command(name="list")
     @commands.bot_can_react()
     async def command_audioset_perms_blacklist_list(self, ctx: commands.Context):
@@ -387,6 +407,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         )
         await menu(ctx, pages)
 
+    @commands.command(hidden=True)
     @command_audioset_perms_blacklist.command(name="clear")
     async def command_audioset_perms_blacklist_clear(self, ctx: commands.Context):
         """Clear all keywords added to the blacklist."""
@@ -400,6 +421,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             description=_("All entries have been removed from the blacklist."),
         )
 
+    @commands.command(hidden=True)
     @command_audioset_perms_blacklist.command(name="delete", aliases=["del", "remove"])
     async def command_audioset_perms_blacklist_delete(
         self, ctx: commands.Context, *, keyword: str
@@ -431,6 +453,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
     async def command_audioset_autoplay(self, ctx: commands.Context):
         """Change auto-play setting."""
 
+    
     @command_audioset_autoplay.command(name="toggle")
     async def command_audioset_autoplay_toggle(self, ctx: commands.Context):
         """Toggle auto-play when there no songs in queue."""
@@ -452,6 +475,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         if self._player_check(ctx):
             await self.set_player_settings(ctx)
 
+    @commands.command(hidden=True)
     @command_audioset_autoplay.command(name="playlist", usage="<playlist_name_OR_id> [args]")
     @commands.bot_can_react()
     async def command_audioset_autoplay_playlist(
@@ -553,6 +577,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ),
             )
 
+    @commands.command(hidden=True)
     @command_audioset_autoplay.command(name="reset")
     async def command_audioset_autoplay_reset(self, ctx: commands.Context):
         """Resets auto-play to the default playlist."""
@@ -589,6 +614,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             ),
         )
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="dailyqueue")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
@@ -827,6 +853,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             ),
         )
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="maxlength")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
@@ -886,6 +913,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             ),
         )
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="restrict")
     @commands.is_owner()
     @commands.guild_only()
@@ -923,6 +951,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             description=_("DJ role set to: {role.name}.").format(role=dj_role_obj),
         )
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="settings", aliases=["info"])
     @commands.guild_only()
     async def command_audioset_settings(self, ctx: commands.Context):
@@ -1172,6 +1201,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             ),
         )
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="thumbnail")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
@@ -1187,6 +1217,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
             ),
         )
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="vote")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
@@ -1252,6 +1283,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         ).format(prefix=ctx.prefix)
         await ctx.maybe_send_embed(message)
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="countrycode")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
@@ -1275,6 +1307,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
 
         await self.config.guild(ctx.guild).country_code.set(country)
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="mycountrycode")
     @commands.guild_only()
     async def command_audioset_countrycode_user(self, ctx: commands.Context, country: str):
@@ -1401,6 +1434,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         await self.config.cache_age.set(age)
         await self.send_embed_msg(ctx, title=_("Setting Changed"), description=msg)
 
+    @commands.command(hidden=True)
     @command_audioset.command(name="persistqueue")
     @commands.has_permissions(manage_guild=True)
     async def command_audioset_persist_queue(self, ctx: commands.Context):
