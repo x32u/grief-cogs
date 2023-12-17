@@ -181,10 +181,6 @@ class MixinMeta(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def maybe_charge_requester(self, ctx: commands.Context, jukebox_price: int) -> bool:
-        raise NotImplementedError()
-
-    @abstractmethod
     async def _can_instaskip(self, ctx: commands.Context, member: discord.Member) -> bool:
         raise NotImplementedError()
 
