@@ -34,7 +34,7 @@ from grief.core.utils.chat_formatting import pagify, text_to_file
 from grief.core.utils.mod import get_audit_reason
 from TagScriptEngine import Interpreter, LooseVariableGetterBlock, MemberAdapter
 
-from .abc import CompositeMetaClass, MixinMeta
+from .abcc import CompositeMetaClass, MixinMeta
 from .converters import FuzzyRole, RoleArgumentConverter, StrictRole, TargeterArgs, TouchableMember
 from .utils import (
     can_run_command,
