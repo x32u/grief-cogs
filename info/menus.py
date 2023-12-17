@@ -483,7 +483,7 @@ class StopButton(discord.ui.Button):
     ):
         super().__init__(style=style, row=row)
         self.style = style
-        self.emoji = "\N{HEAVY MULTIPLICATION X}\N{VARIATION SELECTOR-16}"
+        self.emoji = "\<:grief_x:1107472962333978655>"
 
     async def callback(self, interaction: discord.Interaction):
         self.view.stop()
