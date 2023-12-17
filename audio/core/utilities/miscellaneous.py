@@ -12,7 +12,7 @@ import discord
 import lavalink
 from red_commons.logging import getLogger
 
-from grief.core import bank, commands
+from grief.core import commands
 from grief.core.commands import Context
 from grief.core.i18n import Translator
 from grief.core.utils import AsyncIter, can_user_send_messages_in
@@ -35,30 +35,6 @@ class MiscellaneousUtilities(MixinMeta, metaclass=CompositeMetaClass):
     ) -> asyncio.Task:
         """Non blocking version of clear_react."""
         return asyncio.create_task(self.clear_react(message, emoji))
-
-    async def maybe_charge_requester(self, ctx: commands.Context, jukebox_price: int) -> bool:
-        jukebox = await self.config.guild(ctx.guild).jukebox()
-        if jukebox and not await self._can_instaskip(ctx, ctx.author):
-            can_spend = await bank.can_spend(ctx.author, jukebox_price)
-            if can_spend:
-                await bank.withdraw_credits(ctx.author, jukebox_price)
-            else:
-                credits_name = await bank.get_currency_name(ctx.guild)
-                bal = await bank.get_balance(ctx.author)
-                await self.send_embed_msg(
-                    ctx,
-                    title=_("Not enough {currency}").format(currency=credits_name),
-                    description=_(
-                        "{required_credits} {currency} required, but you have {bal}."
-                    ).format(
-                        currency=credits_name,
-                        required_credits=humanize_number(jukebox_price),
-                        bal=humanize_number(bal),
-                    ),
-                )
-            return can_spend
-        else:
-            return True
 
     async def send_embed_msg(
         self, ctx: commands.Context, author: Mapping[str, str] = None, **kwargs
