@@ -19,6 +19,9 @@ from .inclusive import RoleToolsInclusive
 from .menus import BaseMenu, ConfirmView, RolePages
 from .settings import RoleToolsSettings
 
+from AAA3A_utils import Cog, CogsUtils, Menu 
+from grief.core.utils.chat_formatting import box, pagify
+
 roletools = RoleToolsMixin.roletools
 
 ### roleutils
@@ -45,6 +48,10 @@ from .utils import (
 
 log = getLogger("grief.roletools")
 _ = Translator("RoleTools", __file__)
+
+ERROR_MESSAGE = _(
+    "I attempted to do something that Discord denied me permissions for. Your command failed to successfully complete.\n{error}"
+)
 
 def targeter_cog(ctx: commands.Context):
     cog = ctx.bot.get_cog("Targeter")
@@ -650,6 +657,40 @@ class RoleTools(
         await role.edit(name=name)
         embed = discord.Embed(description=f"> {ctx.author.mention}: Changed role name **{old_name}** to **{name}**.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
+    
+    @commands.has_guild_permissions(manage_roles=True)
+    @role.command(name="delete", aliases=["-"])
+    async def editrole_delete(
+        self,
+        ctx: commands.Context,
+        role: discord.Role,
+        confirmation: bool = False,
+    ) -> None:
+        """Delete a role."""
+        await self.check_role(ctx, role)
+        if not confirmation and not ctx.assume_yes:
+            if ctx.bot_permissions.embed_links:
+                embed: discord.Embed = discord.Embed()
+                embed.title = _("⚠️ - Delete role")
+                embed.description = _(
+                    "Do you really want to delete the role {role.mention} ({role.id})?"
+                ).format(role=role)
+                embed.color = 0xF00020
+                content = ctx.author.mention
+            else:
+                embed = None
+                content = f"{ctx.author.mention} " + _(
+                    "Do you really want to delete the role {role.mention} ({role.id})?"
+                ).format(role=role)
+            if not await CogsUtils.ConfirmationAsk(ctx, content=content, embed=embed):
+                await CogsUtils.delete_message(ctx.message)
+                return
+        try:
+            await role.delete(
+                reason=f"{ctx.author} ({ctx.author.id}) has deleted the role {role.name} ({role.id})."
+            )
+        except discord.HTTPException as e:
+            raise commands.UserFeedbackCheckFailure(_(ERROR_MESSAGE).format(error=box(e, lang="py")))
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
