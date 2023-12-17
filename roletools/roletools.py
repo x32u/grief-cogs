@@ -695,10 +695,12 @@ class RoleTools(
                 already_members.append(member)
         msg = []
         if success_members:
-            msg.append(f"Added **{role}** to {humanize_roles(success_members)}.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Added **{role}** to {humanize_roles(success_members)}.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
         if already_members:
             msg.append(f"{humanize_roles(already_members)} already had **{role}**.")
-        await ctx.send("\n".join(msg))
+        embed = discord.Embed(description=f"> {ctx.author.mention}: {humanize_roles(already_members)} already had **{role}**.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -721,6 +723,7 @@ class RoleTools(
             msg.append(f"Removed **{role}** from {humanize_roles(success_members)}.")
         if already_members:
             msg.append(f"{humanize_roles(already_members)} didn't have **{role}**.")
+            
         await ctx.send("\n".join(msg))
 
     @commands.has_guild_permissions(manage_roles=True)
