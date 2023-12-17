@@ -3,6 +3,12 @@ from abc import ABC
 from typing import Any, Dict, List, Optional, Union
 
 import discord
+import aiohttp
+try:
+    from emoji import UNICODE_EMOJI_ENGLISH as EMOJI_DATA  # emoji<2.0.0
+except ImportError:
+    from emoji import EMOJI_DATA  # emoji>=2.0.0
+import emoji
 from red_commons.logging import getLogger
 from grief.core import Config, commands
 from grief.core.bot import Grief
@@ -135,6 +141,46 @@ class RoleTools(
         self.settings: Dict[int, Any] = {}
         self._ready: asyncio.Event = asyncio.Event()
         self.views: Dict[int, Dict[str, discord.ui.View]] = {}
+
+class EmojiOrUrlConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str):
+        try:
+            return await discord.ext.commands.converter.CONVERTER_MAPPING[discord.Emoji]().convert(
+                ctx, argument
+            )
+        except commands.BadArgument:
+            pass
+        if argument.startswith("<") and argument.endswith(">"):
+            argument = argument[1:-1]
+        return argument
+
+
+class PositionConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> int:
+        try:
+            position = int(argument)
+        except ValueError:
+            raise commands.BadArgument(_("The position must be an integer."))
+        max_guild_roles_position = len(ctx.guild.roles)
+        if position <= 0 or position >= max_guild_roles_position + 1:
+            raise commands.BadArgument(
+                _(
+                    "The indicated position must be between 1 and {max_guild_roles_position}."
+                ).format(max_guild_roles_position=max_guild_roles_position)
+            )
+        _list = list(range(max_guild_roles_position - 1))[::-1]
+        position = _list[position - 1]
+        return position + 1
+
+
+class PermissionConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> str:
+        permissions = [
+            key for key, value in dict(discord.Permissions.all_channel()).items() if value
+        ]
+        if argument not in permissions:
+            raise commands.BadArgument(_("This permission is invalid."))
+        return argument
 
     def cog_check(self, ctx: commands.Context) -> bool:
         return self._ready.is_set()
@@ -646,12 +692,63 @@ class RoleTools(
         embed = discord.Embed(description=f"> {ctx.author.mention}: **{role}** is {now} hoisted.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
+    @role.command(name="displayicon", aliases=["icon", "display_icon"])
+    async def role_display_icon(
+        self,
+        ctx: commands.Context,
+        role: discord.Role,
+        display_icon: EmojiOrUrlConverter = None,
+    ) -> None:
+        """Edit role display icon.
+
+        `display_icon` can be an Unicode emoji, a custom emoji or an url. You can also upload an attachment.
+        """
+        if "ROLE_ICONS" not in ctx.guild.features:
+            raise commands.UserFeedbackCheckFailure(
+                _(
+                    "This server doesn't have the `ROLE_ICONS` feature. This server needs more boosts to perform this action."
+                )
+            )
+        await self.check_role(ctx, role)
+        if len(ctx.message.attachments) > 0:
+            display_icon = await ctx.message.attachments[0].read()  # Read an optional attachment.
+        elif display_icon is not None:
+            if isinstance(display_icon, discord.Emoji):
+                # emoji_url = f"https://cdn.discordapp.com/emojis/{display_icon.id}.png"
+                # async with aiohttp.ClientSession() as session:
+                #     async with session.get(emoji_url) as r:
+                #         display_icon = await r.read()  # Get emoji data.
+                display_icon = await display_icon.read()
+            elif display_icon.strip("\N{VARIATION SELECTOR-16}") in EMOJI_DATA:
+                display_icon = display_icon
+            else:
+                url = display_icon
+                async with aiohttp.ClientSession() as session:
+                    try:
+                        async with session.get(url) as r:
+                            display_icon = await r.read()  # Get URL data.
+                    except aiohttp.InvalidURL:
+                        return await ctx.send("That URL is invalid.")
+                    except aiohttp.ClientError:
+                        return await ctx.send(
+                            "Something went wrong while trying to get the image."
+                        )
+        # else:
+        #     raise commands.UserInputError()  # Send the command help if no attachment, no Unicode/custom emoji and no URL.
+        try:
+            await role.edit(
+                display_icon=display_icon,
+                reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
+            )
+        except discord.HTTPException as e:
+            raise commands.UserFeedbackCheckFailure(
+                _(ERROR_MESSAGE).format(error=box(e, lang="py"))
+            )
+
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("name")
-    async def role_name(
-        self, ctx: commands.Context, role: StrictRole(check_integrated=False), *, name: str
-    ):
+    async def role_name(self, ctx: commands.Context, role: StrictRole(check_integrated=False), *, name: str):
         """Change a role's name."""
         old_name = role.name
         await role.edit(name=name)
@@ -662,9 +759,9 @@ class RoleTools(
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("delete")
     async def role_delete(self, ctx: commands.Context, role: StrictRole(check_integrated=True),):
-        """Change a role's name."""
+        """Delete a role."""
         await role.delete()
-        embed = discord.Embed(description=f"> {ctx.author.mention}: Deleted **{role.name}**", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: Deleted the role **{role.name}**", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
