@@ -39,7 +39,8 @@ log = logging.getLogger("grief.roleutils")
 
 _ = lambda s: s
 
-
+class RoleUtils(commands.Cog):
+        """RoleUtils for your community."""
 
 GENERIC_FORBIDDEN = _(
     "I attempted to do something that Discord denied me permissions for."
@@ -104,9 +105,6 @@ def chunks(l, n):
     """
     for i in range(0, len(l), n):
         yield l[i : i + n]
-
-class RoleUtils(commands.Cog):
-        """RoleUtils for your community."""
 
 class EmojiOrUrlConverter(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str):
