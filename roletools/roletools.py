@@ -676,7 +676,8 @@ class RoleTools(
         """Change a role's name."""
         old_name = role.name
         await role.edit(name=name)
-        await ctx.send(f"Changed **{old_name}** to **{name}**.", embed=await self.get_info(role))
+        embed = discord.Embed(description=f"> Changed **{old_name}** to **{name}**.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -684,12 +685,14 @@ class RoleTools(
     async def role_add(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Add a role to a member."""
         if role in member.roles:
-            await ctx.send(f"**{member}** already has the role **{role}**. Maybe try removing it instead.")
+            embed = discord.Embed(description=f"> **{member}** already has the role **{role}**. Maybe try removing it instead.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             return
         reason = get_audit_reason(ctx.author)
         await member.add_roles(role, reason=reason)
         embed = discord.Embed(description=f"> Added **{role.name}** to **{member}**.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
+
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
