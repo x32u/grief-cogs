@@ -105,6 +105,8 @@ def chunks(l, n):
     for i in range(0, len(l), n):
         yield l[i : i + n]
 
+class RoleUtils(commands.Cog):
+        """RoleUtils for your community."""
 
 class EmojiOrUrlConverter(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str):
@@ -768,6 +770,6 @@ class Roles(MixinMeta):
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
         
-    async def setup(bot: Grief) -> None:
-        role_utils = RoleUtils(bot)
-        await bot.add_cog(role_utils)
+async def setup(bot: Grief):
+    cog = RoleUtils(bot)
+    await bot.add_cog, cog
