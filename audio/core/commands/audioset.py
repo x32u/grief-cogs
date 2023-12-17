@@ -36,6 +36,7 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         """Music configuration options."""
 
     
+    @commands.command(hidden=True)
     @command_audioset.group(name="restrictions")
     @commands.has_permissions(manage_guild=True)
     async def command_audioset_perms(self, ctx: commands.Context):
@@ -48,11 +49,12 @@ class AudioSetCommands(MixinMeta, metaclass=CompositeMetaClass):
         """Manages the global keyword whitelist/blacklist."""
 
     
+    @commands.command(hidden=True)
     @command_audioset_perms_global.group(name="whitelist")
     async def command_audioset_perms_global_whitelist(self, ctx: commands.Context):
         """Manages the global keyword whitelist."""
 
-    
+    @commands.command(hidden=True)
     @command_audioset_perms_global_whitelist.command(name="add")
     async def command_audioset_perms_global_whitelist_add(
         self, ctx: commands.Context, *, keyword: str
