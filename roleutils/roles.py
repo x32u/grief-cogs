@@ -7,7 +7,7 @@ from typing import Dict, Generator, List, Optional, Sequence, Tuple
 
 import discord
 from grief.core import commands
-from redbot.core.utils.chat_formatting import humanize_number as hn
+from grief.core.utils.chat_formatting import humanize_number as hn
 from grief.core.utils.chat_formatting import pagify, text_to_file
 from grief.core.utils.mod import get_audit_reason
 from TagScriptEngine import Interpreter, LooseVariableGetterBlock, MemberAdapter
