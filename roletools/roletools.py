@@ -676,7 +676,7 @@ class RoleTools(
         """Change a role's name."""
         old_name = role.name
         await role.edit(name=name)
-        embed = discord.Embed(description=f"> Changed **{old_name}** to **{name}**.", color=0x313338)
+        embed = discord.Embed(description=f"> Changed role name **{old_name}** to **{name}**.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
