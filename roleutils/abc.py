@@ -1,7 +1,8 @@
 
-from abc import ABC, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
+from typing import Any, Dict
 
-from grief.core import Config
+from grief.core import Config, commands
 from grief.core.bot import Grief
 
 
@@ -25,3 +26,10 @@ class MixinMeta(ABC):
     @abstractmethod
     async def initialize(self):
         ...
+
+
+class CompositeMetaClass(commands.CogMeta, ABCMeta):
+    """
+    This allows the metaclass used for proper type detection to
+    coexist with discord.py's metaclass
+    """
