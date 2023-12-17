@@ -487,7 +487,7 @@ class ForwardButton(discord.ui.Button):
     ):
         super().__init__(style=style, row=row)
         self.style = style
-        self.emoji = "\N{BLACK RIGHT-POINTING TRIANGLE}\N{VARIATION SELECTOR-16}"
+        self.emoji = "\<:grief_arrow_R:1107472965580365836>"
 
     async def callback(self, interaction: discord.Interaction):
         await self.view.show_checked_page(self.view.current_page + 1, interaction)
@@ -501,7 +501,7 @@ class BackButton(discord.ui.Button):
     ):
         super().__init__(style=style, row=row)
         self.style = style
-        self.emoji = "\N{BLACK LEFT-POINTING TRIANGLE}\N{VARIATION SELECTOR-16}"
+        self.emoji = "\<:grief_arrow_L:1107472938069921852>"
 
     async def callback(self, interaction: discord.Interaction):
         await self.view.show_checked_page(self.view.current_page - 1, interaction)
@@ -516,7 +516,7 @@ class LastItemButton(discord.ui.Button):
         super().__init__(style=style, row=row)
         self.style = style
         self.emoji = (
-            "\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\N{VARIATION SELECTOR-16}"
+            "<:grief_force_arrow_R:1107472947758780456>"
         )
 
     async def callback(self, interaction: discord.Interaction):
@@ -532,7 +532,7 @@ class FirstItemButton(discord.ui.Button):
         super().__init__(style=style, row=row)
         self.style = style
         self.emoji = (
-            "\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\N{VARIATION SELECTOR-16}"
+            "<:grief_force_arrow_L:1107472953362370650>"
         )
 
     async def callback(self, interaction: discord.Interaction):
