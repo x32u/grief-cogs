@@ -684,13 +684,12 @@ class RoleTools(
     async def role_add(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Add a role to a member."""
         if role in member.roles:
-            await ctx.send(
-                f"**{member}** already has the role **{role}**. Maybe try removing it instead."
-            )
+            await ctx.send(f"**{member}** already has the role **{role}**. Maybe try removing it instead.")
             return
         reason = get_audit_reason(ctx.author)
         await member.add_roles(role, reason=reason)
-        await ctx.send(f"Added **{role.name}** to **{member}**.")
+        embed = discord.Embed(description=f"> Added **{role.name}** to **{member}**.", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
