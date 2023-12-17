@@ -690,22 +690,19 @@ class RoleTools(
         for member in members:
             if role not in member.roles:
                 await member.add_roles(role, reason=reason)
-                success_members.append(member)
-            else:
-                already_members.append(member)
-        msg = []
         if success_members:
             embed = discord.Embed(description=f"> {ctx.author.mention}: Added **{role}** to {humanize_roles(success_members)}.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
         if already_members:
-            msg.append(f"{humanize_roles(already_members)} already had **{role}**.")
-        embed = discord.Embed(description=f"> {ctx.author.mention}: {humanize_roles(already_members)} already had **{role}**.", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Added **{role}** to {humanize_roles(success_members)}.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command(require_var_positional=True)
-    async def removemulti(self, ctx: commands.Context, role: StrictRole, *members: TouchableMember):
+    async def removemulti(
+        self, ctx: commands.Context, role: StrictRole, *members: TouchableMember
+    ):
         """Remove a role from multiple members."""
         reason = get_audit_reason(ctx.author)
         already_members = []
@@ -713,9 +710,9 @@ class RoleTools(
         for member in members:
             if role in member.roles:
                 await member.remove_roles(role, reason=reason)
-                success_members.append
+                success_members.append(member)
             else:
-                already_members.append
+                already_members.append(member)
         msg = []
         if success_members:
             msg.append(f"Removed **{role}** from {humanize_roles(success_members)}.")
