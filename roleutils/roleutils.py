@@ -11,7 +11,6 @@ from grief.core.modlog import register_casetype
 from grief.core.utils.chat_formatting import humanize_list
 
 from .abc import CompositeMetaClass
-from .reactroles import ReactRoles
 from .roles import Roles
 
 log: logging.Logger = logging.getLogger("red.seina.roleutils")
@@ -21,7 +20,6 @@ RequestType: TypeAlias = Literal["discord_deleted_user", "owner", "user", "user_
 
 class RoleUtils(
     Roles,
-    ReactRoles,
     commands.Cog,
     metaclass=CompositeMetaClass,
 ):
