@@ -211,7 +211,7 @@ class BaseMenu(menus.MenuPages, inherit_buttons=False):
         self.stop()
 
 
-class ChannelsMenu(menus.MenuPages, inherit_buttons=False):
+class ChannelsMenu(menus.MenuPages, inherit_buttons=True):
     def __init__(self, sources: dict, channel_type: str, total_channels: int, timeout: int = 30):
         super().__init__(
             sources[next(iter(sources))],
@@ -227,7 +227,7 @@ class ChannelsMenu(menus.MenuPages, inherit_buttons=False):
         self.channel_type = channel_type
         await self.change_source(self.sources[channel_type])
 
-    def should_add_buttons(self):
+    def should_add_reactions(self):
         return True
 
     @menus.button("\N{BOOKMARK TABS}", position=menus.First(0), skip_if=check_channels("category"))
