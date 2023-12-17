@@ -179,16 +179,12 @@ class BaseMenu(menus.MenuPages, inherit_buttons=False):
         if timed_out and self.delete_message_after:
             self.delete_message_after = False
 
-    @menus.button(
-        "\N{BLACK LEFT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\ufe0f",
-        position=menus.First(0),
-        skip_if=_skip_double_triangle_buttons,
-    )
+    @menus.button("<:grief_force_arrow_L:1107472953362370650>",position=menus.First(3),)
     async def go_to_first_page(self, payload):
         """go to the first page"""
         await self.show_page(0)
 
-    @menus.button("\N{BLACK LEFT-POINTING TRIANGLE}\ufe0f", position=menus.First(1))
+    @menus.button("<:grief_arrow_L:1107472938069921852> ", position=menus.First(4))
     async def go_to_previous_page(self, payload):
         """go to the previous page"""
         if self.current_page == 0:
@@ -196,7 +192,7 @@ class BaseMenu(menus.MenuPages, inherit_buttons=False):
         else:
             await self.show_checked_page(self.current_page - 1)
 
-    @menus.button("\N{BLACK RIGHT-POINTING TRIANGLE}\ufe0f", position=menus.Last(0))
+    @menus.button("<:grief_arrow_R:1107472965580365836> ", position=menus.Last(0))
     async def go_to_next_page(self, payload):
         """go to the next page"""
         if self.current_page == self._source.get_max_pages() - 1:
@@ -204,17 +200,13 @@ class BaseMenu(menus.MenuPages, inherit_buttons=False):
         else:
             await self.show_checked_page(self.current_page + 1)
 
-    @menus.button(
-        "\N{BLACK RIGHT-POINTING DOUBLE TRIANGLE WITH VERTICAL BAR}\ufe0f",
-        position=menus.Last(1),
-        skip_if=_skip_double_triangle_buttons,
-    )
+    @menus.button("<:grief_force_arrow_R:1107472947758780456> ", position=menus.Last(1),)
     async def go_to_last_page(self, payload):
         """go to the last page"""
         # The call here is safe because it's guarded by skip_if
         await self.show_page(self._source.get_max_pages() - 1)
 
-    @menus.button("\N{CROSS MARK}", position=menus.First(2))
+    @menus.button("<:grief_x:1107472962333978655>", position=menus.First(5))
     async def stop_pages(self, payload: discord.RawReactionActionEvent) -> None:
         self.stop()
 
