@@ -661,10 +661,10 @@ class RoleTools(
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("delete")
-    async def role_delete(self, ctx: commands.Context, role: StrictRole(check_integrated=True), *, name: str):
+    async def role_delete(self, ctx: commands.Context, role: StrictRole(check_integrated=True),):
         """Change a role's name."""
         await role.delete()
-        embed = discord.Embed(description=f"> {ctx.author.mention}: Deleted **{role.name}", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: Deleted **{role.name}**", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
