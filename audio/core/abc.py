@@ -526,33 +526,6 @@ class MixinMeta(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    async def _load_v3_playlist(
-        self,
-        ctx: commands.Context,
-        scope: str,
-        uploaded_playlist_name: str,
-        uploaded_playlist_url: str,
-        track_list: List,
-        author: Union[discord.User, discord.Member],
-        guild: Union[discord.Guild],
-    ) -> None:
-        raise NotImplementedError()
-
-    @abstractmethod
-    async def _load_v2_playlist(
-        self,
-        ctx: commands.Context,
-        uploaded_track_list,
-        player: lavalink.player.Player,
-        playlist_url: str,
-        uploaded_playlist_name: str,
-        scope: str,
-        author: Union[discord.User, discord.Member],
-        guild: Union[discord.Guild],
-    ):
-        raise NotImplementedError()
-
-    @abstractmethod
     def format_time(self, time: int) -> str:
         raise NotImplementedError()
 
