@@ -603,69 +603,41 @@ class RoleTools(
     def get_hsv(role: discord.Role) -> Tuple[float, float, float]:
         return rgb_to_hsv(*role.color.to_rgb())
 
-    @commands.bot_has_permissions(embed_links=True)
-    @commands.has_guild_permissions(manage_roles=True)
-    @role.command("colors")
-    async def role_colors(self, ctx: commands.Context):
-        """Sends the server's roles, ordered by color."""
-        roles = defaultdict(list)
-        for r in ctx.guild.roles:
-            roles[str(r.color)].append(r)
-        roles = dict(sorted(roles.items(), key=lambda v: self.get_hsv(v[1][0])))
-
-        lines = [f"**{color}**\n{' '.join(r.mention for r in rs)}" for color, rs in roles.items()]
-        for page in pagify("\n".join(lines)):
-            e = discord.Embed(description=page)
-            await ctx.send(embed=e)
-
     @commands.bot_has_permissions(manage_roles=True)
     @commands.has_guild_permissions(manage_roles=True)
     @role.command("create")
-    async def role_create(
-        self,
-        ctx: commands.Context,
-        color: Optional[discord.Color] = discord.Color.default(),
-        hoist: Optional[bool] = False,
-        *,
-        name: Optional[str] = None,
-    ):
+    async def role_create(self, ctx: commands.Context, color: Optional[discord.Color] = discord.Color.default(), hoist: Optional[bool] = False, *, name: Optional[str] = None,):
         """
         Creates a role.
-
         Color and whether it is hoisted can be specified.
         """
         if len(ctx.guild.roles) >= 250:
-            return await ctx.send("This server has reached the maximum role limit (250).")
-
+            embed = discord.Embed(description=f"> **{role}** created.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         role = await ctx.guild.create_role(name=name, colour=color, hoist=hoist)
-        await ctx.send(f"**{role}** created!", embed=await self.get_info(role))
+        embed = discord.Embed(description=f"> **{role}** created.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("color", aliases=["colour"])
     async def role_color(
-        self, ctx: commands.Context, role: StrictRole(check_integrated=False), color: discord.Color
-    ):
+        self, ctx: commands.Context, role: StrictRole(check_integrated=False), color: discord.Color):
         """Change a role's color."""
         await role.edit(color=color)
-        await ctx.send(
-            f"**{role}** color changed to **{color}**.", embed=await self.get_info(role)
-        )
+        embed = discord.Embed(description=f"> **{role}** color changed to **{color}**.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("hoist")
-    async def role_hoist(
-        self,
-        ctx: commands.Context,
-        role: StrictRole(check_integrated=False),
-        hoisted: Optional[bool] = None,
-    ):
+    async def role_hoist(self, ctx: commands.Context, role: StrictRole(check_integrated=False), hoisted: Optional[bool] = None,):
         """Toggle whether a role should appear seperate from other roles."""
         hoisted = hoisted if hoisted is not None else not role.hoist
         await role.edit(hoist=hoisted)
         now = "now" if hoisted else "no longer"
-        await ctx.send(f"**{role}** is {now} hoisted.", embed=await self.get_info(role))
+        embed = discord.Embed(description=f"> **{role}** is {now} hoisted.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -693,22 +665,19 @@ class RoleTools(
         embed = discord.Embed(description=f"> Added **{role.name}** to **{member}**.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
 
-
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     @role.command("remove")
-    async def role_remove(
-        self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole
-    ):
+    async def role_remove(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Remove a role from a member."""
         if role not in member.roles:
-            await ctx.send(
-                f"**{member}** doesn't have the role **{role}**. Maybe try adding it instead."
-            )
+            embed = discord.Embed(description=f"> **{member}** doesn't have the role **{role}**. Maybe try adding it instead.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             return
         reason = get_audit_reason(ctx.author)
         await member.remove_roles(role, reason=reason)
-        await ctx.send(f"Removed **{role.name}** from **{member}**.")
+        embed = discord.Embed(description=f"> Removed **{role.name}** from **{member}**.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
