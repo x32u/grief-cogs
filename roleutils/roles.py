@@ -219,7 +219,7 @@ class Roles(MixinMeta):
         Creates a role.
         """
         if len(ctx.guild.roles) >= 250:
-            return await ctx.send("This server has reached the maximum role limit (250).")
+            return await ctx.reply("This server has reached the maximum role limit (250).", mention_author=False)
 
         role = await ctx.guild.create_role(name=name, colour=color, hoist=hoist)
         await ctx.tick()
@@ -245,7 +245,7 @@ class Roles(MixinMeta):
         hoisted = hoisted if hoisted is not None else not role.hoist
         await role.edit(hoist=hoisted)
         now = "now" if hoisted else "no longer"
-        await ctx.send(f"**{role}** is {now} hoisted.")
+        await ctx.reply(f"**{role}** is {now} hoisted.", mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @role.command("name")
@@ -253,7 +253,6 @@ class Roles(MixinMeta):
         self, ctx: commands.Context, role: StrictRole(check_integrated=False), *, name: str
     ):
         """Change a role's name."""
-        old_name = role.name
         await role.edit(name=name)
         await ctx.tick()
 
@@ -262,9 +261,8 @@ class Roles(MixinMeta):
     async def role_add(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Add a role to a member."""
         if role in member.roles:
-            await ctx.send(
-                f"**{member}** already has the role **{role}**. Maybe try removing it instead."
-            )
+            await ctx.reply(
+                f"**{member}** already has the role **{role}**. Maybe try removing it instead.", mention_author=False)
             return
         reason = get_audit_reason(ctx.author)
         await member.add_roles(role, reason=reason)
@@ -277,9 +275,7 @@ class Roles(MixinMeta):
     ):
         """Remove a role from a member."""
         if role not in member.roles:
-            await ctx.send(
-                f"**{member}** doesn't have the role **{role}**. Maybe try adding it instead."
-            )
+            await ctx.reply(f"**{member}** doesn't have the role **{role}**. Maybe try adding it instead.", mention_author=False)
             return
         reason = get_audit_reason(ctx.author)
         await member.remove_roles(role, reason=reason)
@@ -350,10 +346,8 @@ class Roles(MixinMeta):
         if already_added:
             msg.append(f"**{member}** already had {humanize_roles(already_added)}.")
         if not_allowed:
-            msg.append(
-                f"You do not have permission to assign the roles {humanize_roles(not_allowed)}."
-            )
-        await ctx.send("\n".join(msg))
+            msg.append(f"You do not have permission to assign the roles {humanize_roles(not_allowed)}.")
+        await ctx.reply("\n".join(msg), mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @multirole.command("remove", require_var_positional=True)
@@ -380,10 +374,8 @@ class Roles(MixinMeta):
         if not_added:
             msg.append(f"**{member}** didn't have {humanize_roles(not_added)}.")
         if not_allowed:
-            msg.append(
-                f"You do not have permission to assign the roles {humanize_roles(not_allowed)}."
-            )
-        await ctx.send("\n".join(msg))
+            msg.append(f"You do not have permission to assign the roles {humanize_roles(not_allowed)}.")
+        await ctx.reply("\n".join(msg), mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @role.command()
@@ -396,32 +388,19 @@ class Roles(MixinMeta):
     async def rall(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all members of the server."""
         member_list = self.get_member_list(ctx.guild.members, role, False)
-        await self.super_massrole(
-            ctx, member_list, role, "No one on the server has this role.", False
-        )
+        await self.super_massrole(ctx, member_list, role, "No one on the server has this role.", False)
 
     @commands.has_guild_permissions(manage_roles=True)
     @role.command()
     async def humans(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all humans."""
-        await self.super_massrole(
-            ctx,
-            [member for member in ctx.guild.members if not member.bot],
-            role,
-            "Every human in the server has this role.",
-        )
+        await self.super_massrole(ctx,[member for member in ctx.guild.members if not member.bot], role, "Every human in the server has this role.",)
 
     @commands.has_guild_permissions(manage_roles=True)
     @role.command()
     async def rhumans(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all humans."""
-        await self.super_massrole(
-            ctx,
-            [member for member in ctx.guild.members if not member.bot],
-            role,
-            "None of the humans in the server have this role.",
-            False,
-        )
+        await self.super_massrole( ctx, [member for member in ctx.guild.members if not member.bot], role, "None of the humans in the server have this role.", False,)
 
     @commands.has_guild_permissions(manage_roles=True)
     @role.command()
@@ -438,13 +417,7 @@ class Roles(MixinMeta):
     @role.command()
     async def rbots(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all bots."""
-        await self.super_massrole(
-            ctx,
-            [member for member in ctx.guild.members if member.bot],
-            role,
-            "None of the bots in the server have this role.",
-            False,
-        )
+        await self.super_massrole(ctx, [member for member in ctx.guild.members if member.bot], role, "None of the bots in the server have this role.", False,)
 
     @commands.has_guild_permissions(manage_roles=True)
     @role.command("in")
