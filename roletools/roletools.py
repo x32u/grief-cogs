@@ -691,18 +691,14 @@ class RoleTools(
         embed = discord.Embed(description=f"> {ctx.author.mention}: **{role}** is {now} hoisted.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
-    @role.command(name="displayicon", aliases=["icon", "display_icon"])
+    @role.command(name="displayicon", aliases=["icon"])
     async def role_display_icon(self, ctx: commands.Context, role: discord.Role, display_icon: EmojiOrUrlConverter = None,) -> None:
         """Edit role display icon.
 
         `display_icon` can be an Unicode emoji, a custom emoji or an url. You can also upload an attachment.
         """
         if "ROLE_ICONS" not in ctx.guild.features:
-            raise commands.UserFeedbackCheckFailure(
-                _(
-                    "This server doesn't have the `ROLE_ICONS` feature. This server needs more boosts to perform this action."
-                )
-            )
+            raise commands.UserFeedbackCheckFailure(_("This server doesn't have the `ROLE_ICONS` feature. This server needs more boosts to perform this action."))
         if len(ctx.message.attachments) > 0:
             display_icon = await ctx.message.attachments[0].read()  # Read an optional attachment.
         elif display_icon is not None:
@@ -723,20 +719,15 @@ class RoleTools(
                     except aiohttp.InvalidURL:
                         return await ctx.send("That URL is invalid.")
                     except aiohttp.ClientError:
-                        return await ctx.send(
-                            "Something went wrong while trying to get the image."
-                        )
-        # else:
-        #     raise commands.UserInputError()  # Send the command help if no attachment, no Unicode/custom emoji and no URL.
+                        return await ctx.send("Something went wrong while trying to get the image.")
+        else:
+            raise commands.UserInputError()  # Send the command help if no attachment, no Unicode/custom emoji and no URL.
         try:
-            await role.edit(
-                display_icon=display_icon,
-                reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",
-            )
+            await role.edit(display_icon=display_icon,reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Updated **{role}** role icon.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
         except discord.HTTPException as e:
-            raise commands.UserFeedbackCheckFailure(
-                _(ERROR_MESSAGE).format(error=box(e, lang="py"))
-            )
+            raise commands.UserFeedbackCheckFailure(_(ERROR_MESSAGE).format(error=box(e, lang="py")))
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
