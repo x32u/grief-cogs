@@ -612,10 +612,10 @@ class RoleTools(
         Color and whether it is hoisted can be specified.
         """
         if len(ctx.guild.roles) >= 250:
-            embed = discord.Embed(description=f"> **{role}** created.", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: this server has 250 roles, delete one to make a new one..", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
         role = await ctx.guild.create_role(name=name, colour=color, hoist=hoist)
-        embed = discord.Embed(description=f"> **{role}** created.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: **{role}** created.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
@@ -625,7 +625,7 @@ class RoleTools(
         self, ctx: commands.Context, role: StrictRole(check_integrated=False), color: discord.Color):
         """Change a role's color."""
         await role.edit(color=color)
-        embed = discord.Embed(description=f"> **{role}** color changed to **{color}**.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: **{role}** color changed to **{color}**.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
@@ -636,7 +636,7 @@ class RoleTools(
         hoisted = hoisted if hoisted is not None else not role.hoist
         await role.edit(hoist=hoisted)
         now = "now" if hoisted else "no longer"
-        embed = discord.Embed(description=f"> **{role}** is {now} hoisted.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: **{role}** is {now} hoisted.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
@@ -648,7 +648,7 @@ class RoleTools(
         """Change a role's name."""
         old_name = role.name
         await role.edit(name=name)
-        embed = discord.Embed(description=f"> Changed role name **{old_name}** to **{name}**.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: Changed role name **{old_name}** to **{name}**.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
@@ -657,7 +657,7 @@ class RoleTools(
     async def role_add(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Add a role to a member."""
         if role in member.roles:
-            embed = discord.Embed(description=f"> **{member}** already has the role **{role}**. Maybe try removing it instead.", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{member}** already has the role **{role}**. Maybe try removing it instead.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
             return
         reason = get_audit_reason(ctx.author)
@@ -671,12 +671,12 @@ class RoleTools(
     async def role_remove(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Remove a role from a member."""
         if role not in member.roles:
-            embed = discord.Embed(description=f"> **{member}** doesn't have the role **{role}**. Maybe try adding it instead.", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{member}** doesn't have the role **{role}**.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
             return
         reason = get_audit_reason(ctx.author)
         await member.remove_roles(role, reason=reason)
-        embed = discord.Embed(description=f"> Removed **{role.name}** from **{member}**.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: Removed **{role.name}** from **{member}**.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.has_guild_permissions(manage_roles=True)
