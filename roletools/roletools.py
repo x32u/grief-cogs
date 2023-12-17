@@ -2,13 +2,12 @@ import asyncio
 from abc import ABC
 from typing import Any, Dict, List, Optional, Union
 
-import discord
 import aiohttp
 try:
     from emoji import UNICODE_EMOJI_ENGLISH as EMOJI_DATA  # emoji<2.0.0
 except ImportError:
     from emoji import EMOJI_DATA  # emoji>=2.0.0
-import emoji
+import discord
 from red_commons.logging import getLogger
 from grief.core import Config, commands
 from grief.core.bot import Grief
@@ -54,6 +53,46 @@ from .utils import (
 
 log = getLogger("grief.roletools")
 _ = Translator("RoleTools", __file__)
+
+class EmojiOrUrlConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str):
+        try:
+            return await discord.ext.commands.converter.CONVERTER_MAPPING[discord.Emoji]().convert(
+                ctx, argument
+            )
+        except commands.BadArgument:
+            pass
+        if argument.startswith("<") and argument.endswith(">"):
+            argument = argument[1:-1]
+        return argument
+
+
+class PositionConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> int:
+        try:
+            position = int(argument)
+        except ValueError:
+            raise commands.BadArgument(_("The position must be an integer."))
+        max_guild_roles_position = len(ctx.guild.roles)
+        if position <= 0 or position >= max_guild_roles_position + 1:
+            raise commands.BadArgument(
+                _(
+                    "The indicated position must be between 1 and {max_guild_roles_position}."
+                ).format(max_guild_roles_position=max_guild_roles_position)
+            )
+        _list = list(range(max_guild_roles_position - 1))[::-1]
+        position = _list[position - 1]
+        return position + 1
+
+
+class PermissionConverter(commands.Converter):
+    async def convert(self, ctx: commands.Context, argument: str) -> str:
+        permissions = [
+            key for key, value in dict(discord.Permissions.all_channel()).items() if value
+        ]
+        if argument not in permissions:
+            raise commands.BadArgument(_("This permission is invalid."))
+        return argument
 
 ERROR_MESSAGE = _(
     "I attempted to do something that Discord denied me permissions for. Your command failed to successfully complete.\n{error}"
@@ -141,46 +180,6 @@ class RoleTools(
         self.settings: Dict[int, Any] = {}
         self._ready: asyncio.Event = asyncio.Event()
         self.views: Dict[int, Dict[str, discord.ui.View]] = {}
-
-class EmojiOrUrlConverter(commands.Converter):
-    async def convert(self, ctx: commands.Context, argument: str):
-        try:
-            return await discord.ext.commands.converter.CONVERTER_MAPPING[discord.Emoji]().convert(
-                ctx, argument
-            )
-        except commands.BadArgument:
-            pass
-        if argument.startswith("<") and argument.endswith(">"):
-            argument = argument[1:-1]
-        return argument
-
-
-class PositionConverter(commands.Converter):
-    async def convert(self, ctx: commands.Context, argument: str) -> int:
-        try:
-            position = int(argument)
-        except ValueError:
-            raise commands.BadArgument(_("The position must be an integer."))
-        max_guild_roles_position = len(ctx.guild.roles)
-        if position <= 0 or position >= max_guild_roles_position + 1:
-            raise commands.BadArgument(
-                _(
-                    "The indicated position must be between 1 and {max_guild_roles_position}."
-                ).format(max_guild_roles_position=max_guild_roles_position)
-            )
-        _list = list(range(max_guild_roles_position - 1))[::-1]
-        position = _list[position - 1]
-        return position + 1
-
-
-class PermissionConverter(commands.Converter):
-    async def convert(self, ctx: commands.Context, argument: str) -> str:
-        permissions = [
-            key for key, value in dict(discord.Permissions.all_channel()).items() if value
-        ]
-        if argument not in permissions:
-            raise commands.BadArgument(_("This permission is invalid."))
-        return argument
 
     def cog_check(self, ctx: commands.Context) -> bool:
         return self._ready.is_set()
