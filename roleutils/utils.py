@@ -3,6 +3,7 @@
 import re
 from typing import List, Optional, Tuple
 
+import argparse
 import discord
 from grief.core import commands
 from grief.core.bot import Grief
@@ -79,3 +80,7 @@ async def delete_quietly(message: discord.Message):
 
 def guild_roughly_chunked(guild: discord.Guild) -> bool:
     return len(guild.members) / guild.member_count > 0.9
+
+class NoExitParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        raise commands.BadArgument(message)
