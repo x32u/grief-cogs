@@ -326,8 +326,6 @@ class KickBanMixin(MixinMeta):
                     # await user.send(embed=discord.Embed
                     # title=bold(_("You have been banned from {guild}.").format(guild=guild)), color=await self.bot.get_embed_color(user),) em.add_field(name=_("**Reason**"), value=reason if reason is not None else _("No reason was given."), inline=False,)
         
-        if not (0 <= days <= 7):
-            return False, _("Invalid days. Must be between 0 and 7.")
         if days is None:
             days = await self.config.guild(guild).default_days()
         if isinstance(user, int):
