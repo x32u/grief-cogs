@@ -318,13 +318,8 @@ class RoleTools(
     @roletools.command(cooldown_after_parsing=True, with_app_command=False)
     @commands.bot_has_permissions(manage_roles=True)
     @commands.has_permissions(manage_roles=True)
-<<<<<<< HEAD
-    @commands.max_concurrency(1, commands.BucketType.guild)
-    @commands.cooldown(1, 3, commands.BucketType.guild)
-=======
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.dynamic_cooldown(custom_cooldown, commands.BucketType.guild)
->>>>>>> bbf22669d9df3f0da71924fd5c6d3d079cbe3c30
     async def giverole(
         self,
         ctx: Context,
@@ -704,12 +699,8 @@ class RoleTools(
         await ctx.reply(embed=embed, mention_author=False)
 
     @role.command(name="displayicon", aliases=["icon"])
-<<<<<<< HEAD
-
-=======
     @commands.has_guild_permissions(manage_roles=True)
     @commands.cooldown(1, 10, commands.BucketType.guild)
->>>>>>> bbf22669d9df3f0da71924fd5c6d3d079cbe3c30
     async def role_display_icon(self, ctx: commands.Context, role: discord.Role, display_icon: EmojiOrUrlConverter = None,) -> None:
         """Edit role display icon.
 
