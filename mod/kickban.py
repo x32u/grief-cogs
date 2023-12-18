@@ -200,7 +200,6 @@ class KickBanMixin(MixinMeta):
                     )
                 )
 
-                success_message = discord.Embed(description=f"> {ctx.author.mention}: That user has been banned.", color=0x313338)
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
@@ -350,11 +349,8 @@ class KickBanMixin(MixinMeta):
         if isinstance(user, int):
             user = self.bot.get_user(user) or discord.Object(id=user)
 
-        success_, message = await self.ban_user(
-            user=user, ctx=ctx, days=days, reason=reason
-        )
-
-        await ctx.reply(message, mention_author=False)
+        success_, message = await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
+        await ctx.reply(embed = discord.Embed(description=f"> **{user}** has been banned.", color=0x313338), mention_author=False)
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
