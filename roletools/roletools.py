@@ -1002,15 +1002,14 @@ class RoleTools(
         if not member_list:
             await ctx.send(fail_message)
             return
-    
         verb = "add" if adding else "remove"
         word = "to" if adding else "from"
         embed = discord.Embed(description=f"> {ctx.author.mention}: Beginning to {verb} **{role.name}** {word} **{len(member_list)}** members.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
         async with ctx.typing():
-              await self.massrole(member_list, [role], get_audit_reason(ctx.author), adding)
-        embed = discord.Embed(description=f"> {ctx.author.mention}: {verb.title()[:5]}ed **{role.name}** {word} **{len(member_list)}** members.", color=0x313338)
-        return await ctx.reply(embed, mention_author=False)
+              if await self.massrole(member_list, [role], get_audit_reason(ctx.author), adding):
+                embed = discord.Embed(description=f"> {ctx.author.mention}: {verb.title()[:5]}ed **{role.name}** {word} **{len(member_list)}** members.", color=0x313338)
+        await ctx.reply(embed, mention_author=False)
 
     def get_member_list(
         self, members: List[discord.Member], role: discord.Role, adding: bool = True
