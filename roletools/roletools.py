@@ -318,7 +318,7 @@ class RoleTools(
     @roletools.command(cooldown_after_parsing=True, with_app_command=False)
     @commands.bot_has_permissions(manage_roles=True)
     @commands.has_permissions(manage_roles=True)
-    @commands.max_concurrency(1, commands.BucketType.guild)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.dynamic_cooldown(custom_cooldown, commands.BucketType.guild)
     async def giverole(
         self,
@@ -487,6 +487,7 @@ class RoleTools(
 
     @roletools.command()
     @commands.has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     async def forcerole(
         self,
         ctx: Context,
@@ -533,6 +534,7 @@ class RoleTools(
 
     @roletools.command()
     @commands.has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     async def forceroleremove(
         self,
         ctx: Context,
@@ -579,6 +581,7 @@ class RoleTools(
 
     @roletools.command(aliases=["viewrole"])
     @commands.bot_has_permissions(read_message_history=True, add_reactions=True, embed_links=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     async def viewroles(self, ctx: Context, *, role: Optional[discord.Role] = None) -> None:
         """
         View current roletools setup for each role in the server
@@ -623,6 +626,7 @@ class RoleTools(
 ###### roleutils
     @commands.guild_only()
     @commands.group(invoke_without_command=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     async def role(
         self, ctx: commands.Context, member: TouchableMember(False), *, role: StrictRole(False)
     ):
@@ -657,6 +661,7 @@ class RoleTools(
 
     @commands.bot_has_permissions(manage_roles=True)
     @commands.has_guild_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command("create")
     async def role_create(self, ctx: commands.Context, color: Optional[discord.Color] = discord.Color.default(), hoist: Optional[bool] = False, *, name: Optional[str] = None,):
         """
@@ -672,6 +677,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command("color", aliases=["colour"])
     async def role_color(
         self, ctx: commands.Context, role: StrictRole(check_integrated=False), color: discord.Color):
@@ -682,6 +688,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command("hoist")
     async def role_hoist(self, ctx: commands.Context, role: StrictRole(check_integrated=False), hoisted: Optional[bool] = None,):
         """Toggle whether a role should appear seperate from other roles."""
@@ -692,6 +699,8 @@ class RoleTools(
         await ctx.reply(embed=embed, mention_author=False)
 
     @role.command(name="displayicon", aliases=["icon"])
+    @commands.has_guild_permissions(manage_roles=True)
+    @commands.cooldown(1, 10, commands.BucketType.guild)
     async def role_display_icon(self, ctx: commands.Context, role: discord.Role, display_icon: EmojiOrUrlConverter = None,) -> None:
         """Edit role display icon.
 
@@ -731,6 +740,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command("name")
     async def role_name(self, ctx: commands.Context, role: StrictRole(check_integrated=False), *, name: str):
         """Change a role's name."""
@@ -741,6 +751,7 @@ class RoleTools(
     
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 5, commands.BucketType.guild)
     @role.command("delete")
     async def role_delete(self, ctx: commands.Context, role: StrictRole(check_integrated=True),):
         """Delete a role."""
@@ -750,6 +761,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 5, commands.BucketType.guild)
     @role.command("add")
     async def role_add(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Add a role to a member."""
@@ -764,6 +776,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command("remove")
     async def role_remove(self, ctx: commands.Context, member: TouchableMember, *, role: StrictRole):
         """Remove a role from a member."""
@@ -778,6 +791,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command(require_var_positional=True)
     async def addmulti(self, ctx: commands.Context, role: StrictRole, *members: TouchableMember):
         """Add a role to multiple members."""
@@ -799,6 +813,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command(require_var_positional=True)
     async def removemulti(self, ctx: commands.Context, role: StrictRole, *members: TouchableMember):
         """Remove a role from multiple members."""
@@ -820,6 +835,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.group(invoke_without_command=True, require_var_positional=True)
     async def multirole(self, ctx: commands.Context, member: TouchableMember, *roles: StrictRole):
         """Add multiple roles to a member."""
@@ -847,6 +863,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @multirole.command("remove", require_var_positional=True)
     async def multirole_remove(self, ctx: commands.Context, member: TouchableMember, *roles: StrictRole):
         """Remove multiple roles from a member."""
@@ -874,6 +891,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command()
     async def all(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all members of the server."""
@@ -881,6 +899,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command(aliases=["removeall"])
     async def rall(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all members of the server."""
@@ -889,6 +908,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command()
     async def humans(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all humans (non-bots) in the server."""
@@ -896,6 +916,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command()
     async def rhumans(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all humans (non-bots) in the server."""
@@ -903,6 +924,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command()
     async def bots(self, ctx: commands.Context, *, role: StrictRole):
         """Add a role to all bots in the server."""
@@ -910,6 +932,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command()
     async def rbots(self, ctx: commands.Context, *, role: StrictRole):
         """Remove a role from all bots in the server."""
@@ -917,6 +940,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command("in")
     async def role_in(self, ctx: commands.Context, target_role: FuzzyRole, *, add_role: StrictRole):
         """Add a role to all members of a another role."""
@@ -924,6 +948,7 @@ class RoleTools(
 
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.command("rin")
     async def role_rin(self, ctx: commands.Context, target_role: FuzzyRole, *, remove_role: StrictRole):
         """Remove a role from all members of a another role."""
@@ -932,6 +957,7 @@ class RoleTools(
     @commands.check(targeter_cog)
     @commands.has_guild_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     @role.group()
     async def target(self, ctx: commands.Context):
         """
