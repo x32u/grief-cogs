@@ -627,30 +627,19 @@ class RoleTools(
     @commands.guild_only()
     @commands.group(invoke_without_command=True)
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    async def role(
-        self, ctx: commands.Context, member: TouchableMember(False), *, role: StrictRole(False)
-    ):
+    async def role(self, ctx: commands.Context, member: TouchableMember(False), *, role: StrictRole(False)):
         """Base command for modifying roles.
 
         Invoking this command will add or remove the given role from the member, depending on whether they already had it.
         """
         if role in member.roles and await can_run_command(ctx, "role remove"):
             com = self.bot.get_command("role remove")
-            await ctx.invoke(
-                com,
-                member=member,
-                role=role,
-            )
+            await ctx.invoke(com, member=member, role=role,)
         elif role not in member.roles and await can_run_command(ctx, "role add"):
             com = self.bot.get_command("role add")
-            await ctx.invoke(
-                com,
-                member=member,
-                role=role,
-            )
+            await ctx.invoke(com, member=member, role=role,)
         else:
             await ctx.send_help()
-
     def format_member(self, member: discord.Member, formatting: str) -> str:
         output = self.interpreter.process(formatting, {"member": MemberAdapter(member)})
         return output.body
@@ -1008,7 +997,6 @@ class RoleTools(
         embed = discord.Embed(description=f"> {ctx.author.mention}: Beginning to {verb} **{role.name}** {word} **{len(member_list)}** members.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
         async with ctx.typing():
-              await self.massrole(member_list, [role], get_audit_reason(ctx.author), adding)
               embed = discord.Embed(description=f"> {ctx.author.mention}: {verb.title()[:5]}ed **{role.name}** {word} **{len(member_list)}** members.", color=0x313338)
         await ctx.reply(embed, mention_author=False)
 
