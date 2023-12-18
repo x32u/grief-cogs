@@ -122,51 +122,14 @@ class KickBanMixin(MixinMeta):
         member = discord.Member
 
         removed_temp = False
+            
+        tempbans = await self.config.guild(guild).current_tempbans()
 
-        if not (0 <= days <= 7):
-            return False, _("Invalid days. Must be between 0 and 7.")
-
-        if isinstance(user, discord.Member):
-            if author == user:
-                return (
-                    False,
-                    _("You cannot ban yourself."),
-                )
-            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
-                return (
-                    False,
-                    _(
-                        "I cannot let you do that. You are "
-                        "not higher than the user in the role "
-                        "hierarchy."
-                    ),
-                )
-            elif guild.me.top_role <= user.top_role or user == guild.owner:
-                return False, _("I cannot do that due to Discord hierarchy rules.")
-
-            toggle = await self.config.guild(guild).dm_on_kickban()
-            if toggle:
-                with contextlib.suppress(discord.HTTPException):
-                    em = discord.Embed(
-                        title=bold(_("You have been banned from {guild}.").format(guild=guild)),
-                        color=await self.bot.get_embed_color(user),
-                    )
-                    em.add_field(
-                        name=_("**Reason**"),
-                        value=reason if reason is not None else _("No reason was given."),
-                        inline=False,
-                    )
-                    await user.send(embed=em)
-
-            ban_type = "ban"
-        else:
-            tempbans = await self.config.guild(guild).current_tempbans()
-
-            try:
-                await guild.fetch_ban(user)
-            except discord.NotFound:
+        try:
+            await guild.fetch_ban(user)
+        except discord.NotFound:
                 pass
-            else:
+        else:
                 if user.id in tempbans:
                     async with self.config.guild(guild).current_tempbans() as tempbans:
                         tempbans.remove(user.id)
@@ -177,7 +140,7 @@ class KickBanMixin(MixinMeta):
                         _("User with ID {user_id} is already banned.").format(user_id=user.id),
                     )
 
-            ban_type = "hackban"
+        ban_type = "hackban"
 
         audit_reason = get_audit_reason(author, reason, shorten=True)
 
