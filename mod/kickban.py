@@ -293,32 +293,32 @@ class KickBanMixin(MixinMeta):
                 )
             )
 
-    @commands.command(aliases=["b"])
-    @commands.guild_only()
-    @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
-        """Ban a user from this server and optionally delete days of messages."""
+    # @commands.command(aliases=["b"])
+    # @commands.guild_only()
+    # @commands.has_permissions(ban_members=True)
+    # async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
+        # """Ban a user from this server and optionally delete days of messages."""
 
-        author = ctx.author
-        guild = ctx.guild
+        # author = ctx.author
+        # guild = ctx.guild
         
-        if isinstance(user, discord.Member):
-            if author == user:
-                return (
-                    False,
-                    _("You cannot ban yourself."),
-                )
-            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
-                return (
-                    False,
-                    _(
-                        "I cannot let you do that. You are "
-                        "not higher than the user in the role "
-                        "hierarchy."
-                    ),
-                )
-            elif guild.me.top_role <= user.top_role or user == guild.owner:
-                return False, _("I cannot do that due to Discord hierarchy rules.")
+        # if isinstance(user, discord.Member):
+            # if author == user:
+                # return (
+                    # False,
+                    # _("You cannot ban yourself."),
+                # )
+            # elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
+                # return (
+                    # False,
+                    # _(
+                        # "I cannot let you do that. You are "
+                       # "not higher than the user in the role "
+                       # "hierarchy."
+                   # ),
+               # )
+           # elif guild.me.top_role <= user.top_role or user == guild.owner:
+            #    return False, _("I cannot do that due to Discord hierarchy rules.")
 
             # toggle = await self.config.guild(guild).dm_on_kickban()
             # if toggle:
@@ -326,12 +326,12 @@ class KickBanMixin(MixinMeta):
                     # await user.send(embed=discord.Embed
                     # title=bold(_("You have been banned from {guild}.").format(guild=guild)), color=await self.bot.get_embed_color(user),) em.add_field(name=_("**Reason**"), value=reason if reason is not None else _("No reason was given."), inline=False,)
         
-        if days is None:
-            days = await self.config.guild(guild).default_days()
-        if isinstance(user, int):
-            user = self.bot.get_user(user) or discord.Object(id=user)
-        await guild.ban(user=user, reason=reason)
-        await ctx.reply(embed = discord.Embed(description=f"> **{user}** has been banned.", color=0x313338), mention_author=False)
+       # if days is None:
+       #     days = await self.config.guild(guild).default_days()
+      #  if isinstance(user, int):
+       #     user = self.bot.get_user(user) or discord.Object(id=user)
+       # await guild.ban(user=user, reason=reason)
+       # await ctx.reply(embed = discord.Embed(description=f"> **{user}** has been banned.", color=0x313338), mention_author=False)
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
