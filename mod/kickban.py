@@ -212,7 +212,7 @@ class KickBanMixin(MixinMeta):
                 )
                 return False, _("An unexpected error occurred.")
 
-        return True, success_message
+        return True
 
     async def tempban_expirations_task(self) -> None:
         while True:
@@ -333,16 +333,44 @@ class KickBanMixin(MixinMeta):
     @commands.command(aliases=["b"])
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
-    async def ban(
-        self,
-        ctx: commands.Context,
-        user: Union[discord.Member, RawUserIdConverter],
-        days: Optional[int] = None,
-        *,
-        reason: str = None,
-    ):
-        """Ban a user from this server and optionally delete days of messages.
-        """
+    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
+        """Ban a user from this server and optionally delete days of messages."""
+
+        if not (0 <= days <= 7):
+            return False, _("Invalid days. Must be between 0 and 7.")
+
+        if isinstance(user, discord.Member):
+            if author == user:
+                return (
+                    False,
+                    _("You cannot ban yourself."),
+                )
+            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
+                return (
+                    False,
+                    _(
+                        "I cannot let you do that. You are "
+                        "not higher than the user in the role "
+                        "hierarchy."
+                    ),
+                )
+            elif guild.me.top_role <= user.top_role or user == guild.owner:
+                return False, _("I cannot do that due to Discord hierarchy rules.")
+
+            toggle = await self.config.guild(guild).dm_on_kickban()
+            if toggle:
+                with contextlib.suppress(discord.HTTPException):
+                    em = discord.Embed(
+                        title=bold(_("You have been banned from {guild}.").format(guild=guild)),
+                        color=await self.bot.get_embed_color(user),
+                    )
+                    em.add_field(
+                        name=_("**Reason**"),
+                        value=reason if reason is not None else _("No reason was given."),
+                        inline=False,
+                    )
+        await user.send(embed=em)
+        author= ctx.author
         guild = ctx.guild
         if days is None:
             days = await self.config.guild(guild).default_days()
