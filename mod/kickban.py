@@ -110,7 +110,7 @@ class KickBanMixin(MixinMeta):
             return False
         return True
 
-    async def ban_user(
+    async def temp_ban(
         self,
         user: Union[discord.Member, discord.User, discord.Object],
         ctx: commands.Context,
