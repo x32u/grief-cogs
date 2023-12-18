@@ -299,6 +299,9 @@ class KickBanMixin(MixinMeta):
     async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
 
+        author = ctx.author
+        guild = ctx.guild
+        
         if isinstance(user, discord.Member):
             if author == user:
                 return (
@@ -317,21 +320,11 @@ class KickBanMixin(MixinMeta):
             elif guild.me.top_role <= user.top_role or user == guild.owner:
                 return False, _("I cannot do that due to Discord hierarchy rules.")
 
-            toggle = await self.config.guild(guild).dm_on_kickban()
-            if toggle:
-                with contextlib.suppress(discord.HTTPException):
-                    em = discord.Embed(
-                        title=bold(_("You have been banned from {guild}.").format(guild=guild)),
-                        color=await self.bot.get_embed_color(user),
-                    )
-                    em.add_field(
-                        name=_("**Reason**"),
-                        value=reason if reason is not None else _("No reason was given."),
-                        inline=False,
-                    )
-        await user.send(embed=em)
-        author= ctx.author
-        guild = ctx.guild
+            # toggle = await self.config.guild(guild).dm_on_kickban()
+            # if toggle:
+                # with contextlib.suppress(discord.HTTPException):
+                    # await user.send(embed=discord.Embed
+                    # title=bold(_("You have been banned from {guild}.").format(guild=guild)), color=await self.bot.get_embed_color(user),) em.add_field(name=_("**Reason**"), value=reason if reason is not None else _("No reason was given."), inline=False,)
         
         if not (0 <= days <= 7):
             return False, _("Invalid days. Must be between 0 and 7.")
