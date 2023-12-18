@@ -348,7 +348,6 @@ class KickBanMixin(MixinMeta):
             days = await self.config.guild(guild).default_days()
         if isinstance(user, int):
             user = self.bot.get_user(user) or discord.Object(id=user)
-
         await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
         await ctx.reply(embed = discord.Embed(description=f"> **{user}** has been banned.", color=0x313338), mention_author=False)
 
