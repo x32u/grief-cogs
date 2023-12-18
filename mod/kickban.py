@@ -299,9 +299,6 @@ class KickBanMixin(MixinMeta):
     async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
 
-        if not (0 <= days <= 7):
-            return False, _("Invalid days. Must be between 0 and 7.")
-
         if isinstance(user, discord.Member):
             if author == user:
                 return (
@@ -335,6 +332,9 @@ class KickBanMixin(MixinMeta):
         await user.send(embed=em)
         author= ctx.author
         guild = ctx.guild
+        
+        if not (0 <= days <= 7):
+            return False, _("Invalid days. Must be between 0 and 7.")
         if days is None:
             days = await self.config.guild(guild).default_days()
         if isinstance(user, int):
