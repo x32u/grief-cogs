@@ -177,9 +177,7 @@ class KickBanMixin(MixinMeta):
             log.info(
                 "%s (%s) upgraded the tempban for %s to a permaban.", author, author.id, user.id
             )
-            success_message = _(
-                "User with ID {user_id} was upgraded from a temporary to a permanent ban."
-            ).format(user_id=user.id)
+            await ctx.tick()
         else:
             user_handle = str(user) if isinstance(user, discord.abc.User) else "Unknown"
             try:
@@ -326,9 +324,10 @@ class KickBanMixin(MixinMeta):
                 )
             )
 
-    @commands.command()
+    @commands.command(aliases=["b"])
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
@@ -489,7 +488,7 @@ class KickBanMixin(MixinMeta):
                     else:
                         banned.append(user_id)
 
-    @commands.command()
+    @commands.command(aliases=["tb"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
@@ -502,8 +501,7 @@ class KickBanMixin(MixinMeta):
         *,
         reason: str = None,
     ):
-        """Temporarily ban a user from this server.
-        """
+        """Temporarily ban a user from this server."""
         guild = ctx.guild
         author = ctx.author
 
@@ -565,7 +563,7 @@ class KickBanMixin(MixinMeta):
         except discord.HTTPException:
             await ctx.send(_("Something went wrong while banning."))
 
-    @commands.command(autohelp=True, aliases=["sbn"])
+    @commands.command(aliases=["sbn"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
@@ -632,12 +630,10 @@ class KickBanMixin(MixinMeta):
                 "of messages.".format(author.name, author.id, member.name, member.id)
             )
 
-    @commands.command(autohelp=True, aliases=["vk"])
+    @commands.command(aliases=["vk"])
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(move_members=True)
-    async def voicekick(
-        self, ctx: commands.Context, member: discord.Member, *, reason: str = None
-    ):
+    async def voicekick(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """Kick a member from a voice channel."""
         author = ctx.author
         guild = ctx.guild
@@ -665,13 +661,11 @@ class KickBanMixin(MixinMeta):
             await ctx.send(_("Something went wrong while attempting to kick that member."))
             return
 
-    @commands.command()
+    @commands.command(aliases=["vu"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(mute_members=True, deafen_members=True)
-    async def voiceunban(
-        self, ctx: commands.Context, member: discord.Member, *, reason: str = None
-    ):
+    async def voiceunban(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """Unban a user from speaking and listening in the server's voice channels."""
         user_voice_state = member.voice
         if (
@@ -696,7 +690,7 @@ class KickBanMixin(MixinMeta):
             await ctx.send(_("That user isn't muted or deafened by the server."))
             return
 
-    @commands.command(autohelp=True, aliases=["vb"])
+    @commands.command(aliases=["vb"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(mute_members=True, deafen_members=True)
@@ -727,7 +721,7 @@ class KickBanMixin(MixinMeta):
             await ctx.send(_("That user is already muted and deafened server-wide."))
             return
 
-    @commands.command(autohelp=True, aliases=["ub"])
+    @commands.command(aliases=["ub"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(ban_members=True)
@@ -843,7 +837,7 @@ class KickBanMixin(MixinMeta):
         except discord.Forbidden:
             await ctx.send("I don't have the required permissions to manage channels.")
 
-    @commands.command()
+    @commands.command(aliases=["ci"])
     @commands.has_permissions(manage_guild=True)
     async def clearinvites(self, ctx):
         """Delete all invites in the server."""
