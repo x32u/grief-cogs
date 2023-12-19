@@ -209,7 +209,7 @@ class KickBanMixin(MixinMeta):
                 )
                 return False, _("An unexpected error occurred.")
 
-        return True, success_message
+        return True
 
     async def tempban_expirations_task(self) -> None:
         while True:
