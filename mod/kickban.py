@@ -193,6 +193,7 @@ class KickBanMixin(MixinMeta):
                     user.id,
                     days,
                 )
+                await ctx.tick()
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
@@ -347,8 +348,6 @@ class KickBanMixin(MixinMeta):
         success_, message = await self.ban_user(
             user=user, ctx=ctx, days=days, reason=reason
         )
-
-        await ctx.tick()
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
