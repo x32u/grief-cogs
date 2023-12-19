@@ -324,18 +324,63 @@ class KickBanMixin(MixinMeta):
                 )
             )
 
-    @commands.command(aliases=["b"])
+    @commands.command(autohelp=True, aliases=["k"])
     @commands.guild_only()
-    @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
-        """Ban a user from this server and optionally delete days of messages."""
+    @commands.has_permissions(kick_members=True)
+    async def ban(self, ctx: commands.Context, user: Union[discord.user, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
+        """
+        Ban a user.
+        """
+        author = ctx.author
         guild = ctx.guild
-        if days is None:
-            days = await self.config.guild(guild).default_days()
-        if isinstance(user, int):
-            user = self.bot.get_user(user) or discord.Object(id=user)
-        await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
+
+        if reason == None:
+            reason = "no reason given"
+        
+        if author == user:
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You can't ban yourself.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
+        elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
+            await ctx.send(
+                _(
+                    "I cannot let you do that. You are "
+                    "not higher than the user in the role "
+                    "hierarchy."
+                )
+            )
+            return
+        elif ctx.guild.me.top_role <= user.top_role or user == ctx.guild.owner:
+            embed = discord.Embed(description=f"> {ctx.author.mention}: I cannot do that due to Discord hierarchy rules.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
+            return
+        audit_reason = get_audit_reason(author, reason, shorten=True)
+        toggle = await self.config.guild(guild).dm_on_kickban()
+        if toggle:
+            with contextlib.suppress(discord.HTTPException):
+                em = discord.Embed(
+                    title=bold(_("You have been banned from {guild}.").format(guild=guild)),
+                    color=await self.bot.get_embed_color(user),
+                )
+                em.add_field(
+                    name=_("**Reason**"),
+                    value=reason if reason is not None else _("No reason was given."),
+                    inline=False,
+                )
+                await user.send(embed=em)
+        try:
+            await guild.ban(user, reason=audit_reason)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Banned {user.mention} for: {reason}", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
+        except discord.errors.Forbidden:
+            embed = discord.Embed(description=f"> I'm not allowed to do that.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
+        except Exception:
+            log.exception(
+                "{}({}) attempted to kick {}({}), but an error occurred.".format(
+                    author.name, author.id, user.name, user.id
+                )
+            )
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
