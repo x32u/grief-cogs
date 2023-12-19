@@ -334,6 +334,8 @@ class KickBanMixin(MixinMeta):
         """
         author = ctx.author
         guild = ctx.guild
+        if not (0 <= days <= 7):
+            return False, _("Invalid days. Must be between 0 and 7.")
 
         if reason == None:
             reason = "no reason given"
