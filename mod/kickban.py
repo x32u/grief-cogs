@@ -193,7 +193,6 @@ class KickBanMixin(MixinMeta):
                     user.id,
                     days,
                 )
-                await ctx.reply(success_message = discord.Embed(description=f"> {ctx.author.mention}: **{user}** has been banned.", color=0x313338), mention_author=False)
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
@@ -285,7 +284,6 @@ class KickBanMixin(MixinMeta):
         if author == member:
             embed = discord.Embed(description=f"> {ctx.author.mention}: You can't kick yourself.", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
-            return
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, member):
             await ctx.send(
                 _(
@@ -350,7 +348,7 @@ class KickBanMixin(MixinMeta):
             user=user, ctx=ctx, days=days, reason=reason
         )
 
-        await ctx.send(message)
+        await ctx.tick()
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
