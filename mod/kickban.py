@@ -266,7 +266,7 @@ class KickBanMixin(MixinMeta):
                     changed = True
         return changed
 
-    @commands.command(autohelp=True, aliases=["k"])
+    @commands.command(aliases=["k"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(kick_members=True)
@@ -324,7 +324,7 @@ class KickBanMixin(MixinMeta):
                 )
             )
 
-    @commands.command(autohelp=True, aliases=["k"])
+    @commands.command(autohelp=True, aliases=["b"])
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     @commands.has_permissions(kick_members=True)
