@@ -299,7 +299,6 @@ class Giveaways(commands.Cog):
                     else:
                         kwvalue = arguments[kwarg]
                         kwtitle = kwarg.title()
-                        subject = "days"
                     description += f"\n{kwtitle}: {kwvalue} {subject}"
 
         emoji = arguments["emoji"] or "🎉"

@@ -28,6 +28,7 @@ class Args(Converter):
         # Optional Arguments
         parser.add_argument("--channel", dest="channel", default=None, nargs="?")
         parser.add_argument("--roles", "--r", "--restrict", dest="roles", nargs="*", default=[])
+        parser.add_argument("--server", dest="server", default=None, nargs="*")
         parser.add_argument("--multiplier", "--m", dest="multi", default=None, type=int, nargs="?")
         parser.add_argument("--multi-roles", "--mr", nargs="*", dest="multi-roles", default=[])
         parser.add_argument("--joined", dest="joined", default=None, type=int, nargs="?")
@@ -45,7 +46,6 @@ class Args(Converter):
         parser.add_argument("--announce", action="store_true")
         parser.add_argument("--ateveryone", action="store_true")
         parser.add_argument("--athere", action="store_true")
-        parser.add_argument("--show-requirements", action="store_true")
 
         try:
             vals = vars(parser.parse_args(argument.split(" ")))
