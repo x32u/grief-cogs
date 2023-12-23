@@ -169,9 +169,9 @@ class Vanity(commands.Cog):
        # if role.position >= ctx.author.top_role.position:
         #    embed = discord.Embed(description=f"> Your role is lower or equal to the vanity role, please choose a lower role than yourself.", color=0x313338)
          #   return await ctx.reply(embed=embed, mention_author=False)
-        if role.position >= ctx.guild.me.top_role.position:
-            embed = discord.Embed(description=f"> The role is higher than me, please choose a lower role than me.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
+       # if role.position >= ctx.guild.me.top_role.position:
+        #    embed = discord.Embed(description=f"> The role is higher than me, please choose a lower role than me.", color=0x313338)
+         #   return await ctx.reply(embed=embed, mention_author=False)
         await self.config.guild(ctx.guild).role.set(role.id)
         embed = discord.Embed(description=f"> Vanity role has been updated to {role.mention}", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
