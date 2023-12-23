@@ -246,20 +246,23 @@ class Giveaways(commands.Cog):
             await ctx.send("Giveaway not found.")
 
     @giveaway.command(aliases=["adv"])
-    async def advanced(self, ctx: commands.Context, *, arguments: Args):
+    async def advanced(self, ctx: commands.Context, *, arguments: Args) -> None:
         """Advanced creation of Giveaways.
 
+        `;gw explain` for a further full listing of the arguments.
 
-        `[p]gw explain` for a further full listing of the arguments.
         """
-        prize = arguments["prize"]
+        prize = f"**{arguments['prize']}**"
         duration = arguments["duration"]
         channel = arguments["channel"] or ctx.channel
 
         winners = arguments.get("winners", 1) or 1
         end = datetime.now(timezone.utc) + duration
-        description += "\n\n**Requirements**:"
-        for kwarg in set(arguments) - {
+        description = arguments["description"] or ""
+        if arguments["show_requirements"]:
+            description += "\n\n**Requirements**:"
+            for kwarg in set(arguments) - {
+                "show_requirements",
                 "prize",
                 "duration",
                 "channel",
@@ -271,14 +274,41 @@ class Giveaways(commands.Cog):
                 "emoji",
             }:
                 if arguments[kwarg]:
-                    description += f"\n**{kwarg.title()}:** {arguments[kwarg]}"
+                    subject = ""
+                    kwtitle = kwarg.title()
+                    if kwtitle == "Created":
+                        kwvalue = arguments[kwarg]
+                        kwtitle = "Account Age"
+                        subject = "days"
+
+                    elif kwtitle == "Joined":
+                        kwvalue = arguments[kwarg]
+                        kwtitle = "Member of Server"
+                        subject = "days"
+
+                    elif kwtitle == "Roles":
+                        roles = arguments[kwarg]
+                        kwvalue = "".join(f"{ctx.guild.get_role(r).mention} " for r in roles)
+                        kwtitle = "Required Roles"
+                        subject = ""
+
+                    elif kwtitle == "Server":
+                        server_id = int(arguments[kwarg][0])
+                        kwvalue = f"**{str(self.bot.get_guild(server_id))}**"
+                        kwtitle = "Must be a member of"
+                        subject = ""
+                    else:
+                        kwvalue = arguments[kwarg]
+                        kwtitle = kwarg.title()
+                        subject = "days"
+                    description += f"\n{kwtitle}: {kwvalue} {subject}"
 
         emoji = arguments["emoji"] or "🎉"
         if isinstance(emoji, int):
             emoji = self.bot.get_emoji(emoji)
         embed = discord.Embed(
             title=f"{f'{winners}x ' if winners > 1 else ''}{prize}",
-            description=f"{description}\n\nReact with {emoji} to enter\n\n**Hosted by:** {ctx.author.mention}\n\nEnds: <t:{int(end.timestamp())}:R>",
+            description=f"{description}\n\nReact with {emoji} to enter\n\nEnds: <t:{int(end.timestamp())}:R>",
             color=await ctx.embed_color(),
         )
         txt = "\n"
@@ -290,14 +320,11 @@ class Giveaways(commands.Cog):
             for mention in arguments["mentions"]:
                 role = ctx.guild.get_role(mention)
                 if role is not None:
-                    txt += f"{role.mention}"
+                    txt += f"{role.mention} "
         msg = await channel.send(
-            content=f"🎉 Giveaway 🎉{txt}",
+            content=f"{emoji} Giveaway! {emoji}{txt}",
             embed=embed,
-            allowed_mentions=discord.AllowedMentions(
-                roles=bool(arguments["mentions"]),
-                everyone=bool(arguments["ateveryone"]),
-            ),
+            allowed_mentions=discord.AllowedMentions(roles=bool(arguments["mentions"]), everyone=bool(arguments["ateveryone"])),
         )
 
         giveaway_obj = Giveaway(
@@ -307,11 +334,7 @@ class Giveaways(commands.Cog):
             end,
             prize,
             str(emoji),
-            **{
-                k: v
-                for k, v in arguments.items()
-                if k not in ["prize", "duration", "channel", "emoji"]
-            },
+            **{k: v for k, v in arguments.items() if k not in ["prize", "duration", "channel", "emoji"]},
         )
         self.giveaways[msg.id] = giveaway_obj
         await msg.add_reaction(emoji)
