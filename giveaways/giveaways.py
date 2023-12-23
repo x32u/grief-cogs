@@ -179,7 +179,11 @@ class Giveaways(commands.Cog):
         """
 
     @giveaway.command()
-    @app_commands.describe(channel="The channel in which to start the giveaway.", time="The time the giveaway should last.", prize="The prize for the giveaway.",)
+    @app_commands.describe(
+        channel="The channel in which to start the giveaway.",
+        time="The time the giveaway should last.",
+        prize="The prize for the giveaway.",
+    )
     async def start(
         self,
         ctx: commands.Context,
@@ -258,7 +262,9 @@ class Giveaways(commands.Cog):
             await ctx.send("Giveaway not found.")
 
     @giveaway.command(aliases=["adv"])
-    @app_commands.describe(arguments="The arguments for the giveaway. See `[p]gw explain` for more info.")
+    @app_commands.describe(
+        arguments="The arguments for the giveaway. See `[p]gw explain` for more info."
+    )
     async def advanced(self, ctx: commands.Context, *, arguments: Args):
         """Advanced creation of Giveaways.
 
@@ -285,7 +291,6 @@ class Giveaways(commands.Cog):
                 "notify",
                 "announce",
                 "emoji",
-                "roles",
             }:
                 if arguments[kwarg]:
                     description += f"\n**{kwarg.title()}:** {arguments[kwarg]}"
@@ -309,6 +314,7 @@ class Giveaways(commands.Cog):
                 if role is not None:
                     txt += f"{role.mention} "
         msg = await channel.send(
+            content=f"🎉 Giveaway 🎉{txt}",
             embed=embed,
             allowed_mentions=discord.AllowedMentions(
                 roles=bool(arguments["mentions"]),
@@ -365,7 +371,7 @@ class Giveaways(commands.Cog):
             embeds.append(embed)
 
         if len(embeds) == 1:
-            return await ctx.reply(embed=embeds[0], mention_author=False)
+            return await ctx.send(embed=embeds[0])
         return await menu(ctx, embeds, DEFAULT_CONTROLS)
 
     @giveaway.command()
@@ -387,7 +393,7 @@ class Giveaways(commands.Cog):
             description=msg,
         )
         embed.set_footer(text=f"Giveaway ID #{msgid}")
-        await ctx.reply(embed=embed, mention_author=False)
+        await ctx.send(embed=embed)
 
     @giveaway.command(name="list")
     async def _list(self, ctx: commands.Context):
@@ -413,7 +419,7 @@ class Giveaways(commands.Cog):
             )
             embeds.append(embed)
         if len(embeds) == 1:
-            return await ctx.reply(embed=embeds[0], mention_author=False)
+            return await ctx.send(embed=embeds[0])
         return await menu(ctx, embeds, DEFAULT_CONTROLS)
 
     @giveaway.command()
@@ -450,9 +456,11 @@ class Giveaways(commands.Cog):
 
         Setting Arguments:
         `--congratulate`: Whether or not to congratulate the winner. Not passing will default to off.
+        `--notify`: Whether or not to notify a user if they failed to enter the giveaway. Not passing will default to off.
         `--multientry`: Whether or not to allow multiple entries. Not passing will default to off.
         `--announce`: Whether to post a seperate message when the giveaway ends. Not passing will default to off.
         `--ateveryone`: Whether to tag @everyone in the giveaway notice.
+        `--show-requirements`: Whether to show the requirements of the giveaway.
 
         Examples:
         `{prefix}gw advanced --prize A new sword --duration 1h30m --restrict Role ID --multiplier 2 --multi-roles RoleID RoleID2`
