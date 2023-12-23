@@ -1,4 +1,4 @@
-import asyncio
+
 import typing
 from logging import Logger, getLogger
 
@@ -17,7 +17,7 @@ class Vanity(commands.Cog):
         self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
-        self.cached = True
+        self.cached = False
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
 
@@ -156,9 +156,8 @@ class Vanity(commands.Cog):
         await self.config.guild(ctx.guild).vanity.set(vanity)
         #if "VANITY_URL" in ctx.guild.features:
         self.vanity_cache[ctx.guild.id] = vanity
-        self.update_cache
-        await ctx.send(
-            f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.")
+        self.update_cache[ctx.guild.id] = vanity
+        await ctx.send(f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.")
 
     @vanity.command()
     @commands.guild_only()
