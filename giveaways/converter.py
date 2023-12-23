@@ -36,6 +36,7 @@ class Args(Converter):
         parser.add_argument("--winners", dest="winners", default=None, type=int, nargs="?")
         parser.add_argument("--mentions", dest="mentions", nargs="*", default=[])
         parser.add_argument("--description", dest="description", default=[], nargs="*")
+        parser.add_argument("--emoji", dest="emoji", default=None, nargs="*")
 
         # Setting arguments
         parser.add_argument("--multientry", action="store_true")
@@ -164,6 +165,4 @@ class Args(Converter):
                 raise BadArgument(
                     "Invalid end date. Use `--end` or `-e`. Ensure to pass a timezone, otherwise it defaults to UTC."
                 )
-        vals["image"] = " ".join(vals["image"]) if vals["image"] else None
-        vals["thumbnail"] = " ".join(vals["thumbnail"]) if vals["thumbnail"] else None
         return vals
