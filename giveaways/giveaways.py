@@ -436,11 +436,9 @@ class Giveaways(commands.Cog):
         `--winners`: How many winners to draw. Must be a positive number.
         `--mentions`: Roles to mention in the giveaway notice.
         `--description`: Description of the giveaway.
-        `--image`: Image URL to use for the giveaway embed.
 
         Setting Arguments:
         `--congratulate`: Whether or not to congratulate the winner. Not passing will default to off.
-        `--notify`: Whether or not to notify a user if they failed to enter the giveaway. Not passing will default to off.
         `--multientry`: Whether or not to allow multiple entries. Not passing will default to off.
         `--announce`: Whether to post a seperate message when the giveaway ends. Not passing will default to off.
         `--ateveryone`: Whether to tag @everyone in the giveaway notice.
@@ -469,7 +467,7 @@ class Giveaways(commands.Cog):
             try:
                 await giveaway.add_entrant(payload.member, bot=self.bot, session=self.session)
             except GiveawayEnterError as e:
-                if giveaway.kwargs.get("notify", False):
+                if giveaway.kwargs.get("notify", True):
                     with contextlib.suppress(discord.Forbidden):
                         await payload.member.send(e.message)
                 return
