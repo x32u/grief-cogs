@@ -286,10 +286,6 @@ class Giveaways(commands.Cog):
             description=f"{description}\n\nReact with {emoji} to enter\n\n**Hosted by:** {ctx.author.mention}\n\nEnds: <t:{int(end.timestamp())}:R>",
             color=await ctx.embed_color(),
         )
-        if arguments["image"] is not None:
-            embed.set_image(url=arguments["image"])
-        if arguments["thumbnail"] is not None:
-            embed.set_thumbnail(url=arguments["thumbnail"])
         txt = "\n"
         if arguments["ateveryone"]:
             txt += "@everyone "
