@@ -12,6 +12,7 @@ class Vanity(commands.Cog):
     """For level 3 servers, award your users for advertising the vanity in their status."""
 
     def __init__(self, bot: Grief):
+        bot: Grief = bot
         self.bot: Grief = bot
         self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
@@ -159,6 +160,7 @@ class Vanity(commands.Cog):
             # return await ctx.reply(embed=embed, mention_author=False)
         # if "VANITY_URL" in ctx.guild.features:
         embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
+        await self.cog.update_cache()
         return await ctx.reply(embed=embed, mention_author=False)
 
     @vanity.command()
