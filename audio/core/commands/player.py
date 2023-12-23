@@ -119,8 +119,6 @@ class PlayerCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ctx, title=_("Unable To Play Tracks"), description=_("Queue size limit reached.")
             )
 
-        if not await self.maybe_charge_requester(ctx, guild_data["jukebox_price"]):
-            return
         if query.is_spotify:
             return await self._get_spotify_tracks(ctx, query)
         try:
@@ -227,8 +225,6 @@ class PlayerCommands(MixinMeta, metaclass=CompositeMetaClass):
                 ctx, title=_("Unable To Play Tracks"), description=_("Queue size limit reached.")
             )
 
-        if not await self.maybe_charge_requester(ctx, guild_data["jukebox_price"]):
-            return
         try:
             if query.is_spotify:
                 tracks = await self._get_spotify_tracks(ctx, query)
@@ -526,8 +522,6 @@ class PlayerCommands(MixinMeta, metaclass=CompositeMetaClass):
             return await self.send_embed_msg(
                 ctx, title=_("Unable To Play Tracks"), description=_("Queue size limit reached.")
             )
-        if not await self.maybe_charge_requester(ctx, guild_data["jukebox_price"]):
-            return
         if query.is_spotify:
             return await self._get_spotify_tracks(ctx, query)
         return await self.send_embed_msg(
@@ -599,8 +593,6 @@ class PlayerCommands(MixinMeta, metaclass=CompositeMetaClass):
             return await self.send_embed_msg(
                 ctx, title=_("Unable To Play Tracks"), description=_("Queue size limit reached.")
             )
-        if not await self.maybe_charge_requester(ctx, guild_data["jukebox_price"]):
-            return
         try:
             await self.api_interface.autoplay(player, self.playlist_api)
         except DatabaseError:
