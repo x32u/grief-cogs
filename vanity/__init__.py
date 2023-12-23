@@ -156,7 +156,7 @@ class Vanity(commands.Cog):
         await self.config.guild(ctx.guild).vanity.set(vanity)
         #if "VANITY_URL" in ctx.guild.features:
         self.vanity_cache[ctx.guild.id] = vanity
-        self.update_cache[ctx.guild.id] = vanity
+        self.update_cache()
         await ctx.send(f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.")
 
     @vanity.command()
