@@ -22,7 +22,6 @@ class Vanity(commands.Cog):
         self.config.register_guild(**default_guild)
 
     async def refresh_config(self, ctx: commands.Context, guild=None) -> None:
-        await self.bot.waits_uptime_for(30)
         vanity: Vanity = self.bot.get_cog("Vanity")
         if guild:
                 await vanity.config.guild(guild).all()
