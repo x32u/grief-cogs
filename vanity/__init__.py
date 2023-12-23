@@ -1,4 +1,4 @@
-
+import asyncio
 import typing
 from logging import Logger, getLogger
 
@@ -12,12 +12,16 @@ class Vanity(commands.Cog):
     """For level 3 servers, award your users for advertising the vanity in their status."""
 
     def __init__(self, bot: Grief):
-        bot: Grief = bot
         self.bot: Grief = bot
         self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
-        default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
-        self.cached = True
+        default_guild = {
+            "role": None,
+            "toggled": False,
+            "channel": None,
+            "vanity": None,
+        }
+        self.cached = False
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
 
@@ -149,14 +153,18 @@ class Vanity(commands.Cog):
     async def vanity(self, ctx: commands.Context) -> None:
         """Vanity roles for grief."""
 
-    @vanity.command()
+    @vanity.command(usage="true yor")
+    @commands.has_permissions(manage_guild=True)
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
-        """Toggle vanity checker for current server on/off."""
+        """Toggle vanity checker for current server on/off. Do not use "/"."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
-        #if "VANITY_URL" in ctx.guild.features:
-        self.vanity_cache[ctx.guild.id] = vanity
-        await ctx.send(f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.")
+        # if ctx.guild.premium_tier != 3:
+            # embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
+            # return await ctx.reply(embed=embed, mention_author=False)
+        if "VANITY_URL" in ctx.guild.features:
+            embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
 
     @vanity.command()
     @commands.guild_only()
