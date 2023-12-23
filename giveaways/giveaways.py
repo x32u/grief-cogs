@@ -7,7 +7,7 @@ from typing import Optional
 
 import aiohttp
 import discord
-from grief.core import Config, commands
+from grief.core import Config, app_commands, commands
 from grief.core.commands.converter import TimedeltaConverter
 from grief.core.utils.chat_formatting import pagify
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
@@ -18,8 +18,15 @@ from .objects import Giveaway, GiveawayEnterError, GiveawayExecError
 log = logging.getLogger("grief.giveaways")
 GIVEAWAY_KEY = "giveaways"
 
+# TODO: Add a way to delete giveaways that have ended from the config
+
+
 class Giveaways(commands.Cog):
-    """Create giveaways for your server."""
+    """Giveaway Commands"""
+
+    def format_help_for_context(self, ctx):
+        pre_processed = super().format_help_for_context(ctx)
+        return f"{pre_processed}"
 
     def __init__(self, bot):
         self.bot = bot
@@ -164,7 +171,7 @@ class Giveaways(commands.Cog):
                 entrants = [x for x in entrants if x != winner]
         return
 
-    @commands.group(aliases=["gw"])
+    @commands.hybrid_group(aliases=["gw"])
     @commands.has_permissions(manage_guild=True)
     async def giveaway(self, ctx: commands.Context):
         """
@@ -172,6 +179,11 @@ class Giveaways(commands.Cog):
         """
 
     @giveaway.command()
+    @app_commands.describe(
+        channel="The channel in which to start the giveaway.",
+        time="The time the giveaway should last.",
+        prize="The prize for the giveaway.",
+    )
     async def start(
         self,
         ctx: commands.Context,
@@ -193,7 +205,17 @@ class Giveaways(commands.Cog):
             color=await ctx.embed_color(),
         )
         msg = await channel.send(embed=embed)
-        giveaway_obj = Giveaway(ctx.guild.id, channel.id, msg.id, end, prize, "🎉", **{"congratulate": True, "notify": True},)
+        giveaway_obj = Giveaway(
+            ctx.guild.id,
+            channel.id,
+            msg.id,
+            end,
+            prize,
+            "🎉",
+            **{"congratulate": True, "notify": True},
+        )
+        if ctx.interaction:
+            await ctx.send("Giveaway created!", ephemeral=True)
         self.giveaways[msg.id] = giveaway_obj
         await msg.add_reaction("🎉")
         giveaway_dict = deepcopy(giveaway_obj.__dict__)
@@ -201,6 +223,7 @@ class Giveaways(commands.Cog):
         await self.config.custom(GIVEAWAY_KEY, str(ctx.guild.id), str(msg.id)).set(giveaway_dict)
 
     @giveaway.command()
+    @app_commands.describe(msgid="The message ID of the giveaway to end.")
     async def reroll(self, ctx: commands.Context, msgid: int):
         """Reroll a giveaway."""
         data = await self.config.custom(GIVEAWAY_KEY, ctx.guild.id).all()
@@ -223,6 +246,7 @@ class Giveaways(commands.Cog):
             await ctx.tick()
 
     @giveaway.command()
+    @app_commands.describe(msgid="The message ID of the giveaway to end.")
     async def end(self, ctx: commands.Context, msgid: int):
         """End a giveaway."""
         if msgid in self.giveaways:
@@ -238,6 +262,7 @@ class Giveaways(commands.Cog):
             await ctx.send("Giveaway not found.")
 
     @giveaway.command(aliases=["adv"])
+    @app_commands.describe(arguments="The arguments for the giveaway. See `[p]gw explain` for more info.")
     async def advanced(self, ctx: commands.Context, *, arguments: Args):
         """Advanced creation of Giveaways.
 
@@ -264,8 +289,6 @@ class Giveaways(commands.Cog):
                 "notify",
                 "announce",
                 "emoji",
-                "thumbnail",
-                "image",
             }:
                 if arguments[kwarg]:
                     description += f"\n**{kwarg.title()}:** {arguments[kwarg]}"
@@ -287,15 +310,16 @@ class Giveaways(commands.Cog):
             for mention in arguments["mentions"]:
                 role = ctx.guild.get_role(mention)
                 if role is not None:
-                    txt += f"{role.name} "
+                    txt += f"{role.mention} "
         msg = await channel.send(
-            content=f"Giveaway {txt}",
             embed=embed,
             allowed_mentions=discord.AllowedMentions(
                 roles=bool(arguments["mentions"]),
                 everyone=bool(arguments["ateveryone"]),
             ),
         )
+        if ctx.interaction:
+            await ctx.send("Giveaway created!", ephemeral=True)
 
         giveaway_obj = Giveaway(
             ctx.guild.id,
@@ -317,6 +341,7 @@ class Giveaways(commands.Cog):
         await self.config.custom(GIVEAWAY_KEY, str(ctx.guild.id), str(msg.id)).set(giveaway_dict)
 
     @giveaway.command()
+    @app_commands.describe(msgid="The message ID of the giveaway to edit.")
     async def entrants(self, ctx: commands.Context, msgid: int):
         """List all entrants for a giveaway."""
         if msgid not in self.giveaways:
@@ -347,6 +372,7 @@ class Giveaways(commands.Cog):
         return await menu(ctx, embeds, DEFAULT_CONTROLS)
 
     @giveaway.command()
+    @app_commands.describe(msgid="The message ID of the giveaway to edit.")
     async def info(self, ctx: commands.Context, msgid: int):
         """Information about a giveaway."""
         if msgid not in self.giveaways:
@@ -390,7 +416,7 @@ class Giveaways(commands.Cog):
             )
             embeds.append(embed)
         if len(embeds) == 1:
-            return await ctx.send(embed=embeds[0])
+            return await ctx.reply(embed=embeds[0], mention_author=False)
         return await menu(ctx, embeds, DEFAULT_CONTROLS)
 
     @giveaway.command()
@@ -454,7 +480,7 @@ class Giveaways(commands.Cog):
             try:
                 await giveaway.add_entrant(payload.member, bot=self.bot, session=self.session)
             except GiveawayEnterError as e:
-                if giveaway.kwargs.get("notify", True):
+                if giveaway.kwargs.get("notify", False):
                     with contextlib.suppress(discord.Forbidden):
                         await payload.member.send(e.message)
                 return
