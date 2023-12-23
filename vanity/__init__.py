@@ -16,7 +16,7 @@ class Vanity(commands.Cog):
         self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
-        self.cached = False
+        self.cached = True
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
 
@@ -154,11 +154,12 @@ class Vanity(commands.Cog):
         """Toggle vanity checker for current server on/off. Do not use "/"."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
-        # if ctx.guild.premium_tier != 3:
-            # embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
-            # return await ctx.reply(embed=embed, mention_author=False)
+       # if ctx.guild.premium_tier != 3:
+        #    embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
+         #   return await ctx.reply(embed=embed, mention_author=False)
         if "VANITY_URL" in ctx.guild.features:
-            await ctx.send("Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.")
+            embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
 
     @vanity.command()
     @commands.guild_only()
@@ -166,12 +167,12 @@ class Vanity(commands.Cog):
     @commands.has_permissions(manage_guild=True)
     async def role(self, ctx: commands.Context, role: discord.Role) -> None:
         """Setup the role to be rewarded."""
-       # if role.position >= ctx.author.top_role.position:
-        #    embed = discord.Embed(description=f"> Your role is lower or equal to the vanity role, please choose a lower role than yourself.", color=0x313338)
-         #   return await ctx.reply(embed=embed, mention_author=False)
-       # if role.position >= ctx.guild.me.top_role.position:
-        #    embed = discord.Embed(description=f"> The role is higher than me, please choose a lower role than me.", color=0x313338)
-         #   return await ctx.reply(embed=embed, mention_author=False)
+        if role.position >= ctx.author.top_role.position:
+            embed = discord.Embed(description=f"> Your role is lower or equal to the vanity role, please choose a lower role than yourself.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
+        if role.position >= ctx.guild.me.top_role.position:
+            embed = discord.Embed(description=f"> The role is higher than me, please choose a lower role than me.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         await self.config.guild(ctx.guild).role.set(role.id)
         embed = discord.Embed(description=f"> Vanity role has been updated to {role.mention}", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
