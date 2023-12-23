@@ -149,19 +149,16 @@ class Vanity(commands.Cog):
     async def vanity(self, ctx: commands.Context) -> None:
         """Vanity roles for grief."""
 
-    @vanity.command(usage="true yor")
-    @commands.has_permissions(manage_guild=True)
+    @vanity.command()
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
-        """Toggle vanity checker for current server on/off. Do not use "/"."""
-        # if ctx.guild.premium_tier != 3:
-            # embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
-            # return await ctx.reply(embed=embed, mention_author=False)
-        if "VANITY_URL" in ctx.guild.features:
-            await self.config.guild(ctx.guild).toggled.set(on)
+        """Toggle vanity checker for current server on/off."""
+        await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
-        await self.update_cache()
-        embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
-        return await ctx.reply(embed=embed, mention_author=False)
+        #if "VANITY_URL" in ctx.guild.features:
+        self.vanity_cache[ctx.guild.id] = vanity
+        self.update_cache
+        await ctx.send(
+            f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.")
 
     @vanity.command()
     @commands.guild_only()
