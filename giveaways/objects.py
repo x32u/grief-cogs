@@ -67,6 +67,15 @@ class Giveaway:
             <= self.kwargs["created"]
         ):
             raise GiveawayEnterError("Your account is too new to join this giveaway.")
+        
+        if required_server := self.kwargs.get("server", None):
+            required_server = int(required_server[0])
+            partner_guild: discord.Guild = bot.get_guild(required_server)
+            if not partner_guild:
+                raise GiveawayExecError
+            if not partner_guild.get_member(user.id):
+                msg = f"You must be a member of {partner_guild} to participate in this giveaway!"
+                raise GiveawayEnterError(msg)
 
         self.entrants.append(user.id)
         if self.kwargs.get("multi", None) is not None and any(
