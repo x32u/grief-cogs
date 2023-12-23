@@ -21,12 +21,6 @@ class Vanity(commands.Cog):
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
 
-    async def refresh_config(self, ctx: commands.Context, guild=None) -> None:
-        vanity: Vanity = self.bot.get_cog("Vanity")
-        if guild:
-                await vanity.config.guild(guild).all()
-                self.config.guild(ctx.guild).vanity.set(vanity)
-
     async def update_cache(self):
         data = await self.config.all_guilds()
         for x in data:
@@ -35,10 +29,6 @@ class Vanity(commands.Cog):
                 self.vanity_cache[x] = vanity
         if not self.cached:
             self.cached = True
-
-    async def reset_cache(self, guild: discord.Guild) -> None:
-        worker = self.bot.get_cog("Vanity")
-        await worker.refresh_config(guild)
 
     async def safe_send(self, channel: discord.TextChannel, embed: discord.Embed) -> None:
         try:
@@ -169,7 +159,7 @@ class Vanity(commands.Cog):
         if "VANITY_URL" in ctx.guild.features:
             await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
-        await self.reset_cache(ctx.guild)
+        await self.update_cache(ctx.guild)
         embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
 
