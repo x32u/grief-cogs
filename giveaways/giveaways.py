@@ -290,7 +290,7 @@ class Giveaways(commands.Cog):
             for mention in arguments["mentions"]:
                 role = ctx.guild.get_role(mention)
                 if role is not None:
-                    txt += f"{ctx.guild.get_role.mention} "
+                    txt += f"{role.mention}"
         msg = await channel.send(
             content=f"🎉 Giveaway 🎉{txt}",
             embed=embed,
