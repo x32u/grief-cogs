@@ -30,6 +30,10 @@ class Vanity(commands.Cog):
         if not self.cached:
             self.cached = True
 
+    async def reset_cache(self, guild: discord.Guild) -> None:
+        worker = self.bot.get_cog("Vanity")
+        await worker.refresh_config(guild)
+
     async def safe_send(self, channel: discord.TextChannel, embed: discord.Embed) -> None:
         try:
             await channel.send(embed=embed)
@@ -157,9 +161,9 @@ class Vanity(commands.Cog):
             # embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
             # return await ctx.reply(embed=embed, mention_author=False)
         if "VANITY_URL" in ctx.guild.features:
-            self.vanity_cache[ctx.guild.id] = vanity
-        await self.config.guild(ctx.guild).toggled.set(on)
+            await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
+        await self.reset_cache(ctx.guild)
         embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
 
@@ -175,7 +179,6 @@ class Vanity(commands.Cog):
         if role.position >= ctx.guild.me.top_role.position:
             embed = discord.Embed(description=f"> The role is higher than me, please choose a lower role than me.", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
-        await self.reset_cache(ctx.guild)
         await self.config.guild(ctx.guild).role.set(role.id)
         embed = discord.Embed(description=f"> Vanity role has been updated to {role.mention}", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
