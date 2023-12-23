@@ -38,7 +38,6 @@ class Args(Converter):
         parser.add_argument("--description", dest="description", default=[], nargs="*")
         parser.add_argument("--emoji", dest="emoji", default=None, nargs="*")
         parser.add_argument("--image", dest="image", default=None, nargs="*")
-        parser.add_argument("--thumbnail", dest="thumbnail", default=None, nargs="*")
 
         # Setting arguments
         parser.add_argument("--multientry", action="store_true")
@@ -48,16 +47,6 @@ class Args(Converter):
         parser.add_argument("--ateveryone", action="store_true")
         parser.add_argument("--athere", action="store_true")
         parser.add_argument("--show-requirements", action="store_true")
-
-        # Integrations
-        parser.add_argument("--cost", dest="cost", default=None, type=int, nargs="?")
-        parser.add_argument("--level-req", dest="levelreq", default=None, type=int, nargs="?")
-        parser.add_argument("--rep-req", dest="repreq", default=None, type=int, nargs="?")
-        parser.add_argument("--tatsu-level", default=None, type=int, nargs="?")
-        parser.add_argument("--tatsu-rep", default=None, type=int, nargs="?")
-        parser.add_argument("--mee6-level", default=None, type=int, nargs="?")
-        parser.add_argument("--amari-level", default=None, type=int, nargs="?")
-        parser.add_argument("--amari-weekly-xp", default=None, type=int, nargs="?")
 
         try:
             vals = vars(parser.parse_args(argument.split(" ")))
@@ -73,13 +62,6 @@ class Args(Converter):
             raise BadArgument(
                 "You must specify a duration or end date. Use `--duration` or `-d` or `--end` or `-e`"
             )
-
-        nums = [vals["cost"], vals["joined"], vals["created"], vals["winners"]]
-        for val in nums:
-            if val is None:
-                continue
-            if val < 1:
-                raise BadArgument("Number must be greater than 0")
 
         valid_multi_roles = []
         for role in vals["multi-roles"]:
@@ -122,29 +104,6 @@ class Args(Converter):
                 vals["channel"] = await TextChannelConverter().convert(ctx, vals["channel"])
             except BadArgument:
                 raise BadArgument("Invalid channel.")
-
-        if vals["levelreq"] or vals["repreq"]:
-            cog = ctx.bot.get_cog("Leveler")
-            if not cog:
-                raise BadArgument("Leveler cog not loaded.")
-            if not hasattr(cog, "db"):
-                raise BadArgument(
-                    "This may be the wrong leveling cog. Ensure you are using Fixators."
-                )
-
-        if vals["tatsu_level"] or vals["tatsu_rep"]:
-            token = await ctx.bot.get_shared_api_tokens("tatsumaki")
-            if not token.get("authorization"):
-                raise BadArgument(
-                    f"You do not have a valid Tatsumaki API token. Check `{ctx.clean_prefix}gw integrations` for more info."
-                )
-
-        if vals["amari_level"] or vals["amari_weekly_xp"]:
-            token = await ctx.bot.get_shared_api_tokens("amari")
-            if not token.get("authorization"):
-                raise BadArgument(
-                    f"You do not have a valid Amari API token. Check `{ctx.clean_prefix}gw integrations` for more info."
-                )
 
         if (vals["multi"] or vals["multi-roles"]) and not (vals["multi"] and vals["multi-roles"]):
             raise BadArgument(

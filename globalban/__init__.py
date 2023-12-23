@@ -6,7 +6,6 @@ from grief.core import Config, commands
 from grief.core.bot import Grief
 from grief.core.utils import chat_formatting as chat
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
-from grief.core.utils.predicates import MessagePredicate
 
 from .converters import ActionReason, MemberID
 
@@ -48,7 +47,7 @@ class GlobalBan(commands.Cog):
                 await guild.leave()
             finally:
                 banned_guilds.append(guild)
-        await ctx.send(embed=discord.Embed(description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
+        await ctx.reply(embed=discord.Embed(description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
         
     @commands.command()
     @commands.is_owner()
@@ -69,7 +68,7 @@ class GlobalBan(commands.Cog):
                 await guild.kick(user, reason=reason)
             finally:
                 banned_guilds.append(guild)
-        await ctx.send(embed=discord.Embed(description=f"Kicked {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
+        await ctx.reply(embed=discord.Embed(description=f"Kicked {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
 
     @commands.command()
     @commands.is_owner()
@@ -89,7 +88,7 @@ class GlobalBan(commands.Cog):
                 couldnt_unban.append(guild)
             finally:
                 unbanned_guilds.append(guild)
-        await ctx.send(embed=discord.Embed(description=f"Unbanned {user} from {len(unbanned_guilds)}/{len(self.bot.guilds)} guilds."))
+        await ctx.reply(embed=discord.Embed(description=f"Unbanned {user} from {len(unbanned_guilds)}/{len(self.bot.guilds)} guilds."))
 
     @commands.command()
     @commands.guildowner()
@@ -122,8 +121,8 @@ class GlobalBan(commands.Cog):
         try:
             await ctx.guild.unban(user, reason=reason)
         except (discord.HTTPException, discord.Forbidden):
-            return await ctx.send(embed=discord.Embed(description="Couldn't unban {user}."))
-        await ctx.send(embed=discord.Embed(description=f"Unbanned {user}."))
+            return await ctx.reply(embed=discord.Embed(description="Couldn't unban {user}."))
+        await ctx.reply(embed=discord.Embed(description=f"Unbanned {user}."))
 
     @commands.command()
     @commands.is_owner()
@@ -176,7 +175,6 @@ class GlobalBan(commands.Cog):
                 )
             except (discord.HTTPException, discord.Forbidden) as e:
                 logger.exception(e)
-
         if user.id in guild_banned:
             try:
                 await guild.ban(user, reason="Hard banned by bot owner.")
@@ -184,7 +182,6 @@ class GlobalBan(commands.Cog):
                 logger.exception(e)
                 if not guild.me.guild_permissions.ban_members:
                     await guild.leave()
-
                 await guild.ban(user)
             except discord.HTTPException:
                 await guild.leave()
@@ -210,8 +207,7 @@ class GlobalBan(commands.Cog):
             return
         if not after.guild_permissions.administrator:
             logger.info(
-                f"Leaving {after.guild.name}/{after.guild.id} as they removed administrator permission from me."
-            )
+                f"Leaving {after.guild.name}/{after.guild.id} as they removed administrator permission from me.")
             try:
                 await after.guild.leave()
             except discord.NotFound:
@@ -242,7 +238,6 @@ class GlobalBan(commands.Cog):
                 logger.exception(e)
                 if not guild.me.guild_permissions.administrator:
                     await guild.leave()
-
                 await guild.ban(user)
             except discord.HTTPException:
                 await guild.leave()  

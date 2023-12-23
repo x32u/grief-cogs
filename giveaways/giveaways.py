@@ -355,7 +355,7 @@ class Giveaways(commands.Cog):
             embeds.append(embed)
 
         if len(embeds) == 1:
-            return await ctx.send(embed=embeds[0])
+            return await ctx.reply(embed=embeds[0], mention_author=False)
         return await menu(ctx, embeds, DEFAULT_CONTROLS)
 
     @giveaway.command()
@@ -376,7 +376,7 @@ class Giveaways(commands.Cog):
             description=msg,
         )
         embed.set_footer(text=f"Giveaway ID #{msgid}")
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @giveaway.command(name="list")
     async def _list(self, ctx: commands.Context):
@@ -437,7 +437,6 @@ class Giveaways(commands.Cog):
         `--mentions`: Roles to mention in the giveaway notice.
         `--description`: Description of the giveaway.
         `--image`: Image URL to use for the giveaway embed.
-        `--thumbnail`: Thumbnail URL to use for the giveaway embed.
 
         Setting Arguments:
         `--congratulate`: Whether or not to congratulate the winner. Not passing will default to off.
@@ -447,10 +446,6 @@ class Giveaways(commands.Cog):
         `--ateveryone`: Whether to tag @everyone in the giveaway notice.
         `--show-requirements`: Whether to show the requirements of the giveaway.
 
-
-        3rd party integrations:
-        See `[p]gw integrations` for more information.
-
         Examples:
         `{prefix}gw advanced --prize A new sword --duration 1h30m --restrict Role ID --multiplier 2 --multi-roles RoleID RoleID2`
         `{prefix}gw advanced --prize A better sword --duration 2h3h30m --channel channel-name --cost 250 --joined 50 --congratulate --notify --multientry --level-req 100`""".format(
@@ -458,40 +453,6 @@ class Giveaways(commands.Cog):
         )
         embed = discord.Embed(
             title="Giveaway Advanced Explanation", description=msg, color=await ctx.embed_color()
-        )
-        await ctx.send(embed=embed)
-
-    @giveaway.command()
-    async def integrations(self, ctx: commands.Context):
-        """Various 3rd party integrations for giveaways."""
-
-        msg = """
-        3rd party integrations for giveaways.
-
-        You can use these integrations to integrate giveaways with other 3rd party services.
-
-        `--level-req`: Integrate with the Grief Level system Must be Fixator's leveler.
-        `--rep-req`: Integrate with the Grief Level Rep system Must be Fixator's leveler.
-        `--tatsu-level`: Integrate with the Tatsumaki's levelling system, must have a valid Tatsumaki API key set.
-        `--tatsu-rep`: Integrate with the Tatsumaki's rep system, must have a valid Tatsumaki API key set.
-        `--mee6-level`: Integrate with the MEE6 levelling system.
-        `--amari-level`: Integrate with the Amari's levelling system.
-        `--amari-weekly-xp`: Integrate with the Amari's weekly xp system.""".format(
-            prefix=ctx.clean_prefix
-        )
-        if await self.bot.is_owner(ctx.author):
-            msg += """
-                **API Keys**
-                Tatsu's API key can be set with the following command (You must find where this key is yourself): `{prefix}set api tatsumaki authorization <key>`
-                Amari's API key can be set with the following command (Apply [here](https://docs.google.com/forms/d/e/1FAIpQLScQDCsIqaTb1QR9BfzbeohlUJYA3Etwr-iSb0CRKbgjA-fq7Q/viewform)): `{prefix}set api amari authorization <key>`
-
-
-                For any integration suggestions, suggest them via the [#support-flare-cogs](https://discord.gg/GET4DVk) channel on the support server or [flare-cogs](https://github.com/flaree/flare-cogs/issues/new/choose) github.""".format(
-                prefix=ctx.clean_prefix
-            )
-
-        embed = discord.Embed(
-            title="3rd Party Integrations", description=msg, color=await ctx.embed_color()
         )
         await ctx.send(embed=embed)
 
