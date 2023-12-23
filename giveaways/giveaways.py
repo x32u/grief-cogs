@@ -179,11 +179,7 @@ class Giveaways(commands.Cog):
         """
 
     @giveaway.command()
-    @app_commands.describe(
-        channel="The channel in which to start the giveaway.",
-        time="The time the giveaway should last.",
-        prize="The prize for the giveaway.",
-    )
+    @app_commands.describe(channel="The channel in which to start the giveaway.", time="The time the giveaway should last.", prize="The prize for the giveaway.",)
     async def start(
         self,
         ctx: commands.Context,
@@ -289,6 +285,7 @@ class Giveaways(commands.Cog):
                 "notify",
                 "announce",
                 "emoji",
+                "roles",
             }:
                 if arguments[kwarg]:
                     description += f"\n**{kwarg.title()}:** {arguments[kwarg]}"
