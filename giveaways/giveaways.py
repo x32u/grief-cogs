@@ -258,8 +258,10 @@ class Giveaways(commands.Cog):
 
         winners = arguments.get("winners", 1) or 1
         end = datetime.now(timezone.utc) + duration
-        description += "\n\n**Requirements**:"
-        for kwarg in set(arguments) - {
+        description = arguments["description"] or ""
+        if arguments[""] or "":
+            description += "\n\n**Requirements**:"
+            for kwarg in set(arguments) - {
                 "prize",
                 "duration",
                 "channel",
@@ -454,7 +456,6 @@ class Giveaways(commands.Cog):
         `--multientry`: Whether or not to allow multiple entries. Not passing will default to off.
         `--announce`: Whether to post a seperate message when the giveaway ends. Not passing will default to off.
         `--ateveryone`: Whether to tag @everyone in the giveaway notice.
-        `--show-requirements`: Whether to show the requirements of the giveaway.
 
         Examples:
         `{prefix}gw advanced --prize A new sword --duration 1h30m --restrict Role ID --multiplier 2 --multi-roles RoleID RoleID2`
