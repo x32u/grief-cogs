@@ -45,7 +45,6 @@ class Args(Converter):
         parser.add_argument("--announce", action="store_true")
         parser.add_argument("--ateveryone", action="store_true")
         parser.add_argument("--athere", action="store_true")
-        parser.add_argument("--show-requirements", action="store_true")
 
         try:
             vals = vars(parser.parse_args(argument.split(" ")))

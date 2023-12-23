@@ -258,11 +258,8 @@ class Giveaways(commands.Cog):
 
         winners = arguments.get("winners", 1) or 1
         end = datetime.now(timezone.utc) + duration
-        description = arguments["description"] or ""
-        if arguments["show_requirements"]:
-            description += "\n\n**Requirements**:"
-            for kwarg in set(arguments) - {
-                "show_requirements",
+        description += "\n\n**Requirements**:"
+        for kwarg in set(arguments) - {
                 "prize",
                 "duration",
                 "channel",
@@ -272,8 +269,6 @@ class Giveaways(commands.Cog):
                 "notify",
                 "announce",
                 "emoji",
-                "thumbnail",
-                "image",
             }:
                 if arguments[kwarg]:
                     description += f"\n**{kwarg.title()}:** {arguments[kwarg]}"
@@ -295,7 +290,7 @@ class Giveaways(commands.Cog):
             for mention in arguments["mentions"]:
                 role = ctx.guild.get_role(mention)
                 if role is not None:
-                    txt += f"{role.mention} "
+                    txt += f"{ctx.guild.get_role.mention} "
         msg = await channel.send(
             content=f"🎉 Giveaway 🎉{txt}",
             embed=embed,
