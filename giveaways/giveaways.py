@@ -416,8 +416,8 @@ class Giveaways(commands.Cog):
         if len(embeds) == 1:
             return await ctx.send(embed=embeds[0])
         return await menu(ctx, embeds, DEFAULT_CONTROLS)
-
-    @giveaway.command()
+    
+    @giveaway.command(hidden=True)
     async def explain(self, ctx: commands.Context):
         """Explanation of giveaway advanced and the arguements it supports."""
 
