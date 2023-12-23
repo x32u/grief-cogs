@@ -158,8 +158,7 @@ class Vanity(commands.Cog):
             # embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
             # return await ctx.reply(embed=embed, mention_author=False)
         if "VANITY_URL" in ctx.guild.features:
-            embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
-            await ctx.send(embed=embed, mention_author=False)
+            await ctx.send("Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.")
 
     @vanity.command()
     @commands.guild_only()
