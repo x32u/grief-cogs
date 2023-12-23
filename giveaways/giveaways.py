@@ -259,7 +259,7 @@ class Giveaways(commands.Cog):
         winners = arguments.get("winners", 1) or 1
         end = datetime.now(timezone.utc) + duration
         description = arguments["description"] or ""
-        if arguments[""] or "":
+        if arguments["prize"] or "":
             description += "\n\n**Requirements**:"
             for kwarg in set(arguments) - {
                 "prize",
