@@ -193,15 +193,7 @@ class Giveaways(commands.Cog):
             color=await ctx.embed_color(),
         )
         msg = await channel.send(embed=embed)
-        giveaway_obj = Giveaway(
-            ctx.guild.id,
-            channel.id,
-            msg.id,
-            end,
-            prize,
-            "🎉",
-            **{"congratulate": True, "notify": True},
-        )
+        giveaway_obj = Giveaway(ctx.guild.id, channel.id, msg.id, end, prize, "🎉", **{"congratulate": True, "notify": True},)
         self.giveaways[msg.id] = giveaway_obj
         await msg.add_reaction("🎉")
         giveaway_dict = deepcopy(giveaway_obj.__dict__)
@@ -295,9 +287,9 @@ class Giveaways(commands.Cog):
             for mention in arguments["mentions"]:
                 role = ctx.guild.get_role(mention)
                 if role is not None:
-                    txt += f"{role.mention} "
+                    txt += f"{role.name} "
         msg = await channel.send(
-            content=f"🎉 Giveaway 🎉{txt}",
+            content=f"Giveaway {txt}",
             embed=embed,
             allowed_mentions=discord.AllowedMentions(
                 roles=bool(arguments["mentions"]),
@@ -438,7 +430,6 @@ class Giveaways(commands.Cog):
         `--multientry`: Whether or not to allow multiple entries. Not passing will default to off.
         `--announce`: Whether to post a seperate message when the giveaway ends. Not passing will default to off.
         `--ateveryone`: Whether to tag @everyone in the giveaway notice.
-        `--show-requirements`: Whether to show the requirements of the giveaway.
 
         Examples:
         `{prefix}gw advanced --prize A new sword --duration 1h30m --restrict Role ID --multiplier 2 --multi-roles RoleID RoleID2`
