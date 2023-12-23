@@ -291,17 +291,6 @@ class ReTrigger(
         [For more details click here.](https://github.com/TrustyJAID/Trusty-cogs/blob/master/retrigger/README.md)
         """
 
-    @retrigger.group(name="modlog")
-    @checks.mod_or_permissions(manage_channels=True)
-    async def _modlog(self, ctx: commands.Context) -> None:
-        """
-        Set which events to record in the modlog.
-
-        See https://regex101.com/ for help building a regex pattern.
-        See `[p]retrigger explain` or click the link below for more details.
-        [For more details click here.](https://github.com/TrustyJAID/Trusty-cogs/blob/master/retrigger/README.md)
-        """
-
     @retrigger.group(name="edit")
     @checks.mod_or_permissions(manage_channels=True)
     async def _edit(self, ctx: commands.Context) -> None:
@@ -1268,7 +1257,7 @@ class ReTrigger(
         """
         if type(trigger) is Trigger:
             await self.remove_trigger(ctx.guild.id, trigger.name)
-            # await self.remove_trigger_from_cache(ctx.guild.id, trigger)
+            await self.remove_trigger_from_cache(ctx.guild.id, trigger)
             msg = _("Trigger `{trigger}` removed.").format(trigger=trigger.name)
             await ctx.send(msg)
         else:
