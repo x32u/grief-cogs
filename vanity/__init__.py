@@ -156,7 +156,8 @@ class Vanity(commands.Cog):
         # if ctx.guild.premium_tier != 3:
             # embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
             # return await ctx.reply(embed=embed, mention_author=False)
-        # if "VANITY_URL" in ctx.guild.features:
+        if "VANITY_URL" in ctx.guild.features:
+            self.vanity_cache[ctx.guild.id] = vanity
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
         embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
