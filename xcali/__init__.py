@@ -11,8 +11,7 @@ import requests
 from grief.core import Config, commands
 from grief.core.bot import Grief
 
-from .constants import (TIKTOK_DESKTOP_PATTERN, TIKTOK_MOBILE_PATTERN,
-                        YOUTUBE_PATTERN, ydl_tok)
+from .constants import (TIKTOK_DESKTOP_PATTERN, TIKTOK_MOBILE_PATTERN,YOUTUBE_PATTERN, ydl_tok)
 from .utilities import sync_as_async
 
 
