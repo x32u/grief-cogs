@@ -96,24 +96,14 @@ class Vanity(commands.Cog):
             if after_custom_activity[0].name is not None:
                 if vanity.lower() in after_custom_activity[0].name.lower():
                     if role.id not in after._roles:
-                        try:
                             await after.add_roles(role)
-                        except (discord.Forbidden, discord.HTTPException) as e:
-                            self.logger.warning(
-                                f"Failed to add role to {after} in {guild.name}/{guild.id}: {str(e)}"
-                            )
                             return
                     self.bot.loop.create_task(self.safe_send(log_channel, has_in_status_embed))
         elif before_custom_activity and not after_custom_activity:
             if before_custom_activity[0].name is not None:
                 if vanity.lower() in before_custom_activity[0].name.lower():
                     if role.id in after._roles:
-                        try:
                             await after.remove_roles(role)
-                        except (discord.Forbidden, discord.HTTPException) as e:
-                            self.logger.warning(
-                                f"Failed to remove role from {after} in {guild.name}/{guild.id}: {str(e)}"
-                            )
         elif (
             before_custom_activity
             and after_custom_activity
@@ -129,31 +119,16 @@ class Vanity(commands.Cog):
                 after_match = vanity.lower() in after_custom_activity[0].name.lower()
             if not before_match and after_match:
                 if role.id not in after._roles:
-                    try:
                         await after.add_roles(role)
-                    except (discord.Forbidden, discord.HTTPException) as e:
-                        self.logger.warning(
-                            f"Failed to add role to {after} in {guild.name}/{guild.id}: {str(e)}"
-                        )
                         return
                 self.bot.loop.create_task(self.safe_send(log_channel, has_in_status_embed))
             elif before_match and not after_match:
                 if role.id in after._roles:
-                    try:
                         await after.remove_roles(role)
-                    except (discord.Forbidden, discord.HTTPException) as e:
-                        self.logger.warning(
-                            f"Failed to remove role from {after} in {guild.name}/{guild.id}: {str(e)}"
-                        )
         if not before_custom_activity and not after_custom_activity:
             # cope with the case where the user does not have a custom status
             if role.id in after._roles:
-                try:
                     await after.remove_roles(role)
-                except (discord.Forbidden, discord.HTTPException) as e:
-                    self.logger.warning(
-                        f"Failed to remove role from {after} in {guild.name}/{guild.id}: {str(e)}"
-                    )
 
     @commands.group(name="vanity",)
     @commands.guild_only()
