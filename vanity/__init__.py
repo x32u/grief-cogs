@@ -8,7 +8,7 @@ from grief.core.bot import Grief
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
-class VanityInStatus(commands.Cog):
+class Vanity(commands.Cog):
     """Give users a if they have a vanity in their status."""
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
@@ -20,7 +20,7 @@ class VanityInStatus(commands.Cog):
 
     def __init__(self, bot: Grief):
         self.bot: Grief = bot
-        self.logger: Logger = getLogger("red.dia.VanityInStatus")
+        self.logger: Logger = getLogger("grief.vanity")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
             "role": None,
@@ -158,7 +158,7 @@ class VanityInStatus(commands.Cog):
                         f"Failed to remove role from {after} in {guild.name}/{guild.id}: {str(e)}"
                     )
 
-    @commands.group(name="vanity-in-status",)
+    @commands.group(name="vanity",)
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
     async def vanity(self, ctx: commands.Context) -> None:
@@ -217,6 +217,6 @@ class VanityInStatus(commands.Cog):
 
 
 async def setup(bot: Grief):
-    cog = VanityInStatus(bot)
+    cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()
