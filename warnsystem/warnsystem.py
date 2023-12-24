@@ -23,6 +23,13 @@ from .cache import MemoryCache
 from .converters import AdvancedMemberSelect
 from .settings import SettingsMixin
 
+from discord.utils import utcnow
+from grief.core import Config, commands
+from grief.core.bot import Grief
+from grief.core.commands.converter import TimedeltaConverter
+import datetime
+from typing import Any, Dict, Final, List, Literal, Optional
+
 if TYPE_CHECKING:
     from grief.core.bot import Grief
 
@@ -418,6 +425,14 @@ class WarnSystem(SettingsMixin, commands.Cog, metaclass=CompositeMetaClass):
             if message:
                 await message.delete()
 
+    async def timeout_user(
+        self,
+        ctx: commands.Context,
+        member: discord.Member,
+        time: Optional[datetime.timedelta],
+        reason: Optional[str] = None,) -> None:
+        await member.timeout(time, reason=reason)
+
     # all warning commands
     @commands.group(invoke_without_command=True, name="warn")
     @checks.mod_or_permissions(administrator=True)
@@ -648,7 +663,54 @@ class WarnSystem(SettingsMixin, commands.Cog, metaclass=CompositeMetaClass):
                     return
             await asyncio.sleep(300)
 
-    def cog_unload(self):
+
+    @commands.command(aliases=["t"])
+    @commands.guild_only()
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(moderate_members=True)
+    async def timeout(self, ctx: commands.Context, member: discord.Member, time: TimedeltaConverter(minimum=datetime.timedelta(minutes=1), maximum=datetime.timedelta(days=28), default_unit="minutes", allowed_units=["minutes", "seconds", "hours", "days"],) = None, *, reason: Optional[str] = None,):
+        """Timeout users."""
+        if not time:
+            time = datetime.timedelta(seconds=60)
+        timestamp = int(datetime.datetime.timestamp(utcnow() + time))
+        if isinstance(member, discord.Member):
+            if member.is_timed_out():
+                embed = discord.Embed(description=f"> {member.mention} is already timed out.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+            if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member):
+                embed = discord.Embed(description=f"> You cannot timeout this user due to hierarchy.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+            if ctx.channel.permissions_for(member).administrator:
+                embed = discord.Embed(description=f"> You can't timeout an administrator.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+            await self.timeout_user(ctx, member, time, reason)
+            embed = discord.Embed(description=f"> {member.mention} has been timed out until <t:{timestamp}:f>.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
+
+    @commands.command(aliases=["ut"])
+    @commands.guild_only()
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(moderate_members=True)
+    async def untimeout(self, ctx: commands.Context, member: discord.Member, *, reason: Optional[str] = None,):
+        """Untimeout users."""
+        if isinstance(member, discord.Member):
+                if not member.is_timed_out():
+                    embed = discord.Embed(description=f"> {member.mention} is not timed out.", color=0x313338)
+                    return await ctx.reply(embed=embed, mention_author=False)
+                await self.timeout_user(ctx, member, None, reason)
+        embed = discord.Embed(description=f"> Removed the timeout for {member.mention}.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
+
+async def is_allowed_by_hierarchy(
+    bot: Grief, user: discord.Member, member: discord.Member
+) -> bool:
+        return (
+        user.guild.owner_id == user.id
+        or user.top_role > member.top_role
+        or await bot.is_owner(user)
+    )
+
+def cog_unload(self):
         log.debug("Unloading cog...")
 
         # stop checking for unmute and unban
