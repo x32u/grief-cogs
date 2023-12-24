@@ -129,6 +129,14 @@ class Mod(
 
     def cog_unload(self):
         self.tban_expiry_task.cancel()
+    
+    async def timeout_user(
+        self,
+        ctx: commands.Context,
+        member: discord.Member,
+        time: Optional[datetime.timedelta],
+        reason: Optional[str] = None,) -> None:
+        await member.timeout(time, reason=reason)
 
     async def _maybe_update_config(self):
         """Maybe update `delete_delay` value set by Config prior to Mod 1.0.0."""
@@ -960,6 +968,43 @@ class Mod(
         else:
             invalid = ""
         return overwrite, valid_perms, invalid, not_allowed
+    
+    @commands.command(aliases=["t"])
+    @commands.guild_only()
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(moderate_members=True)
+    async def timeout(self, ctx: commands.Context, member: discord.Member, time: TimedeltaConverter(minimum=datetime.timedelta(minutes=1), maximum=datetime.timedelta(days=28), default_unit="minutes", allowed_units=["minutes", "seconds", "hours", "days"],) = None, *, reason: Optional[str] = None,):
+        """Timeout users."""
+        if not time:
+            time = datetime.timedelta(seconds=60)
+        timestamp = int(datetime.datetime.timestamp(utcnow() + time))
+        if isinstance(member, discord.Member):
+            if member.is_timed_out():
+                embed = discord.Embed(description=f"> {member.mention} is already timed out.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+            if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member):
+                embed = discord.Embed(description=f"> You cannot timeout this user due to hierarchy.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+            if ctx.channel.permissions_for(member).administrator:
+                embed = discord.Embed(description=f"> You can't timeout an administrator.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+            await self.timeout_user(ctx, member, time, reason)
+            embed = discord.Embed(description=f"> {member.mention} has been timed out until <t:{timestamp}:f>.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
+
+    @commands.command(aliases=["ut"])
+    @commands.guild_only()
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.has_permissions(moderate_members=True)
+    async def untimeout(self, ctx: commands.Context, member: discord.Member, *, reason: Optional[str] = None,):
+        """Untimeout users."""
+        if isinstance(member, discord.Member):
+                if not member.is_timed_out():
+                    embed = discord.Embed(description=f"> {member.mention} is not timed out.", color=0x313338)
+                    return await ctx.reply(embed=embed, mention_author=False)
+                await self.timeout_user(ctx, member, None, reason)
+        embed = discord.Embed(description=f"> Removed the timeout for {member.mention}.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @commands.guild_only()  # type:ignore
     @commands.bot_has_permissions(embed_links=True)
@@ -1023,3 +1068,12 @@ class Mod(
                 await poll.finish()
                 poll.view.stop()
                 self.polls.remove(poll)
+
+async def is_allowed_by_hierarchy(
+    bot: Grief, user: discord.Member, member: discord.Member
+) -> bool:
+    return (
+        user.guild.owner_id == user.id
+        or user.top_role > member.top_role
+        or await bot.is_owner(user)
+    )

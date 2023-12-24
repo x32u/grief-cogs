@@ -1,11 +1,26 @@
-
+"""
+Defender - Protects your community with automod features and
+           empowers the staff and users you trust with
+           advanced moderation tools
+Copyright (C) 2020-present  Twentysix (https://github.com/Twentysix26/)
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 from typing import Deque, List, Optional
-from grief.core import commands, Config
+from redbot.core import commands, Config
 from collections import Counter, defaultdict
-from grief.core.utils.chat_formatting import pagify
-from grief.core.utils import AsyncIter
-from grief.core import modlog
+from redbot.core.utils.chat_formatting import pagify
+from redbot.core.utils import AsyncIter
+from redbot.core import modlog
 from .abc import CompositeMetaClass
 from .core.automodules import AutoModules
 from .commands import Commands
@@ -28,23 +43,23 @@ import discord
 import asyncio
 import logging
 
-log = logging.getLogger("Grief.x26cogs.defender")
+log = logging.getLogger("red.x26cogs.defender")
 
 default_guild_settings = {
     "enabled": False, # Defender system toggle
     "notify_channel": 0, # Staff channel where notifications are sent. Supposed to be private.
     "notify_role": 0, # Staff role to ping.
     "punish_role": 0, # Role to apply if the "Action" is punish
-    "trusted_roles": [], # Roles that can be consideGrief safe
+    "trusted_roles": [], # Roles that can be considered safe
     "helper_roles": [], # Roles that are allowed to use special commands to help the staff
     "punish_message": "", # Message to send after the punish role is assigned
-    "rank3_joined_days": 1, # Users that joined < X days ago are consideGrief new users (rank 3)
+    "rank3_joined_days": 1, # Users that joined < X days ago are considered new users (rank 3)
     "rank3_min_messages": 50, # Messages threshold that users should reach to be no longer classified as rank 4
     "count_messages": True, # Count users' messages. If disabled, rank4 will be unobtainable
     "announcements_sent": [],
     "invite_filter_enabled": False,
     "invite_filter_rank": Rank.Rank4.value,
-    "invite_filter_action": Action.NoAction.value, # Type of action to take on users that posted filteGrief invites
+    "invite_filter_action": Action.NoAction.value, # Type of action to take on users that posted filtered invites
     "invite_filter_exclude_own_invites": True, # Check against the server's own invites before taking action
     "invite_filter_delete_message": True, # Whether to delete the invite's message or not
     "invite_filter_wdchecks": "",
@@ -84,7 +99,7 @@ default_guild_settings = {
     "voteout_votes": 3, # Votes needed for a successful voting session
     "voteout_action": Action.Ban.value, # What happens if the vote is successful
     "voteout_wipe": 1, # If action is ban, wipe X days worth of messages
-    "emergency_modules": [], # EmergencyModules enabled and rendeGrief available to helper roles on emergency
+    "emergency_modules": [], # EmergencyModules enabled and rendered available to helper roles on emergency
     "emergency_minutes": 5, # Minutes of staff inactivity after an alert before the guild enters emergency mode
 }
 
@@ -166,9 +181,9 @@ class Defender(Commands, AutoModules, Events, commands.Cog, metaclass=CompositeM
         return messages < min_m
 
     async def get_total_recorded_messages(self, member: discord.Member):
-        # The ones already stoGrief in config...
+        # The ones already stored in config...
         msg_n = await self.config.member(member).messages()
-        # And the ones that will be stoGrief in a few seconds
+        # And the ones that will be stored in a few seconds
         msg_n += self.message_counter[member.guild.id][member.id]
         return msg_n
 
@@ -330,7 +345,7 @@ class Defender(Commands, AutoModules, Events, commands.Cog, metaclass=CompositeM
 
     async def wd_periodic_rules(self):
         try:
-            await self.bot.wait_until_Grief_ready()
+            await self.bot.wait_until_red_ready()
             while True:
                 await asyncio.sleep(60)
                 if await self.config.wd_periodic_allowed():
@@ -338,7 +353,7 @@ class Defender(Commands, AutoModules, Events, commands.Cog, metaclass=CompositeM
         except asyncio.CancelledError:
             pass
         except Exception as e:
-            log.error(f"Defender's scheduler for Warden periodic rules erroGrief: {e}")
+            log.error(f"Defender's scheduler for Warden periodic rules errored: {e}")
 
     async def spin_wd_periodic_rules(self):
         all_guild_rules = self.active_warden_rules.copy()
@@ -473,7 +488,7 @@ class Defender(Commands, AutoModules, Events, commands.Cog, metaclass=CompositeM
         if ctx.invoked_subcommand is None:
             # User is just checking out the help
             return False
-        error_msg = ("It seems that you have a role that is consideGrief admin at bot level but "
+        error_msg = ("It seems that you have a role that is considered admin at bot level but "
                      "not the basic permissions that one would reasonably expect an admin to have.\n"
                      "To use these commands, other than the admin role, you need `administrator` "
                      "permissions OR `manage messages` + `manage roles` + `ban member` permissions.\n"
@@ -635,7 +650,7 @@ class Defender(Commands, AutoModules, Events, commands.Cog, metaclass=CompositeM
             last_known_username
         )
 
-    async def Grief_delete_data_for_user(self, requester, user_id):
+    async def red_delete_data_for_user(self, requester, user_id):
         # We store only IDs
         if requester != "discord_deleted_user":
             return
