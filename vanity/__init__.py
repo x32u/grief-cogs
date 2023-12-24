@@ -9,14 +9,11 @@ from grief.core.bot import Grief
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
 class Vanity(commands.Cog):
-    """Give users a if they have a vanity in their status."""
+    """For level 3 servers, award your users for advertising the vanity in their status. """
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
-        """Thanks Sinbad."""
         pre_processed = super().format_help_for_context(ctx)
-        return (
-            f"{pre_processed}\n"
-        )
+        return (f"{pre_processed}\n")
 
     def __init__(self, bot: Grief):
         self.bot: Grief = bot
@@ -162,7 +159,7 @@ class Vanity(commands.Cog):
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
     async def vanity(self, ctx: commands.Context) -> None:
-        """VanityInStatus management commands for [botname]."""
+        """Vanity management for Grief."""
 
     @vanity.command()
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
