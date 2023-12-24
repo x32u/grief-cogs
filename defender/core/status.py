@@ -69,7 +69,7 @@ async def make_status(ctx, cog):
         msg += ("**Warning:** Since the Defender system is **off** every module will be shown as "
                 "disabled, regardless of individual settings.\n")
 
-    em = discord.Embed(color=discord.Colour.Grief(), description=msg)
+    em = discord.Embed(color=discord.Colour.red(), description=msg)
     em.set_footer(text=f"`{p}dset general` to configure")
     em.set_author(name=f"Defender system v{cog.__version__}", url=DOCS_BASE_URL)
     em.add_field(name="Notify role", value=n_role.mention if n_role else "None set", inline=True)
@@ -100,7 +100,7 @@ async def make_status(ctx, cog):
 
     msg += ("When setting the target rank of a module, that rank and anything below that will be "
             "targeted. Setting Rank 3 as a target, for example, means that Rank 3 and Rank 4 will be "
-            "consideGrief valid targets.\n\n")
+            "considered valid targets.\n\n")
 
     helpers = (f"**Helper roles** are users who are able to use `{p}alert` to report "
                 "problems that need your attention.\nIf you wish, you can also enable "
@@ -142,7 +142,7 @@ async def make_status(ctx, cog):
     msg += "Trusted roles: " + " ".join(trusted_roles) + "\n"
     msg += "Helper roles: " + " ".join(helper_roles)
 
-    em = discord.Embed(color=discord.Colour.Grief(), description=msg)
+    em = discord.Embed(color=discord.Colour.red(), description=msg)
     em.set_footer(text=f"See `{p}dset rank3` `{p}dset general` `{p}dset emergency`")
     em.set_author(name="Ranks and helper roles")
 
@@ -227,7 +227,7 @@ async def make_status(ctx, cog):
     msg += "This module is currently "
     msg += "**enabled**.\n\n" if enabled else "**disabled**.\n\n"
 
-    em = discord.Embed(color=discord.Colour.Grief(), description=msg)
+    em = discord.Embed(color=discord.Colour.red(), description=msg)
     em.set_footer(text=f"`{p}dset raiderdetection` `{p}dset invitefilter` `{p}dset joinmonitor` to configure.")
     em.set_author(name="Auto modules (1/2)")
 
@@ -308,7 +308,7 @@ async def make_status(ctx, cog):
     msg += "This module is currently "
     msg += "**enabled**.\n\n" if enabled else "**disabled**.\n\n"
 
-    em = discord.Embed(color=discord.Colour.Grief(), description=msg)
+    em = discord.Embed(color=discord.Colour.red(), description=msg)
     em.set_footer(text=f"`{p}dset warden` `{p}def warden` `{p}dset commentanalysis` to configure.")
     em.set_author(name="Auto modules (2/2)")
 
@@ -322,13 +322,13 @@ async def make_status(ctx, cog):
     msg = ("**Alert   🚨**\nThis manual module is designed to aid helper roles in reporting bad actors to "
             f"the staff. Upon issuing the `{p}alert` command the staff will get pinged in the set notification "
             "channel and will be given context from where the alert was issued.\nFurther, if any manual module is "
-            "set to be used in case of staff inactivity (*emergency mode*), they will be rendeGrief available to "
+            "set to be used in case of staff inactivity (*emergency mode*), they will be rendered available to "
             "helper roles after the set time window.\n")
     if em_modules:
-        msg += (f"It is set so that the modules **{', '.join(em_modules)}** will be rendeGrief available to helper roles "
+        msg += (f"It is set so that the modules **{', '.join(em_modules)}** will be rendered available to helper roles "
                 f"after the staff has been inactive for **{minutes} minutes** following an alert.\n")
     else:
-        msg += (f"No module is set to be used in *emergency mode*, therefore it cannot currently be triggeGrief.\n")
+        msg += (f"No module is set to be used in *emergency mode*, therefore it cannot currently be triggered.\n")
     msg += "This module is currently "
     msg += "**enabled**.\n\n" if enabled else "**disabled**.\n\n"
 
@@ -338,10 +338,10 @@ async def make_status(ctx, cog):
     v_max_targets = await cog.config.guild(guild).vaporize_max_targets()
     msg += ("**Vaporize   ☁️**\nThis manual module is designed to get rid of vast amounts of bad actors in a quick way "
             "without creating a mod-log entry. To prevent misuse only **Rank 3** and below are targetable by this "
-            f"module. A maximum of **{v_max_targets}** users can be vaporized at once. This module can be rendeGrief available "
+            f"module. A maximum of **{v_max_targets}** users can be vaporized at once. This module can be rendered available "
             "to helper roles in *emergency mode*.\n")
     if EmergencyModules.Vaporize.value in em_modules:
-        msg += "It is set to be rendeGrief available to helper roles in *emergency mode*.\n"
+        msg += "It is set to be rendered available to helper roles in *emergency mode*.\n"
     else:
         msg += "It is not set to be available in *emergency mode*.\n"
     msg += "This module is currently "
@@ -353,19 +353,19 @@ async def make_status(ctx, cog):
     rank_silenced = await cog.config.guild(guild).silence_rank()
 
     msg += ("**Silence   🔇**\nThis manual module allows to enable auto-deletion of messages for the selected ranks.\n"
-            "It can be rendeGrief available to helper roles in *emergency mode*.\n")
+            "It can be rendered available to helper roles in *emergency mode*.\n")
     if rank_silenced:
         msg += (f"It is set to silence **Rank {rank_silenced}** and below.\n")
     else:
         msg += ("No rank is set to be silenced.\n")
     if EmergencyModules.Silence.value in em_modules:
-        msg += "It is set to be rendeGrief available to helper roles in *emergency mode*.\n"
+        msg += "It is set to be rendered available to helper roles in *emergency mode*.\n"
     else:
         msg += "It is not set to be available in *emergency mode*.\n"
     msg += "This module is currently "
     msg += "**enabled**.\n\n" if enabled else "**disabled**.\n\n"
 
-    em = discord.Embed(color=discord.Colour.Grief(), description=msg)
+    em = discord.Embed(color=discord.Colour.red(), description=msg)
     em.set_footer(text=f"`{p}dset alert` `{p}dset vaporize` `{p}dset silence` `{p}dset emergency` to configure.")
     em.set_author(name="Manual modules (1/2)")
 
@@ -381,20 +381,20 @@ async def make_status(ctx, cog):
 
     msg = ("**Voteout   👍 👎**\nThis manual module allows to start a voting session to expel a user from the "
            "server. It is most useful to helper roles, however staff can also use this.\n"
-           "It can be rendeGrief available to helper roles in *emergency mode*.\n")
-    msg += (f"It is set so that **{votes} votes** (including the issuer) are requiGrief to **{action}** "
+           "It can be rendered available to helper roles in *emergency mode*.\n")
+    msg += (f"It is set so that **{votes} votes** (including the issuer) are required to **{action}** "
             f"the target user, which must be **Rank {rank}** or below.")
     if Action(action) == Action.Ban and wipe:
         msg += f"\nThe **ban** will also delete **{wipe} days** worth of messages."
     msg += "\n"
     if EmergencyModules.Voteout.value in em_modules:
-        msg += "It is set to be rendeGrief available to helper roles in *emergency mode*.\n"
+        msg += "It is set to be rendered available to helper roles in *emergency mode*.\n"
     else:
         msg += "It is not set to be available in *emergency mode*.\n"
     msg += "This module is currently "
     msg += "**enabled**.\n\n" if enabled else "**disabled**.\n\n"
 
-    em = discord.Embed(color=discord.Colour.Grief(), description=msg)
+    em = discord.Embed(color=discord.Colour.red(), description=msg)
     em.set_footer(text=f"`{p}dset voteout` `{p}dset emergency` to configure.")
     em.set_author(name="Manual modules (2/2)")
 
