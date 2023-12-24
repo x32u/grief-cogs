@@ -8,24 +8,32 @@ from grief.core.bot import Grief
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
-class Vanity(commands.Cog):
-    """For level 3 servers, award your users for advertising the vanity in their status."""
+class VanityInStatus(commands.Cog):
+    """Give users a if they have a vanity in their status."""
+
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad."""
+        pre_processed = super().format_help_for_context(ctx)
+        return (
+            f"{pre_processed}\n"
+        )
 
     def __init__(self, bot: Grief):
         self.bot: Grief = bot
-        self.logger: Logger = getLogger("grief.vanity")
+        self.logger: Logger = getLogger("red.dia.VanityInStatus")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
             "role": None,
-            "toggled": True,
+            "toggled": False,
             "channel": None,
             "vanity": None,
         }
-        self.cached = True
+        self.cached = False
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
 
     async def update_cache(self):
+        await self.bot.wait_until_red_ready()
         data = await self.config.all_guilds()
         for x in data:
             vanity = data[x]["vanity"]
@@ -54,16 +62,19 @@ class Vanity(commands.Cog):
             return
         if not data["role"] or not data["channel"]:
             return
-        if not "VANITY_URL" in guild.features:
-            return
+        #if not "VANITY_URL" in guild.features:
+            #return
         vanity: str = "/" + self.vanity_cache[guild.id]
         role: discord.Role = guild.get_role(int(data["role"]))
         log_channel: discord.TextChannel = guild.get_channel(int(data["channel"]))
         if not role:
+            self.logger.info(f"Vanity role not found for {guild.name}/{guild.id}, skipping")
             return
         if not log_channel:
+            self.logger.info(f"Vanity log channel not found for {guild.name}/{guild.id}, skipping")
             return
         if role.position >= guild.me.top_role.position:
+            self.logger.info(f"Vanity role is higher than me in {guild.name}/{guild.id}, skipping")
             return
         before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
@@ -147,18 +158,15 @@ class Vanity(commands.Cog):
                         f"Failed to remove role from {after} in {guild.name}/{guild.id}: {str(e)}"
                     )
 
-    @commands.group(
-        name="vanity",
-    )
+    @commands.group(name="vanity-in-status",)
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
     async def vanity(self, ctx: commands.Context) -> None:
-        """Vanity roles for grief."""
-        ...
+        """VanityInStatus management commands for [botname]."""
 
     @vanity.command()
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
-        """Toggle vanity checker for current server on/off. Do not use "/"."""
+        """Toggle vanity checker for current server on/off."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
         #if "VANITY_URL" in ctx.guild.features:
@@ -170,19 +178,19 @@ class Vanity(commands.Cog):
     @vanity.command()
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
-    async def role(self, ctx: commands.Context, role: discord.Role) -> None:
+    async def role(self, ctx: commands.Context, r_ole: discord.Role) -> None:
         """Setup the role to be rewarded."""
-        if role.position >= ctx.author.top_role.position:
+        if r_ole.position >= ctx.author.top_role.position:
             await ctx.send(
                 "Your role is lower or equal to the vanity role, please choose a lower role than yourself."
             )
             return
-        if role.position >= ctx.guild.me.top_role.position:
+        if r_ole.position >= ctx.guild.me.top_role.position:
             await ctx.send("The role is higher than me, please choose a lower role than me.")
             return
-        await self.config.guild(ctx.guild).role.set(role.id)
+        await self.config.guild(ctx.guild).role.set(r_ole.id)
         await ctx.send(
-            f"Vanity role has been updated to {role.mention}",
+            f"Vanity role has been updated to {r_ole.mention}",
             allowed_mentions=discord.AllowedMentions.none(),
         )
 
@@ -209,6 +217,6 @@ class Vanity(commands.Cog):
 
 
 async def setup(bot: Grief):
-    cog = Vanity(bot)
+    cog = VanityInStatus(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()
