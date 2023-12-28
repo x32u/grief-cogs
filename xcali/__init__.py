@@ -208,8 +208,8 @@ class XCali(commands.Cog):
     @commands.command()
     async def tiktok(self, channel, tiktok_link):
         async with aiohttp.ClientSession() as session:
-            response = await session.get(f"https://api.rival.rocks/tiktok?url={tiktok_link}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
-            data = await response.json(content_type='text/html', charset='utf-8')
+            async with session.get(f"https://api.rival.rocks/tiktok?url={tiktok_link}", headers = {'api-key':'05eab8f3-f0f6-443b-9d5e-fba1339c4b04'}) as response:
+                data = await response.json()
             
 
         if response.status != 200:
