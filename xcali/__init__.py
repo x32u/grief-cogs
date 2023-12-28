@@ -204,89 +204,56 @@ class XCali(commands.Cog):
         embed = discord.Embed(description=f"> Reposting is now {'enabled' if not old else 'disabled'}.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
     
-    @commands.is_owner()
-    @commands.command()
-    @commands.cooldown(1, 5, commands.BucketType.guild)
-    async def tiktok(self, ctx, username):
-        url = f"https://www.tiktok.com/@{username}?lang=en"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
-        }
-        try:
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
-        except requests.exceptions.RequestException as e:
-            embed = discord.Embed(
-                title="Error",
-                description=f">>> ***{e}***",
-                color=0x2B2D31,
-            )
-            await ctx.send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author == self.bot.user:
             return
 
-        html = response.text
-        try:
-            nickname = html.split('nickname":"')[1].split('"')[0]
-            followers = html.split('followerCount":')[1].split(",")[0]
-            following = html.split('followingCount":')[1].split(",")[0]
-            likes = html.split('heartCount":')[1].split(",")[0]
-            videos = html.split('videoCount":')[1].split(",")[0]
-            bio = html.split('desc":"')[1].split('"')[0]
-            profile_pic_url = html.split('og:image" content="')[1].split('"')[0]
-        except IndexError as e:
-            embed = discord.Embed(
-                title="<:deny:1121826907739144412> Error",
-                description=f">>> ***{e}***",
-                color=0x2B2D31,
+        if "clust" in message.content.lower():
+            tiktok_links = self.get_tiktok_links(message.content)
+            for link in tiktok_links:
+                await self.send_tiktok_embed(message.channel, link)
+
+    def get_tiktok_links(self, content):
+        return [
+            link.strip()
+            for link in content.split()
+            if link.startswith("https://www.tiktok.com")
+        ]
+
+    async def send_tiktok_embed(self, channel, tiktok_link):
+        api_key = (
+            "05eab8f3-f0f6-443b-9d5e-fba1339c4b04"
+        )
+
+        headers = {"Authorization": api_key}
+
+        async with aiohttp.ClientSession() as session:
+            response = await session.get(
+                f"https://api.rival.rocks/tiktok?url={tiktok_link}", headers=headers
             )
-            await ctx.send(embed=embed)
-            return
+            data = await response.json()
+
+        if response.status != 200:
+            return await channel.send(
+                "An error occurred while fetching the TikTok post."
+            )
 
         embed = discord.Embed(
-            title=f"{nickname}",
-            color=0x2B2D31,
+            title="TikTok Post", description=data["caption"], color=self.bot.color
         )
+        embed.set_image(url=data["assets"]["cover"])
+        embed.add_field(name="Likes", value=data["statistics"]["likes"], inline=True)
+        embed.add_field(
+            name="Comments", value=data["statistics"]["comments"], inline=True
+        )
+        embed.add_field(name="Plays", value=data["statistics"]["plays"], inline=True)
+        embed.add_field(name="Shares", value=data["statistics"]["shares"], inline=True)
+        embed.add_field(name="User", value=data["user"]["nickname"], inline=True)
+        embed.set_footer(text="Api by lain")
 
-        embed.set_thumbnail(url=profile_pic_url)
-
-        embed.add_field(
-            name="Username:",
-            value=f"> `{username}`",
-            inline=False,
-        )
-        embed.add_field(
-            name="Posts:",
-            value=f"> `{videos}`",
-            inline=False,
-        )
-        embed.add_field(
-            name="Likes:",
-            value=f"> `{likes}`",
-            inline=False,
-        )
-        embed.add_field(
-            name="Followers:",
-            value=f"> `{followers}`",
-            inline=False,
-        )
-        embed.add_field(
-            name="Following:",
-            value=f"> `{following}`",
-            inline=False,
-        )
-        embed.add_field(
-            name=" Bio:",
-            value=f"> *{bio}*",
-            inline=False,
-        )
-
-        button = TikTokLinkBUtton(
-            username, custom_emoji="<:tiktok:1114291908659908719>"
-        )
-        view = discord.ui.View()
-        view.add_item(button)
-
-        await ctx.send(embed=embed, view=view)
+        await channel.send(embed=embed)
 
 
     # @commands.is_owner()
