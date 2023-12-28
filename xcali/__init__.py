@@ -206,14 +206,7 @@ class XCali(commands.Cog):
     
 
     @commands.command()
-    async def tiktok(self, content):
-        return [
-            link.strip()
-            for link in content.split()
-            if link.startswith("https://www.tiktok.com")
-        ]
-
-    async def send_tiktok_embed(self, channel, tiktok_link):
+    async def tiktok(self, channel, tiktok_link):
         api_key = ("05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
 
         headers = {"05eab8f3-f0f6-443b-9d5e-fba1339c4b04": api_key}
