@@ -215,17 +215,12 @@ class XCali(commands.Cog):
         if response.status != 200:
             return await channel.send("An error occurred while fetching the TikTok post.")
 
-        embed = discord.Embed(
-            title="TikTok Post", description=data["caption"], color=self.bot.color
-        )
-        embed.set_image(url=data["assets"]["cover"])
-        embed.add_field(name="Likes", value=data["statistics"]["likes"], inline=True)
-        embed.add_field(
-            name="Comments", value=data["statistics"]["comments"], inline=True
-        )
-        embed.add_field(name="Plays", value=data["statistics"]["plays"], inline=True)
-        embed.add_field(name="Shares", value=data["statistics"]["shares"], inline=True)
-        embed.add_field(name="User", value=data["user"]["nickname"], inline=True)
+        embed = discord.Embed(title="TikTok Post", description=data, color=self.bot.color)
+        embed.set_image(url=data["assets"]["items"])
+        embed.add_field(name="Comments", value=data["statistics"]["comment_count"], inline=True)
+        embed.add_field(name="Plays", value=data["statistics"]["play_count"], inline=True)
+        embed.add_field(name="Shares", value=data["statistics"]["share_count"], inline=True)
+        embed.add_field(name="User", value=data["user"]["username"], inline=True)
         embed.set_footer(text="grief")
 
         await channel.send(embed=embed)
