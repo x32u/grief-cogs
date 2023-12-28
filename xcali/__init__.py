@@ -223,22 +223,16 @@ class XCali(commands.Cog):
         ]
 
     async def send_tiktok_embed(self, channel, tiktok_link):
-        api_key = (
-            "05eab8f3-f0f6-443b-9d5e-fba1339c4b04"
-        )
+        api_key = ("05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
 
-        headers = {"Authorization": api_key}
+        headers = {"05eab8f3-f0f6-443b-9d5e-fba1339c4b04": api_key}
 
         async with aiohttp.ClientSession() as session:
-            response = await session.get(
-                f"https://api.rival.rocks/tiktok?url={tiktok_link}", headers=headers
-            )
+            response = await session.get(f"https://api.rival.rocks/tiktok?url={tiktok_link}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers=headers)
             data = await response.json()
 
         if response.status != 200:
-            return await channel.send(
-                "An error occurred while fetching the TikTok post."
-            )
+            return await channel.send("An error occurred while fetching the TikTok post.")
 
         embed = discord.Embed(
             title="TikTok Post", description=data["caption"], color=self.bot.color
@@ -251,7 +245,7 @@ class XCali(commands.Cog):
         embed.add_field(name="Plays", value=data["statistics"]["plays"], inline=True)
         embed.add_field(name="Shares", value=data["statistics"]["shares"], inline=True)
         embed.add_field(name="User", value=data["user"]["nickname"], inline=True)
-        embed.set_footer(text="Api by lain")
+        embed.set_footer(text="grief")
 
         await channel.send(embed=embed)
 
