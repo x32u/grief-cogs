@@ -154,46 +154,46 @@ class XCali(commands.Cog):
             )
             await message.delete()
 
-    @commands.Cog.listener("on_message")
-    async def on_tiktok_trigger(self, message: discord.Message) -> None:
-        if message.author.bot:
-            return
-        if message.guild is None:
-            return
-        if not message.channel.permissions_for(message.guild.me).attach_files:
-            return
-        if match := TIKTOK_MOBILE_PATTERN.search(message.content):
-            url = match[1]
-        elif match := TIKTOK_DESKTOP_PATTERN.search(message.content):
-            url = match[1]
-        else:
-            return
-        if not await self.config.guild(message.guild).enabled():
-            return
-        url = yarl.URL(url)
-        async with message.channel.typing():
-            info = await self._extract_video_info(url)
-            if not info:
-                return
-            filesize_limit = (message.guild and message.guild.filesize_limit) or 8388608  # noqa
-            count, dlvideo = await self._download_file(
-                self.find_proper_url(info)["url"], f"tiktok.{info['ext']}"
-            )
-            if count > filesize_limit:
-                return
-            embed = discord.Embed(color=0x2F3136)
-            embed.title = info["title"]
-            embed.set_author(name=info["uploader"], url=info["uploader_url"])
-            embed.description = info["description"]
-            embed.timestamp = datetime.datetime.now(datetime.timezone.utc)
-            embed.set_footer(
-                text=f"❤️ {info['like_count']:,} | 💬 {info['comment_count']:,} | 📺 {info['view_count']:,} | 🔁 {info['repost_count']:,}"  # noqa
-            )
-            await message.channel.send(
-                embed=embed,
-                file=dlvideo,
-            )
-            await message.delete()
+  #  @commands.Cog.listener("on_message")
+   # async def on_tiktok_trigger(self, message: discord.Message) -> None:
+    #    if message.author.bot:
+     #       return
+      #  if message.guild is None:
+       #     return
+       # if not message.channel.permissions_for(message.guild.me).attach_files:
+       #     return
+       # if match := TIKTOK_MOBILE_PATTERN.search(message.content):
+        #    url = match[1]
+       # elif match := TIKTOK_DESKTOP_PATTERN.search(message.content):
+         #   url = match[1]
+       # else:
+        #    return
+       # if not await self.config.guild(message.guild).enabled():
+       #     return
+       # url = yarl.URL(url)
+       # async with message.channel.typing():
+        #    info = await self._extract_video_info(url)
+         #   if not info:
+          #      return
+           # filesize_limit = (message.guild and message.guild.filesize_limit) or 8388608  # noqa
+            #count, dlvideo = await self._download_file(
+            #    self.find_proper_url(info)["url"], f"tiktok.{info['ext']}"
+            #)
+            #if count > filesize_limit:
+            #    return
+            #embed = discord.Embed(color=0x2F3136)
+            #embed.title = info["title"]
+            #embed.set_author(name=info["uploader"], url=info["uploader_url"])
+            #embed.description = info["description"]
+            #embed.timestamp = datetime.datetime.now(datetime.timezone.utc)
+            #embed.set_footer(
+             #   text=f"❤️ {info['like_count']:,} | 💬 {info['comment_count']:,} | 📺 {info['view_count']:,} | 🔁 {info['repost_count']:,}"  # noqa
+           # )
+            #await message.channel.send(
+             #   embed=embed,
+              #  file=dlvideo,
+            #)
+            #await message.delete()
 
     @commands.command()
     @commands.has_permissions(manage_guild=True)
@@ -210,7 +210,7 @@ class XCali(commands.Cog):
         if message.author == self.bot.user:
             return
 
-        if "clust" in message.content.lower():
+        if "grief" in message.content.lower():
             tiktok_links = self.get_tiktok_links(message.content)
             for link in tiktok_links:
                 await self.send_tiktok_embed(message.channel, link)
