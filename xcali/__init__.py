@@ -209,7 +209,8 @@ class XCali(commands.Cog):
     async def tiktok(self, channel, tiktok_link):
         async with aiohttp.ClientSession() as session:
             response = await session.get(f"https://api.rival.rocks/tiktok?url={tiktok_link}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
-            data = await response.json()
+            data = await response.json(content_type='text/html')
+            
 
         if response.status != 200:
             return await channel.send("An error occurred while fetching the TikTok post.")
