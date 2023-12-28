@@ -205,17 +205,8 @@ class XCali(commands.Cog):
         return await ctx.reply(embed=embed, mention_author=False)
     
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if message.author == self.bot.user:
-            return
-
-        if "grief" in message.content.lower():
-            tiktok_links = self.get_tiktok_links(message.content)
-            for link in tiktok_links:
-                await self.send_tiktok_embed(message.channel, link)
-
-    def get_tiktok_links(self, content):
+    @commands.command()
+    async def tiktok(self, content):
         return [
             link.strip()
             for link in content.split()
