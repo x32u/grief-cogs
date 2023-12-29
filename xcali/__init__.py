@@ -47,7 +47,7 @@ class XCali(commands.Cog):
         import aiohttp, discord
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get(f"https://api.rival.rocks/tiktok?url={tiktok_link}", headers = {'api-key':'05eab8f3-f0f6-443b-9d5e-fba1339c4b04'}) as response:
+                async with session.get(f"https://api.rival.rocks/tiktok?url={tiktok_link}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04") as response:
                     if response.status != 200:
                         return await ctx.send(f"an error occurred : {response.status}")
                     data = TikTokVideo(**await response.json())
