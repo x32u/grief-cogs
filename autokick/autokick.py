@@ -99,7 +99,7 @@ class AutoKick(commands.Cog):
         Enable the autokick feature.
         """
         async with ctx.typing():
-            await self.config.guild(ctx.guild).enabledd.set(True)
+            await self.config.guild(ctx.guild).enabledd()
         await ctx.send("Auto kicking all members has been enabled for this guild.")
 
     @commands.Cog.listener()
