@@ -48,9 +48,11 @@ class XCali(commands.Cog):
         try:
             session = httpx.AsyncClient()
             response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
-            data = TikTokVideo(**await response.json())
+            with open('response.txt','w') as f:
+                f.write(await response.content())
+            return await ctx.send(file=discord.File('response.txt'))
         except Exception as e:
-            return await ctx.send(f"an error occurred : {str(e)}")
+             return await ctx.send(f"an error occurred : {str(e)}")
         embed = discord.Embed(description = data.desc, color = self.bot.color)
         embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
         embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
