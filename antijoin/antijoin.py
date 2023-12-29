@@ -36,11 +36,11 @@ class AntiJoin(commands.Cog):
         """
         Disable the antijoin feature.
         """
-        await self.config.guild(ctx.guild).enabled.clear()
+        await self.config.guild(ctx.guild).clear()
         await ctx.reply(embed=discord.Embed(description="Autokicking all members has been disabled for this guild."))
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
-        if await self.config.guild(discord.Guild).enabled:
+        if await self.config.guild(discord.Guild).enabled(True):
                     await member.guild.kick(member, reason="antijoin: autokicking all members is enabled, run ;antijoin disable to disable this.")
 
