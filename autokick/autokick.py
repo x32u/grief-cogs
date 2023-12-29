@@ -20,8 +20,7 @@ class AutoKick(commands.Cog):
             force_registration=True,
         )
         default_guild = {
-            "channel": None,
-            "enabled": "False",
+            "enabled": "True",
             "blacklisted_ids": [],
         }
         self.config.register_guild(**default_guild)
@@ -33,26 +32,6 @@ class AutoKick(commands.Cog):
         """
         Auto Kick settings.
         """
-
-    @autokickset.command(name="channel")
-    async def autokickset_channel(self, ctx, channel: discord.TextChannel = None):
-        """
-        Set the auto kick log channel.
-
-        Leave blank to disable.
-
-        """
-        if channel:
-            if ctx.channel.permissions_for(channel.guild.me).send_messages is True:
-                await self.config.guild(ctx.guild).channel.set(channel.id)
-                await ctx.send(f"The auto kick log channel has been set to {channel.mention}")
-            else:
-                await ctx.send(
-                    "I can't send messages in that channel. Please give me the necessary permissions and try again.",
-                )
-        else:
-            await self.config.guild(ctx.guild).channel.clear(None)
-            await ctx.send("Auto kick log channel has been cleared.")
 
     @autokickset.command(name="enable")
     async def autokickset_enable(self, ctx):
@@ -97,12 +76,9 @@ class AutoKick(commands.Cog):
         """
         Check your autokick settings.
         """
-        channel = await self.config.guild(ctx.guild).channel()
-        channel_mention = f"<#{channel}>" if channel else "Not Set"
         enabled = await self.config.guild(ctx.guild).enabled()
         blacklisted_ids = await self.config.guild(ctx.guild).blacklisted_ids()
         e = discord.Embed(title="Auto kick Settings", color=discord.Colour.dark_theme())
-        e.add_field(name="Channel", value=channel_mention, inline=True)
         e.add_field(name="Enabled", value=enabled, inline=True)
         e.add_field(name="Users", value=blacklisted_ids, inline=True)
         e.set_footer(text=ctx.guild.name, icon_url=getattr(ctx.guild.icon, "url", None))
