@@ -4,6 +4,7 @@ from grief.core import Config, commands
 from grief.core.bot import Grief
 import aiohttp
 import discord
+import button_paginator as pg
 
 class BaseModel(BM):
     class Config:
@@ -40,18 +41,6 @@ class XCali(commands.Cog):
     def __init__(self, bot: Grief):
         self.bot = bot
 
-    async def paginate(self, ctx: commands.Context, embeds: list):
-        import button_paginator as pg
-        import discord
-        paginator = pg.Paginator(self.bot, embeds, self, invoker=ctx.author.id)
-        if len(embeds) > 1:
-            paginator.add_button('prev', emoji = '⬅️', style = discord.ButtonStyle.grey)
-            paginator.add_button('next', emoji = '➡️', style = discord.ButtonStyle.grey)
-        elif len(embeds) == 1:
-            pass
-        else:
-            raise discord.ext.commands.errors.CommandError(f"No Embeds Supplied to Paginator")
-        return await paginator.start()
 
     @commands.command()
     async def tiktok(self, ctx, tiktok_link: str):
@@ -81,6 +70,17 @@ class XCali(commands.Cog):
                 e.set_image(url=item)
                 embeds.append(e)
             return await self.paginate(ctx,embeds)
+        
+async def paginate(self, ctx: commands.Context, embeds: list):
+    paginator = pg.Paginator(self.bot, embeds, ctx, invoker=ctx.author.id)
+    if len(embeds) > 1:
+        paginator.add_button('prev', emoji = '⬅️', style = discord.ButtonStyle.grey)
+        paginator.add_button('next', emoji = '➡️', style = discord.ButtonStyle.grey)
+    elif len(embeds) == 1:
+            pass
+    else:
+        raise discord.ext.commands.errors.CommandError(f"No Embeds Supplied to Paginator")
+    return await paginator.start()
         
 async def setup(bot: Grief) -> None:
     cog = XCali(bot)
