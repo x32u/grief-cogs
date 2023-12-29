@@ -44,12 +44,10 @@ class XCali(commands.Cog):
 
     @commands.command()
     async def tiktok(self, ctx, url: str):
-        import aiohttp, discord
+        import httpx, discord
         try:
-            async with aiohttp.ClientSession() as session:
+            async with httpx.AsyncClient() as session:
                 async with session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04") as response:
-                    if response.status != 200:
-                        return await ctx.send(f"an error occurred : {response.status}")
                     data = TikTokVideo(**await response.json())
         except Exception as e:
             return await ctx.send(f"an error occurred : {str(e)}")
@@ -60,7 +58,7 @@ class XCali(commands.Cog):
         embed.add_field(name = 'User', value = data.username, inline = True)
         embed.set_footer(text='grief')
         if data.is_video == True:
-            async with aiohttp.ClientSession() as session:
+            async with httpx.AsyncClient() as session:
                 async with session.get(data.items[0]) as f:
                     file = discord.File(fp=await f.read(), filename='tiktok.mp4')
                     return await ctx.send(embed=embed, file=file)
