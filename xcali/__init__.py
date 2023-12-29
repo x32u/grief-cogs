@@ -46,9 +46,9 @@ class XCali(commands.Cog):
     async def tiktok(self, ctx, url: str):
         import httpx, discord
         try:
-            async with httpx.AsyncClient() as session:
-                async with session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04") as response:
-                    data = TikTokVideo(**await response.json())
+            session = httpx.AsyncClient()
+            response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
+            data = TikTokVideo(**await response.json())
         except Exception as e:
             return await ctx.send(f"an error occurred : {str(e)}")
         embed = discord.Embed(description = data.desc, color = self.bot.color)
@@ -58,10 +58,10 @@ class XCali(commands.Cog):
         embed.add_field(name = 'User', value = data.username, inline = True)
         embed.set_footer(text='grief')
         if data.is_video == True:
-            async with httpx.AsyncClient() as session:
-                async with session.get(data.items[0]) as f:
-                    file = discord.File(fp=await f.read(), filename='tiktok.mp4')
-                    return await ctx.send(embed=embed, file=file)
+            session = httpx.AsyncClient()
+            f = await session.get(data.items[0])
+            file = discord.File(fp=await f.read(), filename='tiktok.mp4')
+            return await ctx.send(embed=embed, file=file)
             
         else:
             file = None
