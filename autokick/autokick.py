@@ -62,9 +62,9 @@ class AutoKick(commands.Cog):
         async with ctx.typing():
             ids = await self.config.guild(ctx.guild).blacklisted_ids()
             ids.remove(user.id)
-            await self.config.guild(ctx.guild).blacklisted_ids.set(ids)
-        await ctx.send(f"{user} will not be auto kicked on join.")
-        if discord.ext.commands.errors.CommandInvokeError:
+            if await self.config.guild(ctx.guild).blacklisted_ids.set(ids):
+                await ctx.send(f"{user} will not be auto kicked on join.")
+        if not self.config.guild(ctx.guild).blacklisted_ids(): 
             await ctx.send(f"{user} is not being autokicked.")
 
     @autokickset.command(name="settings", aliases=["showsettings"])
