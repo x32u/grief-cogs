@@ -44,35 +44,13 @@ class XCali(commands.Cog):
 
     @commands.command()
     async def tiktok(self, ctx, url: str):
-        import httpx, discord
+        import httpx, discord,io
         try:
             session = httpx.AsyncClient()
             response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
-            with open('response.txt','w') as f:
-                f.write(await response.content())
-            return await ctx.send(file=discord.File('response.txt'))
+            return await ctx.send(file=discord.File(fp=io.StringIO(await response.content()),filename='response.txt'))
         except Exception as e:
-             return await ctx.send(f"an error occurred : {str(e)}")
-        embed = discord.Embed(description = data.desc, color = self.bot.color)
-        embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
-        embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
-        embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
-        embed.add_field(name = 'User', value = data.username, inline = True)
-        embed.set_footer(text='grief')
-        if data.is_video == True:
-            session = httpx.AsyncClient()
-            f = await session.get(data.items[0])
-            file = discord.File(fp=await f.read(), filename='tiktok.mp4')
-            return await ctx.send(embed=embed, file=file)
-            
-        else:
-            file = None
-            embeds = []
-            for item in data.items:
-                e = embed.copy()
-                e.set_image(url=item)
-                embeds.append(e)
-            return await self.paginate(ctx,embeds)
+            return await ctx.send(f"an error occurred : {str(e)}")
         
 async def paginate(self, ctx: commands.Context, embeds: list):
     paginator = pg.Paginator(self.bot, embeds, ctx, invoker=ctx.author.id)
