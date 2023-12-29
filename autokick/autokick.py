@@ -85,29 +85,9 @@ class AutoKick(commands.Cog):
             await self.config.guild(ctx.guild).blacklisted_ids.clear()
         await ctx.send("Auto kick list has been cleared.")
 
-    @commands.group(name="antijoin", aliases=["aj"])
-    @commands.has_permissions(manage_guild=True)
-    @commands.guild_only()
-    async def antijoin(self, ctx):
-        """
-        Auto Kick settings.
-        """
-
-    @antijoin.command(name="enable")
-    async def antijoin_enable(self, ctx):
-        """
-        Enable the autokick feature.
-        """
-        async with ctx.typing():
-            await self.config.guild(ctx.guild).enabledd()
-        await ctx.send("Auto kicking all members has been enabled for this guild.")
-
     @commands.Cog.listener()
     async def on_member_join(self, ctx, member: discord.Member):
         if await self.config.guild(member.guild).enabled():
             if member.id in await self.config.guild(member.guild).blacklisted_ids():
                     await member.guild.kick(member, reason="AutoKicked: run ;autokickset remove {member.id} to disable this.")
-        else:
-            if await self.config.guild(ctx.guild).enabledd():
-                    await member.guild.kick(member, reason="AutoKicked: kicking all members is enabled, run ;antijoin disable to disable this.")
 
