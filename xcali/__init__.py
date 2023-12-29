@@ -1,5 +1,5 @@
 from pydantic import BaseModel as BM
-from typing import Optional, List
+from typing import Optional, List, Any, Union
 from grief.core import Config, commands
 from grief.core.bot import Grief
 import aiohttp
@@ -25,7 +25,7 @@ class TikTokVideoStatistics(BaseModel):
 
 class TikTokVideo(BaseModel):
     is_video: Optional[bool] = False
-    items: List[str]
+    items: Union[str,List[str]]
     desc: Optional[str] = None
     username: Optional[str] = None
     nickname: Optional[str] = None
