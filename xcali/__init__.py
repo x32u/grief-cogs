@@ -41,15 +41,15 @@ class TwitterPostStatistics(BaseModel):
     nsfw: Optional[str] = None
     color: Optional[int] = 0
     timestamp: Optional[int] = 0
-    text: Optional[int] = 0
+    text: Optional[str] = 0
     url: Optional[str] = None
     like_count: Optional[int] = 0
     retweet_count: Optional[int] = 0
     raw_like_count: Optional[int] = 0
     raw_retweet_count: Optional[int] = 0
-    footer_url: Optional[int] = 0
-    avatar: Optional[int] = 0
-    screen_name: Optional[int] = 0
+    footer_url: Optional[str] = 0
+    avatar: Optional[str] = 0
+    screen_name: Optional[str] = 0
     image: Optional[str] = None
     video: Optional[str] = None
 
@@ -69,9 +69,9 @@ class XCali(commands.Cog):
         "Repost a TikTok video in chat."
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
-        data = TwitterPostStatistics(**response.json())
+        data = TikTokVideoStatistics(**response.json())
             
-        embed = discord.Embed(description = data.text, color = 0x313338)
+        embed = discord.Embed(description = data.desc, color = 0x313338)
         embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
         embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
         embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
@@ -98,7 +98,7 @@ class XCali(commands.Cog):
         response = await session.get(f"https://api.rival.rocks/twitter/post?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
         data = TwitterPostStatistics(**response.json())
             
-        embed = discord.Embed(description = data.desc, color = 0x313338)
+        embed = discord.Embed(description = data.text, color = 0x313338)
         if data.video == True:
             session = httpx.AsyncClient()
             f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
