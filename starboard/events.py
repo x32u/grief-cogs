@@ -6,7 +6,7 @@ import discord
 from discord.utils import snowflake_time
 from red_commons.logging import getLogger
 from grief.core import Config, commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils import AsyncIter
 from grief.core.utils.chat_formatting import humanize_timedelta
@@ -19,7 +19,7 @@ log = getLogger("red.trusty-cogs.Starboard")
 
 @cog_i18n(_)
 class StarboardEvents:
-    bot: Red
+    bot: Grief
     config: Config
     starboards: Dict[int, Dict[str, StarboardEntry]]
     ready: asyncio.Event
