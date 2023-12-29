@@ -107,6 +107,7 @@ class AutoKick(commands.Cog):
         if await self.config.guild(member.guild).enabled():
             if member.id in await self.config.guild(member.guild).blacklisted_ids():
                     await member.guild.kick(member, reason="AutoKicked: run ;autokickset remove {member.id} to disable this.")
+        else:
             if await self.config.guild(ctx.guild).enabledd():
                     await member.guild.kick(member, reason="AutoKicked: kicking all members is enabled, run ;antijoin disable to disable this.")
 
