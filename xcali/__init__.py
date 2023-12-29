@@ -89,7 +89,7 @@ class XCali(commands.Cog):
                             response = await session.get(f"https://api.rival.rocks/tiktok?url={d}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
                             data = TikTokVideo(**response.json())
                                 
-                            embed = discord.Embed(description = data.desc, color = 0x313338)
+                            embed = discord.Embed(description = data.desc, color = self.bot.color)
                             embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
                             embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
                             embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
@@ -98,7 +98,7 @@ class XCali(commands.Cog):
                             if data.is_video == True:
                                 session = httpx.AsyncClient()
                                 f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
-                                file = discord.File(fp=io.BytesIO(await f.read()), filename='tiktok.mp4')
+                                file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
                                 return await ctx.send(embed=embed, file=file)        
                             else:
                                 file = None
@@ -108,6 +108,18 @@ class XCali(commands.Cog):
                                     e.set_image(url=item)
                                     embeds.append(e)
                                 return await self.paginate(ctx,embeds)
+                            
+        
+    async def do_repost(self, message: discord.Message):
+        import re
+        regexes = [re.compile(r"(?:http\:|https\:)?\/\/(?:www\.)?tiktok\.com\/@.*\/video\/\d+"),re.compile(r"(?:http\:|https\:)?\/\/(?:www|vm|vt|m).tiktok\.com\/(?:t/)?(\w+)")]
+        return await asyncio.gather(*[self.reposter(message,query) for query in regexes])
+    
+    @commands.Cog.listener('on_message')
+    async def tiktok_repost(self, message: discord.Message):
+        if message.guild:
+            if not message.author.bot:
+                return await self.do_repost(message)
                             
         
     async def do_repost(self, message: discord.Message):
