@@ -43,8 +43,9 @@ class XCali(commands.Cog):
         self.bot = bot
 
 
-    @commands.command()
+    @commands.command(aliases="tt")
     async def tiktok(self, ctx, url: str):
+        "Repost a TikTok video in chat."
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
         data = TikTokVideo(**response.json())
@@ -70,8 +71,9 @@ class XCali(commands.Cog):
                 await url.delete()
             return await self.paginate(ctx,embeds)
         
-    @commands.command()
+    @commands.command(aliases="ss")
     async def screenshot(self, ctx, url: str):
+        "Get a preview of a website and post it in chat."
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/screenshot?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
         if response.status_code == 200:
