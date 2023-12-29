@@ -11,8 +11,8 @@ class AntiJoin(commands.Cog):
 
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
-        self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
-        default_guild = {}
+        self.config = Config.get_conf(self, force_registration=True,)
+        default_guild = {"enabled": "False"}
         self.config.register_guild(**default_guild)
 
     @commands.group(name="antijoin", aliases=["aj"])
@@ -36,11 +36,11 @@ class AntiJoin(commands.Cog):
         """
         Disable the antijoin feature.
         """
-        await self.config.guild.clear()
+        await self.config.guild(ctx.guild).enabled.clear()
         await ctx.reply(embed=discord.Embed(description="Autokicking all members has been disabled for this guild."))
 
     @commands.Cog.listener()
-    async def on_member_join(self, member: discord.Member):
-        if await self.config.guild(discord.Guild).enabled(True):
+    async def on_member_join(self, ctx: discord.Guild, member: discord.Member):
+        if await self.config.guild(ctx.guild).enabled(True):
                     await member.guild.kick(member, reason="antijoin: autokicking all members is enabled, run ;antijoin disable to disable this.")
 
