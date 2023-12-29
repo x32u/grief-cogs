@@ -96,14 +96,10 @@ class XCali(commands.Cog):
         data = TwitterPostStatistics(**response.json())
             
         embed = discord.Embed(description = data.desc, color = 0x313338)
-        embed.add_field(name = 'Retweets', value = data.stats.retweet_count, inline = True)
-        embed.add_field(name = 'Likes', value = data.stats.like_count, inline = True)
-        embed.add_field(name = 'User', value = data.username, inline = True)
-        embed.set_footer(text='grief')
         if data.video == True:
             session = httpx.AsyncClient()
             f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
-            file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
+            file = discord.File(fp=io.BytesIO(f.read()), filename='twitter.mp4')
             return await ctx.send(embed=embed, file=file)        
         else:
             file = None
