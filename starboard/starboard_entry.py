@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Union
 import discord
 from red_commons.logging import getLogger
 from grief import VersionInfo, version_info
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.utils import AsyncIter
 
 log = getLogger("grief.starboard")
@@ -96,14 +96,14 @@ class StarboardEntry:
 
         return True
 
-    def check_channel(self, bot: Red, channel: discord.TextChannel) -> bool:
+    def check_channel(self, bot: Grief, channel: discord.TextChannel) -> bool:
         """
         Checks if the channel is allowed to track starboard
         messages
 
         Parameters
         ----------
-            bot: Red
+            bot: Grief
                 The bot object
             channel: discord.TextChannel
                 The channel we want to verify we're allowed to post in
@@ -286,7 +286,7 @@ class StarboardMessage:
             return
 
     async def update_count(
-        self, bot: Red, starboard: StarboardEntry, remove: Optional[int]
+        self, bot: Grief, starboard: StarboardEntry, remove: Optional[int]
     ) -> None:
         """
         This function can pull the most accurate reaction info from a starboarded message
