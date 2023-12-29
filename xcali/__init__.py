@@ -106,7 +106,7 @@ class XCali(commands.Cog):
                                     e = embed.copy()
                                     e.set_image(url=item)
                                     embeds.append(e)
-                                    await message.delete()
+                                await message.delete()
                                 return await self.paginate(ctx,embeds)
                             
         
