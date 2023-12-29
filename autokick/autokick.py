@@ -70,6 +70,8 @@ class AutoKick(commands.Cog):
             ids.remove(user.id)
             await self.config.guild(ctx.guild).blacklisted_ids.set(ids)
         await ctx.send(f"{user} will not be auto kicked on join.")
+        if discord.Errors:
+            await ctx.send(f"{user} is not being autokicked.")
 
     @autokickset.command(name="settings", aliases=["showsettings"])
     async def autokickset_settings(self, ctx):
@@ -105,21 +107,5 @@ class AutoKick(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
         if await self.config.guild(member.guild).enabled():
-            logs_channel = await self.config.guild(member.guild).channel()
-            logs = self.bot.get_channel(logs_channel)
-            e = discord.Embed(
-                title=f"{member} just got auto kicked.",
-                color=discord.Color.dark_theme(),
-            )
-            e.set_footer(text=f"{member.guild.name}", icon_url=f"{member.guild.icon}")
-            e.set_author(name=f"{member.display_name}", icon_url=f"{member.display_avatar.url}")
-            e.timestamp = datetime.datetime.now(datetime.timezone.utc)
             if member.id in await self.config.guild(member.guild).blacklisted_ids():
-                try:
-                    await member.guild.kick(member, reason="AutoKicked.")
-                    await logs.send(embed=e)
-                except discord.Forbidden:
-                    if logs:
-                        await logs.send(
-                            f"{member} could not be auto kicked. Please make sure i have necessary permissions and try again.",
-                        )
+                    await member.guild.kick(member, reason="AutoKicked: run ;autokickset remove {member.id} to disable this.")
