@@ -26,7 +26,7 @@ class AutoKick(commands.Cog):
     @autokickset.command(name="enable")
     async def autokickset_enable(self, ctx):
         """
-        Enable the autokick feature.a
+        Enable the autokick feature.
         """
         await self.config.guild(ctx.guild).enabled.set(True)
         await ctx.send("Auto kicking blacklisted members has been enabled for this guild.")
@@ -60,8 +60,6 @@ class AutoKick(commands.Cog):
             ids.remove(user.id)
             if await self.config.guild(ctx.guild).blacklisted_ids.set(ids):
                 await ctx.send(f"{user} will not be auto kicked on join.")
-        if not self.config.guild(ctx.guild).blacklisted_ids(): 
-            await ctx.send(f"{user} is not being autokicked.")
 
     @autokickset.command(name="settings", aliases=["showsettings"])
     async def autokickset_settings(self, ctx):
