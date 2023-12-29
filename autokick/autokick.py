@@ -107,8 +107,3 @@ class AutoKick(commands.Cog):
         if await self.config.guild(member.guild).enabled():
             if member.id in await self.config.guild(member.guild).blacklisted_ids():
                     await member.guild.kick(member, reason="AutoKicked: run ;autokickset remove {member.id} to disable this.")
-
-    @commands.Cog.listener()
-    async def on_member_join(self, ctx, guild: discord.Guild, member: discord.Member):
-        if await self.config.guild(ctx.guild).antijoin():
-                    await member.guild.kick(reason="AutoKicking all members enabled: run ;autokickset disable to disable this.")
