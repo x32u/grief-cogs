@@ -44,7 +44,7 @@ class XCali(commands.Cog):
 
 
     @commands.command()
-    async def tiktok(self, ctx, message: discord.Message, url: str):
+    async def tiktok(self, ctx, url: str):
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
         data = TikTokVideo(**response.json())
@@ -67,7 +67,7 @@ class XCali(commands.Cog):
                 e = embed.copy()
                 e.set_image(url=item)
                 embeds.append(e)
-                await message.delete()
+                await url.delete()
             return await self.paginate(ctx,embeds)
         
     @commands.command()
