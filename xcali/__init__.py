@@ -44,10 +44,30 @@ class XCali(commands.Cog):
 
     @commands.command()
     async def tiktok(self, ctx, url: str):
-        import httpx, discord,io
-        session = httpx.AsyncClient()
-        response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
-        return await ctx.send(file=discord.File(fp=io.StringIO(response.text),filename='response.txt'))
+        import aiohttp, discord,io
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"}) as response:
+                data = TikTokVideo(**await response.json())
+            
+        embed = discord.Embed(description = data.desc, color = self.bot.color)
+        embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
+        embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
+        embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
+        embed.add_field(name = 'User', value = data.username, inline = True)
+        embed.set_footer(text='grief')
+        if data.is_video == True:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(data.items[0],headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"}) as f:
+                    file = discord.File(fp=await f.read(), filename='tiktok.mp4')
+            return await ctx.send(embed=embed, file=file)        
+        else:
+            file = None
+            embeds = []
+            for item in data.items:
+                e = embed.copy()
+                e.set_image(url=item)
+                embeds.append(e)
+            return await self.paginate(ctx,embeds)
         
 async def paginate(self, ctx: commands.Context, embeds: list):
     paginator = pg.Paginator(self.bot, embeds, ctx, invoker=ctx.author.id)
