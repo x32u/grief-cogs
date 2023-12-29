@@ -37,6 +37,19 @@ class TikTokVideo(BaseModel):
     stats: TikTokVideoStatistics
     url: Optional[str] = None
 
+class TwitterPostStatistics(BaseModel):
+    nsfw: Optional[str] = None
+    color: Optional[int] = 0
+    timestamp: Optional[int] = 0
+    text: Optional[int] = 0
+    like_count: Optional[int] = 0
+    retweet_count: Optional[int] = 0
+    url: Optional[str] = None
+    username: Optional[str] = None
+    nickname: Optional[str] = None
+    image: Optional[str] = None
+    video: Optional[str] = None
+
 class XCali(commands.Cog):
     """
     Repost TikTok and YouTube videos.
@@ -62,6 +75,32 @@ class XCali(commands.Cog):
         embed.add_field(name = 'User', value = data.username, inline = True)
         embed.set_footer(text='grief')
         if data.is_video == True:
+            session = httpx.AsyncClient()
+            f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+            file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
+            return await ctx.send(embed=embed, file=file)        
+        else:
+            file = None
+            embeds = []
+            for item in data.items:
+                e = embed.copy()
+                e.set_image(url=item)
+                embeds.append(e)
+            return await self.paginate(ctx,embeds)
+        
+    @commands.command(aliases=["tw"])
+    async def twitter(self, ctx, url: str):
+        "Repost a TikTok video in chat."
+        session = httpx.AsyncClient()
+        response = await session.get(f"https://api.rival.rocks/twitter/post?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+        data = TwitterPostStatistics(**response.json())
+            
+        embed = discord.Embed(description = data.desc, color = 0x313338)
+        embed.add_field(name = 'Retweets', value = data.stats.retweet_count, inline = True)
+        embed.add_field(name = 'Likes', value = data.stats.like_count, inline = True)
+        embed.add_field(name = 'User', value = data.username, inline = True)
+        embed.set_footer(text='grief')
+        if data.video == True:
             session = httpx.AsyncClient()
             f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
             file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
