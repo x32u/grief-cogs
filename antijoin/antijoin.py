@@ -6,7 +6,7 @@ from grief.core.bot import Grief
 from grief.core.config import Config
 
 
-class AutoKick(commands.Cog):
+class AntiJoin(commands.Cog):
     """Instead of banning, have grief automatically kick certain users on join."""
 
     def __init__(self, bot: Grief) -> None:
