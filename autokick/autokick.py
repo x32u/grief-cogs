@@ -1,13 +1,9 @@
 import asyncio
 import datetime
-
-import button_paginator as pg
 import discord
 from grief.core import commands
 from grief.core.bot import Grief
 from grief.core.config import Config
-from grief.core.utils.menus import start_adding_reactions
-from grief.core.utils.predicates import ReactionPredicate
 
 
 class AutoKick(commands.Cog):
@@ -16,7 +12,7 @@ class AutoKick(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
-        default_guild = {"enabled": "True", "blacklisted_ids": [],}
+        default_guild = {"enabled": "True", "blacklisted_ids": [], "antijoin": "False"}
         self.config.register_guild(**default_guild)
 
     @commands.group(name="autokickset", aliases=["aks"])
@@ -41,7 +37,7 @@ class AutoKick(commands.Cog):
         Disable the autokick feature.
         """
         await self.config.guild(ctx.guild).enabled.set(False)
-        await ctx.send("Auto kicking blacklisted members has been disabled for this guild.")
+        await ctx.reply(embed=discord.Embed(description="Autokicking members has been disabled for this guild."))
 
     @autokickset.command(name="add", aliases=["blacklist", "bl"])
     async def autokickset_add(self, ctx, user: discord.User):
@@ -85,21 +81,34 @@ class AutoKick(commands.Cog):
         """
         Clear the autokick list.
         """
-        confirmation_msg = await ctx.send("Are you sure you want to clear the auto kick list?")
-        pred = ReactionPredicate.yes_or_no(confirmation_msg, ctx.author)
-        start_adding_reactions(confirmation_msg, ReactionPredicate.YES_OR_NO_EMOJIS)
-        try:
-            await self.bot.wait_for("reaction_add", check=pred, timeout=60)
-        except asyncio.TimeoutError:
-            return await ctx.send("You took too long to respond. Cancelling.")
-        if not pred.result:
-            return await ctx.send("Alright I will not clear the auto kick list.")
         async with ctx.typing():
             await self.config.guild(ctx.guild).blacklisted_ids.clear()
         await ctx.send("Auto kick list has been cleared.")
+
+    @commands.group(name="antijoin", aliases=["aj"])
+    @commands.has_permissions(manage_guild=True)
+    @commands.guild_only()
+    async def antijoin(self, ctx):
+        """
+        Auto Kick settings.
+        """
+
+    @antijoin.command(name="enable")
+    async def antijoin_enable(self, ctx):
+        """
+        Enable the autokick feature.
+        """
+        async with ctx.typing():
+            await self.config.guild(ctx.guild).antijoin.set(True)
+        await ctx.send("Auto kicking all members has been enabled for this guild.")
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
         if await self.config.guild(member.guild).enabled():
             if member.id in await self.config.guild(member.guild).blacklisted_ids():
                     await member.guild.kick(member, reason="AutoKicked: run ;autokickset remove {member.id} to disable this.")
+
+    @commands.Cog.listener()
+    async def on_member_join(self, ctx, member: discord.Member):
+        if await self.config.guild(ctx.guild).antijoin():
+                    await member.guild.kick(member, reason="AutoKicking all members enabled: run ;autokickset disable to disable this.")
