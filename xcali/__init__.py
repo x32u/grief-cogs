@@ -42,11 +42,14 @@ class TwitterPostStatistics(BaseModel):
     color: Optional[int] = 0
     timestamp: Optional[int] = 0
     text: Optional[int] = 0
+    url: Optional[str] = None
     like_count: Optional[int] = 0
     retweet_count: Optional[int] = 0
-    url: Optional[str] = None
-    username: Optional[str] = None
-    nickname: Optional[str] = None
+    raw_like_count: Optional[int] = 0
+    raw_retweet_count: Optional[int] = 0
+    footer_url: Optional[int] = 0
+    avatar: Optional[int] = 0
+    screen_name: Optional[int] = 0
     image: Optional[str] = None
     video: Optional[str] = None
 
@@ -66,15 +69,15 @@ class XCali(commands.Cog):
         "Repost a TikTok video in chat."
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
-        data = TikTokVideo(**response.json())
+        data = TwitterPostStatistics(**response.json())
             
-        embed = discord.Embed(description = data.desc, color = 0x313338)
+        embed = discord.Embed(description = data.text, color = 0x313338)
         embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
         embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
         embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
         embed.add_field(name = 'User', value = data.username, inline = True)
         embed.set_footer(text='grief')
-        if data.is_video == True:
+        if data.video == True:
             session = httpx.AsyncClient()
             f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
             file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
@@ -102,6 +105,7 @@ class XCali(commands.Cog):
             file = discord.File(fp=io.BytesIO(f.read()), filename='twitter.mp4')
             return await ctx.send(embed=embed, file=file)        
         else:
+
             file = None
             embeds = []
             for item in data.items:
