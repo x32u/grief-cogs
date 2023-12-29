@@ -41,15 +41,15 @@ class TwitterPostStatistics(BaseModel):
     nsfw: Optional[str] = None
     color: Optional[int] = 0
     timestamp: Optional[int] = 0
-    text: Optional[str] = 0
+    text: Optional[str] = None
     url: Optional[str] = None
     like_count: Optional[int] = 0
     retweet_count: Optional[int] = 0
     raw_like_count: Optional[int] = 0
     raw_retweet_count: Optional[int] = 0
     footer_url: Optional[str] = 0
-    avatar: Optional[str] = 0
-    screen_name: Optional[str] = 0
+    avatar: Optional[str] = None
+    screen_name: Optional[str] = None
     image: Optional[str] = None
     video: Optional[str] = None
 
