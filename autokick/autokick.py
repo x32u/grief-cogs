@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 
+import button_paginator as pg
 import discord
 from grief.core import commands
 from grief.core.bot import Grief
@@ -14,15 +15,8 @@ class AutoKick(commands.Cog):
 
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
-        self.config = Config.get_conf(
-            self,
-            identifier=694835810347909161,
-            force_registration=True,
-        )
-        default_guild = {
-            "enabled": "True",
-            "blacklisted_ids": [],
-        }
+        self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
+        default_guild = {"enabled": "True", "blacklisted_ids": [],}
         self.config.register_guild(**default_guild)
 
     @commands.group(name="autokickset", aliases=["aks"])
@@ -70,7 +64,7 @@ class AutoKick(commands.Cog):
             ids.remove(user.id)
             await self.config.guild(ctx.guild).blacklisted_ids.set(ids)
         await ctx.send(f"{user} will not be auto kicked on join.")
-        if discord.Errors:
+        if discord.ext.commands.errors.CommandInvokeError:
             await ctx.send(f"{user} is not being autokicked.")
 
     @autokickset.command(name="settings", aliases=["showsettings"])
@@ -91,7 +85,7 @@ class AutoKick(commands.Cog):
         """
         Clear the autokick list.
         """
-        confirmation_msg = await ctx.send("Are you sure you want to clear the auto kick list. ?")
+        confirmation_msg = await ctx.send("Are you sure you want to clear the auto kick list?")
         pred = ReactionPredicate.yes_or_no(confirmation_msg, ctx.author)
         start_adding_reactions(confirmation_msg, ReactionPredicate.YES_OR_NO_EMOJIS)
         try:
