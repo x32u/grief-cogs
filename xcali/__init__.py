@@ -73,7 +73,6 @@ class XCali(commands.Cog):
                 e = embed.copy()
                 e.set_image(url=item)
                 embeds.append(e)
-                await url.delete()
             return await self.paginate(ctx,embeds)
         
     async def reposter(self, message: discord.Message, query:Any):
@@ -107,6 +106,7 @@ class XCali(commands.Cog):
                                     e = embed.copy()
                                     e.set_image(url=item)
                                     embeds.append(e)
+                                    await message.delete()
                                 return await self.paginate(ctx,embeds)
                             
         
