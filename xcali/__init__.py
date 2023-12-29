@@ -46,7 +46,7 @@ class XCali(commands.Cog):
     async def tiktok(self, ctx, url: str):
         import httpx, discord,io
         session = httpx.AsyncClient()
-        response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
+        response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
         return await ctx.send(file=discord.File(fp=io.StringIO(response.text),filename='response.txt'))
         
 async def paginate(self, ctx: commands.Context, embeds: list):
