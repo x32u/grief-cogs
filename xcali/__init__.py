@@ -1,3 +1,5 @@
+import re
+from typing import Any
 from pydantic import BaseModel as BM
 import asyncio
 from typing import Optional, List, Any, Union
@@ -74,6 +76,7 @@ class XCali(commands.Cog):
                 await url.delete()
             return await self.paginate(ctx,embeds)
         
+    @commands.command()
     async def reposter(self, message: discord.Message, query:Any):
         results = query.findall(message.content)
         if results:
