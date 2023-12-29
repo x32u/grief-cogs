@@ -65,6 +65,7 @@ class XCali(commands.Cog):
             session = httpx.AsyncClient()
             f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
             file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
+            await url.delete()  
             return await ctx.send(embed=embed, file=file)        
         else:
             file = None
