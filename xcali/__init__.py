@@ -47,7 +47,7 @@ class XCali(commands.Cog):
         import httpx, discord,io
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
-        return await ctx.send(file=discord.File(fp=io.StringIO(await response.text()),filename='response.txt'))
+        return await ctx.send(file=discord.File(fp=io.StringIO(await response.text),filename='response.txt'))
         
 async def paginate(self, ctx: commands.Context, embeds: list):
     paginator = pg.Paginator(self.bot, embeds, ctx, invoker=ctx.author.id)
