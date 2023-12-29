@@ -44,12 +44,15 @@ class XCali(commands.Cog):
 
     @commands.command()
     async def tiktok(self, ctx, tiktok_link: str):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f"https://api.rival.rocks/tiktok?url={tiktok_link}", headers = {'api-key':'05eab8f3-f0f6-443b-9d5e-fba1339c4b04'}) as response:
-                if response.status != 200:
-                    return await ctx.send(f"an error occured")
-                data = TikTokVideo(**await response.json())
-        
+        import aiohttp, discord
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f"https://api.rival.rocks/tiktok?url={tiktok_link}", headers = {'api-key':'05eab8f3-f0f6-443b-9d5e-fba1339c4b04'}) as response:
+                    if response.status != 200:
+                        return await ctx.send(f"an error occurred")
+                    data = TikTokVideo(**await response.json())
+        except Exception as e:
+            return await ctx.send(f"an error occurred : {str(e)}")
         embed = discord.Embed(description = data.desc, color = self.bot.color)
         embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
         embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
