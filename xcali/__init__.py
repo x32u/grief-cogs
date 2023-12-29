@@ -43,7 +43,7 @@ class XCali(commands.Cog):
 
 
     @commands.command()
-    async def tiktok(self, ctx, tiktok_link: str):
+    async def tiktok(self, ctx, url: str):
         import aiohttp, discord
         try:
             async with aiohttp.ClientSession() as session:
