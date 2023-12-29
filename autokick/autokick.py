@@ -100,9 +100,11 @@ class AutoKick(commands.Cog):
         channel = await self.config.guild(ctx.guild).channel()
         channel_mention = f"<#{channel}>" if channel else "Not Set"
         enabled = await self.config.guild(ctx.guild).enabled()
+        blacklisted_ids=self.config.guild(ctx.guild).blacklisted_ids
         e = discord.Embed(title="Auto kick Settings", color=discord.Colour.dark_theme())
         e.add_field(name="Channel", value=channel_mention, inline=True)
         e.add_field(name="Enabled", value=enabled, inline=True)
+        e.add_field(name="Users", value=blacklisted_ids, inline=True)
         e.set_footer(text=ctx.guild.name, icon_url=getattr(ctx.guild.icon, "url", None))
         await ctx.send(embed=e)
 
