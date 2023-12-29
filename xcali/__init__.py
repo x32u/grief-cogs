@@ -44,10 +44,10 @@ class XCali(commands.Cog):
 
     @commands.command()
     async def tiktok(self, ctx, url: str):
-        import aiohttp, discord,io
-        async with aiohttp.ClientSession() as session:
-            async with session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"}) as response:
-                data = TikTokVideo(**await response.json())
+        import httpx, discord,io
+        session = httpx.AsyncClient()
+        response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+        data = TikTokVideo(**await response.json())
             
         embed = discord.Embed(description = data.desc, color = self.bot.color)
         embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
@@ -56,9 +56,9 @@ class XCali(commands.Cog):
         embed.add_field(name = 'User', value = data.username, inline = True)
         embed.set_footer(text='grief')
         if data.is_video == True:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(data.items[0],headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"}) as f:
-                    file = discord.File(fp=await f.read(), filename='tiktok.mp4')
+            session = httpx.AsyncClient()
+            f = await session.get(data.items[0],headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+            file = discord.File(fp=await f.read(), filename='tiktok.mp4')
             return await ctx.send(embed=embed, file=file)        
         else:
             file = None
