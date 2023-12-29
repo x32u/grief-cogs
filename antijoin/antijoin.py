@@ -11,7 +11,7 @@ class AntiJoin(commands.Cog):
 
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
-        self.config = Config.get_conf(self, force_registration=True,)
+        self.config = Config.get_conf(self, identifier="0", force_registration=True)
         default_guild = {"enabled": "False"}
         self.config.register_guild(**default_guild)
 
