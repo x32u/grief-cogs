@@ -76,7 +76,6 @@ class XCali(commands.Cog):
                 await url.delete()
             return await self.paginate(ctx,embeds)
         
-    @commands.command()
     async def reposter(self, message: discord.Message, query:Any):
         results = query.findall(message.content)
         if results:
