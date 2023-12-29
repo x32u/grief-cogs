@@ -111,31 +111,7 @@ class XCali(commands.Cog):
                             
         
     async def do_repost(self, message: discord.Message):
-        import re
-        regexes = [re.compile(r"(?:http\:|https\:)?\/\/(?:www\.)?tiktok\.com\/@.*\/video\/\d+"),re.compile(r"(?:http\:|https\:)?\/\/(?:www|vm|vt|m).tiktok\.com\/(?:t/)?(\w+)")]
-        return await asyncio.gather(*[self.reposter(message,query) for query in regexes])
-    
-    @commands.Cog.listener('on_message')
-    async def tiktok_repost(self, message: discord.Message):
-        if message.guild:
-            if not message.author.bot:
-                return await self.do_repost(message)
-                            
-        
-    async def do_repost(self, message: discord.Message):
-        import re
-        regexes = [re.compile(r"(?:http\:|https\:)?\/\/(?:www\.)?tiktok\.com\/@.*\/video\/\d+"),re.compile(r"(?:http\:|https\:)?\/\/(?:www|vm|vt|m).tiktok\.com\/(?:t/)?(\w+)")]
-        return await asyncio.gather(*[self.reposter(message,query) for query in regexes])
-    
-    @commands.Cog.listener('on_message')
-    async def tiktok_repost(self, message: discord.Message):
-        if message.guild:
-            if not message.author.bot:
-                return await self.do_repost(message)
-                            
-        
-    async def do_repost(self, message: discord.Message) -> Optional[TikTokVideo]:
-        import re
+        import re, asyncio
         regexes = [re.compile(r"(?:http\:|https\:)?\/\/(?:www\.)?tiktok\.com\/@.*\/video\/\d+"),re.compile(r"(?:http\:|https\:)?\/\/(?:www|vm|vt|m).tiktok\.com\/(?:t/)?(\w+)")]
         return await asyncio.gather(*[self.reposter(message,query) for query in regexes])
     
