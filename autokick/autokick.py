@@ -12,7 +12,7 @@ class AutoKick(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
-        default_guild = {"enabled": "True", "blacklisted_ids": [], "antijoin": "False"}
+        default_guild = {"enabled": "True", "blacklisted_ids": [], "enabledd": "False"}
         self.config.register_guild(**default_guild)
 
     @commands.group(name="autokickset", aliases=["aks"])
@@ -99,7 +99,7 @@ class AutoKick(commands.Cog):
         Enable the autokick feature.
         """
         async with ctx.typing():
-            await self.config.guild(ctx.guild).antijoin.set(True)
+            await self.config.guild(ctx.guild).enabledd.set(True)
         await ctx.send("Auto kicking all members has been enabled for this guild.")
 
     @commands.Cog.listener()
@@ -107,3 +107,8 @@ class AutoKick(commands.Cog):
         if await self.config.guild(member.guild).enabled():
             if member.id in await self.config.guild(member.guild).blacklisted_ids():
                     await member.guild.kick(member, reason="AutoKicked: run ;autokickset remove {member.id} to disable this.")
+
+    @commands.Cog.listener()
+    async def on_member_join(self, ctx, member):
+        if await self.config.guild(ctx.guild).enabledd():
+                    await member.guild.kick(member, reason="AutoKicked: kicking all members is enabled, run ;antijoin disable to disable this.")
