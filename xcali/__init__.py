@@ -48,7 +48,7 @@ class XCali(commands.Cog):
         try:
             session = httpx.AsyncClient()
             response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04")
-            return await ctx.send(file=discord.File(fp=await response.content(),filename='response.txt'))
+            return await ctx.send(file=discord.File(fp=io.StringIO(await response.text()),filename='response.txt'))
         except Exception as e:
             return await ctx.send(f"an error occurred : {str(e)}")
         
