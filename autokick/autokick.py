@@ -88,6 +88,6 @@ class AutoKick(commands.Cog):
     async def on_member_join(self, member: discord.Member):
         if await self.config.guild(member.guild).enabled():
             if member.id in await self.config.guild(member.guild).blacklisted_ids():
-            await member.guild.kick(member, reason="AutoKicked.")
+              await member.guild.kick(member, reason="AutoKicked.")
     
 
