@@ -83,8 +83,11 @@ class AutoKick(commands.Cog):
             await self.config.guild(ctx.guild).blacklisted_ids.clear()
         await ctx.send("Auto kick list has been cleared.")
 
+    @commands.bot_has_permissions(kick_members=True)
     @commands.Cog.listener()
-    async def on_member_join(self, ctx, member: discord.Member):
-        if member.id in await self.config.guild(ctx.guild).blacklisted_ids():
-                await member.guild.kick(member, reason="AutoKicked: run ;autokickset remove {member.id} to disable this.")
+    async def on_member_join(self, member: discord.Member):
+        if await self.config.guild(member.guild).enabled():
+            if member.id in await self.config.guild(member.guild).blacklisted_ids():
+            await member.guild.kick(member, reason="AutoKicked.")
+    
 
