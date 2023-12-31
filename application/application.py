@@ -140,12 +140,7 @@ class Application(commands.Cog):
                     f"This application is too long, so here's a link to hastebin: https://hastebin.com/{key}"
                 )
             )
-
-        if role_add:
-            await ctx.author.add_roles(role_add)
-        await ctx.author.send(
-            "Your application has been sent to the Admins, thank you!"
-        )
+        await ctx.author.send("Your application has been sent to the staff, thank you!")
 
     @commands.has_permissions(manage_guild=True)
     @commands.group(autohelp=True, aliases=["setapply", "applicationset"])
