@@ -37,7 +37,7 @@ class Application(commands.Cog):
                 ["Why do you want to be a member of our staff?", "Reason", 120],
             ],
         )
-
+    @commands.command()
     @commands.guild_only()
     async def apply(self, ctx: commands.Context):
         """Apply to be a staff member."""
