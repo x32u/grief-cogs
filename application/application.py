@@ -38,7 +38,6 @@ class Application(commands.Cog):
             ],
         )
 
-    @commands.max_concurrency(1, commands.BucketType.member, wait=True)
     @commands.guild_only()
     @commands.cooldown(1, 3, commands.BucketType.guild)
     async def apply(self, ctx: commands.Context):
