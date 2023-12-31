@@ -14,27 +14,54 @@ class BaseModel(BM):
     class Config:
         arbitrary_types_allowed = True
 
-class TikTokVideoStatistics(BaseModel):
-    aweme_id: Optional[str] = None
-    comment_count: Optional[int] = 0
-    digg_count: Optional[int] = 0
-    download_count: Optional[int] = 0
-    play_count: Optional[int] = 0
-    share_count: Optional[int] = 0
-    lose_count: Optional[int] = 0
-    lose_comment_count: Optional[int] = 0
-    whatsapp_share_count: Optional[int] = 0
-    collect_count: Optional[int] = 0
+class VideoStats(BaseModel):
+    digg_count: int
+    share_count: int
+    comment_count: int
+    play_count: int
+    collect_count: int
 
+class VideoDetails(BaseModel):
+    height: Optional[int] = None
+    width: Optional[int] = None
+    duration: Optional[int] = None
+    ratio: Optional[str] = None
+    format: Optional[str] = None
+    codec_type: Optional[str] = None
 
-class TikTokVideo(BaseModel):
-    is_video: Optional[bool] = False
-    items: Union[str,List[str]]
-    desc: Optional[str] = None
-    username: Optional[str] = None
+class VideoURLS(BaseModel):
+    play_addr: Optional[str] = None
+    download_addr: Optional[str] = None
+
+class UserStats(BaseModel):
+    follower_count: int
+    following_count: int
+    # heart: int
+    heart_count: int
+    video_count: int
+    digg_count: int
+
+class Author(BaseModel):
+    unique_id: str
+    id: Optional[int] = None
+    """The User's unique id"""
+    # short_id: Optional[str]
     nickname: Optional[str] = None
-    avatar: Optional[str] = None
-    stats: TikTokVideoStatistics
+    sec_uid: Optional[str] = None
+    private_account: Optional[bool] = None
+    verified: Optional[bool] = None
+    stats: Optional[UserStats] = None
+
+class TikTokPost(BaseModel):
+    id: Optional[int] = None
+    author: Optional[Author] = None
+    description: Optional[str] = None
+    created_at: Optional[float] = None
+    details: Optional[VideoDetails] = None
+    urls: Union[list,VideoURLS,str] = None
+    is_video: Optional[bool] = None
+    cover: Optional[str] = None
+    stats: Optional[VideoStats] = None
     url: Optional[str] = None
 
 class TwitterPostStatistics(BaseModel):
@@ -69,7 +96,7 @@ class XCali(commands.Cog):
         "Repost a TikTok video in chat."
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
-        data = TikTokVideo(**response.json())
+        data = TikTokPost(**response.json())
             
         embed = discord.Embed(description = data.desc, color = 0x313338)
         embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
@@ -125,7 +152,7 @@ class XCali(commands.Cog):
                             import httpx, discord,io
                             session = httpx.AsyncClient()
                             response = await session.get(f"https://api.rival.rocks/tiktok?url={d}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
-                            data = TikTokVideo(**response.json())
+                            data = TikTokPost(**response.json())
                                 
                             embed = discord.Embed(description = data.desc, color = 0x313338)
                             embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
