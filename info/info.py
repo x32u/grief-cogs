@@ -768,6 +768,10 @@ class Info(commands.Cog):
             member = ctx.message.author
 
         activity = discord.Activity
+
+        if not (activity := member.activities):
+            await ctx.send(chat.info(_("Right now this user isn't listening to Spotify.")))
+            return
         
         if isinstance(activity, discord.Spotify):
             em = discord.Embed(title=activity.title, description=_("by {}\non {}").format(", ".join(activity.artists), activity.album), color=discord.Colour.dark_theme(), timestamp=activity.created_at, url=f"https://open.spotify.com/track/{activity.track_id}",)
@@ -777,10 +781,6 @@ class Info(commands.Cog):
         em.set_thumbnail(url=activity.album_cover_url)
         em.set_footer(text=_("Listening since"))
         await ctx.send(em)
-
-        if not (activity := member.activities):
-            await ctx.send(chat.info(_("Right now this user isn't listening to Spotify.")))
-            return
         
     @commands.command()
     @commands.guild_only()
