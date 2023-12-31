@@ -4,7 +4,7 @@ from grief.core.utils import chat_formatting as chat
 from grief.vendored.discord.ext import menus
 
 from .common_variables import KNOWN_CHANNEL_TYPES
-from .embeds import activity_embed, emoji_embed
+from .embeds import activity_embed, emoji_embed, spotify_embed
 from .utils import _
 from datetime import datetime, timezone
 from enum import Enum
@@ -326,6 +326,13 @@ class ActivityPager(menus.ListPageSource):
 
     async def format_page(self, menu: BaseMenu, page):
         return await activity_embed(menu.ctx, page)
+    
+class Spotify:
+    def __init__(self, entries):
+        super().__init__(entries, per_page=1)
+
+    async def format_page(self, menu: BaseMenu, page):
+        return await spotify_embed(menu.ctx, page)
 
 
 class AvatarDisplay(Enum):

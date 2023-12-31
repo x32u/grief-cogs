@@ -62,8 +62,8 @@ from fixcogsutils.dpy_future import TimestampStyle, get_markdown_timestamp
 from fixcogsutils.formatting import bool_emojify
 
 from .common_variables import CHANNEL_TYPE_EMOJIS, GUILD_FEATURES, KNOWN_CHANNEL_TYPES
-from .embeds import emoji_embed
-from .menus import ActivityPager, BaseMenu, ChannelsMenu, ChannelsPager, EmojiPager, PagePager, AvatarPages, BaseView, GuildPages, ListPages
+from .embeds import emoji_embed, spotify_embed
+from .menus import ActivityPager, BaseMenu, ChannelsMenu, ChannelsPager, EmojiPager, PagePager, AvatarPages, BaseView, GuildPages, ListPages, Spotify
 from .utils import _
 
 from grief.core import commands
@@ -759,6 +759,17 @@ class Info(commands.Cog):
             await ctx.send(chat.info(_("Right now this user is doing nothing")))
             return
         await BaseMenu(ActivityPager(activities)).start(ctx)
+
+    @commands.command(aliases=["sp"])
+    @commands.guild_only()
+    async def spotify(self, ctx, *, member: discord.Member = None):
+        """Send Spotify embed in chat."""
+        if member is None:
+            member = ctx.message.author
+        if not (activities := member.activities):
+            await ctx.send(chat.info(_("Right now this user isn't listening to Spotify.")))
+            return
+        await BaseMenu(Spotify(activities)).start(ctx)
         
     @commands.command()
     @commands.guild_only()
