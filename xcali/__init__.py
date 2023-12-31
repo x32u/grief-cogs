@@ -102,7 +102,7 @@ class XCali(commands.Cog):
         embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
         embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
         embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
-        embed.add_field(name = 'User', value = data.nickname, inline = True)
+        embed.add_field(name = 'User', value = data.author, inline = True)
         embed.set_footer(text='grief')
         if data.video == True:
             session = httpx.AsyncClient()
@@ -158,7 +158,7 @@ class XCali(commands.Cog):
                             embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
                             embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
                             embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
-                            embed.add_field(name = 'User', value = data.nickname, inline = True)
+                            embed.add_field(name = 'User', value = data.author, inline = True)
                             embed.set_footer(text='grief')
                             if data.is_video == True:
                                 session = httpx.AsyncClient()
