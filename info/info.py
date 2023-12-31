@@ -774,13 +774,13 @@ class Info(commands.Cog):
             return
         
         if isinstance(activity, discord.Spotify):
-            em = discord.Embed(title=activity.title, description=_("by {}\non {}").format(", ".join(activity.artists), activity.album), color=discord.Colour.dark_theme(), timestamp=activity.created_at, url=f"https://open.spotify.com/track/{activity.track_id}",)
+           em = discord.Embed(title=activity.title, description=_("by {}\non {}").format(", ".join(activity.artists), activity.album), color=discord.Colour.dark_theme(), timestamp=activity.created_at, url=f"https://open.spotify.com/track/{activity.track_id}",)
         em.add_field(name=_("Started at"), value=get_markdown_timestamp(activity.start, TimestampStyle.time_long),)
         em.add_field(name=_("Duration"), value=str(activity.duration)[:-3])  # 0:03:33.877[000]
         em.add_field(name=_("Will end at"), value=get_markdown_timestamp(activity.end, TimestampStyle.time_long),)
         em.set_thumbnail(url=activity.album_cover_url)
         em.set_footer(text=_("Listening since"))
-        await ctx.send(em)
+        await ctx.send(embed=em)
         
     @commands.command()
     @commands.guild_only()
