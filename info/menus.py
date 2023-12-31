@@ -328,8 +328,6 @@ class ActivityPager(menus.ListPageSource):
         return await activity_embed(menu.ctx, page)
     
 class Spotify:
-    def __init__(self, entries):
-        super().__init__(entries, per_page=1)
 
     async def format_page(self, menu: BaseMenu, page):
         return await spotify_embed(menu.ctx, page)
