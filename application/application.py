@@ -39,7 +39,6 @@ class Application(commands.Cog):
         )
 
     @commands.guild_only()
-    @commands.cooldown(1, 3, commands.BucketType.guild)
     async def apply(self, ctx: commands.Context):
         """Apply to be a staff member."""
         if not await self.config.guild(ctx.guild).channel_id():
