@@ -769,7 +769,7 @@ class Info(commands.Cog):
         if not (activities := member.activities):
             await ctx.send(chat.info(_("Right now this user isn't listening to Spotify.")))
             return
-        await BaseMenu(Spotify(activities)).start(ctx)
+        await ctx.send(Spotify(activities))
         
     @commands.command()
     @commands.guild_only()
