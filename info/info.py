@@ -762,10 +762,12 @@ class Info(commands.Cog):
 
     @commands.command(aliases=["sp"])
     @commands.guild_only()
-    async def spotify(self, activity: discord.Activity, ctx, *, member: discord.Member = None):
+    async def spotify(self, ctx, *, member: discord.Member = None):
         """Send Spotify embed in chat."""
         if member is None:
             member = ctx.message.author
+
+        activity = discord.Activity
         
         if isinstance(activity, discord.Spotify):
             em = discord.Embed(title=activity.title, description=_("by {}\non {}").format(", ".join(activity.artists), activity.album), color=discord.Colour.dark_theme(), timestamp=activity.created_at, url=f"https://open.spotify.com/track/{activity.track_id}",)
