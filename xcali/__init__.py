@@ -104,7 +104,7 @@ class XCali(commands.Cog):
         embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
         embed.add_field(name = 'User', value = data.author, inline = True)
         embed.set_footer(text='grief')
-        if data.video == True:
+        if data.is_video == True:
             session = httpx.AsyncClient()
             f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
             file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
