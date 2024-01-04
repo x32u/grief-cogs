@@ -279,7 +279,7 @@ class Nsfw(Core):
 
         embed = discord.Embed(colour=discord.Colour.dark_theme(), description=f""),
         embed.set_image(url=images)
-        await ctx.send(embed=embed)
+        await send_embed(self, ctx, embed)
 
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
@@ -422,3 +422,6 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("yiff"), sub.YIFF)
 
+
+async def send_embed(self, ctx: commands.Context, embed: discord.Embed,):
+    await ctx.reply(embed=embed, mention_author=False)
