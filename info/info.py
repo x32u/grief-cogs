@@ -1526,6 +1526,7 @@ class Info(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def botinfo(self, ctx):
+        "View information about Grief."
         async with ctx.typing():
             lis = []
             for i in self.bot.owner_ids:
