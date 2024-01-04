@@ -163,7 +163,7 @@ class Vanity(commands.Cog):
 
     @vanity.command()
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
-        """Toggle vanity checker for current server on/off. Don't use "/" in the command."""
+        """Toggle vanity checker for current server on/off."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
         #if "VANITY_URL" in ctx.guild.features:
@@ -184,6 +184,7 @@ class Vanity(commands.Cog):
             return
         if role.position >= ctx.guild.me.top_role.position:
             await ctx.send("The role is higher than me, please choose a lower role than me.")
+        if ctx.guild.owner:
             return
         await self.config.guild(ctx.guild).role.set(role.id)
         await ctx.send(
