@@ -1542,4 +1542,4 @@ class Info(commands.Cog):
         embed.add_field(name="System:", value=f"CPU: AMD Ryzen 5 3600 6-Core Processor\nRam: 62.7GB\nDisk: 435.8GB", inline=False)
         # embed.add_field(name="Shard", value=f"This ShardID: {ctx.guild.shard_id}\nShardLatency: {self.bot.get_shard(ctx.guild.shard_id).latency} ms", inline=False)
         # embed.add_field(name="System:", value=f"`Latency:` `{round(self.bot.latency * 1000)}ms`\n`Language:` `Python`\n`System`: `{my_system.system}`\n`CPU Usage:` `{psutil.cpu_percent(interval=0.6)}%`\n`Memory Usage:` `{psutil.virtual_memory().percent}%`", inline=True
-        await ctx.reply(embed=embed, view=view)
+        await ctx.reply(embed=embed, view=view, mention_author=False)
