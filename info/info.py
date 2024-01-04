@@ -1531,7 +1531,7 @@ class Info(commands.Cog):
             for i in self.bot.owner_ids:
                 user = await self.bot.fetch_user(i)
             lis.append(user.name)
-        embed = discord.Embed(color=0x2B2D31, title=f"About").set_thumbnail(url=self.bot.user.display_avatar.url)
+        embed = discord.Embed(color=0x2B2D31, title=f"About")
         embed.add_field(name="Developer:", value=f"Discord: {' '.join(l for l in lis)}\nServer: [here](https://discord.gg/seer)", inline=False)
         button1 = discord.ui.Button(label="invite", style=discord.ButtonStyle.url, url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
         button2 = discord.ui.Button(label="support", style=discord.ButtonStyle.url, url="https://discord.gg/seer")
