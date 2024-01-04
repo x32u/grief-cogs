@@ -1707,7 +1707,7 @@ class Info(commands.Cog):
             if user.activities:
                 for activity in user.activities:
                     if str(activity).lower() == "spotify":
-                        await ctx.send("https://open.spotify.com/track/{activity.track}")
+                        await ctx.send("https://open.spotify.com/track/{activity.track_id}")
                         return
             embed = discord.Embed(
                 description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify")
