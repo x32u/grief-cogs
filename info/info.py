@@ -1526,9 +1526,10 @@ class Info(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def botinfo(self, ctx):
-        lis = []
-        for i in self.bot.owner_ids:
-            user = await self.bot.fetch_user(i)
+        async with ctx.typing():
+            lis = []
+            for i in self.bot.owner_ids:
+                user = await self.bot.fetch_user(i)
             lis.append(user.name)
         embed = discord.Embed(color=0x2B2D31, title=f"About").set_thumbnail(url=self.bot.user.display_avatar.url)
         embed.add_field(name="Developer:", value=f"Discord: {' '.join(l for l in lis)}\nServer: [here](https://discord.gg/seer)", inline=False)
