@@ -295,4 +295,8 @@ class ModInfo(MixinMeta):
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
 
+        button1 = discord.ui.Button(label="userinfo", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
+        view = discord.ui.View()
+        view.add_item(button1)
+
         await ctx.reply(embed=data, mention_author=False)
