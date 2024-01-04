@@ -78,6 +78,13 @@ from grief.core.utils.chat_formatting import (
     humanize_timedelta,
 )
 
+async def sendmsg(self, ctx, content, embed, view, file, allowed_mentions): 
+    if ctx.guild is None: return
+    try:
+       await ctx.reply(content=content, embed=embed, view=view, file=file, allowed_mentions=allowed_mentions, mention_author=False)
+    except:
+        await ctx.send(content=content, embed=embed, view=view, file=file, allowed_mentions=allowed_mentions) 
+
 async def wait_reply(ctx: commands.Context, timeout: int = 60):
     def check(message: discord.Message):
         return message.author == ctx.author and message.channel == ctx.channel
@@ -1696,23 +1703,32 @@ class Info(commands.Cog):
         )
 
         return embed
-
-    @commands.command()
-    @commands.cooldown(1, 3, commands.BucketType.user)
-    async def appinfo(self, ctx, id: int):
+    
+    @commands.hybrid_command(description="Shows the Spotify song a user is listening to")
+    @commands.cooldown(1, 2, commands.BucketType.guild)
+    async def spotify(self, ctx, user: discord.Member = None):
         try:
-            response = await self.bot.session.get(f"https://discord.com/api/applications/{id}/rpc")
-            res = await response.json()
-        except:
-            return await ctx.reply("Invalid application id")
-
-        avatar = f"https://cdn.discordapp.com/avatars/{res['id']}/{res['icon']}.png?size=1024"
-
-        embed = discord.Embed(color=0x2B2D31, title=res["name"], description=res["description"] or "No description for this application found")
-        embed.add_field(
-            name="general",
-            value=f"**id**: {res['id']}\n**name**: {res['name']}\n**bot public**: {res['bot_public']}\n**bot require code grant**: {res['bot_require_code_grant']}",
-        )
-        embed.set_thumbnail(url=avatar)
-
-        return await ctx.reply(embed=embed)
+            if user == None:
+                user = ctx.author
+                pass
+            if user.activities:
+                for activity in user.activities:
+                    if str(activity).lower() == "spotify":
+                        embed = discord.Embed(color=0x2B2D31)
+                        embed.add_field(
+                            name="**Song**", value=f"**[{activity.title}](https://open.spotify.com/embed/track/{activity.track_id})**", inline=True)
+                        embed.add_field(
+                            name="**Artist**", value=f"**[{activity.artist}](https://open.spotify.com/embed/track/{activity.track_id})**", inline=True)
+                        embed.set_thumbnail(url=activity.album_cover_url)
+                        embed.set_author(
+                            name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
+                        embed.set_footer(
+                            text=f"Album: {activity.album}", icon_url=activity.album_cover_url)
+                        await sendmsg(self, ctx, None, embed, None, None, None, None)
+                        return
+            embed = discord.Embed(
+                description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify", colour=0x313338)
+            await sendmsg(self, ctx, None, embed, None, None, None, None)
+            return
+        except Exception as e:
+            print(e)
