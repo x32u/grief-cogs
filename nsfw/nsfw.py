@@ -2,6 +2,7 @@ import discord
 
 from grief.core import commands
 from grief.core.i18n import Translator, cog_i18n
+from typing import Optional
 
 import contextlib
 
@@ -15,24 +16,9 @@ _ = Translator("Nsfw", __file__)
 class Nsfw(Core):
     """NSFW commands."""
 
-    @commands.is_owner()
-    @commands.group()
-    async def nsfwset(self, ctx: commands.Context):
-        """Settings for the Nsfw cog."""
-
-    @nsfwset.command()
-    async def switchredditapi(self, ctx: commands.Context):
-        """Toggle to use Reddit API directly with the cost of getting ratelimited fast, or use Martine API with faster results and no ratelimits problems.
-
-        Defaults to Martine API."""
-        val = await self.config.use_reddit_api()
-        await self.config.use_reddit_api.set(not val)
-        await ctx.send(
-            "Switched to Reddit API. Warning: Your bot might be ratelimited by Reddit fast."
-            if not val
-            else "Switched back to Martine API."
-        )
-
+    async def send_embed(self, ctx: commands.Context, embed: discord.Embed, user: Optional[discord.Member] = None,):
+        await ctx.reply(embed=embed, mention_author=False)
+    
     @commands.is_nsfw()
     @commands.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
@@ -282,6 +268,20 @@ class Nsfw(Core):
             url=sub.NEKOBOT_URL.format(sub.NEKOBOT_HENTAI),
         )
 
+    @commands.cooldown(1, 3, commands.BucketType.user)
+    @commands.command()
+    async def hentaii(self, ctx: commands.Context, user: discord.Member):
+        """
+        Fuck a user.
+        """
+
+        images = f"https://nekobot.xyz/api/image?type=ass"
+
+        embed = discord.Embed(colour=discord.Colour.dark_theme(), description=f""),
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
+        embed.set_image(url=images)
+        await ctx.send(embed=embed)
+
     @commands.is_nsfw()
     @commands.bot_has_permissions(embed_links=True)
     @commands.cooldown(1, 0.5, commands.BucketType.user)
@@ -422,3 +422,4 @@ class Nsfw(Core):
         """Sends some yiff images from random subreddits."""
 
         await self._send_msg(ctx, _("yiff"), sub.YIFF)
+
