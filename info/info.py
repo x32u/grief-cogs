@@ -78,12 +78,6 @@ from grief.core.utils.chat_formatting import (
     humanize_timedelta,
 )
 
-async def sendmsg(self, ctx, content, embed, view, file, allowed_mentions): 
-    if ctx.guild is None: return
-    try:
-       await ctx.reply(content=content, embed=embed, view=view, file=file, allowed_mentions=allowed_mentions, mention_author=False)
-    except:
-        await ctx.send(content=content, embed=embed, view=view, file=file, allowed_mentions=allowed_mentions) 
 
 async def wait_reply(ctx: commands.Context, timeout: int = 60):
     def check(message: discord.Message):
@@ -1717,9 +1711,9 @@ class Info(commands.Cog):
                     if str(activity).lower() == "spotify":
                         embed = discord.Embed(color=0x2B2D31)
                         embed.add_field(
-                            name="**Song**", value=f"**[{activity.title}](https://open.spotify.com/embed/track/{activity.track_id})**", inline=True)
+                            name="**Song**", value=f"**[{activity.title}](https://open.spotify.com/track/{activity.track_id})**", inline=True)
                         embed.add_field(
-                            name="**Artist**", value=f"**[{activity.artist}](https://open.spotify.com/embed/track/{activity.track_id})**", inline=True)
+                            name="**Artist**", value=f"**[{activity.artist}](https://open.spotify.com/track/{activity.track_id})**", inline=True)
                         embed.set_thumbnail(url=activity.album_cover_url)
                         embed.set_author(
                             name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
