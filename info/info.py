@@ -1517,7 +1517,7 @@ class Info(commands.Cog):
                         button1 = discord.ui.Button(label="track", style=discord.ButtonStyle.url, url="https://open.spotify.com/track/{activity.track_id}")
                         view = discord.ui.View()
                         view.add_item(button1)
-                        await ctx.reply(embed=embed, view=view mention_author=False)
+                        await ctx.reply(embed=embed, view=view, mention_author=False)
                         return
             embed = discord.Embed(
                 description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify", colour=0x313338)
