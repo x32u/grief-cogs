@@ -1704,7 +1704,7 @@ class Info(commands.Cog):
 
         return embed
     
-    @commands.hybrid_command(description="Shows the Spotify song a user is listening to")
+    @commands.command()
     @commands.cooldown(1, 2, commands.BucketType.guild)
     async def spotify(self, ctx, user: discord.Member = None):
         try:
