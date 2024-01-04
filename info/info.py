@@ -1698,7 +1698,7 @@ class Info(commands.Cog):
 
         return embed
     
-    @commands.command()
+    @commands.command(aliases=["sp"])
     @commands.cooldown(1, 2, commands.BucketType.guild)
     async def spotify(self, ctx, user: discord.Member = None):
         "Sends what you or another user is listening to on Spotify."
@@ -1723,7 +1723,7 @@ class Info(commands.Cog):
                         return
             embed = discord.Embed(
                 description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify", colour=0x313338)
-            await ctx.send(embed=embed, mention_author=False)
+            await ctx.reply(embed=embed, mention_author=False)
             return
         except Exception as e:
             print(e)
