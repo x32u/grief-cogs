@@ -1709,18 +1709,8 @@ class Info(commands.Cog):
             if user.activities:
                 for activity in user.activities:
                     if str(activity).lower() == "spotify":
-                        embed = discord.Embed(color=0x2B2D31)
-                        embed.add_field(
-                            name="**Song**", value=f"**[{activity.title}](https://open.spotify.com/track/{activity.track_id})**", inline=True)
-                        embed.add_field(
-                            name="**Artist**", value=f"**[{activity.artist}](https://open.spotify.com/track/{activity.track_id})**", inline=True)
-                        embed.set_thumbnail(url=activity.album_cover_url)
-                        embed.set_author(
-                            name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
-                        embed.set_footer(
-                            text=f"Album: {activity.album}", icon_url=activity.album_cover_url)
-                        await ctx.reply(embed=embed, mention_author=False)
-                        return
+                        await ctx.reply(f"https://open.spotify.com/track/{activity.track_id}")
+                    return
             embed = discord.Embed(
                 description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify", colour=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
