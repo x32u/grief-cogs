@@ -759,28 +759,6 @@ class Info(commands.Cog):
             await ctx.send(chat.info(_("Right now this user is doing nothing")))
             return
         await BaseMenu(ActivityPager(activities)).start(ctx)
-
-    @commands.command(aliases=["sp"])
-    @commands.guild_only()
-    async def spotify(self, ctx, *, member: discord.Member = None):
-        """Send Spotify embed in chat."""
-        if member is None:
-            member = ctx.message.author
-
-        activity = discord.Activity
-
-        if not (activity := member.activities):
-            await ctx.send(chat.info(_("Right now this user isn't listening to Spotify.")))
-            return
-        
-        if isinstance(activity, discord.Spotify):
-           em = discord.Embed(title=activity.title, description=_("by {}\non {}").format(", ".join(activity.artists), activity.album), color=discord.Colour.dark_theme(), timestamp=activity.created_at, url=f"https://open.spotify.com/track/{activity.track_id}",)
-        em.add_field(name=_("Started at"), value=get_markdown_timestamp(activity.start, TimestampStyle.time_long),)
-        em.add_field(name=_("Duration"), value=str(activity.duration)[:-3])  # 0:03:33.877[000]
-        em.add_field(name=_("Will end at"), value=get_markdown_timestamp(activity.end, TimestampStyle.time_long),)
-        em.set_thumbnail(url=activity.album_cover_url)
-        em.set_footer(text=_("Listening since"))
-        await ctx.send(embed=em)
         
     @commands.command()
     @commands.guild_only()
@@ -1718,3 +1696,30 @@ class Info(commands.Cog):
         )
 
         return embed
+
+    @commands.command()
+    @commands.cooldown(1, 2, commands.BucketType.guild)
+    async def spotify(self, ctx, user: discord.Member = None):
+        try:
+            if user == None:
+                user = ctx.author
+                pass
+            if user.activities:
+                for activity in user.activities:
+                    if str(activity).lower() == "spotify":
+                        embed = discord.Embed(color=0x2B2D31)
+                        embed.add_field(
+                            name="**Song**", value=f"**[{activity.title}](https://open.spotify.com/embed/track/{activity.track_id})**", inline=True)
+                        embed.add_field(
+                            name="**Artist**", value=f"**[{activity.artist}](https://open.spotify.com/embed/track/{activity.track_id})**", inline=True)
+                        embed.set_thumbnail(url=activity.album_cover_url)
+                        embed.set_author(
+                            name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
+                        embed.set_footer(
+                            text=f"Album: {activity.album}", icon_url=activity.album_cover_url)
+            embed = discord.Embed(
+                description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify")
+            await ctx.send(self, ctx, None, embed, None, None, None, None)
+            return
+        except Exception as e:
+            print(e)
