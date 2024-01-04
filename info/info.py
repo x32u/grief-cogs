@@ -1527,17 +1527,17 @@ class Info(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def botinfo(self, ctx):
         embed1 = discord.Embed(color=0x2B2D31, description="**getting informations from client**")
-        msg = await ctx.reply(embed=embed1)
+        msg = await ctx.reply(embed=embed1, mention_author=False)
         lis = []
         for i in self.bot.owner_ids:
             user = await self.bot.fetch_user(i)
             lis.append(user.name)
-        embed = discord.Embed(color=0x2B2D31, title=f"{self.bot.user.name} | About").set_thumbnail(url=self.bot.user.display_avatar.url)
-        embed.add_field(name="Founder", value=f"`Discord:` `{' '.join(l for l in lis)}`\n`Server:` [here](https://discord.gg/seer)", inline=False)
+        embed = discord.Embed(color=0x2B2D31, title=f"About").set_thumbnail(url=self.bot.user.display_avatar.url)
+        embed.add_field(name="Founder", value=f"`Discord:{' '.join(l for l in lis)}\nServer: [here](https://discord.gg/seer)", inline=False)
         button = discord.ui.Button(label="invite", style=discord.ButtonStyle.url, url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
         view = discord.ui.View()
         view.add_item(button)
-        embed.add_field(name="Stats", value=f"`Users:` `{sum(g.member_count for g in self.bot.guilds)}`\n`Servers:` `{len(self.bot.guilds)}`", inline=False)
-        embed.add_field(name="System:", value=f"`Latency:` `{round(self.bot.latency * 1000)}ms`\n`Language:` `Python`\n`CPU Usage:` `{psutil.cpu_percent(interval=0.6)}%`\n`Memory Usage:` `{psutil.virtual_memory().percent}%`", inline=True)
-        embed.add_field(name="Shard", value=f"`This ShardID:` `{ctx.guild.shard_id}`\n`ShardLatency:` `{self.bot.get_shard(ctx.guild.shard_id).latency} ms`", inline=False)
+        embed.add_field(name="Stats", value=f"Users: {sum(g.member_count for g in self.bot.guilds)}\nServers: {len(self.bot.guilds)}", inline=False)
+        embed.add_field(name="System:", value=f"Latency: {round(self.bot.latency * 1000)}ms\nLanguage: Python\nCPU Usage: {psutil.cpu_percent(interval=0.6)}%\nMemory Usage: {psutil.virtual_memory().percent}%", inline=True)
+        embed.add_field(name="Shard", value=f"This ShardID: {ctx.guild.shard_id}\nShardLatency: {self.bot.get_shard(ctx.guild.shard_id).latency} ms", inline=False)
         await msg.edit(embed=embed, view=view)##      embed.add_field(name="System:", value=f"`Latency:` `{round(self.bot.latency * 1000)}ms`\n`Language:` `Python`\n`System`: `{my_system.system}`\n`CPU Usage:` `{psutil.cpu_percent(interval=0.6)}%`\n`Memory Usage:` `{psutil.virtual_memory().percent}%`", inline=True
