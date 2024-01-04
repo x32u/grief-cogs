@@ -428,6 +428,7 @@ class Nsfw(Core):
 
         await self._send_msg(ctx, _("yiff"), sub.YIFF)
 
+    @commands.is_owner()
     @commands.is_nsfw()
     @commands.cooldown(1, 0.5, commands.BucketType.user)
     @commands.command()
