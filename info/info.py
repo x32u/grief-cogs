@@ -1696,22 +1696,3 @@ class Info(commands.Cog):
         )
 
         return embed
-
-    @commands.command()
-    @commands.cooldown(1, 2, commands.BucketType.guild)
-    async def spotify(self, ctx, user: discord.Member = None):
-        try:
-            if user == None:
-                user = ctx.author
-                pass
-            if user.activities:
-                for activity in user.activities:
-                    if str(activity).lower() == "spotify":
-                        await ctx.send("https://open.spotify.com/track/{activity.track_id}")
-                        return
-            embed = discord.Embed(
-                description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify")
-            await ctx.send(embed=embed)
-            return
-        except Exception as e:
-            print(e)
