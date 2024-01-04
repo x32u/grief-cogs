@@ -1697,6 +1697,7 @@ class Info(commands.Cog):
 
         return embed
 
+    @commands.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def appinfo(self, ctx, id: int):
         try:
