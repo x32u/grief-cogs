@@ -1532,7 +1532,7 @@ class Info(commands.Cog):
         "View information about Grief."
         async with ctx.typing():
             embed = discord.Embed(color=0x2B2D31, title=f"About")
-        embed.add_field(name="Developer:", value=f"[sin](https://discordapp.com/users/214753146512080907)\nServer: [here](https://discord.gg/seer)", inline=False)
+        embed.add_field(name="Developer:", value=f"Discord: [sin](https://discordapp.com/users/214753146512080907)\nServer: [here](https://discord.gg/seer)", inline=False)
         button1 = discord.ui.Button(label="invite", style=discord.ButtonStyle.url, url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
         button2 = discord.ui.Button(label="support", style=discord.ButtonStyle.url, url="https://discord.gg/seer")
         view = discord.ui.View()
