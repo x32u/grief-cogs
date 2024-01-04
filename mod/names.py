@@ -188,10 +188,6 @@ class ModInfo(MixinMeta):
         if not member:
             member = author
 
-        button1 = discord.ui.Button(label="userinfo", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
-        view = discord.ui.View()
-        view.add_item(button1)
-
         roles = member.roles[-1:0:-1]
         # usernames, display_names, nicks = await self.get_names(member)
 
@@ -265,6 +261,10 @@ class ModInfo(MixinMeta):
             role_str = None
 
         data = discord.Embed(description=status_string or activity, colour=0x313338)
+
+        button1 = discord.ui.Button(label="userinfo", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
+        view = discord.ui.View()
+        view.add_item(button1)
 
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
