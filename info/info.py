@@ -1724,11 +1724,11 @@ class Info(commands.Cog):
                             name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
                         embed.set_footer(
                             text=f"Album: {activity.album}", icon_url=activity.album_cover_url)
-                        await sendmsg(self, ctx, None, embed, None, None, None, None)
+                        await ctx.send(embed=embed)
                         return
             embed = discord.Embed(
                 description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify", colour=0x313338)
-            await sendmsg(self, ctx, None, embed, None, None, None, None)
+            await ctx.send(embed=embed)
             return
         except Exception as e:
             print(e)
