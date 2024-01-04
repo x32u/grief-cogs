@@ -1514,7 +1514,7 @@ class Info(commands.Cog):
                             name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
                         embed.set_footer(
                             text=f"Album: {activity.album}", icon_url=activity.album_cover_url)
-                        button1 = discord.ui.Button(label="<:spotify:1192606955282374716>", style=discord.ButtonStyle.url, url=f"https://open.spotify.com/track/{activity.track_id}")
+                        button1 = discord.ui.Button(label="track", style=discord.ButtonStyle.url, url=f"https://open.spotify.com/track/{activity.track_id}")
                         view = discord.ui.View()
                         view.add_item(button1)
                         await ctx.reply(embed=embed, view=view, mention_author=False)
