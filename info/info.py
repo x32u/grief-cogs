@@ -1533,7 +1533,7 @@ class Info(commands.Cog):
             user = await self.bot.fetch_user(i)
             lis.append(user.name)
         embed = discord.Embed(color=0x2B2D31, title=f"About").set_thumbnail(url=self.bot.user.display_avatar.url)
-        embed.add_field(name="Founder", value=f"`Discord:{' '.join(l for l in lis)}\nServer: [here](https://discord.gg/seer)", inline=False)
+        embed.add_field(name="Developer", value=f"Discord: {' '.join(l for l in lis)}\nServer: [here](https://discord.gg/seer)", inline=False)
         button = discord.ui.Button(label="invite", style=discord.ButtonStyle.url, url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
         view = discord.ui.View()
         view.add_item(button)
