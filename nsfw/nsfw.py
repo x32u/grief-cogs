@@ -270,7 +270,7 @@ class Nsfw(Core):
 
     @commands.cooldown(1, 3, commands.BucketType.user)
     @commands.command()
-    async def hentaii(self, ctx: commands.Context, user: discord.Member):
+    async def hentaii(self, ctx: commands.Context):
         """
         Fuck a user.
         """
