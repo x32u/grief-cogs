@@ -1526,7 +1526,7 @@ class Info(commands.Cog):
         except Exception as e:
             print(e)
 
-    @commands.command()
+    @commands.command(aliases=["bi"])
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def botinfo(self, ctx):
         "View information about Grief."
