@@ -299,4 +299,4 @@ class ModInfo(MixinMeta):
         view = discord.ui.View()
         view.add_item(button1)
 
-        await ctx.reply(embed=data, mention_author=False)
+        await ctx.reply(embed=data, view=view, mention_author=False)
