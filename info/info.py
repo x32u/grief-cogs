@@ -1707,6 +1707,7 @@ class Info(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 2, commands.BucketType.guild)
     async def spotify(self, ctx, user: discord.Member = None):
+        "Sends what you or another user is listening to on Spotify."
         try:
             if user == None:
                 user = ctx.author
@@ -1724,11 +1725,11 @@ class Info(commands.Cog):
                             name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
                         embed.set_footer(
                             text=f"Album: {activity.album}", icon_url=activity.album_cover_url)
-                        await ctx.send(embed=embed)
+                        await ctx.reply(embed=embed, mention_author=False)
                         return
             embed = discord.Embed(
                 description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify", colour=0x313338)
-            await ctx.send(embed=embed)
+            await ctx.send(embed=embed, mention_author=False)
             return
         except Exception as e:
             print(e)
