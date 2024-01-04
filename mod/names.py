@@ -188,6 +188,10 @@ class ModInfo(MixinMeta):
         if not member:
             member = author
 
+        button1 = discord.ui.Button(label="userinfo", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
+        view = discord.ui.View()
+        view.add_item(button1)
+
         roles = member.roles[-1:0:-1]
         # usernames, display_names, nicks = await self.get_names(member)
 
@@ -294,9 +298,5 @@ class ModInfo(MixinMeta):
         avatar = member.display_avatar.replace(static_format="png")
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
-
-        button1 = discord.ui.Button(label="userinfo", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
-        view = discord.ui.View()
-        view.add_item(button1)
 
         await ctx.reply(embed=data, view=view, mention_author=False)
