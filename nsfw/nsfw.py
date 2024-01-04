@@ -1,4 +1,5 @@
 import discord
+import requests
 
 from grief.core import commands
 from grief.core.i18n import Translator, cog_i18n
@@ -426,6 +427,19 @@ class Nsfw(Core):
         """Sends some yiff images from random subreddits."""
 
         await self._send_msg(ctx, _("yiff"), sub.YIFF)
+
+    @commands.is_nsfw()
+    @commands.cooldown(1, 0.5, commands.BucketType.user)
+    @commands.command()
+    async def nsfwtest(self, ctx:commands.Context):
+        """Testing nsfw"""
+    
+    header = {'Authorization': 'Bearer 4f2dd5ad-7d9a-4252-bae9-9b3e33441649'}
+
+    r = requests.get("https://undefined.rip/api/1.0/nsfw", headers=header)
+    response = r.json()
+
+    print(response['url'])
 
 
 async def send_embed(self, ctx: commands.Context, embed: discord.Embed,):
