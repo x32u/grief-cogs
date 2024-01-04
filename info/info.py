@@ -1494,7 +1494,7 @@ class Info(commands.Cog):
                 await ctx.send(embed=em)
     
     @commands.command(aliases=["sp"])
-    @commands.cooldown(1, 2, commands.BucketType.guild)
+    @commands.cooldown(1, 3, commands.BucketType.user)
     async def spotify(self, ctx, user: discord.Member = None):
         "Sends what you or another user is listening to on Spotify."
         try:
@@ -1514,7 +1514,10 @@ class Info(commands.Cog):
                             name=ctx.message.author.name, icon_url=ctx.message.author.avatar)
                         embed.set_footer(
                             text=f"Album: {activity.album}", icon_url=activity.album_cover_url)
-                        await ctx.reply(embed=embed, mention_author=False)
+                        button1 = discord.ui.Button(label="track", style=discord.ButtonStyle.url, url="https://open.spotify.com/track/{activity.track_id}")
+                        view = discord.ui.View()
+                        view.add_item(button1)
+                        await ctx.reply(embed=embed, view=view mention_author=False)
                         return
             embed = discord.Embed(
                 description=f"{ctx.message.author.mention}: **{user}** is not listening to spotify", colour=0x313338)
