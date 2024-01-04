@@ -277,7 +277,12 @@ class Nsfw(Core):
 
         images = f"https://nekobot.xyz/api/image?type=ass"
 
-        embed = discord.Embed(colour=discord.Colour.dark_theme(), description=f""),
+        embed = discord.Embed(
+            colour=discord.Colour.dark_theme(),
+            description=f"hi",
+        )
+
+        embed.set_author(name=self.bot.user.display_name, icon_url=self.bot.user.avatar)
         embed.set_image(url=images)
         await send_embed(self, ctx, embed)
 
