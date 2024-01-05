@@ -1388,9 +1388,9 @@ class Info(commands.Cog):
         view.add_item(button1)
 
         if invite.guild.splash:
-            urls += f"[**splash**]({invite.guild.splash.url}), "
-        if len(urls) > 0:
-            embed.add_field(name="**assets**", value=urls[:-2], inline=False)
+            button2 = discord.ui.Button(label="splash", style=discord.ButtonStyle.url, url=f"{banner_url}")
+        view = discord.ui.View()
+        view.add_item(button2)
         await ctx.reply(embed=embed, view=view, mention_author=False)
 
     @commands.command()
