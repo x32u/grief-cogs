@@ -1375,14 +1375,15 @@ class Info(commands.Cog):
             banner_url = yarl.URL(str(invite.guild.banner.url))
             if "a_" in banner_url.path:
                 banner_url = str(banner_url).replace("webp", "gif")
-            urls += f"[**banner**]({banner_url}), "
-            lookup = (str(invite.guild.banner.url))
-            if lookup:
-                embed.color = 0x313338
-            embed.set_image(url=str(banner_url))
         button1 = discord.ui.Button(label="banner", style=discord.ButtonStyle.url, url=f"{banner_url}")
         view = discord.ui.View()
         view.add_item(button1)
+
+        urls += f"[**banner**]({banner_url}), "
+        lookup = (str(invite.guild.banner.url))
+        if lookup:
+                embed.color = 0x313338
+        embed.set_image(url=str(banner_url))
 
         if invite.guild.splash:
             urls += f"[**splash**]({invite.guild.splash.url}), "
