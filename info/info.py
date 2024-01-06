@@ -1,5 +1,5 @@
 
-from grief.core.utils.menus import SimpleMenu
+
 from grief.core import commands
 from grief.core.bot import Grief
 from grief import VersionInfo, version_info
@@ -12,6 +12,7 @@ import psutil
 import cpuinfo
 import asyncio
 import datetime
+from time import perf_counter
 import discord
 import inspect
 import itertools
