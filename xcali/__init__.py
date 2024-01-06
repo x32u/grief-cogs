@@ -49,11 +49,12 @@ class XCali(commands.Cog):
 
 
     @commands.command(aliases=["tt"])
-    async def tiktok(self, message: discord.Message, ctx, url: str):
+    async def tiktok(self, ctx, url: str):
         "Repost a TikTok video in chat."
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
         data = TikTokVideo(**response.json())
+        message = discord.Message
             
         embed = discord.Embed(description = data.desc, color = 0x313338)
         embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
