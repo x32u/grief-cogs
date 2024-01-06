@@ -79,7 +79,7 @@ class XCali(commands.Cog):
         results = query.findall(message.content)
         if results:
             for result in results:
-                if "tiktok" in str(message.content).lower():
+                if "grief" in str(message.content).lower():
                     for d in message.content.split():
                         if "tiktok.com" in d.lower():
                             ctx = await self.bot.get_context(message)
