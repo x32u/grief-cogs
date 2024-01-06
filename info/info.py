@@ -1371,27 +1371,21 @@ class Info(commands.Cog):
                 icon_url = str(icon_url).replace("webp", "gif")
             urls += f"[**icon**]({icon_url}), "
             embed.set_thumbnail(url=icon_url)
-        
         if invite.guild.banner:
             banner_url = yarl.URL(str(invite.guild.banner.url))
             if "a_" in banner_url.path:
                 banner_url = str(banner_url).replace("webp", "gif")
-        urls += f"[**banner**]({banner_url}), "
-        lookup = (str(invite.guild.banner.url))
-        if lookup:
+            urls += f"[**banner**]({banner_url}), "
+            lookup = (str(invite.guild.banner.url))
+            if lookup:
                 embed.color = 0x313338
-        embed.set_image(url=str(banner_url))
-
-        if invite.guild.banner:
-            button1 = discord.ui.Button(label="banner", style=discord.ButtonStyle.url, url=f"{banner_url}")
-        view = discord.ui.View()
-        view.add_item(button1)
+            embed.set_image(url=str(banner_url))
 
         if invite.guild.splash:
-            button2 = discord.ui.Button(label="splash", style=discord.ButtonStyle.url, url=f"{banner_url}")
-        view = discord.ui.View()
-        view.add_item(button2)
-        await ctx.reply(embed=embed, view=view, mention_author=False)
+            urls += f"[**splash**]({invite.guild.splash.url}), "
+        if len(urls) > 0:
+            embed.add_field(name="**assets**", value=urls[:-2], inline=False)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command()
     async def getuser(self, ctx, *, user_id: t.Union[int, discord.User]):
