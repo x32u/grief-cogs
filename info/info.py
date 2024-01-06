@@ -1539,7 +1539,7 @@ class Info(commands.Cog):
         view.add_item(button1)
         view.add_item(button2)
         view.add_item(button3)
-        embed.add_field(name="Stats", value=f"Users: {len(self.bot.users)}\nServers: {len(self.bot.guilds)}]\nChannels: {len(self.bot.channels)}]\Roles: {len(self.bot.roles)}]", inline=False)
+        embed.add_field(name="Stats", value=f"Users: {len(self.bot.users)}\nServers: {len(self.bot.guilds)}]\nChannels: {(len(guild.channels) for guild in self.bot.guilds)})\n", inline=False)
         embed.add_field(name="Backend:", value=f"Latency: {round(self.bot.latency * 1000)}ms\nLanguage: discord.py\nCPU Usage: {psutil.cpu_percent(interval=1)}%\nMemory Usage: {psutil.virtual_memory().percent}%", inline=False)
         embed.add_field(name="System:", value=f"CPU: AMD Ryzen 5 3600 6-Core Processor\nRam: 62.7GB\nDisk: 435.8GB", inline=False)
         embed.set_footer(text="grief", icon_url="https://cdn.discordapp.com/emojis/886356428116357120.gif")
