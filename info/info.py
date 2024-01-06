@@ -1530,6 +1530,7 @@ class Info(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def botinfo(self, ctx):
         "View information about Grief."
+        guild = self.bot.guilds
         async with ctx.typing():
             embed = discord.Embed(color=0x2B2D31, title=f"About")
         button1 = discord.ui.Button(label="Invite", style=discord.ButtonStyle.url, url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
@@ -1539,7 +1540,7 @@ class Info(commands.Cog):
         view.add_item(button1)
         view.add_item(button2)
         view.add_item(button3)
-        embed.add_field(name="Stats", value=f"Users: {len(self.bot.users)}\nServers: {len(self.bot.guilds)}]\n Channels: {(len(guild.channels) for guild in self.bot.guilds)})", inline=False)
+        embed.add_field(name="Stats", value=f"Users: {len(self.bot.users)}\nServers: {len(self.bot.guilds)}\n Channels: {(len(guild.channels))})", inline=False)
         embed.add_field(name="Backend:", value=f"Latency: {round(self.bot.latency * 1000)}ms\nLanguage: discord.py\nCPU Usage: {psutil.cpu_percent(interval=1)}%\nMemory Usage: {psutil.virtual_memory().percent}%", inline=False)
         embed.add_field(name="System:", value=f"CPU: AMD Ryzen 5 3600 6-Core Processor\nRam: 62.7GB\nDisk: 435.8GB", inline=False)
         embed.set_footer(text="grief", icon_url="https://cdn.discordapp.com/emojis/886356428116357120.gif")
