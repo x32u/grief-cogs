@@ -1531,7 +1531,7 @@ class Info(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def botinfo(self, ctx):
         "View information about Grief."
-        td = datetime.utcnow() - datetime.fromtimestamp(psutil.boot_time())
+        td = humanize_timedelta(timedelta=td)
         async with ctx.typing():
             embed = discord.Embed(color=0x2B2D31, title=f"About")
         button1 = discord.ui.Button(label="Invite", style=discord.ButtonStyle.url, url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
