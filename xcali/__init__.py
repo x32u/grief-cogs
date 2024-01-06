@@ -14,54 +14,27 @@ class BaseModel(BM):
     class Config:
         arbitrary_types_allowed = True
 
-class VideoStats(BaseModel):
-    digg_count: int
-    share_count: int
-    comment_count: int
-    play_count: int
-    collect_count: int
+class TikTokVideoStatistics(BaseModel):
+    aweme_id: Optional[str] = None
+    comment_count: Optional[int] = 0
+    digg_count: Optional[int] = 0
+    download_count: Optional[int] = 0
+    play_count: Optional[int] = 0
+    share_count: Optional[int] = 0
+    lose_count: Optional[int] = 0
+    lose_comment_count: Optional[int] = 0
+    whatsapp_share_count: Optional[int] = 0
+    collect_count: Optional[int] = 0
 
-class VideoDetails(BaseModel):
-    height: Optional[int] = None
-    width: Optional[int] = None
-    duration: Optional[int] = None
-    ratio: Optional[str] = None
-    format: Optional[str] = None
-    codec_type: Optional[str] = None
 
-class VideoURLS(BaseModel):
-    play_addr: Optional[str] = None
-    download_addr: Optional[str] = None
-
-class UserStats(BaseModel):
-    follower_count: int
-    following_count: int
-    # heart: int
-    heart_count: int
-    video_count: int
-    digg_count: int
-
-class Author(BaseModel):
-    unique_id: str
-    id: Optional[int] = None
-    """The User's unique id"""
-    # short_id: Optional[str]
+class TikTokVideo(BaseModel):
+    is_video: Optional[bool] = False
+    items: Union[str,List[str]]
+    desc: Optional[str] = None
+    username: Optional[str] = None
     nickname: Optional[str] = None
-    sec_uid: Optional[str] = None
-    private_account: Optional[bool] = None
-    verified: Optional[bool] = None
-    stats: Optional[UserStats] = None
-
-class TikTokPost(BaseModel):
-    id: Optional[int] = None
-    author: Optional[Author] = None
-    description: Optional[str] = None
-    created_at: Optional[float] = None
-    details: Optional[VideoDetails] = None
-    urls: Union[list,VideoURLS,str] = None
-    is_video: Optional[bool] = None
-    cover: Optional[str] = None
-    stats: Optional[VideoStats] = None
+    avatar: Optional[str] = None
+    stats: TikTokVideoStatistics
     url: Optional[str] = None
 
 class XCali(commands.Cog):
@@ -80,28 +53,61 @@ class XCali(commands.Cog):
         "Repost a TikTok video in chat."
         session = httpx.AsyncClient()
         response = await session.get(f"https://api.rival.rocks/tiktok?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
-        data = TikTokPost(**response.json())
+        data = TikTokVideo(**response.json())
             
-        # embed = discord.Embed(description = data.description, color = 0x313338)
-        # embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
-        # embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
-        # embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
-        # embed.add_field(name = 'User', value = data.author, inline = True)
-        # embed.set_footer(text='grief')
+        embed = discord.Embed(description = data.desc, color = 0x313338)
+        embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
+        embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
+        embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
+        embed.add_field(name = 'User', value = data.username, inline = True)
+        embed.set_footer(text='grief')
         if data.is_video == True:
             session = httpx.AsyncClient()
-            f = await session.get(data.url,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+            f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
             file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
-            return await ctx.send(file=file)        
+            return await ctx.send(embed=embed, file=file)        
         else:
             file = None
-            # embeds = []
-            # for item in data.items:
-                # e = embed.copy()
-                # e.set_image(url=item)
-                # embeds.append(e)
-            # return await self.paginate(ctx,embeds)
-    
+            embeds = []
+            for item in data.items:
+                e = embed.copy()
+                e.set_image(url=item)
+                embeds.append(e)
+            return await self.paginate(ctx,embeds)
+        
+    async def reposter(self, message: discord.Message, query:Any):
+        results = query.findall(message.content)
+        if results:
+            for result in results:
+                if "tiktok" in str(message.content).lower():
+                    for d in message.content.split():
+                        if "tiktok.com" in d.lower():
+                            ctx = await self.bot.get_context(message)
+                            import httpx, discord,io
+                            session = httpx.AsyncClient()
+                            response = await session.get(f"https://api.rival.rocks/tiktok?url={d}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+                            data = TikTokVideo(**response.json())
+                                
+                            embed = discord.Embed(description = data.desc, color = 0x313338)
+                            embed.add_field(name = 'Comments', value = data.stats.comment_count, inline = True)
+                            embed.add_field(name = 'Plays', value = data.stats.play_count, inline = True)
+                            embed.add_field(name = 'Shares', value = data.stats.share_count, inline = True)
+                            embed.add_field(name = 'User', value = data.username, inline = True)
+                            embed.set_footer(text='grief')
+                            if data.is_video == True:
+                                session = httpx.AsyncClient()
+                                f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+                                file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
+                                await message.delete()   
+                                return await ctx.send(embed=embed, file=file)  
+                            else:
+                                file = None
+                                embeds = []
+                                for item in data.items:
+                                    e = embed.copy()
+                                    e.set_image(url=item)
+                                    embeds.append(e)
+                                return await self.paginate(ctx,embeds)
                             
         
     async def do_repost(self, message: discord.Message):
