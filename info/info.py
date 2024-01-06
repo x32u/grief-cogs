@@ -1531,7 +1531,7 @@ class Info(commands.Cog):
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def botinfo(self, ctx):
         "View information about Grief."
-        td = datetime.datetime.utcnow() - self.bot.uptime
+        td = datetime.utcnow() - self.bot.uptime
         uptime = humanize_timedelta(timedelta=td)
         async with ctx.typing():
             embed = discord.Embed(color=0x2B2D31, title=f"About")
