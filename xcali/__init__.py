@@ -90,7 +90,7 @@ class XCali(commands.Cog):
         embed.set_footer(text='grief')
         if data.is_video == True:
             session = httpx.AsyncClient()
-            f = await session.get(data.stats,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+            f = await session.get(data.url,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
             file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
             return await ctx.send(embed=embed, file=file)        
         else:
