@@ -141,7 +141,7 @@ class XCali(commands.Cog):
         else:
             file = None
             embeds = []
-            for item in data.items:
+            for item in data.media:
                 e = embed.copy()
                 e.set_image(url=item)
                 embeds.append(e)
