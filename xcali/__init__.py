@@ -77,6 +77,7 @@ class TwitterAuthor(BaseModel):
     following: int = Field(..., title='Following')
     joined: str = Field(..., title='Joined')
     likes: int = Field(..., title='Likes')
+    website: str = Field(..., title='Website')
     tweets: int = Field(..., title='Tweets')
     avatar_color: Optional[str] = Field(None, title='Avatar Color')
 
