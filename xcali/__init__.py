@@ -172,7 +172,6 @@ class XCali(commands.Cog):
             e = embed.copy()
             e.set_image(url=media)
             embeds.append(e)
-            return await self.paginate(ctx,embeds)
         
     async def reposter(self, message: discord.Message, query:Any):
         results = query.findall(message.content)
