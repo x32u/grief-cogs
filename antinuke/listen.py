@@ -77,41 +77,8 @@ class Listen:
         logchan = self.settings[guild.id]["log"] if self.settings[guild.id]["log"] else None
         logchan = guild.get_channel(logchan) if logchan else None
 
-        userwarn = (
-            f"Slow down there! You have exceeded {overload} mod actions in {cooldown} seconds."
-        )
-        failwarn = None
-        success = None
-        if action == "ban":
-            userwarn = (
-                f"You have been banned from {guild.name} "
-                f"for exceeding {overload} mod actions in {cooldown} seconds"
-            )
-            failwarn = "Failed to ban"
-            success = "been banned"
-        elif action == "kick":
-            userwarn = (
-                f"You have been kicked from {guild.name} "
-                f"for exceeding {overload} mod actions in {cooldown} seconds"
-            )
-            failwarn = "Failed to kick"
-            success = "been kicked"
-        elif action == "strip":
-            userwarn = (
-                f"You have had your roles stripped in {guild.name} "
-                f"for exceeding {overload} mod actions in {cooldown} seconds"
-            )
-            failwarn = "Failed to strip roles from"
-            success = "had their roles stripped"
-
-        if dm:
-            with contextlib.suppress(discord.HTTPException):
-                em = discord.Embed(
-                    title="Anti-Nuke Warning",
-                    description=userwarn,
-                    color=discord.Color.red(),
-                )
-                await member.send(embed=em)
+        failwarn = "Failed to strip roles from"
+        success = "had their roles stripped"
 
         failed = False
         try:

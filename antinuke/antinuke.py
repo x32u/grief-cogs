@@ -39,7 +39,7 @@ class AntiNuke(Listen, commands.Cog):
             "dm": False,  # Whether to DM the user the bot kicks
             "action": "notify",  # Valid types are 'kick', 'ban', 'strip', and 'notify'
             "ignore_bots": False,  # Whether to ignore other bots
-            "trust": [],  # passport of trusted users(or bots)
+            "whitelist": [],  # passport of trusted users(or bots)
         }
         self.config.register_guild(**default_guild)
 
@@ -194,7 +194,7 @@ class AntiNuke(Listen, commands.Cog):
         await self.initialize(ctx.guild)
 
     @antinuke.command()
-    async def trust(self, ctx: commands.Context, user: discord.Member):
+    async def whitelist(self, ctx: commands.Context, user: discord.Member):
         """Add/Remove users from the trust"""
         async with self.config.guild(ctx.guild).whitelist() as whitelist:
             if user.id in whitelist:
