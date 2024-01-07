@@ -64,44 +64,48 @@ class TwitterUser(BaseModel):
     verified: Optional[bool] = Field(False, title='Verified')
     id: Optional[Union[str, int]] = Field(None, title='Id')
 
+class Website(BaseModel):
+    url: str
+    display_url: str
+
 class TwitterAuthor(BaseModel):
-    id: str = Field(..., title='Id')
-    name: str = Field(..., title='Name')
-    screen_name: str = Field(..., title='Screen Name')
-    avatar_url: str = Field(..., title='Avatar Url')
-    banner_url: str = Field(..., title='Banner Url')
-    description: str = Field(..., title='Description')
-    location: str = Field(..., title='Location')
-    url: str = Field(..., title='Url')
-    followers: int = Field(..., title='Followers')
-    following: int = Field(..., title='Following')
-    joined: str = Field(..., title='Joined')
-    likes: int = Field(..., title='Likes')
-    website: str = Field(..., title='Website')
-    tweets: int = Field(..., title='Tweets')
-    avatar_color: Optional[str] = Field(None, title='Avatar Color')
+    id: str
+    name: str
+    screen_name: str
+    avatar_url: str
+    banner_url: str
+    description: str
+    location: str
+    url: str
+    followers: int
+    following: int
+    joined: str
+    likes: int
+    website: Optional[List[Website]] = None
+    tweets: int
+    avatar_color: Optional[str] = None
 
 
 class TwitterPostResponse(BaseModel):
-    url: str = Field(..., title='Url')
-    id: str = Field(..., title='Id')
-    text: str = Field(..., title='Text')
+    url: str
+    id: str
+    text: str
     author: TwitterAuthor
-    replies: int = Field(..., title='Replies')
-    retweets: int = Field(..., title='Retweets')
-    likes: int = Field(..., title='Likes')
-    created_at: str = Field(..., title='Created At')
-    created_timestamp: int = Field(..., title='Created Timestamp')
-    possibly_sensitive: bool = Field(..., title='Possibly Sensitive')
-    views: Optional[int] = Field(0, title='Views')
-    is_note_tweet: bool = Field(..., title='Is Note Tweet')
-    lang: Optional[str] = Field(None, title='Lang')
-    replying_to: Optional[str] = Field(None, title='Replying To')
-    replying_to_status: Optional[str] = Field(None, title='Replying To Status')
-    media: Optional[List[List[str]]] = Field(None, title='Media')
-    source: Optional[str] = Field(None, title='Source')
-    twitter_card: Optional[str] = Field(None, title='Twitter Card')
-    color: Optional[str] = Field(None, title='Color')
+    replies: int
+    retweets: int
+    likes: int
+    created_at: str
+    created_timestamp: int
+    possibly_sensitive: bool
+    views: Optional[int] = 0
+    is_note_tweet: bool
+    lang: Optional[str] = None
+    replying_to: Optional[str] = None
+    replying_to_status: Optional[str] = None
+    media: Optional[List[List[str]]] = None
+    source: Optional[str] = None
+    twitter_card: Optional[str] = None
+    color: Optional[str] = None
 
 class XCali(commands.Cog):
     """
@@ -154,7 +158,7 @@ class XCali(commands.Cog):
         # embed = discord.Embed(description = data.desc, color = 0x313338)
         # embed.add_field(name = 'Replies', value = data.stats.replies, inline = True)
         # embed.add_field(name = 'Views', value = data.stats.views, inline = True)
-        # mbed.add_field(name = 'Retweets', value = data.stats.retweets, inline = True)
+        # embed.add_field(name = 'Retweets', value = data.stats.retweets, inline = True)
         # embed.add_field(name = 'Author', value = data.author, inline = True)
         # embed.set_footer(text='grief')
         if data.media == True:
