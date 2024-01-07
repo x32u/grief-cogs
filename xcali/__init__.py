@@ -167,11 +167,11 @@ class XCali(commands.Cog):
             return await ctx.send(file=file)        
         else:
             file = None
-        embeds = []
+        embed = []
         for media in data.media:
             e = embed.copy()
             e.set_image(url=media)
-            embeds.append(e)
+            embed.append(e)
             return await paginate(ctx,embed)
         
     async def reposter(self, message: discord.Message, query:Any):
