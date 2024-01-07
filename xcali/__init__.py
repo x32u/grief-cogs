@@ -141,7 +141,7 @@ class XCali(commands.Cog):
         else:
             file = None
             embeds = []
-            for item in data.media:
+            for item in data.items:
                 e = embed.copy()
                 e.set_image(url=item)
                 embeds.append(e)
@@ -154,7 +154,7 @@ class XCali(commands.Cog):
         response = await session.get(f"https://api.rival.rocks/twitter/post?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
         data = TwitterPostResponse(**response.json())
             
-        embed = discord.Embed(description = data.media, color = 0x313338)
+        embed = discord.Embed(description = data.text, color = 0x313338)
         embed.add_field(name = 'Replies', value = data.replies, inline = True)
         embed.add_field(name = 'Views', value = data.views, inline = True)
         embed.add_field(name = 'Retweets', value = data.retweets, inline = True)
@@ -162,16 +162,16 @@ class XCali(commands.Cog):
         embed.set_footer(text='grief')
         if data.media == True:
             session = httpx.AsyncClient()
-            f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+            f = await session.get(data.media,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
             file = discord.File(fp=io.BytesIO(f.read()), filename='twitter.mp4')  
-            return await ctx.send(embed=embed, file=file)        
+            return await ctx.send(file=file)        
         else:
             file = None
-            embeds = []
-            for item in data.items:
-                e = embed.copy()
-                e.set_image(url=item)
-                embeds.append(e)
+        embeds = []
+        for media in data.media:
+            e = embed.copy()
+            e.set_image(url=media)
+            embeds.append(e)
             return await self.paginate(ctx,embeds)
         
     async def reposter(self, message: discord.Message, query:Any):
