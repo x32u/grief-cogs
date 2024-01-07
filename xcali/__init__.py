@@ -154,7 +154,7 @@ class XCali(commands.Cog):
         response = await session.get(f"https://api.rival.rocks/twitter/post?url={url}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
         data = TwitterPostResponse(**response.json())
             
-        embed = discord.Embed(description = data.desc, color = 0x313338)
+        embed = discord.Embed(description = data.media, color = 0x313338)
         embed.add_field(name = 'Replies', value = data.stats.replies, inline = True)
         embed.add_field(name = 'Views', value = data.stats.views, inline = True)
         embed.add_field(name = 'Retweets', value = data.stats.retweets, inline = True)
