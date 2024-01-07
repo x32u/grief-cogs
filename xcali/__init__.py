@@ -155,9 +155,9 @@ class XCali(commands.Cog):
         data = TwitterPostResponse(**response.json())
             
         embed = discord.Embed(description = data.media, color = 0x313338)
-        embed.add_field(name = 'Replies', value = data.stats.replies, inline = True)
-        embed.add_field(name = 'Views', value = data.stats.views, inline = True)
-        embed.add_field(name = 'Retweets', value = data.stats.retweets, inline = True)
+        embed.add_field(name = 'Replies', value = data.replies, inline = True)
+        embed.add_field(name = 'Views', value = data.views, inline = True)
+        embed.add_field(name = 'Retweets', value = data.retweets, inline = True)
         embed.add_field(name = 'Author', value = data.author, inline = True)
         embed.set_footer(text='grief')
         if data.media == True:
