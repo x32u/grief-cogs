@@ -107,7 +107,7 @@ class Spotifyembed(commands.Cog):
 
         for match in spembedMatches:
             spembedSplit = match.split('.com/')
-            sendMsg += spembedSplit[0] + ".com/embed/" + spembedSplit[1] + "\n"
+            sendMsg += spembedSplit[0] + ".com/" + spembedSplit[1] + "\n"
 
         # Find a webhook that the bot made
         try:
