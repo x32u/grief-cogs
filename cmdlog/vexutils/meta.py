@@ -66,8 +66,7 @@ def format_help(self: commands.Cog, ctx: commands.Context) -> str:
     docs = DOCS_BASE.format(self.qualified_name.lower())
     pre_processed = super(type(self), self).format_help_for_context(ctx)  # type:ignore
 
-    return (
-        f"{pre_processed"  # type:ignore
+    return (f"{pre_processed}"  # type:ignore
     )
     # adding docs link here so doesn't show up in auto generated docs
 
