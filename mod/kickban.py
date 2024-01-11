@@ -312,7 +312,7 @@ class KickBanMixin(MixinMeta):
                 await member.send(embed=em)
         try:
             await guild.kick(member, reason=audit_reason)
-            embed = discord.Embed(description=f"> {ctx.author.mention}: Kicked {member.mention} for: {reason}", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Kicked {member.mention} for {reason}", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
         except discord.errors.Forbidden:
             embed = discord.Embed(description=f"> I'm not allowed to do that.", color=0x313338)
