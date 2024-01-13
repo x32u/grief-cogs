@@ -28,6 +28,10 @@ from uwuipy import uwuipy
 import textwrap
 import asyncio
 
+import discord
+import random
+from datetime import datetime
+
 
 _ = T_ = Translator("General", __file__)
 
