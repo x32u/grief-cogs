@@ -11,8 +11,6 @@ import unidecode
 from aiomisc.periodic import PeriodicCallback
 from grief.core import Config, checks, commands
 from grief.core.bot import Grief
-
-import roleplay.roleplay
 import webhook.webhook
 import uwuify
 
@@ -40,7 +38,6 @@ class Shutup(commands.Cog):
         self.config.register_global(uwu_locked_users={})
 
         self.webhook: webhook.webhook.Webhook
-        self.roleplay: roleplay.roleplay.Roleplay
         self.no_emoji: discord.Emoji
         self.uwu_allowed_users = list(self.bot.owner_ids)
         self.bot.ioloop.spawn_callback(self.init_cog)
@@ -168,6 +165,7 @@ class Shutup(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        uwu = uwuipy()
         if not self.bot.is_ready():
             return
 
@@ -181,7 +179,7 @@ class Shutup(commands.Cog):
             settings = await self.get_guild_settings(message.guild)
             if message.author.id in settings.uwulocked_users:
                 content = str(message.content.lower())
-                uwu = uwuize_string(unidecode.unidecode(content))
+                uwu = uwuipy(unidecode.unidecode(content))
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
                     await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
