@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 from contextlib import suppress
-from pydantic import BaseModel
+
 import discord
 import msgpack
 import orjson
@@ -11,8 +11,9 @@ import unidecode
 from aiomisc.periodic import PeriodicCallback
 from grief.core import Config, checks, commands
 from grief.core.bot import Grief
+
 import webhook.webhook
-import uwuipy
+import uwuify
 
 
 def delaytask(coro, wait: int = 1):
@@ -62,7 +63,7 @@ class Shutup(commands.Cog):
 
     async def init_cog(self) -> None:
         await self.bot.wait_until_ready()
-        if self.bot.user.name == "melanie":
+        if self.bot.user.name == "grief":
             self.uwu_allowed_users = list(self.bot.owner_ids)
             users = list(self.uwu_allowed_users)
             if guild := self.bot.get_guild(915317604153962546):
@@ -70,15 +71,12 @@ class Shutup(commands.Cog):
                     extras = [m.id for m in role.members]
                     users.extend(extras)
                 self.uwu_allowed_users = users
-                await self.bot.redis.set("uwu_allowed_users_", msgpack.packb(users))
 
         self.webhook = self.bot.get_cog("Webhook")
-        self.roleplay = self.bot.get_cog("Roleplay")
-        self.no_emoji = self.bot.get_emoji(1061996704372633635)
 
     @commands.guild_only()
     @checks.has_permissions(administrator=True)
-    @commands.command()
+    @commands.command(hidden=True)
     async def stfubitch(self, ctx: commands.Context):
         """STFU, bitch.
 
@@ -164,32 +162,25 @@ class Shutup(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        uwu = uwuipy()
         if not self.bot.is_ready():
             return
 
         if not message.guild:
             return
         with suppress(discord.HTTPException):
-            if hasattr(message, "embeds") and message.embeds and await self.bot.redis.get(f"shutup_lock:{message.channel.id}"):
+            if hasattr(message, "embeds") and message.embeds and await self.bot(f"shutup_lock:{message.channel.id}"):
                 payload = orjson.dumps(message.embeds[0].to_dict()).decode("UTF-8").lower()
                 if "snipe" in payload or "deleted" in payload or "delete" in payload:
                     return await message.delete()
             settings = await self.get_guild_settings(message.guild)
             if message.author.id in settings.uwulocked_users:
                 content = str(message.content.lower())
-                uwu = uwuipy(unidecode.unidecode(content))
+                uwu = uwuify(unidecode.unidecode(content))
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
                     await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
-                    await self.bot.redis.set(f"shutup_lock:{message.channel.id}", 1, ex=21)
-
-            elif message.author.id in settings.ghettolocked_users:
-                text = " ".join(str(ghetto_string(message.content)).split())
-                period = " ".join(text.capitalize() for text in text.split(" "))
-                ctx = await self.bot.get_context(message)
-                await self.webhook.sudo(ctx=ctx, member=message.author, message=f"{period} 💅🏿")
-                await self.bot.redis.set(f"shutup_lock:{message.channel.id}", 1, ex=40)
+                    await self.bot(f"shutup_lock:{message.channel.id}", 1, ex=21)
+                
 
     @checks.has_permissions(administrator=True)
     @commands.command()
@@ -223,6 +214,7 @@ class Shutup(commands.Cog):
                         return
                     uwulocked_users.remove(user.id)
                     return await ctx.send(f"{user} has been removed from uwu lock 🤨")
+                uwulocked_users.append(user.id)
 
                 if ctx.author.id in self.bot.owner_ids:
                         self.owner_locked.append(user.id)
