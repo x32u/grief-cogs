@@ -3,8 +3,8 @@ import typing
 from logging import Logger, getLogger
 
 import discord
-from redbot.core import Config, commands
-from redbot.core.bot import Red
+from grief.core import Config, commands
+from grief.core.bot import Grief
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
@@ -21,8 +21,8 @@ class VanityInStatus(commands.Cog):
             f"{pre_processed}\n**Cog Version:** {self.__version__}\n**Author:** {self.__author__}"
         )
 
-    def __init__(self, bot: Red):
-        self.bot: Red = bot
+    def __init__(self, bot: Grief):
+        self.bot: Grief = bot
         self.logger: Logger = getLogger("red.dia.VanityInStatus")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
@@ -222,7 +222,7 @@ class VanityInStatus(commands.Cog):
         )
 
 
-async def setup(bot: Red):
+async def setup(bot: Grief):
     cog = VanityInStatus(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()
