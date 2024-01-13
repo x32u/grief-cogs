@@ -3,34 +3,40 @@ import typing
 from logging import Logger, getLogger
 
 import discord
-from grief.core import Config, commands
-from grief.core.bot import Grief
+from redbot.core import Config, commands
+from redbot.core.bot import Red
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
-class Vanity(commands.Cog):
-    """For level 3 servers, award your users for advertising the vanity in their status. """
+class VanityInStatus(commands.Cog):
+    """Give users a if they have a vanity in their status."""
+
+    __version__ = "0.0.2"
+    __author__ = "dia ♡#0666 (696828906191454221)"
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
+        """Thanks Sinbad."""
         pre_processed = super().format_help_for_context(ctx)
-        return (f"{pre_processed}\n")
+        return (
+            f"{pre_processed}\n**Cog Version:** {self.__version__}\n**Author:** {self.__author__}"
+        )
 
-    def __init__(self, bot: Grief):
-        self.bot: Grief = bot
-        self.logger: Logger = getLogger("grief.vanity")
+    def __init__(self, bot: Red):
+        self.bot: Red = bot
+        self.logger: Logger = getLogger("red.dia.VanityInStatus")
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
             "role": None,
-            "toggled": True,
+            "toggled": False,
             "channel": None,
             "vanity": None,
         }
-        self.cached = True
+        self.cached = False
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
-        self.bot.wait_until_red_ready()
 
     async def update_cache(self):
+        await self.bot.wait_until_red_ready()
         data = await self.config.all_guilds()
         for x in data:
             vanity = data[x]["vanity"]
@@ -155,11 +161,14 @@ class Vanity(commands.Cog):
                         f"Failed to remove role from {after} in {guild.name}/{guild.id}: {str(e)}"
                     )
 
-    @commands.group(name="vanity",)
+    @commands.group(
+        name="vanity-in-status",
+    )
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
     async def vanity(self, ctx: commands.Context) -> None:
-        """Vanity management for Grief."""
+        """VanityInStatus management commands for [botname]."""
+        ...
 
     @vanity.command()
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
@@ -175,23 +184,19 @@ class Vanity(commands.Cog):
     @vanity.command()
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
-    async def role(self, ctx: commands.Context, role: discord.Role) -> None:
+    async def role(self, ctx: commands.Context, r_ole: discord.Role) -> None:
         """Setup the role to be rewarded."""
-        if role.position >= ctx.author.top_role.position:
+        if r_ole.position >= ctx.author.top_role.position:
             await ctx.send(
                 "Your role is lower or equal to the vanity role, please choose a lower role than yourself."
             )
             return
-        if role.position >= ctx.guild.me.top_role.position:
+        if r_ole.position >= ctx.guild.me.top_role.position:
             await ctx.send("The role is higher than me, please choose a lower role than me.")
-        if ctx.guild.owner:
-            await ctx.send(f"Vanity role has been updated to {role.mention}",
-            allowed_mentions=discord.AllowedMentions.none(),
-        )
             return
-        await self.config.guild(ctx.guild).role.set(role.id)
+        await self.config.guild(ctx.guild).role.set(r_ole.id)
         await ctx.send(
-            f"Vanity role has been updated to {role.mention}",
+            f"Vanity role has been updated to {r_ole.mention}",
             allowed_mentions=discord.AllowedMentions.none(),
         )
 
@@ -217,7 +222,7 @@ class Vanity(commands.Cog):
         )
 
 
-async def setup(bot: Grief):
-    cog = Vanity(bot)
+async def setup(bot: Red):
+    cog = VanityInStatus(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
     await cog.update_cache()
