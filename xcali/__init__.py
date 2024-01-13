@@ -107,6 +107,13 @@ class TwitterPostResponse(BaseModel):
     twitter_card: Optional[str] = None
     color: Optional[str] = None
 
+class Google(BaseModel):
+    title: str
+    alt: str
+    website: str
+    url: str
+    color: str
+
 class XCali(commands.Cog):
     """
     Repost TikTok and YouTube videos.
@@ -207,6 +214,21 @@ class XCali(commands.Cog):
                                     e.set_image(url=item)
                                     embeds.append(e)
                                 return await self.paginate(ctx,embeds)
+                            
+    @commands.command(aliases=["tt"])
+    async def google(self, ctx, str: str):
+        "Repost a TikTok video in chat."
+        session = httpx.AsyncClient()
+        response = await session.get(f"https://api.rival.rocks/google/search?query={str}&safe=false&limit=100&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+        data = Google(**response.json())
+        message = discord.Message
+            
+        embed = discord.Embed(description = data.title, color = 0x313338)
+        embed.add_field(name = 'Url', value = data.website, inline = True)
+        embed.set_footer(text='grief')
+        session = httpx.AsyncClient()
+        f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+        return await self.paginate(ctx,embed)
                             
                             
     async def do_repost(self, message: discord.Message):
