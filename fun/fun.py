@@ -27,6 +27,7 @@ from .core import Core
 from uwuipy import uwuipy
 import textwrap
 import asyncio
+
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 
 
@@ -258,8 +259,9 @@ class Fun(commands.Cog):
 
             headers = {"content-type": "application/json"}
 
-            async with aiohttp.get(url, headers=headers, params=params) as response:
-                data = await response.json()
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, headers=headers, params=params) as response:
+                    data = await response.json()
 
         except aiohttp.ClientError:
             await ctx.send("No Urban Dictionary entries were found, or there was an error in the process.")
