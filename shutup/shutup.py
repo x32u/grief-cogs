@@ -118,13 +118,8 @@ class Shutup(commands.Cog):
 
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
 
-        if member.id in enabled_list:
-            enabled_list.remove(member.id)
-            with contextlib.suppress(KeyError, ValueError):
-                self.bot._shutup_group.remove(r)
-
-            await self.config.guild(ctx.guild).target_members.set(enabled_list)
-            return await ctx.tick()
+        await self.config.guild(ctx.guild).target_members.set(enabled_list)
+        return await ctx.tick()
 
     @checks.is_owner()
     @shutup.command(name="resetall")
