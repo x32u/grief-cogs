@@ -12,7 +12,7 @@ from aiomisc.periodic import PeriodicCallback
 from grief.core import Config, checks, commands
 from grief.core.bot import Grief
 import webhook.webhook
-from uwuhelpers import ghetto_string, uwuize_string
+from .uwuhelpers import ghetto_string, uwuize_string
 
 
 def delaytask(coro, wait: int = 1):
