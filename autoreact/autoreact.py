@@ -16,8 +16,8 @@ BaseCog = getattr(commands, "Cog", object)
 
 
 class AutoReact(BaseCog):
+    "Automatically react to a user or a channel."
     def __init__(self, bot_instance: bot):
-        "Automatically react to a user or a channel."
         super().__init__()
 
         self.bot = bot_instance
