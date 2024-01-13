@@ -101,8 +101,8 @@ class AutoReact(BaseCog):
         """
         Set a list of emoji to react with
         """
-        config = await self.config.guild(ctx.guild).autoreact()
-        config = await self.config.guild(ctx.guild).channel()
+        config = await self.config.guild(ctx.guild).autoreact.clear()
+        config = await self.config.guild(ctx.guild).channel.clear()
         del config
         await ctx.send("Autoreacts have been cleared.")
 
