@@ -1122,7 +1122,7 @@ class Owner(commands.Cog):
                 await ctx.send(f"Error: {str(e)}")
 
     @commands.command()
-    @commands.is_owner()
+    @commands.has_permissions(manage_guild=True)
     async def serverinvites(self, ctx):
         """Get a list of server invites"""
         async with ctx.typing():
