@@ -829,9 +829,8 @@ class Owner(commands.Cog):
             except discord.Forbidden:
                 await ctx.send("Your DMs appear to be disabled, please enable them and try again.")
 
-    @commands.command()
-    @commands.is_owner()
-    async def istats(self, ctx, invite_link: str):
+    @commands.command(aliases="istats")
+    async def invitestats(self, ctx, invite_link: str):
         """Returns server stats from an invite link"""
         """Keep in mind the bot has to be in the target server to be able to retrieve the information"""
         async with ctx.channel.typing():
@@ -942,7 +941,7 @@ class Owner(commands.Cog):
                     raise ValueError("Invalid invite type")
 
                 # Create an embed
-                embed = Embed(title="Server Stats", color=discord.Color.blue())
+                embed = Embed(title="Server Stats", color=discord.Color.dark_theme())
                 embed.add_field(name="Guild ID", value=guild_id, inline=True)
                 embed.add_field(name="Guild Name", value=guild_name, inline=True)
 
