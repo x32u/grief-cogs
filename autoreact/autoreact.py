@@ -1,11 +1,10 @@
-# stdlib
+
 import random
 import re
 from pprint import pprint as pp
 
 from typing import Optional, List, Union
 
-# third party
 import discord
 from grief.core import commands, bot, checks, Config
 from grief.core.utils import embed

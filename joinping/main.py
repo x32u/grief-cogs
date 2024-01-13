@@ -19,9 +19,6 @@ class JoinPing(commands.Cog):
     """
     Ghost ping users when they join."""
 
-    __version__ = "1.1.1"
-    __author__ = ["crayyy_zee"]
-
     def __init__(self, bot: Grief):
         self.bot = bot
         self.config = Config.get_conf(self, identifier=56789, force_registration=True)
@@ -30,9 +27,7 @@ class JoinPing(commands.Cog):
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
         pre_processed = super().format_help_for_context(ctx)
-        n = "\n" if "\n\n" not in pre_processed else ""
-        text = [
-            f"{pre_processed}{n}"]
+        text = [f"{pre_processed}"]
         return text
 
     async def _build_cache(self):
@@ -209,3 +204,14 @@ class JoinPing(commands.Cog):
         )
 
         await ctx.send(embed=embed)
+
+    @jpset.command()
+    @commands.has_permissions(manage_channels=True)
+    async def clear(self, ctx: commands.Context):
+        """
+        Clear the autoreact list.
+        """
+        config = await self.config.guild(ctx.guild).ping_channels.clear()
+        del config
+        embed = discord.Embed(description=f"> {ctx.author.mention}: Ping channels have been cleared.", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
