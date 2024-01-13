@@ -28,9 +28,9 @@ class Vanity(commands.Cog):
         self.cached = True
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
+        self.bot.wait_until_red_ready()
 
     async def update_cache(self):
-        await self.bot.wait_until_red_ready()
         data = await self.config.all_guilds()
         for x in data:
             vanity = data[x]["vanity"]
