@@ -1,4 +1,0 @@
-from .anisearch import Anisearch
-
-async def setup(bot):
-    await bot.add_cog(Anisearch(bot))
