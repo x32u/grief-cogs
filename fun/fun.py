@@ -258,7 +258,7 @@ class Fun(commands.Cog):
 
             headers = {"content-type": "application/json"}
 
-            async with self.bot.aiohttp.get(url, headers=headers, params=params) as response:
+            async with aiohttp.get(url, headers=headers, params=params) as response:
                 data = await response.json()
 
         except aiohttp.ClientError:
