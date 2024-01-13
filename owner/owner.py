@@ -829,7 +829,7 @@ class Owner(commands.Cog):
             except discord.Forbidden:
                 await ctx.send("Your DMs appear to be disabled, please enable them and try again.")
 
-    @commands.command(aliases="istats")
+    @commands.command(aliases=["istats"])
     async def invitestats(self, ctx, invite_link: str):
         """Returns server stats from an invite link"""
         """Keep in mind the bot has to be in the target server to be able to retrieve the information"""
