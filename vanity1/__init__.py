@@ -21,7 +21,7 @@ class Vanity(commands.Cog):
         self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {
             "role": None,
-            "toggled": False,
+            "toggled": True,
             "channel": None,
             "vanity": None,
         }
