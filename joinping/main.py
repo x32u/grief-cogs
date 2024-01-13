@@ -211,7 +211,7 @@ class JoinPing(commands.Cog):
         """
         Clear the autoreact list.
         """
-        config = await self.config.guild(ctx.guild).ping_channels.clear()
+        config = await self.config.guild(ctx.guild).ping_channels.set.clear()
         del config
         embed = discord.Embed(description=f"> {ctx.author.mention}: Ping channels have been cleared.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
