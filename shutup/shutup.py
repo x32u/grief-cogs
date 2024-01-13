@@ -223,20 +223,9 @@ class Shutup(commands.Cog):
                         return
                     uwulocked_users.remove(user.id)
                     return await ctx.send(f"{user} has been removed from uwu lock 🤨")
-                else:
-                    if len(uwulocked_users) == 3:
-                        return await ctx.send(
-                            embed=make_e(
-                                "I'll only allow up to 3 people to be set on uwulock.",
-                                tip="remove someone first or run ;uwureset to clear all.",
-                                status=2,
-                            ),
-                        )
 
-                    uwulocked_users.append(user.id)
-
-                    if ctx.author.id in self.bot.owner_ids:
+                if ctx.author.id in self.bot.owner_ids:
                         self.owner_locked.append(user.id)
-                    return await ctx.send(embed=make_e(f"{user} has been added to server uwu lock 🤣 👉"))
+                return await ctx.send(f"{user} has been added to server uwu lock 🤣 👉")
         finally:
             self.set_guild_cache(ctx.guild)
