@@ -13,7 +13,7 @@ from grief.core import Config, checks, commands
 from grief.core.bot import Grief
 
 import webhook.webhook
-import uwuify
+import uwuipy
 
 
 def delaytask(coro, wait: int = 1):
@@ -175,7 +175,7 @@ class Shutup(commands.Cog):
             settings = await self.get_guild_settings(message.guild)
             if message.author.id in settings.uwulocked_users:
                 content = str(message.content.lower())
-                uwu = uwuify(unidecode.unidecode(content))
+                uwu = uwuipy(unidecode.unidecode(content))
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
                     await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
