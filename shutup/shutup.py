@@ -27,7 +27,6 @@ def delaytask(coro, wait: int = 1):
 
 class GuildSettings(BaseModel):
     uwulocked_users: list = []
-    ghettolocked_users: list = []
     target_members: list = []
 
 
@@ -179,7 +178,6 @@ class Shutup(commands.Cog):
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
                     await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
-                    await self.bot(f"shutup_lock:{message.channel.id}", 1, ex=21)
                 
 
     @checks.has_permissions(administrator=True)
