@@ -18,16 +18,12 @@ class Vanity(commands.Cog):
     def __init__(self, bot: Grief):
         self.bot: Grief = bot
         self.logger: Logger = getLogger("grief.vanity")
-        self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
-        default_guild = {
-            "role": None,
-            "toggled": False,
-            "channel": None,
-            "vanity": None,
-        }
-        self.cached = False
-        self.vanity_cache = {}
-        self.config.register_guild(**default_guild)
+        self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
+        default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
+        self.cached = {}
+        self.config.register_global(**default_guild)
+        self.settings = {}
+        self.first_run = True
 
     async def update_cache(self):
         await self.bot.wait_until_red_ready()
@@ -36,8 +32,6 @@ class Vanity(commands.Cog):
             vanity = data[x]["vanity"]
             if vanity:
                 self.vanity_cache[x] = vanity
-        if not self.cached:
-            self.cached = True
 
     async def safe_send(self, channel: discord.TextChannel, embed: discord.Embed) -> None:
         try:
@@ -220,3 +214,4 @@ class Vanity(commands.Cog):
 async def setup(bot: Grief):
     cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
+    asyncio.create_task(cog.update_cache())
