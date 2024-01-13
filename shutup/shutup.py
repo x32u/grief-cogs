@@ -106,7 +106,7 @@ class Shutup(commands.Cog):
 
     @commands.guild_only()
     @checks.has_permissions(administrator=True)
-    @commands.group(invoke_without_command=True, require_var_positional=True, hidden=True)
+    @commands.group(invoke_without_command=True, require_var_positional=True)
     async def shutup(self, ctx: commands.Context, member: discord.Member):
         "A fun alternative to muting."
         r = (ctx.guild.id, member.id)
@@ -174,7 +174,7 @@ class Shutup(commands.Cog):
             settings = await self.get_guild_settings(message.guild)
             if message.author.id in settings.uwulocked_users:
                 content = str(message.content.lower())
-                uwu = uwuipy(unidecode.unidecode(content))
+                uwu = uwu.uwuify(message)
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
                     await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
