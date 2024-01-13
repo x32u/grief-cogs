@@ -220,4 +220,3 @@ class Vanity(commands.Cog):
 async def setup(bot: Grief):
     cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
-    await cog.update_cache()
