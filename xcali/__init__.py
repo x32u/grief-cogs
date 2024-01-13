@@ -215,7 +215,7 @@ class XCali(commands.Cog):
                                     embeds.append(e)
                                 return await self.paginate(ctx,embeds)
                             
-    @commands.command(aliases=["tt"])
+    @commands.command()
     async def google(self, ctx, str: str):
         "Repost a TikTok video in chat."
         session = httpx.AsyncClient()
