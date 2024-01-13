@@ -29,7 +29,7 @@ class Vanity(commands.Cog):
         self.vanity_cache = {}
         self.config.register_guild(**default_guild)
 
-    async def update_cache(self):
+    async def initialize(self):
         await self.bot.wait_until_red_ready()
         data = await self.config.all_guilds()
         for x in data:
@@ -220,4 +220,5 @@ class Vanity(commands.Cog):
 async def setup(bot: Grief):
     cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
-    await cog.update_cache()
+    await cog.initialize()
+    asyncio.create_task(cog.initialize())
