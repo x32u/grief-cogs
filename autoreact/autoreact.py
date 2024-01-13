@@ -79,14 +79,18 @@ class AutoReact(BaseCog):
         """
         async with self.config.guild(ctx.guild).autoreact() as autoreactdict:
             userid = str(user.id)
-            converted = []
-            for e in emojis:
+            if not len(emojis) and userid in autoreactdict:
+                del autoreactdict[userid]
+                await ctx.send("Success, reactions removed for user.")
+            else:
+                converted = []
+                for e in emojis:
                     if isinstance(e, discord.Emoji):
                         converted.append(str(e.id))
                     else:
                         converted.append(e)
-            autoreactdict[userid] = converted
-            await ctx.send("Success, emoji set.")
+                autoreactdict[userid] = converted
+                await ctx.send("Success, emoji set.")
 
     @autoreact.command()
     @commands.has_permissions(manage_channels=True)
@@ -141,7 +145,6 @@ class AutoReact(BaseCog):
                 await ctx.send(formatted)
         else:
             await ctx.send("No autoreacts have been set.")
-            
     async def autoreact_handler(self, message: discord.message):
         # don't proc on DMs
         if message.guild is None:
