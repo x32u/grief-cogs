@@ -204,21 +204,3 @@ class JoinPing(commands.Cog):
         )
 
         await ctx.send(embed=embed)
-
-    @jpset.command()
-    @commands.has_permissions(manage_channels=True)
-    async def clear(self, ctx: commands.Context):
-        """
-        Clear the autoreact list.
-        """
-        channels = discord.TextChannel
-        cached_chans = self.cache.setdefault(ctx.guild.id, guild_defaults).get("ping_channels")
-        channels = {x.id for x in channels}
-        for i in channels:
-                cached_chans.remove()
-                
-        await self.config.guild(ctx.guild).ping_channels.set(cached_chans)
-        await self._build_cache()
-        del config
-        embed = discord.Embed(description=f"> {ctx.author.mention}: Channels to ping in have been cleared.", color=0x313338)
-        return await ctx.reply(embed=embed, mention_author=False)
