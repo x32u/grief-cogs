@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 from contextlib import suppress
-
+from pydantic import BaseModel
 import discord
 import msgpack
 import orjson
