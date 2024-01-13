@@ -105,11 +105,13 @@ class AutoReact(BaseCog):
             userid = str(user.id)
             if len(msg) == 0 and userid in automsgdict:
                 del automsgdict[userid]
-                await ctx.send("Success, messages removed for user.")
+                embed = discord.Embed(description=f"> {ctx.author.mention}: Messages removed for this user.", color=0x313338)
+                await ctx.reply(embed=embed, mention_author=False)
             else:
                 msg = " ".join(msg)
                 automsgdict[userid] = msg
-                await ctx.send("Success, message set.")
+                embed = discord.Embed(description=f"> {ctx.author.mention}: Message has been set.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
 
     @autoreact.command()
     @commands.has_permissions(manage_channels=True)
