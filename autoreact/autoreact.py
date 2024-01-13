@@ -60,7 +60,8 @@ class AutoReact(BaseCog):
         async with self.config.guild(ctx.guild).channel() as channeldict:
             if not len(emojis) and channelid in channeldict:
                 del channeldict[channelid]
-                await ctx.send("Success, reactions removed for user.")
+                embed = discord.Embed(description=f"> {ctx.author.mention}: Reactions removed for this user created.", color=0x313338)
+                await ctx.reply(embed=embed, mention_author=False)
             else:
                 converted = []
                 for e in emojis:
@@ -69,8 +70,9 @@ class AutoReact(BaseCog):
                     else:
                         converted.append(e)
                 channeldict[channelid] = converted
-                await ctx.send("Success, emoji set.")
-
+                embed = discord.Embed(description=f"> {ctx.author.mention}: Autoreact has been created.", color=0x313338)
+                return ctx.reply(embed=embed, mention_author=False)
+    
     @autoreact.command()
     @commands.has_permissions(manage_channels=True)
     async def set(self, ctx: commands.Context, user: discord.Member, *emojis: Union[str, discord.Emoji],):
