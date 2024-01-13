@@ -78,7 +78,7 @@ class Shutup(commands.Cog):
 
     @commands.guild_only()
     @checks.has_permissions(administrator=True)
-    @commands.command(hidden=True)
+    @commands.command()
     async def stfubitch(self, ctx: commands.Context):
         """STFU, bitch.
 
@@ -92,12 +92,12 @@ class Shutup(commands.Cog):
         return await ctx.tick()
 
     @commands.guild_only()
-    @commands.command(hidden=True)
+    @commands.command()
     @checks.has_permissions(administrator=True)
     async def unstfubitch(self, ctx: commands.Context):
         "(un)STFU, bitch."
         if not ctx.author.voice:
-            return await ctx.send(embed=make_e("You have to be in a voice channel to run this command.", status=3))
+            return await ctx.send("You have to be in a voice channel to run this command.")
         async with ctx.typing():
             for m in ctx.author.voice.channel.members:
                 m: discord.Member
@@ -150,7 +150,7 @@ class Shutup(commands.Cog):
         """A list of all memebers currently on auto deletion."""
         stfu_list = await self.config.guild(ctx.guild).target_members()
         if not stfu_list:
-            return await ctx.reply(embed=make_e("No members are currently targetted", status="info"))
+            return await ctx.reply("No members are currently targetted")
         description = "".join(f"{ctx.guild.get_member(int(i)).mention} \n" for i in stfu_list)
         embed = discord.Embed(title="Members currently targeted by shutup", description=description)
         return await ctx.reply(embed=embed, mention_author=False)
