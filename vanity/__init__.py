@@ -23,7 +23,7 @@ class Vanity(commands.Cog):
             "role": None,
             "toggled": True,
             "channel": None,
-            "vanity": True,
+            "vanity": None,
         }
         self.cached = False
         self.vanity_cache = {}
