@@ -28,7 +28,6 @@ class AutoReact(BaseCog):
             "channel": {},
         }
         self.config.register_guild(**default_guild)
-
         self.bot.add_listener(self.autoreact_handler, "on_message")
         self.bot.add_listener(self.channel_handler, "on_message")
 
@@ -60,7 +59,7 @@ class AutoReact(BaseCog):
         async with self.config.guild(ctx.guild).channel() as channeldict:
             if not len(emojis) and channelid in channeldict:
                 del channeldict[channelid]
-                embed = discord.Embed(description=f"> {ctx.author.mention}: Reactions removed for this user created.", color=0x313338)
+                embed = discord.Embed(description=f"> {ctx.author.mention}: Reactions for this channel have been removed.", color=0x313338)
                 await ctx.reply(embed=embed, mention_author=False)
             else:
                 converted = []
@@ -70,7 +69,7 @@ class AutoReact(BaseCog):
                     else:
                         converted.append(e)
                 channeldict[channelid] = converted
-                embed = discord.Embed(description=f"> {ctx.author.mention}: Autoreact has been created.", color=0x313338)
+                embed = discord.Embed(description=f"> {ctx.author.mention}: Reactions for this channel has been created for this channel.", color=0x313338)
                 return ctx.reply(embed=embed, mention_author=False)
     
     @autoreact.command()
@@ -83,7 +82,8 @@ class AutoReact(BaseCog):
             userid = str(user.id)
             if not len(emojis) and userid in autoreactdict:
                 del autoreactdict[userid]
-                await ctx.send("Success, reactions removed for user.")
+                embed = discord.Embed(description=f"> {ctx.author.mention}: Reactions removed for this user.", color=0x313338)
+                await ctx.reply(embed=embed, mention_author=False)
             else:
                 converted = []
                 for e in emojis:
@@ -92,7 +92,8 @@ class AutoReact(BaseCog):
                     else:
                         converted.append(e)
                 autoreactdict[userid] = converted
-                await ctx.send("Success, emoji set.")
+                embed = discord.Embed(description=f"> {ctx.author.mention}: Reactions have been set.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
 
     @autoreact.command()
     @commands.has_permissions(manage_channels=True)
