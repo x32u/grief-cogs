@@ -126,12 +126,6 @@ class Shutup(commands.Cog):
             await self.config.guild(ctx.guild).target_members.set(enabled_list)
             return await ctx.tick()
 
-        enabled_list.append(member.id)
-        self.bot._shutup_group.add(r)
-        await self.config.guild(ctx.guild).target_members.set(enabled_list)
-        emote = self.bot.get_emoji(1015327039848448013)
-        return await ctx.message.add_reaction(emote)
-
     @checks.is_owner()
     @shutup.command(name="resetall")
     async def shutup_reset(self, ctx) -> None:
