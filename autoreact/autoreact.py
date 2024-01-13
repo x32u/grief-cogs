@@ -99,12 +99,13 @@ class AutoReact(BaseCog):
     @commands.has_permissions(manage_channels=True)
     async def clear(self, ctx: commands.Context):
         """
-        Set a list of emoji to react with
+        Clear the autoreact list.
         """
         config = await self.config.guild(ctx.guild).autoreact.clear()
         config = await self.config.guild(ctx.guild).channel.clear()
         del config
-        await ctx.send("Autoreacts have been cleared.")
+        embed = discord.Embed(description=f"> {ctx.author.mention}: Autoreacts have been cleared.", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
 
     @autoreact.command()
     @commands.has_permissions(manage_channels=True)
