@@ -103,12 +103,7 @@ class AutoReact(BaseCog):
         """
         emojis = discord.Emoji
         user = discord.Member
-        async with self.config.guild(ctx.guild).autoreact() as autoreactdict:
-            userid = str(user.id)
-            if len(emojis) and userid in autoreactdict:
-                del autoreactdict
-            if len(emojis) in channeldict:
-                del channeldict
+        del self.config.guild(ctx.guild)
         await ctx.send("Autoreacts have been cleared.")
 
     @autoreact.command()
