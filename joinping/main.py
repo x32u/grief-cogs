@@ -211,6 +211,7 @@ class JoinPing(commands.Cog):
         """
         Clear the autoreact list.
         """
+        channels = discord.TextChannel
         cached_chans = self.cache.setdefault(ctx.guild.id, guild_defaults).get("ping_channels")
         channels = {x.id for x in channels}
         not_present = []
