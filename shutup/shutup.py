@@ -11,9 +11,8 @@ import unidecode
 from aiomisc.periodic import PeriodicCallback
 from grief.core import Config, checks, commands
 from grief.core.bot import Grief
-
 import webhook.webhook
-import uwuipy
+from uwuhelpers import ghetto_string, uwuize_string
 
 
 def delaytask(coro, wait: int = 1):
@@ -27,6 +26,7 @@ def delaytask(coro, wait: int = 1):
 
 class GuildSettings(BaseModel):
     uwulocked_users: list = []
+    ghettolocked_users: list = []
     target_members: list = []
 
 
@@ -40,6 +40,7 @@ class Shutup(commands.Cog):
         self.webhook: webhook.webhook.Webhook
         self.no_emoji: discord.Emoji
         self.uwu_allowed_users = list(self.bot.owner_ids)
+        self.bot.ioloop.spawn_callback(self.init_cog)
         self.init_cb = PeriodicCallback(self.init_cog)
         self.init_cb.start(30)
         self.guild_settings_cache: dict[int, GuildSettings] = {}
@@ -70,8 +71,11 @@ class Shutup(commands.Cog):
                     extras = [m.id for m in role.members]
                     users.extend(extras)
                 self.uwu_allowed_users = users
+                await self.guild_settings_cache("uwu_allowed_users_", msgpack.packb(users))
 
         self.webhook = self.bot.get_cog("Webhook")
+        self.roleplay = self.bot.get_cog("Roleplay")
+        self.no_emoji = self.bot.get_emoji(1061996704372633635)
 
     @commands.guild_only()
     @checks.has_permissions(administrator=True)
@@ -89,7 +93,7 @@ class Shutup(commands.Cog):
         return await ctx.tick()
 
     @commands.guild_only()
-    @commands.command()
+    @commands.command(hidden=True)
     @checks.has_permissions(administrator=True)
     async def unstfubitch(self, ctx: commands.Context):
         "(un)STFU, bitch."
@@ -106,7 +110,7 @@ class Shutup(commands.Cog):
 
     @commands.guild_only()
     @checks.has_permissions(administrator=True)
-    @commands.group(invoke_without_command=True, require_var_positional=True)
+    @commands.group(invoke_without_command=True, require_var_positional=True, hidden=True)
     async def shutup(self, ctx: commands.Context, member: discord.Member):
         "A fun alternative to muting."
         r = (ctx.guild.id, member.id)
@@ -118,8 +122,19 @@ class Shutup(commands.Cog):
 
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
 
+        if member.id in enabled_list:
+            enabled_list.remove(member.id)
+            with contextlib.suppress(KeyError, ValueError):
+                self.bot._shutup_group.remove(r)
+
+            await self.config.guild(ctx.guild).target_members.set(enabled_list)
+            return await ctx.tick()
+
+        enabled_list.append(member.id)
+        self.bot._shutup_group.add(r)
         await self.config.guild(ctx.guild).target_members.set(enabled_list)
-        return await ctx.tick()
+        emote = self.bot.get_emoji(1015327039848448013)
+        return await ctx.message.add_reaction(emote)
 
     @checks.is_owner()
     @shutup.command(name="resetall")
@@ -156,18 +171,25 @@ class Shutup(commands.Cog):
         if not message.guild:
             return
         with suppress(discord.HTTPException):
-            if hasattr(message, "embeds") and message.embeds and await self.bot(f"shutup_lock:{message.channel.id}"):
+            if hasattr(message, "embeds") and message.embeds and await self.bot.redis.get(f"shutup_lock:{message.channel.id}"):
                 payload = orjson.dumps(message.embeds[0].to_dict()).decode("UTF-8").lower()
                 if "snipe" in payload or "deleted" in payload or "delete" in payload:
                     return await message.delete()
             settings = await self.get_guild_settings(message.guild)
             if message.author.id in settings.uwulocked_users:
                 content = str(message.content.lower())
-                uwu = uwu.uwuify(message)
+                uwu = uwuize_string(unidecode.unidecode(content))
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
                     await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
-                
+                    await self.bot.redis.set(f"shutup_lock:{message.channel.id}", 1, ex=21)
+
+            elif message.author.id in settings.ghettolocked_users:
+                text = " ".join(str(ghetto_string(message.content)).split())
+                period = " ".join(text.capitalize() for text in text.split(" "))
+                ctx = await self.bot.get_context(message)
+                await self.webhook.sudo(ctx=ctx, member=message.author, message=f"{period} 💅🏿")
+                await self.bot.redis.set(f"shutup_lock:{message.channel.id}", 1, ex=40)
 
     @checks.has_permissions(administrator=True)
     @commands.command()
@@ -190,6 +212,10 @@ class Shutup(commands.Cog):
     @checks.has_permissions(administrator=True)
     @commands.command()
     async def uwulock(self, ctx: commands.Context, user: discord.User):
+        if user.id in self.bot.owner_ids:
+            return
+        if ctx.guild.id == 836671067853422662 and ctx.author.id not in self.bot.owner_ids:
+            return await ctx.send("Disabled")
         if ctx.author.id == user.id:
             return await ctx.send("You cant uwulock, or un-uwulock yourself 🤡")
 
@@ -201,10 +227,55 @@ class Shutup(commands.Cog):
                         return
                     uwulocked_users.remove(user.id)
                     return await ctx.send(f"{user} has been removed from uwu lock 🤨")
-                uwulocked_users.append(user.id)
+                else:
+                    if len(uwulocked_users) == 3:
+                        return await ctx.send(
+                                "I'll only allow up to 3 people to be set on uwulock.",
+                                tip="remove someone first or run ;uwureset to clear all.",
+                                status=2,
+                            ),
 
-                if ctx.author.id in self.bot.owner_ids:
+                    uwulocked_users.append(user.id)
+
+                    if ctx.author.id in self.bot.owner_ids:
                         self.owner_locked.append(user.id)
-                return await ctx.send(f"{user} has been added to server uwu lock 🤣 👉")
+                    return await ctx.send(f"{user} has been added to server uwu lock 🤣 👉")
+        finally:
+            self.set_guild_cache(ctx.guild)
+
+    @checks.has_permissions(administrator=True)
+    @commands.command()
+    async def ghettoreset(self, ctx: commands.Context):
+        await self.config.guild(ctx.guild).ghettolocked_users.set([])
+        self.set_guild_cache(ctx.guild)
+        return await ctx.tick()
+
+    @checks.has_permissions(administrator=True)
+    @commands.command()
+    async def ghettolock(self, ctx: commands.Context, user: discord.User):
+        if ctx.author.id not in self.bot.owner_ids and user.id in self.bot.owner_ids:
+            return
+        if ctx.author.id == user.id:
+            return await ctx.send("You cant ghetto lock, or un-ghetto lock yourself 🤡")
+
+        try:
+            async with self.config.guild(ctx.guild).ghettolocked_users() as ghettolocked_users:
+                ghettolocked_users: list[int]
+                if user.id in ghettolocked_users:
+                    ghettolocked_users.remove(user.id)
+                    return await ctx.send(f"{user} has been removed from ghetto lock 💅🏿")
+                else:
+                    if len(ghettolocked_users) == 3:
+                        return await ctx.send(
+                                "I'll only allow up to 3 people to be set on ghetto lock.",
+                                tip="remove someone first or run ;uwureset to clear all.",
+                                status=2,
+                            ),
+                        
+
+                    ghettolocked_users.append(user.id)
+                    if ctx.author.id in self.bot.owner_ids:
+                        self.owner_locked.append(user.id)
+                    return await ctx.send(f"{user} has been added to server ghetto lock 🤣 👉")
         finally:
             self.set_guild_cache(ctx.guild)
