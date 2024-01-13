@@ -1,5 +1,5 @@
-from redbot.core.commands import Context
-from redbot.core.utils.views import SimpleMenu
+from grief.core.commands import Context
+from grief.core.utils.views import SimpleMenu
 import discord
 
 class ExtendedSimpleMenu(SimpleMenu):
