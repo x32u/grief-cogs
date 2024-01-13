@@ -74,7 +74,6 @@ class Shutup(commands.Cog):
                 await self.guild_settings_cache("uwu_allowed_users_", msgpack.packb(users))
 
         self.webhook = self.bot.get_cog("Webhook")
-        self.roleplay = self.bot.get_cog("Roleplay")
         self.no_emoji = self.bot.get_emoji(1061996704372633635)
 
     @commands.guild_only()
@@ -171,7 +170,7 @@ class Shutup(commands.Cog):
         if not message.guild:
             return
         with suppress(discord.HTTPException):
-            if hasattr(message, "embeds") and message.embeds and await self.bot.redis.get(f"shutup_lock:{message.channel.id}"):
+            if hasattr(message, "embeds") and message.embeds:
                 payload = orjson.dumps(message.embeds[0].to_dict()).decode("UTF-8").lower()
                 if "snipe" in payload or "deleted" in payload or "delete" in payload:
                     return await message.delete()
@@ -182,14 +181,12 @@ class Shutup(commands.Cog):
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
                     await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
-                    await self.bot.redis.set(f"shutup_lock:{message.channel.id}", 1, ex=21)
 
             elif message.author.id in settings.ghettolocked_users:
                 text = " ".join(str(ghetto_string(message.content)).split())
                 period = " ".join(text.capitalize() for text in text.split(" "))
                 ctx = await self.bot.get_context(message)
                 await self.webhook.sudo(ctx=ctx, member=message.author, message=f"{period} 💅🏿")
-                await self.bot.redis.set(f"shutup_lock:{message.channel.id}", 1, ex=40)
 
     @checks.has_permissions(administrator=True)
     @commands.command()
