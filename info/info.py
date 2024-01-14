@@ -1494,7 +1494,7 @@ class Info(commands.Cog):
                 em = discord.Embed(description=p, color=ctx.author.color)
                 await ctx.send(embed=em)
     
-    @commands.command(aliases=["sp"])
+    @commands.command()
     @commands.cooldown(1, 3, commands.BucketType.user)
     async def lol(self, ctx, user: discord.Member = None):
         "Sends what you or another user is listening to on Spotify."
