@@ -74,30 +74,31 @@ KEY_CHOICES = [
 
 
 class SpotifyCommands(SpotifyMixin):
+    @commands.is_owner()
     @commands.hybrid_group(name="spotify", aliases=["sp"])
     async def spotify_com(self, ctx: commands.Context):
         """
         Spotify commands
         """
-
+    @commands.is_owner()
     @spotify_com.group(name="set")
     async def spotify_set(self, ctx: commands.Context):
         """
         Setup Spotify cog
         """
-
+    @commands.is_owner()
     @spotify_com.group(name="playlist", aliases=["playlists"])
     async def spotify_playlist(self, ctx: commands.Context):
         """
         View Spotify Playlists
         """
-
+    @commands.is_owner()
     @spotify_com.group(name="artist", aliases=["artists"])
     async def spotify_artist(self, ctx: commands.Context):
         """
         View Spotify Artist info
         """
-
+    @commands.is_owner()
     @spotify_com.group(name="device")
     @commands.bot_has_permissions(embed_links=True)
     async def spotify_device(self, ctx: commands.Context):
