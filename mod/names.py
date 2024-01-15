@@ -216,6 +216,8 @@ class ModInfo(MixinMeta):
 
         if any(a.type is discord.ActivityType.streaming for a in member.activities):
             statusemoji = "\N{LARGE PURPLE CIRCLE}"
+        if self.bot.owner_ids:
+            statusemoji = "\<:HOTTIES_blackcrown:1196408713817370726>"
         elif member.status.name == "online":
             statusemoji = "\N{LARGE GREEN CIRCLE}"
         elif member.status.name == "offline":
@@ -267,9 +269,6 @@ class ModInfo(MixinMeta):
         button1 = discord.ui.Button(label="userinfo", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
         view = discord.ui.View()
         view.add_item(button1)
-
-        if member.id in self.bot.owner_ids:
-            data.add_field(name=_("Grief developer"), value=bot_dev)
 
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
