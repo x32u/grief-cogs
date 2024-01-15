@@ -225,7 +225,7 @@ class ModInfo(MixinMeta):
         activity = _("Chilling in {} status").format(member.status)
         status_string = self.get_status_string(member)
         if self.bot.owner_ids:
-            _("Developer")
+            activity = _("Developer").format(member.status)
 
         if roles:
             role_str = ", ".join([x.mention for x in roles])
