@@ -200,8 +200,6 @@ class ModInfo(MixinMeta):
             + 1
         )
 
-        bot_dev = ("")
-
         created_on = (
             f"{discord.utils.format_dt(member.created_at)}\n"
             f"{discord.utils.format_dt(member.created_at, 'R')}"
@@ -226,8 +224,10 @@ class ModInfo(MixinMeta):
             statusemoji = "\N{LARGE ORANGE CIRCLE}"
         activity = _("Chilling in {} status").format(member.status)
         status_string = self.get_status_string(member)
+        bot_dev = _("Developer")
+        
         if self.bot.owner_ids:
-            status_string= "Developer"
+            bot_dev
 
         if roles:
             role_str = ", ".join([x.mention for x in roles])
