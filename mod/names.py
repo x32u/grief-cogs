@@ -217,7 +217,7 @@ class ModInfo(MixinMeta):
         if any(a.type is discord.ActivityType.streaming for a in member.activities):
             statusemoji = "\N{LARGE PURPLE CIRCLE}"
         if self.bot.owner_ids:
-            statusemoji = "\<:HOTTIES_blackcrown:1196408713817370726>"
+            statusemoji = "<:HOTTIES_blackcrown:1196408713817370726>"
         elif member.status.name == "online":
             statusemoji = "\N{LARGE GREEN CIRCLE}"
         elif member.status.name == "offline":
