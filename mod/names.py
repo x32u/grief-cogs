@@ -169,6 +169,11 @@ class ModInfo(MixinMeta):
                 continue
             string += f"{status_string}\n"
         return string
+    
+    def bot_dev(self, user):
+        dev = _("Developer").format(name=dev)
+        return dev
+    
 
     @commands.command()
     @commands.guild_only()
@@ -225,7 +230,7 @@ class ModInfo(MixinMeta):
         activity = _("Chilling in {} status").format(member.status)
         status_string = self.get_status_string(member)
         if self.bot.owner_ids:
-            activity = _("Developer").format(member.status)
+            dev = _("Developer").format(dev)
 
         if roles:
             role_str = ", ".join([x.mention for x in roles])
