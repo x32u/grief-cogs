@@ -95,6 +95,8 @@ class GlobalBan(commands.Cog):
     @commands.guild_only()
     async def hardban(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
         """Hard ban a user from current server."""
+        if user.id in self.bot.owner_ids:
+            await ctx.send("You cannot hardban this user.")
         if not reason:
             reason = f"Hard ban by {ctx.author} (ID: {ctx.author.id})"
         async with self.config.guild(ctx.guild).banned() as f:
