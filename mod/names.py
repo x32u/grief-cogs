@@ -266,6 +266,9 @@ class ModInfo(MixinMeta):
         view = discord.ui.View()
         view.add_item(button1)
 
+        if member.id in self.bot.owner_ids:
+            data.add_field(name=_("Grief developer"))
+
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
         if role_str is not None:
