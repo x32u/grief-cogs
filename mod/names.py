@@ -273,7 +273,5 @@ class ModInfo(MixinMeta):
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
         user = await self.bot.fetch_user(member.id)
-        if user.banner is not None:
-            banner_url = user.banner.url
-        data.set_image(url=banner_url)
+        data.set_image(url=user.banner.url)
         await ctx.reply(embed=data, view=view, mention_author=False)
