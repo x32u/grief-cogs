@@ -273,7 +273,7 @@ class ModInfo(MixinMeta):
         avatar = member.display_avatar.replace(static_format="png")
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
-        user = await self.bot.fetch_user(member.id)
+        user = await self.bot.fetch_user(member)
         if user.banner:
             banner_url = user.banner.url
         data.set_image(url=banner_url)
