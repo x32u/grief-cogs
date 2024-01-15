@@ -266,7 +266,7 @@ class ModInfo(MixinMeta):
                 )
         if voice_state and voice_state.channel:
             data.add_field(name=_("Current voice channel"), value="{0.mention} ID: {0.id}".format(voice_state.channel), inline=False,)
-        data.set_footer(text=_("Member #{} | User ID: {}").format(member_number, member.id))
+        data.set_footer(text=_("Join Position: {}").format(member_number))
         name = str(member)
         name = " ~ ".join((name, member.nick)) if member.nick else name
         name = filter_invites(name)
