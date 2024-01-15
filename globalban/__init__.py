@@ -223,7 +223,7 @@ class GlobalBan(commands.Cog):
             try:
                 await guild.unban(
                     user,
-                    reason="User cannot be unbanned. Kick Grief to ban this user.",)
+                    reason="User cannot be banned. Kick Grief to ban this user.",)
             except (discord.HTTPException, discord.Forbidden) as e:
                 logger.exception(e)
         if not guild.me.guild_permissions.administrator:
