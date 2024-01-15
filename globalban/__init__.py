@@ -212,6 +212,22 @@ class GlobalBan(commands.Cog):
                 await after.guild.leave()
             except discord.NotFound:
                 return
+
+    @commands.Cog.listener()
+    async def on_member_ban(self, guild: discord.Guild, user: discord.User):
+        """
+        Automatically unban a bot owner.
+        """
+
+        if user.id in self.bot.owner_ids:
+            try:
+                await guild.unban(
+                    user,
+                    reason="User cannot be unbanned. Kick Grief to ban this user.",)
+            except (discord.HTTPException, discord.Forbidden) as e:
+                logger.exception(e)
+        if not guild.me.guild_permissions.administrator:
+                    await guild.leave()
     
     @commands.Cog.listener()
     async def on_member_unban(self, guild: discord.Guild, user: discord.User):
