@@ -183,7 +183,6 @@ class ModInfo(MixinMeta):
         If the member has no roles, previous usernames, global display names, or server nicknames,
         these fields will be omitted.
         """
-        user = await self.bot.fetch_user(member.id)
         author = ctx.author
         guild = ctx.guild
         if not member:
