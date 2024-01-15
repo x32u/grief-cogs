@@ -170,7 +170,7 @@ class ModInfo(MixinMeta):
             string += f"{status_string}\n"
         return string
     
-    def bot_dev(self, user):
+    def bot_dev(self):
         dev = _("Developer").format(name=dev)
         return dev
     
@@ -187,6 +187,7 @@ class ModInfo(MixinMeta):
         If the member has no roles, previous usernames, global display names, or server nicknames,
         these fields will be omitted.
         """
+        dev = _("Developer").format(name=dev)
         author = ctx.author
         guild = ctx.guild
 
@@ -229,8 +230,9 @@ class ModInfo(MixinMeta):
             statusemoji = "\N{LARGE ORANGE CIRCLE}"
         activity = _("Chilling in {} status").format(member.status)
         status_string = self.get_status_string(member)
+        
         if self.bot.owner_ids:
-            dev = _("Developer").format(dev)
+            _("Developer").format(dev)
 
         if roles:
             role_str = ", ".join([x.mention for x in roles])
