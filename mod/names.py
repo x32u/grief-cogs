@@ -224,7 +224,7 @@ class ModInfo(MixinMeta):
             statusemoji = "\N{LARGE ORANGE CIRCLE}"
         activity = _("Chilling in {} status").format(member.status)
         status_string = self.get_status_string(member)
-        bot_dev = _("Developer")
+        bot_dev = _("Developer").format(member.status)
         
         if self.bot.owner_ids:
             bot_dev
