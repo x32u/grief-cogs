@@ -170,10 +170,6 @@ class ModInfo(MixinMeta):
             string += f"{status_string}\n"
         return string
     
-    def bot_dev(self):
-        dev = _("Developer").format(name=dev)
-        return dev
-    
 
     @commands.command()
     @commands.guild_only()
@@ -187,37 +183,21 @@ class ModInfo(MixinMeta):
         If the member has no roles, previous usernames, global display names, or server nicknames,
         these fields will be omitted.
         """
-        dev = _("Developer").format(name=dev)
         author = ctx.author
         guild = ctx.guild
-
         if not member:
             member = author
-
         roles = member.roles[-1:0:-1]
         # usernames, display_names, nicks = await self.get_names(member)
-
         joined_at = member.joined_at
         voice_state = member.voice
         member_number = (
-            sorted(guild.members, key=lambda m: m.joined_at or ctx.message.created_at).index(
-                member
-            )
-            + 1
-        )
-
-        created_on = (
-            f"{discord.utils.format_dt(member.created_at)}\n"
-            f"{discord.utils.format_dt(member.created_at, 'R')}"
-        )
+            sorted(guild.members, key=lambda m: m.joined_at or ctx.message.created_at).index(member)+ 1)
+        created_on = (f"{discord.utils.format_dt(member.created_at)}\n" f"{discord.utils.format_dt(member.created_at, 'R')}")
         if joined_at is not None:
-            joined_on = (
-                f"{discord.utils.format_dt(joined_at)}\n"
-                f"{discord.utils.format_dt(joined_at, 'R')}"
-            )
+            joined_on = (f"{discord.utils.format_dt(joined_at)}\n" f"{discord.utils.format_dt(joined_at, 'R')}")
         else:
             joined_on = _("Unknown")
-
         if any(a.type is discord.ActivityType.streaming for a in member.activities):
             statusemoji = "\N{LARGE PURPLE CIRCLE}"
         elif member.status.name == "online":
@@ -230,10 +210,6 @@ class ModInfo(MixinMeta):
             statusemoji = "\N{LARGE ORANGE CIRCLE}"
         activity = _("Chilling in {} status").format(member.status)
         status_string = self.get_status_string(member)
-        
-        if self.bot.owner_ids:
-            _("Developer").format(dev)
-
         if roles:
             role_str = ", ".join([x.mention for x in roles])
             # 400 BAD REQUEST (error code: 50035): Invalid Form Body
@@ -251,7 +227,6 @@ class ModInfo(MixinMeta):
 
                 role_chunks = []
                 remaining_roles = 0
-
                 for r in roles:
                     chunk = f"{r.mention}, "
                     chunk_size = len(chunk)
@@ -265,16 +240,12 @@ class ModInfo(MixinMeta):
                 role_chunks.append(continuation_string.format(numeric_number=remaining_roles))
 
                 role_str = "".join(role_chunks)
-
         else:
             role_str = None
-
         data = discord.Embed(description=status_string or activity, colour=0x313338)
-
         button1 = discord.ui.Button(label="userinfo", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
         view = discord.ui.View()
         view.add_item(button1)
-
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
         if role_str is not None:
@@ -299,13 +270,10 @@ class ModInfo(MixinMeta):
                 inline=False,
             )
         data.set_footer(text=_("Member #{} | User ID: {}").format(member_number, member.id))
-
         name = str(member)
         name = " ~ ".join((name, member.nick)) if member.nick else name
         name = filter_invites(name)
-
         avatar = member.display_avatar.replace(static_format="png")
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
-
         await ctx.reply(embed=data, view=view, mention_author=False)
