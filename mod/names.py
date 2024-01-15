@@ -200,6 +200,8 @@ class ModInfo(MixinMeta):
             + 1
         )
 
+        bot_dev = ("")
+
         created_on = (
             f"{discord.utils.format_dt(member.created_at)}\n"
             f"{discord.utils.format_dt(member.created_at, 'R')}"
@@ -267,7 +269,7 @@ class ModInfo(MixinMeta):
         view.add_item(button1)
 
         if member.id in self.bot.owner_ids:
-            data.add_field(name=_("Grief developer"))
+            data.add_field(name=_("Grief developer"), value=bot_dev)
 
         data.add_field(name=_("Joined Discord on"), value=created_on)
         data.add_field(name=_("Joined this server on"), value=joined_on)
