@@ -183,6 +183,7 @@ class ModInfo(MixinMeta):
         If the member has no roles, previous usernames, global display names, or server nicknames,
         these fields will be omitted.
         """
+        user = await self.bot.fetch_user(member.id)
         author = ctx.author
         guild = ctx.guild
         if not member:
@@ -264,11 +265,7 @@ class ModInfo(MixinMeta):
                     #inline=False,
                 )
         if voice_state and voice_state.channel:
-            data.add_field(
-                name=_("Current voice channel"),
-                value="{0.mention} ID: {0.id}".format(voice_state.channel),
-                inline=False,
-            )
+            data.add_field(name=_("Current voice channel"), value="{0.mention} ID: {0.id}".format(voice_state.channel), inline=False,)
         data.set_footer(text=_("Member #{} | User ID: {}").format(member_number, member.id))
         name = str(member)
         name = " ~ ".join((name, member.nick)) if member.nick else name
@@ -276,4 +273,6 @@ class ModInfo(MixinMeta):
         avatar = member.display_avatar.replace(static_format="png")
         data.set_author(name=f"{statusemoji} {name}", url=avatar)
         data.set_thumbnail(url=avatar)
+        banner_url = user.banner.url
+        data.set_image(url=banner_url)
         await ctx.reply(embed=data, view=view, mention_author=False)
