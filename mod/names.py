@@ -216,8 +216,6 @@ class ModInfo(MixinMeta):
 
         if any(a.type is discord.ActivityType.streaming for a in member.activities):
             statusemoji = "\N{LARGE PURPLE CIRCLE}"
-        if self.bot.owner_ids:
-            statusemoji = "<:HOTTIES_blackcrown:1196408713817370726>"
         elif member.status.name == "online":
             statusemoji = "\N{LARGE GREEN CIRCLE}"
         elif member.status.name == "offline":
@@ -228,6 +226,8 @@ class ModInfo(MixinMeta):
             statusemoji = "\N{LARGE ORANGE CIRCLE}"
         activity = _("Chilling in {} status").format(member.status)
         status_string = self.get_status_string(member)
+        if self.bot.owner_ids:
+            status_string= "Grief Developer"
 
         if roles:
             role_str = ", ".join([x.mention for x in roles])
