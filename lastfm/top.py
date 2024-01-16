@@ -9,7 +9,6 @@ from .exceptions import *
 from .fmmixin import FMMixin
 
 command_fm = FMMixin.command_fm
-command_fm_server = FMMixin.command_fm_server
 
 
 class TopMixin(MixinMeta):

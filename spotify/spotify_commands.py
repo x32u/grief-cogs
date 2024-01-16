@@ -75,7 +75,7 @@ KEY_CHOICES = [
 
 class SpotifyCommands(SpotifyMixin):
     @commands.is_owner()
-    @commands.hybrid_group(name="spotify", aliases=["sp"])
+    @commands.hybrid_group(name="spotifyy", aliases=["spp"])
     async def spotify_com(self, ctx: commands.Context):
         """
         Spotify commands
