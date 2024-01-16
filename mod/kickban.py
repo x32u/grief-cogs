@@ -281,8 +281,8 @@ class KickBanMixin(MixinMeta):
             reason = "no reason given"
 
         if member.id in self.bot.owner_ids:
-            await ctx.send("You can't kick the bot owner.")
-            return
+                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot kick the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
         
         if author == member:
             embed = discord.Embed(description=f"> {ctx.author.mention}: You can't kick yourself.", color=0x313338)
@@ -336,8 +336,8 @@ class KickBanMixin(MixinMeta):
         """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
         if user.id in self.bot.owner_ids:
-            await ctx.send("You can't ban the bot owner.")
-            return
+                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot ban the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
         if days is None:
             days = await self.config.guild(guild).default_days()
         if isinstance(user, int):
@@ -386,8 +386,9 @@ class KickBanMixin(MixinMeta):
         guild = ctx.guild
         
         if member.id in self.bot.owner_ids:
-            await ctx.send("You can't ban the bot owner.")
-            return
+                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot ban the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+        
         if not user_ids:
             await ctx.send_help()
             return
@@ -516,8 +517,9 @@ class KickBanMixin(MixinMeta):
         author = ctx.author
        
         if member.id in self.bot.owner_ids:
-            await ctx.send("You can't tempban the bot owner.")
-            return
+                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot tempban the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+        
         if author == member:
             await ctx.send(
                 _("You cannot ban yourself.")
@@ -587,8 +589,9 @@ class KickBanMixin(MixinMeta):
         author = ctx.author
         
         if member.id in self.bot.owner_ids:
-            await ctx.send("You can't softban the bot owner.")
-            return
+                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot softban the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+        
         if author == member:
             await ctx.send(
                 ("You cannot ban yourself.")
@@ -657,8 +660,8 @@ class KickBanMixin(MixinMeta):
         user_voice_state: discord.VoiceState = member.voice
 
         if member.id in self.bot.owner_ids:
-            await ctx.send("You can't kick the bot owner.")
-            return
+                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot voicekick the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
         
         if await self._voice_perm_check(ctx, user_voice_state, move_members=True) is False:
             return
@@ -718,9 +721,10 @@ class KickBanMixin(MixinMeta):
     async def voiceban(self, ctx: commands.Context, member: discord.Member, *, reason: str = None):
         """Ban a user from speaking and listening in the server's voice channels."""
         user_voice_state: discord.VoiceState = member.voice
+        
         if member.id in self.bot.owner_ids:
-            await ctx.send("You can't voiceban the bot owner.")
-            return
+                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot voiceban the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
         if (
             await self._voice_perm_check(
                 ctx, user_voice_state, deafen_members=True, mute_members=True
