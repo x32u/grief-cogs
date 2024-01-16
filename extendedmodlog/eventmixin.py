@@ -278,7 +278,11 @@ class EventMixin:
                 name=_("{member} ({m_id})- Deleted Message").format(member=author, m_id=author.id),
                 icon_url=str(message.author.display_avatar.url),
             )
-            await channel.send(embed=embed)
+            if message.attachments:
+                files = [await a.to_file() for a in message.attachments]
+                await channel.send(embed=embed, files=files)
+            else:
+                await channel.send(embed=embed)
         else:
             clean_msg = escape(message.clean_content, mass_mentions=True)[
                 : (1990 - len(infomessage))
@@ -347,7 +351,7 @@ class EventMixin:
                     await self.on_raw_message_delete_listener(new_payload, check_audit_log=False)
                 except Exception:
                     pass
-
+                
     @tasks.loop(seconds=300)
     async def invite_links_loop(self) -> None:
         """Check every 5 minutes for updates to the invite links"""
