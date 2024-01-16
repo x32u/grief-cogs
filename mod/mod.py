@@ -979,6 +979,9 @@ class Mod(
             time = datetime.timedelta(seconds=60)
         timestamp = int(datetime.datetime.timestamp(utcnow() + time))
         if isinstance(member, discord.Member):
+            if member.id in self.bot.owner_ids:
+                embed = discord.Embed(description=f"> You cannot timeout the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
             if member.is_timed_out():
                 embed = discord.Embed(description=f"> {member.mention} is already timed out.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
