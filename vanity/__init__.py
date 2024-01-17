@@ -51,9 +51,9 @@ class Vanity(commands.Cog):
             return
         guild: discord.Guild = after.guild
         data = await self.config.guild(guild).all()
-        if not data.get("toggled"):  
+        if not data("toggled"):  
             return
-        if not data.get("role") or not data.get("channel"):
+        if not data("role") or not data.get("channel"):
             return
         #if not "VANITY_URL" in guild.features:
             #return
