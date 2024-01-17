@@ -32,9 +32,7 @@ class Vanity(commands.Cog):
         for x in data:
             vanity = data[x]["vanity"]
             if vanity:
-                return self.vanity_cache[x] = vanity
-        
-        return self.vanity_cache
+                self.vanity_cache[x] = vanity
 
     async def safe_send(self, channel: discord.TextChannel, embed: discord.Embed) -> None:
         try:
