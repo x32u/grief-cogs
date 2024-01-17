@@ -22,7 +22,7 @@ class Vanity(commands.Cog):
         default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
         self.config.register_global(**default_guild)
         self.settings = {}
-        self.first_run = True,
+        self.first_run = True
         self.vanity_cache = {}
         self.update_cache()
 
@@ -44,7 +44,7 @@ class Vanity(commands.Cog):
 
     @commands.Cog.listener(LISTENER_NAME)
     async def on_vanity_trigger(self, before: discord.Member, after: discord.Member) -> None:
-        if after.guild.id in self.vanity_cache:
+        if after.guild.id not in self.vanity_cache:
             await self.update_cache()
             
         if before.bot:
@@ -161,11 +161,13 @@ class Vanity(commands.Cog):
     @vanity.command()
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
         """Toggle vanity checker for current server on/off."""
+        await self.config.guild(ctx.guild).defaults.toggled.set(on)
+        await self.config.guild(ctx.guild).defaults.vanity.set(vanity)
         #if "VANITY_URL" in ctx.guild.features:
         self.vanity_cache[ctx.guild.id] = vanity
-        await ctx.send(f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.")
-        await self.config.guild(ctx.guild).toggled.set(on)
-        await self.config.guild(ctx.guild).vanity.set(vanity)
+        await ctx.send(
+            f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}."
+        )
 
     @vanity.command()
     @commands.guild_only()
