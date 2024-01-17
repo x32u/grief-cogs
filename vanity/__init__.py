@@ -174,11 +174,6 @@ class Vanity(commands.Cog):
     @commands.has_guild_permissions(manage_guild=True)
     async def role(self, ctx: commands.Context, role: discord.Role) -> None:
         """Setup the role to be rewarded."""
-        if ctx.guild.owner:
-            await ctx.send(f"Vanity role has been updated to {role.mention}",
-            allowed_mentions=discord.AllowedMentions.none(),
-        )
-            return
         await self.config.guild(ctx.guild).role.set(role.id)
         await ctx.send(
             f"Vanity role has been updated to {role.mention}",
