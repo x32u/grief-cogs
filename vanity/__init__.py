@@ -22,7 +22,7 @@ class Vanity(commands.Cog):
         default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
         self.config.register_global(**default_guild)
         self.settings = {}
-        self.first_run = True
+        self.first_run = True,
         self.vanity_cache = {}
         self.update_cache()
 
