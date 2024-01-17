@@ -20,10 +20,10 @@ class Vanity(commands.Cog):
         self.logger: Logger = getLogger("grief.vanity")
         self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
-        self.cached = {}
         self.config.register_global(**default_guild)
         self.settings = {}
         self.first_run = True
+        self.vanity_cache = update_cache(self)
 
     async def update_cache(self):
         await self.bot.wait_until_red_ready()
@@ -31,7 +31,12 @@ class Vanity(commands.Cog):
         for x in data:
             vanity = data[x]["vanity"]
             if vanity:
-                self.vanity_cache[x] = vanity
+                return self.vanity_cache[x] = vanity
+        
+        if not self.vanity_cache:
+            return {}
+        
+        return self.vanity_cache
 
     async def safe_send(self, channel: discord.TextChannel, embed: discord.Embed) -> None:
         try:
@@ -43,8 +48,9 @@ class Vanity(commands.Cog):
 
     @commands.Cog.listener(LISTENER_NAME)
     async def on_vanity_trigger(self, before: discord.Member, after: discord.Member) -> None:
-        if not self.cached:
+        if not self.vanity_cache[after.guild.id]:
             await self.update_cache()
+            
         if before.bot:
             return
         guild: discord.Guild = after.guild
@@ -67,6 +73,7 @@ class Vanity(commands.Cog):
         if role.position >= guild.me.top_role.position:
             self.logger.info(f"Vanity role is higher than me in {guild.name}/{guild.id}, skipping")
             return
+        
         before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
             for activity in before.activities
