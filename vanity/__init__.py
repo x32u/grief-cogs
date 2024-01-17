@@ -9,31 +9,26 @@ from grief.core.bot import Grief
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
 class Vanity(commands.Cog):
-    """For level 3 servers, award your users for advertising the vanity in their status. """
-
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        pre_processed = super().format_help_for_context(ctx)
-        return (f"{pre_processed}\n")
+    """For level 3 servers, award your users for advertising the vanity in their status."""
 
     def __init__(self, bot: Grief):
         self.bot: Grief = bot
         self.logger: Logger = getLogger("grief.vanity")
-        self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
+        self.config: Config = Config.get_conf(self, identifier=12039492, force_registration=True)
         default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
-        self.config.register_global(**default_guild)
-        self.settings = {}
-        self.first_run = True
+        self.cached = True
         self.vanity_cache = {}
-        self.update_cache()
+        self.config.register_guild(**default_guild)
 
     async def update_cache(self):
-        await self.bot.wait_until_red_ready()
         data = await self.config.all_guilds()
         for x in data:
             vanity = data[x]["vanity"]
             if vanity:
                 self.vanity_cache[x] = vanity
-        
+        if not self.cached:
+            self.cached = True
+
     async def safe_send(self, channel: discord.TextChannel, embed: discord.Embed) -> None:
         try:
             await channel.send(embed=embed)
@@ -44,32 +39,27 @@ class Vanity(commands.Cog):
 
     @commands.Cog.listener(LISTENER_NAME)
     async def on_vanity_trigger(self, before: discord.Member, after: discord.Member) -> None:
-        if after.guild.id not in self.vanity_cache:
+        if not self.cached:
             await self.update_cache()
-            
         if before.bot:
             return
         guild: discord.Guild = after.guild
         data = await self.config.guild(guild).all()
-        if not data.get("toggled"):  
+        if not data["toggled"]:
             return
-        if not data.get("role") or not data.get("channel"):
+        if not data["role"] or not data["channel"]:
             return
-        #if not "VANITY_URL" in guild.features:
-            #return
+        if not "VANITY_URL" in guild.features:
+            return
         vanity: str = "/" + self.vanity_cache[guild.id]
         role: discord.Role = guild.get_role(int(data["role"]))
         log_channel: discord.TextChannel = guild.get_channel(int(data["channel"]))
         if not role:
-            self.logger.info(f"Vanity role not found for {guild.name}/{guild.id}, skipping")
             return
         if not log_channel:
-            self.logger.info(f"Vanity log channel not found for {guild.name}/{guild.id}, skipping")
             return
         if role.position >= guild.me.top_role.position:
-            self.logger.info(f"Vanity role is higher than me in {guild.name}/{guild.id}, skipping")
             return
-        
         before_custom_activity: typing.List[discord.CustomActivity] = [
             activity
             for activity in before.activities
@@ -154,67 +144,57 @@ class Vanity(commands.Cog):
 
     @commands.group(name="vanity",)
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_guild=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
     async def vanity(self, ctx: commands.Context) -> None:
-        """Vanity management for Grief."""
+        """Vanity roles for grief."""
 
-    @vanity.command()
+    @vanity.command(usage="true yor")
+    @commands.has_permissions(manage_guild=True)
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
-        """Toggle vanity checker for current server on/off."""
-        await self.config.guild(ctx.guild).defaults.toggled.set(on)
-        await self.config.guild(ctx.guild).defaults.vanity.set(vanity)
-        #if "VANITY_URL" in ctx.guild.features:
-        self.vanity_cache[ctx.guild.id] = vanity
-        await ctx.send(
-            f"Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}."
-        )
+        """Toggle vanity checker for current server on/off. Do not use "/"."""
+        await self.config.guild(ctx.guild).toggled.set(on)
+        await self.config.guild(ctx.guild).vanity.set(vanity)
+       # if ctx.guild.premium_tier != 3:
+        #    embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
+         #   return await ctx.reply(embed=embed, mention_author=False)
+        if "VANITY_URL" in ctx.guild.features:
+            embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
 
     @vanity.command()
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_guild=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(manage_guild=True)
     async def role(self, ctx: commands.Context, role: discord.Role) -> None:
         """Setup the role to be rewarded."""
         if role.position >= ctx.author.top_role.position:
-            await ctx.send(
-                "Your role is lower or equal to the vanity role, please choose a lower role than yourself."
-            )
-            return
+            embed = discord.Embed(description=f"> Your role is lower or equal to the vanity role, please choose a lower role than yourself.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         if role.position >= ctx.guild.me.top_role.position:
-            await ctx.send("The role is higher than me, please choose a lower role than me.")
-        if ctx.guild.owner:
-            await ctx.send(f"Vanity role has been updated to {role.mention}",
-            allowed_mentions=discord.AllowedMentions.none(),
-        )
-            return
+            embed = discord.Embed(description=f"> The role is higher than me, please choose a lower role than me.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         await self.config.guild(ctx.guild).role.set(role.id)
-        await ctx.send(
-            f"Vanity role has been updated to {role.mention}",
-            allowed_mentions=discord.AllowedMentions.none(),
-        )
+        embed = discord.Embed(description=f"> Vanity role has been updated to {role.mention}", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
     @vanity.command()
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_guild=True)
+    @commands.cooldown(1, 3, commands.BucketType.guild)
+    @commands.has_permissions(manage_guild=True)
     async def channel(self, ctx: commands.Context, channel: discord.TextChannel) -> None:
         """Setup the log channel."""
         if not channel.permissions_for(ctx.guild.me).send_messages:
-            await ctx.send(
-                f"I don't have permission to send messages in {channel.mention}, please give me permission to send messages."
-            )
-            return
+            embed = discord.Embed(description=f"> I don't have permission to send messages in {channel.mention}, please give me permission to send messages.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         if not channel.permissions_for(ctx.guild.me).embed_links:
-            await ctx.send(
-                f"I don't have permission to embed links in {channel.mention}, please give me permission to embed links."
-            )
-            return
+            embed = discord.Embed(description=f"> I don't have permission to embed links in {channel.mention}, please give me permission to embed links.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         await self.config.guild(ctx.guild).channel.set(channel.id)
-        await ctx.send(
-            f"Vanity log channel has been updated to {channel.mention}",
-            allowed_mentions=discord.AllowedMentions.none(),
-        )
-
+        embed = discord.Embed(description=f"> Vanity log channel has been updated to {channel.mention}", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
+        
 
 async def setup(bot: Grief):
     cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
-    asyncio.create_task(cog.update_cache())
+    await cog.update_cache()
