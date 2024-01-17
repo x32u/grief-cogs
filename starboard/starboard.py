@@ -27,9 +27,6 @@ class Starboard(StarboardEvents, commands.Cog):
     Create a starboard to *pin* those special comments indefinitely
     """
 
-    __version__ = "2.6.0"
-    __author__ = "TrustyJAID"
-
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 356488795)
@@ -64,15 +61,8 @@ class Starboard(StarboardEvents, commands.Cog):
     async def cog_check(self, ctx: commands.Context) -> bool:
         return self.ready.is_set()
 
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        """
-        Thanks Sinbad!
-        """
-        pre_processed = super().format_help_for_context(ctx)
-        return f"{pre_processed}\n\nCog Version: {self.__version__}"
-
     @commands.group()
-    @checks.admin_or_permissions(manage_channels=True)
+    @commands.has_permissions(manage_channels=True)
     @commands.guild_only()
     async def starboard(self, ctx: commands.Context) -> None:
         """
