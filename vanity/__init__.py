@@ -161,7 +161,7 @@ class Vanity(commands.Cog):
 
     @vanity.command()
     async def toggle(self, ctx: commands.Context, on: bool, vanity: str) -> None:
-        """Toggle vanity checker for current server on/off."""
+        """Toggle vanity checker for current server on/off. Do not use "/"."""
         await self.config.guild(ctx.guild).toggled.set(on)
         await self.config.guild(ctx.guild).vanity.set(vanity)
         #if "VANITY_URL" in ctx.guild.features:
