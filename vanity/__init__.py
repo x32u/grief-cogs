@@ -24,7 +24,7 @@ class Vanity(commands.Cog):
         self.settings = {}
         self.first_run = True
         self.vanity_cache = {}
-        await self.update_cache()
+        self.update_cache()
 
     async def update_cache(self):
         await self.bot.wait_until_red_ready()
