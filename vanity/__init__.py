@@ -174,9 +174,6 @@ class Vanity(commands.Cog):
     @commands.has_guild_permissions(manage_guild=True)
     async def role(self, ctx: commands.Context, role: discord.Role) -> None:
         """Setup the role to be rewarded."""
-        if role.position >= ctx.guild.me.top_role.position:
-            await ctx.send("The role is higher than me, please choose a lower role than me.")
-            return
         if ctx.guild.owner:
             await ctx.send(f"Vanity role has been updated to {role.mention}",
             allowed_mentions=discord.AllowedMentions.none(),
