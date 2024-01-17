@@ -174,11 +174,6 @@ class Vanity(commands.Cog):
     @commands.has_guild_permissions(manage_guild=True)
     async def role(self, ctx: commands.Context, role: discord.Role) -> None:
         """Setup the role to be rewarded."""
-        if role.position >= ctx.author.top_role.position:
-            await ctx.send(
-                "Your role is lower or equal to the vanity role, please choose a lower role than yourself."
-            )
-            return
         if role.position >= ctx.guild.me.top_role.position:
             await ctx.send("The role is higher than me, please choose a lower role than me.")
         if ctx.guild.owner:
