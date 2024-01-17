@@ -158,8 +158,7 @@ class Vanity(commands.Cog):
         #    embed = discord.Embed(description=f"> Your server must be level 3 boosted to setup vanity rewards.", color=0x313338)
          #   return await ctx.reply(embed=embed, mention_author=False)
         if "VANITY_URL" in ctx.guild.features:
-            embed = discord.Embed(description=f"> Vanity status tracking for current server is now {'on' if on else 'off'} and set to {vanity}.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
+            await ctx.tick()
 
     @vanity.command()
     @commands.guild_only()
@@ -173,9 +172,8 @@ class Vanity(commands.Cog):
         if role.position >= ctx.guild.me.top_role.position:
             embed = discord.Embed(description=f"> The role is higher than me, please choose a lower role than me.", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
+        await ctx.tick()
         await self.config.guild(ctx.guild).role.set(role.id)
-        embed = discord.Embed(description=f"> Vanity role has been updated to {role.mention}", color=0x313338)
-        await ctx.reply(embed=embed, mention_author=False)
 
     @vanity.command()
     @commands.guild_only()
