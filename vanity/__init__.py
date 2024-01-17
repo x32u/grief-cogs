@@ -33,7 +33,7 @@ class Vanity(commands.Cog):
             vanity = data[x]["vanity"]
             if vanity:
                 self.vanity_cache[x] = vanity
-
+        
     async def safe_send(self, channel: discord.TextChannel, embed: discord.Embed) -> None:
         try:
             await channel.send(embed=embed)
@@ -44,7 +44,7 @@ class Vanity(commands.Cog):
 
     @commands.Cog.listener(LISTENER_NAME)
     async def on_vanity_trigger(self, before: discord.Member, after: discord.Member) -> None:
-        if not self.vanity_cache[after.guild.id]:
+        if after.guild.id in self.vanity_cache:
             await self.update_cache()
             
         if before.bot:
