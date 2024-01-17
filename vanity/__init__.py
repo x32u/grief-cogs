@@ -5,6 +5,7 @@ from logging import Logger, getLogger
 import discord
 from grief.core import Config, commands
 from grief.core.bot import Grief
+from .converter import RoleHierarchyConverter
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
 
@@ -172,20 +173,14 @@ class Vanity(commands.Cog):
     @vanity.command()
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
-    async def role(self, ctx: commands.Context, role: discord.Role) -> None:
+    async def role(self, ctx: commands.Context, role: RoleHierarchyConverter,):
         """Setup the role to be rewarded."""
-        if role.position >= ctx.guild.me.top_role.position:
-            await ctx.send("The role is higher than me, please choose a lower role than me.")
-            return
-        if role.position >= ctx.author.top_role.position:
-            await ctx.send("Your role is lower or equal to the vanity role, please choose a lower role than yourself.")
-            return
-        else:
-            await self.config.guild(ctx.guild).role.set(role.id)
-            await ctx.send(
+        await self.config.guild(ctx.guild).role.set(role.id)
+        await ctx.send(
             f"Vanity role has been updated to {role.mention}",
             allowed_mentions=discord.AllowedMentions.none(),
         )
+
     @vanity.command()
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
