@@ -180,12 +180,12 @@ class Vanity(commands.Cog):
         if role.position >= ctx.author.top_role.position:
             await ctx.send("Your role is lower or equal to the vanity role, please choose a lower role than yourself.")
             return
-        await self.config.guild(ctx.guild).role.set(role.id)
-        await ctx.send(
+        else:
+            await self.config.guild(ctx.guild).role.set(role.id)
+            await ctx.send(
             f"Vanity role has been updated to {role.mention}",
             allowed_mentions=discord.AllowedMentions.none(),
         )
-
     @vanity.command()
     @commands.guild_only()
     @commands.has_guild_permissions(manage_guild=True)
