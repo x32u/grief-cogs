@@ -23,7 +23,8 @@ class Vanity(commands.Cog):
         self.config.register_global(**default_guild)
         self.settings = {}
         self.first_run = True
-        self.vanity_cache = update_cache(self)
+        self.vanity_cache = {}
+        self.update_cache()
 
     async def update_cache(self):
         await self.bot.wait_until_red_ready()
@@ -32,9 +33,6 @@ class Vanity(commands.Cog):
             vanity = data[x]["vanity"]
             if vanity:
                 return self.vanity_cache[x] = vanity
-        
-        if not self.vanity_cache:
-            return {}
         
         return self.vanity_cache
 
