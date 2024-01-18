@@ -22,10 +22,7 @@ class AutoReact(BaseCog):
         self.bot = bot_instance
         self.emojis = {str(e.id): e for e in self.bot.emojis}
         self.config = Config.get_conf(self, identifier=214753146512080907, force_registration=True, cog_name="autoreact",)
-        default_guild = {"autoreact": {},
-            "automsg": {},
-            "channel": {},
-        }
+        default_guild = {"autoreact": {}, "automsg": {}, "channel": {},}
         self.config.register_guild(**default_guild)
         self.bot.add_listener(self.autoreact_handler, "on_message")
         self.bot.add_listener(self.channel_handler, "on_message")

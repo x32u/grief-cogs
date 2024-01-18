@@ -15,9 +15,7 @@ class Application(commands.Cog):
 
     def __init__(self, bot: Grief):
         self.bot = bot
-        self.config = Config.get_conf(
-            self, 5641654654621651651, force_registration=True
-        )
+        self.config = Config.get_conf(self, 5641654654621651651, force_registration=True)
         self.config.register_guild(
             applicant_id=None,
             accepter_id=None,

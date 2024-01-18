@@ -22,10 +22,6 @@ class AntiNuke(Listen, commands.Cog):
     If a user or bot exceeds X mod events within X seconds, the set action will be performed
     """
 
-    def format_help_for_context(self, ctx):
-        helpcmd = super().format_help_for_context(ctx)
-        return f"{helpcmd}"
-
     def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
