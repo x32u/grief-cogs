@@ -53,8 +53,8 @@ from discord.ext.commands import (
     UserConverter,
     VoiceChannelConverter,
 )
-from redbot.core.i18n import Translator
-from redbot.core.utils.chat_formatting import box
+from grief.core.i18n import Translator
+from grief.core.utils.chat_formatting import box
 
 _ = Translator("AutoDocs", __file__)
 

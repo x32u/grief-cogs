@@ -9,7 +9,7 @@ import pandas as pd
 from aiocache import cached
 from discord import app_commands
 from grief.core import commands
-from grief.core.bot import Red
+from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n, set_contextual_locales_from_guild
 from grief.core.utils.mod import is_admin_or_superior, is_mod_or_superior
 
@@ -39,7 +39,7 @@ class AutoDocs(commands.Cog):
     async def red_delete_data_for_user(self, *, requester, user_id: int):
         """No data to delete"""
 
-    def __init__(self, bot: Red, *args, **kwargs):
+    def __init__(self, bot: Grief, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.bot = bot
 
