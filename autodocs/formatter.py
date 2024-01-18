@@ -122,8 +122,7 @@ class CustomCmdFmt:
         if self.embedding_style:
             doc = doc.replace("#", "").strip() + "\n"
 
-        USAGE = _("Usage")
-        CHECKS = _("Checks")
+        USAGE = _("example")
 
         # Get command usage info
         if self.is_slash:
@@ -147,29 +146,6 @@ class CustomCmdFmt:
             if arginfo:
                 doc += f"{arginfo}\n"
 
-            checks = []
-            if self.cmd.nsfw:
-                checks.append("NSFW")
-            if self.cmd.guild_only:
-                GUILDONLY = _("Server Only")
-                checks.append(GUILDONLY)
-            if self.checks:
-                doc += f" - {CHECKS}: `{humanize_list(checks)}\n"
-        else:
-            usage = f"[p]{self.name}"
-            try:
-                for k, v in self.cmd.clean_params.items():
-                    arg = v.name
-
-                    if v.required:
-                        usage += f" <{arg}>"
-                    elif v.kind == v.KEYWORD_ONLY:
-                        usage += f" [{arg}]"
-                    else:
-                        usage += f" [{arg}={v.default}]"
-            except AttributeError:
-                pass
-
             doc += f" - {USAGE}: `{usage}`\n"
             if self.is_hybrid:
                 usage = usage.replace("[p]", "/")
@@ -185,18 +161,12 @@ class CustomCmdFmt:
                     if priv.value < minimum:
                         return None
                     if priv.value > 1:
-                        RESTRICTED = _("Restricted to")
+                        RESTRICTED = _("permission:")
                         doc += f" - {RESTRICTED}: `{priv.name}`\n"
 
             if self.aliases:
-                ALIASES = _("Aliases")
+                ALIASES = _("alises")
                 doc += f" - {ALIASES}: `{self.aliases}`\n"
-            if self.cooldown:
-                COOLDOWN = _("Cooldown")
-                doc += f" - {COOLDOWN}: `{self.cooldown}`\n"
-            if self.checks:
-                doc += f" - {CHECKS}: `{self.checks}`\n"
-
         # Get command docstring
         if not doc.endswith("\n\n"):
             doc += "\n"
