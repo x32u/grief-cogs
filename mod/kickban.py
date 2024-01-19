@@ -572,8 +572,8 @@ class KickBanMixin(MixinMeta):
         audit_reason = get_audit_reason(author, reason, shorten=True)
 
         try:
+            await ctx.tick()
             await guild.ban(member, reason=audit_reason, delete_message_seconds=days * 86400)
-            await ctx.tick
         except discord.Forbidden:
             await ctx.send(_("I can't do that for some reason."))
         except discord.HTTPException:
