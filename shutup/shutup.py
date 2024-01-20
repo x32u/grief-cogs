@@ -13,7 +13,8 @@ from aiomisc.periodic import PeriodicCallback
 from grief.core import Config, checks, commands
 from grief.core.bot import Grief
 import webhook.webhook
-from discord.ext.commands import BadArgument, Converter
+from .utils import is_allowed_by_hierarchy
+
 
 class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
@@ -22,39 +23,40 @@ class Shutup(commands.Cog):
         default_guild = {"enabled": True, "target_members": []}
         self.config.register_guild(**default_guild)
 
-    @commands.has_permissions(manage_messages=True)
     @commands.command()
     async def stfu(self, ctx, user: discord.User):
         """
         Add a certain user to get auto kicked.
         """
-
         author = ctx.author
+        guild = ctx.guild
 
-
-        if user >= ctx.guild.me.top_role:
-                raise BadArgument(
-                    (
-                        "That {user} is higher than my highest role in the discord hierarchy."
-                    ).format(role=user.mention)
+        if author == user:
+            await ctx.send(
+                ("I cannot let you do that. Self-harm is bad {emoji}").format(
+                    emoji="\N{PENSIVE FACE}"
                 )
-        if user >= author.top_role and author.id != ctx.guild.owner_id:
-                raise BadArgument(
-                    (
-                        "The {user} is higher than your "
-                        "highest role in the discord hierarchy."
-                    ).format(role=user.mention)
-                )
+            )
+            return
         
+        elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
+            await ctx.send(
+                (
+                    "I cannot let you do that. You are "
+                    "not higher than the user in the role "
+                    "hierarchy."
+                )
+            )
+            return
         
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
-
         
         if user.id in enabled_list:
             enabled_list.remove(user.id)
+            await ctx.send(f"{user} has been unstfu'ed.")
             async with ctx.typing():
                 await self.config.guild(ctx.guild).target_members.set(enabled_list)
-            return await ctx.send(f"{user} has been unstfu'ed.")
+            return
         
         enabled_list.append(user.id)
     
