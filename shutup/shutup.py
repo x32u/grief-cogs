@@ -49,6 +49,10 @@ class Shutup(commands.Cog):
             )
             return
         
+        elif ctx.guild.me.top_role <= user.top_role or UserWarning == ctx.guild.owner:
+            await ctx.send(("I cannot do that due to Discord hierarchy rules."))
+            return
+        
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         
         if user.id in enabled_list:
