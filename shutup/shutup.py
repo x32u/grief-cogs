@@ -4,8 +4,6 @@ import discord
 from grief.core import Config, commands, checks
 from grief.core.bot import Grief
 from grief.core import i18n
-from .utils import is_allowed_by_hierarchy
-from typing import Tuple, Union
 
 T_ = i18n.Translator("Shutup", __file__)
 
@@ -18,35 +16,18 @@ class Shutup(commands.Cog):
         default_guild = {"enabled": True, "target_members": []}
         self.config.register_guild(**default_guild)
 
-    @commands.command(invoke_without_command=True, require_var_positional=True)
-    @commands.has_permissions(manage_messages=True)
+
+    @commands.command()
     async def stfu(self, ctx: commands.Context, user: discord.Member):
         """
         Add a certain user to get auto kicked.
         """
-        
-        author = ctx.author
-        guild = ctx.guild
+        if user.id in self.bot.owner_ids:
+            return
 
-        if isinstance(user, discord.Member):
-            if author == user:
-                return (
-                    False,
-                    _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
-                )
-            
-            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
-                return (
-                    False,
-                    _(
-                        "I cannot let you do that. You are "
-                        "not higher than the user in the role "
-                        "hierarchy."
-                    ),
-                )
-            elif guild.me.top_role <= user.top_role or user == guild.owner:
-                return False, _("I cannot do that due to Discord hierarchy rules.")
-            
+        if ctx.author.top_role >= user.top_role and ctx.author.id not in self.bot.owner_ids:
+            return await ctx.send("You may only target someone with a higher top role than you.")
+        
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         
         if user.id in enabled_list:
