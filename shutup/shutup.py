@@ -66,49 +66,14 @@ class Shutup(commands.Cog):
         if self.bot.user.name == "grief":
             self.uwu_allowed_users = list(self.bot.owner_ids)
             users = list(self.uwu_allowed_users)
-            if guild := self.bot.get_guild(915317604153962546):
-                if role := guild.get_role(1013524930010288409):
-                    extras = [m.id for m in role.members]
-                    users.extend(extras)
-                self.uwu_allowed_users = users
-                await self.guild_settings_cache("uwu_allowed_users_", msgpack.packb(users))
+            self.uwu_allowed_users = users
+            await self.guild_settings_cache("uwu_allowed_users_", msgpack.packb(users))
 
         self.webhook = self.bot.get_cog("Webhook")
         self.no_emoji = self.bot.get_emoji(1061996704372633635)
 
     @commands.guild_only()
-    @checks.has_permissions(administrator=True)
-    @commands.command(hidden=True)
-    async def stfubitch(self, ctx: commands.Context):
-        """STFU, bitch.
-
-        Mute everyone in a voice channel
-
-        """
-        if not ctx.author.voice:
-            return await ctx.send("You have to be in a voice channel to run this command.")
-
-        await asyncio.gather(*[x.edit(mute=True) for x in ctx.author.voice.channel.members if not x.bot])
-        return await ctx.tick()
-
-    @commands.guild_only()
-    @commands.command(hidden=True)
-    @checks.has_permissions(administrator=True)
-    async def unstfubitch(self, ctx: commands.Context):
-        "(un)STFU, bitch."
-        if not ctx.author.voice:
-            return await ctx.send("You have to be in a voice channel to run this command.")
-        async with ctx.typing():
-            for m in ctx.author.voice.channel.members:
-                m: discord.Member
-                with contextlib.suppress(discord.HTTPException, asyncio.TimeoutError):
-                    async with asyncio.timeout(1.5):
-                        await m.edit(mute=False)
-
-        return await ctx.tick()
-
-    @commands.guild_only()
-    @checks.has_permissions(administrator=True)
+    @commands.has_permissions(administrator=True)
     @commands.group(invoke_without_command=True, require_var_positional=True, hidden=True)
     async def shutup(self, ctx: commands.Context, member: discord.Member):
         "A fun alternative to muting."
@@ -130,149 +95,17 @@ class Shutup(commands.Cog):
             return await ctx.tick()
 
         enabled_list.append(member.id)
-        self.bot._shutup_group.add(r)
         await self.config.guild(ctx.guild).target_members.set(enabled_list)
-        emote = self.bot.get_emoji(1015327039848448013)
-        return await ctx.message.add_reaction(emote)
-
-    @checks.is_owner()
-    @shutup.command(name="resetall")
-    async def shutup_reset(self, ctx) -> None:
-        """Remove all members from auto deletion."""
-        await self.config.clear_all_guilds()
-        self.guild_settings_cache = {}
-        self.owner_locked = []
-        self.bot._shutup_group = set()
         return await ctx.tick()
 
-    @shutup.command(name="list")
-    async def shutup_list(self, ctx: commands.Context) -> None:
-        """A list of all memebers currently on auto deletion."""
-        stfu_list = await self.config.guild(ctx.guild).target_members()
-        if not stfu_list:
-            return await ctx.reply("No members are currently targetted")
-        description = "".join(f"{ctx.guild.get_member(int(i)).mention} \n" for i in stfu_list)
-        embed = discord.Embed(title="Members currently targeted by shutup", description=description)
-        return await ctx.reply(embed=embed, mention_author=False)
 
     @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent) -> None:
-        if (payload.guild_id, payload.user_id) in self.bot._shutup_group:
-            msg = discord.PartialMessage(channel=self.bot.get_channel(payload.channel_id), id=payload.message_id)
-            await asyncio.gather(msg.clear_reaction(payload.emoji), msg.add_reaction(self.no_emoji))
-            delaytask(msg.clear_reaction(self.no_emoji))
-
-    @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
+    async def on_message(self, ctx: discord.Guild, message: discord.Message):
         if not self.bot.is_ready():
             return
 
         if not message.guild:
             return
         with suppress(discord.HTTPException):
-            if hasattr(message, "embeds") and message.embeds:
-                payload = orjson.dumps(message.embeds[0].to_dict()).decode("UTF-8").lower()
-                if "snipe" in payload or "deleted" in payload or "delete" in payload:
+            if await self.config.guild(ctx.guild).target_members():
                     return await message.delete()
-            settings = await self.get_guild_settings(message.guild)
-            if message.author.id in settings.uwulocked_users:
-                content = str(message.content.lower())
-                uwu = uwuize_string(unidecode.unidecode(content))
-                if uwu != content:
-                    ctx = await self.bot.get_context(message)
-                    await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
-
-            elif message.author.id in settings.ghettolocked_users:
-                text = " ".join(str(ghetto_string(message.content)).split())
-                period = " ".join(text.capitalize() for text in text.split(" "))
-                ctx = await self.bot.get_context(message)
-                await self.webhook.sudo(ctx=ctx, member=message.author, message=f"{period} 💅🏿")
-
-    @checks.has_permissions(administrator=True)
-    @commands.command()
-    async def uwureset(self, ctx: commands.Context):
-        users = await self.config.guild(ctx.guild).uwulocked_users()
-
-        if ctx.author.id not in self.bot.owner_ids:
-            for u in users:
-                if u in self.owner_locked and ctx.author.id not in self.bot.owner_ids:
-                    continue
-                else:
-                    users.remove(u)
-
-        else:
-            users = []
-        await self.config.guild(ctx.guild).uwulocked_users.set(users)
-        self.set_guild_cache(ctx.guild)
-        return await ctx.tick()
-
-    @checks.has_permissions(administrator=True)
-    @commands.command()
-    async def uwulock(self, ctx: commands.Context, user: discord.User):
-        if user.id in self.bot.owner_ids:
-            return
-        if ctx.guild.id == 836671067853422662 and ctx.author.id not in self.bot.owner_ids:
-            return await ctx.send("Disabled")
-        if ctx.author.id == user.id:
-            return await ctx.send("You cant uwulock, or un-uwulock yourself 🤡")
-
-        try:
-            async with self.config.guild(ctx.guild).uwulocked_users() as uwulocked_users:
-                uwulocked_users: list[int]
-                if user.id in uwulocked_users:
-                    if user.id in self.owner_locked and ctx.author.id not in self.bot.owner_ids:
-                        return
-                    uwulocked_users.remove(user.id)
-                    return await ctx.send(f"{user} has been removed from uwu lock 🤨")
-                else:
-                    if len(uwulocked_users) == 3:
-                        return await ctx.send(
-                                "I'll only allow up to 3 people to be set on uwulock.",
-                                tip="remove someone first or run ;uwureset to clear all.",
-                                status=2,
-                            ),
-
-                    uwulocked_users.append(user.id)
-
-                    if ctx.author.id in self.bot.owner_ids:
-                        self.owner_locked.append(user.id)
-                    return await ctx.send(f"{user} has been added to server uwu lock 🤣 👉")
-        finally:
-            self.set_guild_cache(ctx.guild)
-
-    @checks.has_permissions(administrator=True)
-    @commands.command()
-    async def ghettoreset(self, ctx: commands.Context):
-        await self.config.guild(ctx.guild).ghettolocked_users.set([])
-        self.set_guild_cache(ctx.guild)
-        return await ctx.tick()
-
-    @checks.has_permissions(administrator=True)
-    @commands.command()
-    async def ghettolock(self, ctx: commands.Context, user: discord.User):
-        if ctx.author.id not in self.bot.owner_ids and user.id in self.bot.owner_ids:
-            return
-        if ctx.author.id == user.id:
-            return await ctx.send("You cant ghetto lock, or un-ghetto lock yourself 🤡")
-
-        try:
-            async with self.config.guild(ctx.guild).ghettolocked_users() as ghettolocked_users:
-                ghettolocked_users: list[int]
-                if user.id in ghettolocked_users:
-                    ghettolocked_users.remove(user.id)
-                    return await ctx.send(f"{user} has been removed from ghetto lock 💅🏿")
-                else:
-                    if len(ghettolocked_users) == 3:
-                        return await ctx.send(
-                                "I'll only allow up to 3 people to be set on ghetto lock.",
-                                tip="remove someone first or run ;uwureset to clear all.",
-                                status=2,
-                            ),
-                        
-
-                    ghettolocked_users.append(user.id)
-                    if ctx.author.id in self.bot.owner_ids:
-                        self.owner_locked.append(user.id)
-                    return await ctx.send(f"{user} has been added to server ghetto lock 🤣 👉")
-        finally:
-            self.set_guild_cache(ctx.guild)
