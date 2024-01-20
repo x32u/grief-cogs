@@ -19,7 +19,7 @@ class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
-        default_guild = {"enabled": "True", "blacklisted_ids": []}
+        default_guild = {"enabled": True, "blacklisted_ids": []}
         self.config.register_guild(**default_guild)
     
     @commands.command()
@@ -28,11 +28,12 @@ class Shutup(commands.Cog):
         Add a certain user to get auto kicked.
         """
         async with ctx.typing():
-            await self.config.guild(ctx.guild).set(user.id)
+            await self.config.guild(ctx.guild).blacklisted_ids.append(user.id)
         await ctx.send(f"{user} will have messages auto-deleted.")
 
                 
     @commands.Cog.listener()
     async def on_message(self, ctx: discord.Guild, message: discord.Message, member: discord.Member):
-                if member.id in await self.config.guild(ctx.guild):
+            if await self.config.guild(member.guild).enabled():
+                if member.id in await self.config.guild(ctx.guild).blacklisted_ids():
                     await message.delete()
