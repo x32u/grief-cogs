@@ -35,10 +35,11 @@ log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
 
 
-class KickBanMixin(MixinMeta):
-    """
-    Kick and ban commands and tasks go here.
-    """
+class GuildSettings(BaseModel):
+    uwulocked_users: list = []
+    ghettolocked_users: list = []
+    target_members: list = []
+    
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(self, 8847843, force_registration=True)
@@ -51,11 +52,6 @@ class KickBanMixin(MixinMeta):
         self.init_cb.start(30)
         self.guild_settings_cache: dict[int, GuildSettings] = {}
         self.owner_locked = []
-
-class GuildSettings(BaseModel):
-    uwulocked_users: list = []
-    ghettolocked_users: list = []
-    target_members: list = []
     
     @staticmethod
     async def get_invite_for_reinvite(ctx: commands.Context, max_age: int = 86400) -> str:
