@@ -19,7 +19,7 @@ class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
-        default_guild = {"enabled": True, "blacklisted_ids": []}
+        default_guild = {"enabled": "True", "blacklisted_ids": []}
         self.config.register_guild(**default_guild)
     
     @commands.command()
