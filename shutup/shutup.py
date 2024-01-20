@@ -13,7 +13,6 @@ from aiomisc.periodic import PeriodicCallback
 from grief.core import Config, checks, commands
 from grief.core.bot import Grief
 import webhook.webhook
-from .converter import RoleHierarchyConverter
 from discord.ext.commands import BadArgument, Converter
 
 class Shutup(commands.Cog):
