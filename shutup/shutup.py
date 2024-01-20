@@ -29,24 +29,23 @@ class Shutup(commands.Cog):
         """
         
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
-        enabled_list.append(user.id)
         
         if user.id in enabled_list:
-            enabled_list.unappend(user.id)
-            return await ctx.send(f"{user} has been unstfu'ed.")
-        
-        else:
+            enabled_list.remove(user.id)
+            await ctx.send(f"{user} has been unstfu'ed.")
             async with ctx.typing():
                 await self.config.guild(ctx.guild).target_members.set(enabled_list)
-        await ctx.send(f"{user} will have messages auto-deleted.")
-
+        
+        enabled_list.append(user.id)
+    
+        async with ctx.typing():
+            await self.config.guild(ctx.guild).target_members.set(enabled_list)
+            return await ctx.send(f"{user} will have messages auto-deleted.")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if not message.guild: return
 
-        is_enabled = await self.config.guild(message.guild).enabled()
-        if is_enabled:
-            target_members = await self.config.guild(message.guild).target_members()
-            if message.author.id in target_members:
+        if await self.config.guild(message.guild).enabled():
+            if message.author.id in await self.config.guild(message.guild).target_members():
                 await message.delete()
