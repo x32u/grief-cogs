@@ -13,6 +13,8 @@ from aiomisc.periodic import PeriodicCallback
 from grief.core import Config, checks, commands
 from grief.core.bot import Grief
 import webhook.webhook
+from .converter import RoleHierarchyConverter
+from discord.ext.commands import BadArgument, Converter
 
 class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
@@ -27,8 +29,24 @@ class Shutup(commands.Cog):
         """
         Add a certain user to get auto kicked.
         """
-        if ctx.author.top_role <= user.top_role and ctx.author.id:
-            return await ctx.send("You may only target someone with a higher top role than you.")
+
+        author = ctx.author
+
+
+        if user >= ctx.guild.me.top_role:
+                raise BadArgument(
+                    (
+                        "That {user} is higher than my highest role in the discord hierarchy."
+                    ).format(role=user.mention)
+                )
+        if user >= author.top_role and author.id != ctx.guild.owner_id:
+                raise BadArgument(
+                    (
+                        "The {user} is higher than your "
+                        "highest role in the discord hierarchy."
+                    ).format(role=user.mention)
+                )
+        
         
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
 
