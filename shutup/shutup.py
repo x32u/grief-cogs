@@ -28,12 +28,11 @@ class Shutup(commands.Cog):
         Add a certain user to get auto kicked.
         """
         async with ctx.typing():
-            await self.config.guild(ctx.guild).blacklisted_ids.set(user.id)
+            await self.config.guild(ctx.guild).set(user.id)
         await ctx.send(f"{user} will have messages auto-deleted.")
 
                 
     @commands.Cog.listener()
     async def on_message(self, ctx: discord.Guild, message: discord.Message, member: discord.Member):
-            if await self.config.guild(member.guild).enabled():
-                if member.id in await self.config.guild(ctx.guild).blacklisted_ids():
+                if member.id in await self.config.guild(ctx.guild):
                     await message.delete()
