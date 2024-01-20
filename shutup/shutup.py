@@ -38,7 +38,7 @@ class Shutup(commands.Cog):
         else:
             async with ctx.typing():
                 await self.config.guild(ctx.guild).target_members.set(enabled_list)
-        await ctx.send(f"{user} will have messages auto-deleted.")
+        return await ctx.send(f"{user} will have messages auto-deleted.")
 
 
     @commands.Cog.listener()
