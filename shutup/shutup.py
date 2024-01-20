@@ -19,7 +19,7 @@ class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
     
-    @commands.command(name="add", aliases=["blacklist", "bl"])
+    @commands.command()
     async def stfu(self, ctx, user: discord.User):
         """
         Add a certain user to get auto kicked.
