@@ -30,16 +30,16 @@ from pydantic import BaseModel
 from grief.core.bot import Grief
 from grief.core import Config
 from aiomisc.periodic import PeriodicCallback
+from webhook.webhook import webhook
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
 
 
-class GuildSettings(BaseModel):
-    uwulocked_users: list = []
-    ghettolocked_users: list = []
-    target_members: list = []
-    
+class KickBanMixin(MixinMeta):
+    """
+    Kick and ban commands and tasks go here.
+    """
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(self, 8847843, force_registration=True)
@@ -52,6 +52,11 @@ class GuildSettings(BaseModel):
         self.init_cb.start(30)
         self.guild_settings_cache: dict[int, GuildSettings] = {}
         self.owner_locked = []
+
+class GuildSettings(BaseModel):
+    uwulocked_users: list = []
+    ghettolocked_users: list = []
+    target_members: list = []
     
     @staticmethod
     async def get_invite_for_reinvite(ctx: commands.Context, max_age: int = 86400) -> str:
@@ -918,10 +923,8 @@ class GuildSettings(BaseModel):
             return await ctx.tick()
 
         enabled_list.append(member.id)
-        self.bot._shutup_group.add(r)
         await self.config.guild(ctx.guild).target_members.set(enabled_list)
-        emote = self.bot.get_emoji(1015327039848448013)
-        return await ctx.message.add_reaction(emote)
+        return await ctx.tick()
 
 
     @commands.Cog.listener()
