@@ -30,6 +30,7 @@ class Shutup(commands.Cog):
                     False,
                     _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
                 )
+            
             elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return (
                     False,
@@ -45,7 +46,7 @@ class Shutup(commands.Cog):
 
     @commands.command(invoke_without_command=True, require_var_positional=True)
     @commands.has_permissions(manage_messages=True)
-    async def stfu(self, ctx: commands.Context, user: discord.User):
+    async def stfu(self, ctx: commands.Context, user: discord.Member):
         """
         Add a certain user to get auto kicked.
         """
