@@ -4,8 +4,10 @@ import discord
 from grief.core import Config, commands
 from grief.core.bot import Grief
 from grief.core import i18n
+from .utils import is_allowed_by_hierarchy
+from typing import Tuple, Union
 
-T_ = i18n.Translator("Mutes", __file__)
+T_ = i18n.Translator("Shutup", __file__)
 
 _ = lambda s: s
 
@@ -16,8 +18,33 @@ class Shutup(commands.Cog):
         default_guild = {"enabled": True, "target_members": []}
         self.config.register_guild(**default_guild)
 
+    @staticmethod
+    async def stfu(self, user: Union[discord.Member, discord.User, discord.Object], ctx: commands.Context,) -> Tuple[bool, str]:
+        
+        author = ctx.author
+        guild = ctx.guild
+
+        if isinstance(user, discord.Member):
+            if author == user:
+                return (
+                    False,
+                    _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
+                )
+            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
+                return (
+                    False,
+                    _(
+                        "I cannot let you do that. You are "
+                        "not higher than the user in the role "
+                        "hierarchy."
+                    ),
+                )
+            elif guild.me.top_role <= user.top_role or user == guild.owner:
+                return False, _("I cannot do that due to Discord hierarchy rules.")
+
 
     @commands.command(invoke_without_command=True, require_var_positional=True)
+    @commands.has_permissions(manage_messages=True)
     async def stfu(self, ctx: commands.Context, user: discord.User):
         """
         Add a certain user to get auto kicked.
