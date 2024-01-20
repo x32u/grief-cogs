@@ -9,8 +9,8 @@ import uwuipy
 import msgpack
 import orjson
 import unidecode
-from .utils import uwuize_string
 from contextlib import suppress
+import uwuipy
 
 T_ = i18n.Translator("Shutup", __file__)
 
@@ -87,14 +87,14 @@ class Shutup(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if not self.bot.is_ready():
-            return
 
-        if not message.guild:
+        if not message.guild: return
 
-            if message.author.id in await self.config.guild(ctx.guild).uwulocked_members():
+        if message.author.id in await self.config.guild(ctx.guild).uwulocked_members():
                 content = str(message.content.lower())
-                uwu = uwuize_string(unidecode.unidecode(content))
+                uwu = uwuipy()
+                uwu_message = uwu.uwuify(message)
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
-                    await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
+                    await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu_message)
+                    await message.delete()
