@@ -91,10 +91,8 @@ class Shutup(commands.Cog):
         if not message.guild: return
 
         if message.author.id in await self.config.guild(ctx.guild).uwulocked_members():
-                content = str(message.content.lower())
                 uwu = uwuipy()
                 uwu_message = uwu.uwuify(message)
-                if uwu != content:
-                    ctx = await self.bot.get_context(message)
-                    await self.webhook.say(ctx=ctx, member=message.author, message=uwu_message)
-                    await message.delete()
+                ctx = await self.bot.get_context(message)
+                await self.webhook.say(ctx=ctx, member=message.author, message=uwu_message)
+                await message.delete()
