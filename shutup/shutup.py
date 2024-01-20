@@ -17,7 +17,7 @@ class Shutup(commands.Cog):
         self.config.register_guild(**default_guild)
 
 
-    @commands.command(invoke_without_command=True, require_var_positional=True))
+    @commands.command(invoke_without_command=True, require_var_positional=True)
     async def stfu(self, ctx: commands.Context, user: discord.User):
         """
         Add a certain user to get auto kicked.
