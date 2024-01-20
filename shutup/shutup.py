@@ -96,5 +96,5 @@ class Shutup(commands.Cog):
                 uwu_message = uwu.uwuify(message)
                 if uwu != content:
                     ctx = await self.bot.get_context(message)
-                    await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu_message)
+                    await self.webhook.say(ctx=ctx, member=message.author, message=uwu_message)
                     await message.delete()
