@@ -30,7 +30,6 @@ from pydantic import BaseModel
 from grief.core.bot import Grief
 from grief.core import Config
 from aiomisc.periodic import PeriodicCallback
-from webhook.webhook import webhook
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
