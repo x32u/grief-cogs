@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import aiohttp
 import asyncio
 import contextlib
 from contextlib import suppress
@@ -39,7 +40,7 @@ class Shutup(commands.Cog):
         self.webhook: webhook.webhook.Webhook
         self.no_emoji: discord.Emoji
         self.uwu_allowed_users = list(self.bot.owner_ids)
-        self.bot.ioloop.spawn_callback(self.init_cog)
+        self.bot.loop.spawn_callback(self.init_cog)
         self.init_cb = PeriodicCallback(self.init_cog)
         self.init_cb.start(30)
         self.guild_settings_cache: dict[int, GuildSettings] = {}
