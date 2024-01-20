@@ -69,7 +69,6 @@ class Shutup(commands.Cog):
             await self.guild_settings_cache("uwu_allowed_users_", msgpack.packb(users))
 
         self.webhook = self.bot.get_cog("Webhook")
-        self.no_emoji = self.bot.get_emoji(1061996704372633635)
 
     @commands.guild_only()
     @commands.has_permissions(administrator=True)
@@ -87,8 +86,6 @@ class Shutup(commands.Cog):
 
         if member.id in enabled_list:
             enabled_list.remove(member.id)
-            with contextlib.suppress(KeyError, ValueError):
-                self.bot._shutup_group.remove(r)
 
             await self.config.guild(ctx.guild).target_members.set(enabled_list)
             return await ctx.tick()
