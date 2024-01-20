@@ -34,6 +34,19 @@ class Shutup(commands.Cog):
             await self.config.guild(ctx.guild).target_members.set(enabled_list)
         await ctx.send(f"{user} will have messages auto-deleted.")
 
+    @commands.command()
+    async def unstfu(self, ctx, user: discord.User):
+        """
+        Add a certain user to get auto kicked.
+        """
+        enabled_list: list = await self.config.guild(ctx.guild).target_members()
+        enabled_list.remove(user.id)
+
+        async with ctx.typing():
+            await self.config.guild(ctx.guild).target_members.set(enabled_list)
+        await ctx.send(f"{user} will have messages auto-deleted.")
+
+
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if not message.guild: return
