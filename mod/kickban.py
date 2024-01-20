@@ -39,15 +39,6 @@ class KickBanMixin(MixinMeta):
     """
     Kick and ban commands and tasks go here.
     """
-    def __init__(self, bot: Grief) -> None:
-        self.bot = bot
-        self.config = Config.get_conf(self, 8847843, force_registration=True)
-        self.no_emoji: discord.Emoji
-        self.uwu_allowed_users = list(self.bot.owner_ids)
-        self.bot.ioloop.spawn_callback(self.init_cog)
-        self.init_cb = PeriodicCallback(self.init_cog)
-        self.init_cb.start(30)
-        self.owner_locked = []
     
     @staticmethod
     async def get_invite_for_reinvite(ctx: commands.Context, max_age: int = 86400) -> str:
