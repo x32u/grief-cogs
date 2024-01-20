@@ -14,7 +14,6 @@ from grief.core import Config, checks, commands
 from grief.core.bot import Grief
 import webhook.webhook
 
-
 class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
@@ -22,13 +21,17 @@ class Shutup(commands.Cog):
         default_guild = {"enabled": True, "target_members": []}
         self.config.register_guild(**default_guild)
 
+    @commands.has_permissions(manage_messages=True)
     @commands.command()
     async def stfu(self, ctx, user: discord.User):
         """
         Add a certain user to get auto kicked.
         """
+        if ctx.author.top_role <= user.top_role and ctx.author.id:
+            return await ctx.send("You may only target someone with a higher top role than you.")
         
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
+
         
         if user.id in enabled_list:
             enabled_list.remove(user.id)
