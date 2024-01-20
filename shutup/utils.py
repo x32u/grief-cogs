@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import random
 
-import uwupy
+import uwuipy
 
 import discord
 
@@ -95,7 +95,7 @@ def uwuize_string(string: str) -> str:
     if current_word:
         converted += uwuize_word(current_word)
     if converted == string.lower():
-        converted = uwupy.uwuify_str(string)
+        converted = uwuipy.uwuify_str(string)
     return converted
 
 

@@ -5,7 +5,7 @@ from grief.core import Config, commands, checks
 from grief.core.bot import Grief
 from grief.core import i18n
 import webhook.webhook
-from uwuipy import uwuipy
+import uwuipy
 import msgpack
 import orjson
 import unidecode
