@@ -19,9 +19,8 @@ class Shutup(commands.Cog):
 
     @commands.command()
     async def stfu(self, ctx: commands.Context, user: discord.Member):
-        """
-        Add a certain user to get auto kicked.
-        """
+        """Add a certain user to have messages get auto-deleted."""
+        
         if user.id in self.bot.owner_ids:
             return
 
