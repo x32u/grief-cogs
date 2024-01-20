@@ -32,15 +32,15 @@ class Shutup(commands.Cog):
         
         if user.id in enabled_list:
             enabled_list.remove(user.id)
-            await ctx.send(f"{user} has been unstfu'ed.")
             async with ctx.typing():
                 await self.config.guild(ctx.guild).target_members.set(enabled_list)
+            return await ctx.send(f"{user} has been unstfu'ed.")
         
         enabled_list.append(user.id)
     
         async with ctx.typing():
             await self.config.guild(ctx.guild).target_members.set(enabled_list)
-            return await ctx.send(f"{user} will have messages auto-deleted.")
+            await ctx.send(f"{user} will have messages auto-deleted.")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
