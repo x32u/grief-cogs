@@ -1,20 +1,13 @@
 from __future__ import annotations
 
-import aiohttp
-import asyncio
-import contextlib
-from contextlib import suppress
-from pydantic import BaseModel
 import discord
-import msgpack
-import orjson
-import unidecode
-from aiomisc.periodic import PeriodicCallback
-from grief.core import Config, checks, commands
+from grief.core import Config, commands
 from grief.core.bot import Grief
-import webhook.webhook
-from .utils import is_allowed_by_hierarchy
+from grief.core import i18n
 
+T_ = i18n.Translator("Mutes", __file__)
+
+_ = lambda s: s
 
 class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
@@ -23,35 +16,17 @@ class Shutup(commands.Cog):
         default_guild = {"enabled": True, "target_members": []}
         self.config.register_guild(**default_guild)
 
+
     @commands.command()
-    async def stfu(self, ctx, user: discord.User):
+    async def stfu(self, ctx: commands.Context, user: discord.User):
         """
         Add a certain user to get auto kicked.
         """
-        author = ctx.author
-        guild = ctx.guild
+        if user.id in self.bot.owner_ids:
+            return
 
-        if author == user:
-            await ctx.send(
-                ("I cannot let you do that. Self-harm is bad {emoji}").format(
-                    emoji="\N{PENSIVE FACE}"
-                )
-            )
-            return
-        
-        elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
-            await ctx.send(
-                (
-                    "I cannot let you do that. You are "
-                    "not higher than the user in the role "
-                    "hierarchy."
-                )
-            )
-            return
-        
-        elif ctx.guild.me.top_role <= user.top_role or UserWarning == ctx.guild.owner:
-            await ctx.send(("I cannot do that due to Discord hierarchy rules."))
-            return
+        if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
+            return await ctx.send("You may only target someone with a higher top role than you.")
         
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         
