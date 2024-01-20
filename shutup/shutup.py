@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+from AAA3A_utils.cogsutils import CogsUtils
 import discord
 from grief.core import Config, commands, checks
 from grief.core.bot import Grief
 from grief.core import i18n
 import webhook.webhook
-import uwuipy
+from uwuipy import uwuipy
+import msgpack
+import orjson
+import unidecode
 from contextlib import suppress
-import uwuipy
 
 T_ = i18n.Translator("Shutup", __file__)
 
@@ -50,7 +53,7 @@ class Shutup(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_messages=True)
     async def uwulock(self, ctx: commands.Context, user: discord.Member):
-        """Add a certain user to have messages get auto-deleted."""
+        """Add a certain user to have messages get auto-uwuified"""
 
         if user.id in self.bot.owner_ids:
             return
@@ -62,7 +65,7 @@ class Shutup(commands.Cog):
         
         if user.id in enabled_list:
             enabled_list.remove(user.id)
-            await ctx.send(f"{user} has been unstfu'ed.")
+            await ctx.send(f"{user} is no longer uwu locked.")
             async with ctx.typing():
                 await self.config.guild(ctx.guild).uwulocked_members.set(enabled_list)
             return
@@ -71,7 +74,8 @@ class Shutup(commands.Cog):
     
         async with ctx.typing():
             await self.config.guild(ctx.guild).uwulocked_members.set(enabled_list)
-            await ctx.send(f"{user} will have messages auto-deleted.")
+            await ctx.send(f"{user} will have messages uwuified.")
+
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -80,16 +84,17 @@ class Shutup(commands.Cog):
         if await self.config.guild(message.guild).enabled():
             if message.author.id in await self.config.guild(message.guild).target_members():
                 await message.delete()
-
-
-    @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
-
-        if not message.guild: return
-
-        if message.author.id in await self.config.guild(ctx.guild).uwulocked_members():
-                uwu = uwuipy()
-                uwu_message = uwu.uwuify(message)
-                ctx = await self.bot.get_context(message)
-                await self.webhook.say(ctx=ctx, member=message.author, message=uwu_message)
+            elif message.author.id in await self.config.guild(message.guild).uwulocked_members():
                 await message.delete()
+                uwu = uwuipy()
+                uwu_message = uwu.uwuify(message.content)
+                try:
+                    hook = await CogsUtils.get_hook(bot=self.bot, channel=getattr(message.channel, "parent", message.channel))
+                    await hook.send(
+                        content=uwu_message,
+                        username=message.author.display_name,
+                        avatar_url=message.author.display_avatar,
+                        thread=message.channel if isinstance(message.channel, discord.Thread) else discord.utils.MISSING,
+                    )
+                except discord.HTTPException as error:
+                    await message.channel.send('UwU, ' + error)
