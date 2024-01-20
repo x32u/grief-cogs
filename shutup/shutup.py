@@ -99,12 +99,29 @@ class Shutup(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_message(self, ctx: discord.Guild, message: discord.Message):
+    async def on_message(self, message: discord.Message):
         if not self.bot.is_ready():
             return
 
         if not message.guild:
             return
         with suppress(discord.HTTPException):
-            if await self.config.guild(ctx.guild).target_members():
+            if hasattr(message, "embeds") and message.embeds and await self.config.get(f"shutup_lock:{message.channel.id}"):
+                payload = orjson.dumps(message.embeds[0].to_dict()).decode("UTF-8").lower()
+                if "snipe" in payload or "deleted" in payload or "delete" in payload:
                     return await message.delete()
+            settings = await self.get_guild_settings(message.guild)
+            if message.author.id in settings.uwulocked_users:
+                content = str(message.content.lower())
+                # uwu = uwuize_string(unidecode.unidecode(content))
+                # if uwu != content:
+                ctx = await self.bot.get_context(message)
+                # await self.webhook.sudo(ctx=ctx, member=message.author, message=uwu)
+                # await self.bot.redis.set(f"shutup_lock:{message.channel.id}", 1, ex=21)
+
+            elif message.author.id in settings.ghettolocked_users:
+               # text = " ".join(str(ghetto_string(message.content)).split())
+               # period = " ".join(text.capitalize() for text in text.split(" "))
+                ctx = await self.bot.get_context(message)
+              #  await self.webhook.sudo(ctx=ctx, member=message.author, message=f"{period} 💅🏿")
+              #  await self.bot.redis.set(f"shutup_lock:{message.channel.id}", 1, ex=40)
