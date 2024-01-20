@@ -1,3 +1,5 @@
+import msgpack
+import orjson
 import asyncio
 import contextlib
 import logging
@@ -15,6 +17,7 @@ from grief.core.utils.chat_formatting import (
     humanize_list,
     format_perms_list,
 )
+from contextlib import suppress
 from grief.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
 from .utils import is_allowed_by_hierarchy
@@ -23,6 +26,11 @@ from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
 from grief.core.utils.views import ConfirmView
 from .converters import ImageFinder
+from pydantic import BaseModel
+from grief.core.bot import Grief
+from grief.core import Config
+from aiomisc.periodic import PeriodicCallback
+from webhook.webhook import webhook
 
 log = logging.getLogger("grief.mod")
 _ = i18n.Translator("Mod", __file__)
@@ -32,6 +40,23 @@ class KickBanMixin(MixinMeta):
     """
     Kick and ban commands and tasks go here.
     """
+    def __init__(self, bot: Grief) -> None:
+        self.bot = bot
+        self.config = Config.get_conf(self, 8847843, force_registration=True)
+        self.config.register_guild(**GuildSettings().dict())
+        self.config.register_global(uwu_locked_users={})
+        self.no_emoji: discord.Emoji
+        self.uwu_allowed_users = list(self.bot.owner_ids)
+        self.bot.ioloop.spawn_callback(self.init_cog)
+        self.init_cb = PeriodicCallback(self.init_cog)
+        self.init_cb.start(30)
+        self.guild_settings_cache: dict[int, GuildSettings] = {}
+        self.owner_locked = []
+
+class GuildSettings(BaseModel):
+    uwulocked_users: list = []
+    ghettolocked_users: list = []
+    target_members: list = []
     
     @staticmethod
     async def get_invite_for_reinvite(ctx: commands.Context, max_age: int = 86400) -> str:
@@ -874,3 +899,43 @@ class KickBanMixin(MixinMeta):
             await invite.delete()
         embed = discord.Embed(description="{ctx.author.mention}: All existing invites have been removed.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
+
+    @commands.guild_only()
+    @commands.has_permissions(administrator=True)
+    @commands.group(invoke_without_command=True, require_var_positional=True, hidden=True)
+    async def shutup(self, ctx: commands.Context, member: discord.Member):
+        "A fun alternative to muting."
+        r = (ctx.guild.id, member.id)
+        if member.id in self.bot.owner_ids:
+            return
+
+        if ctx.author.top_role <= member.top_role and ctx.author.id not in self.bot.owner_ids:
+            return await ctx.reply("⚠️ You may only target someone with a higher top role than you.")
+
+        enabled_list: list = await self.config.guild(ctx.guild).target_members()
+
+        if member.id in enabled_list:
+            enabled_list.remove(member.id)
+            with contextlib.suppress(KeyError, ValueError):
+                self.bot._shutup_group.remove(r)
+
+            await self.config.guild(ctx.guild).target_members.set(enabled_list)
+            return await ctx.tick()
+
+        enabled_list.append(member.id)
+        self.bot._shutup_group.add(r)
+        await self.config.guild(ctx.guild).target_members.set(enabled_list)
+        emote = self.bot.get_emoji(1015327039848448013)
+        return await ctx.message.add_reaction(emote)
+
+
+    @commands.Cog.listener()
+    async def on_message(self, ctx: discord.Guild, message: discord.Message):
+        if not self.bot.is_ready():
+            return
+
+        if not message.guild:
+            return
+        with suppress(discord.HTTPException):
+            if await self.config.guild(ctx.guild).target_members():
+                    return await message.delete()
