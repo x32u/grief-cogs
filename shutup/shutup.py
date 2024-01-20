@@ -18,6 +18,9 @@ import webhook.webhook
 class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
+        self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
+        default_guild = {"enabled": "True", "blacklisted_ids": []}
+        self.config.register_guild(**default_guild)
     
     @commands.command()
     async def stfu(self, ctx, user: discord.User):
@@ -33,5 +36,6 @@ class Shutup(commands.Cog):
                 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message, member: discord.Member):
-            if member.id in await self.config.guild(member.guild).blacklisted_ids():
-              await message.delete()
+            if await self.config.guild(member.guild).enabled():
+                if member.id in await self.config.guild(member.guild).blacklisted_ids():
+                    await message.delete()
