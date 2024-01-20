@@ -18,9 +18,10 @@ class Shutup(commands.Cog):
 
 
     @commands.command()
+    @commands.has_permissions(manage_messages=True)
     async def stfu(self, ctx: commands.Context, user: discord.Member):
         """Add a certain user to have messages get auto-deleted."""
-        
+
         if user.id in self.bot.owner_ids:
             return
 
