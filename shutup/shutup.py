@@ -9,7 +9,7 @@ from uwuipy import uwuipy
 import msgpack
 import orjson
 import unidecode
-from roleplay.uwuhelpers import uwuize_string
+from .utils import uwuize_string
 from contextlib import suppress
 
 T_ = i18n.Translator("Shutup", __file__)
