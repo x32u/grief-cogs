@@ -18,8 +18,12 @@ class Shutup(commands.Cog):
         default_guild = {"enabled": True, "target_members": []}
         self.config.register_guild(**default_guild)
 
-    @staticmethod
-    async def stfu(self, user: Union[discord.Member, discord.User, discord.Object], ctx: commands.Context,) -> Tuple[bool, str]:
+    @commands.command(invoke_without_command=True, require_var_positional=True)
+    @commands.has_permissions(manage_messages=True)
+    async def stfu(self, ctx: commands.Context, user: discord.Member):
+        """
+        Add a certain user to get auto kicked.
+        """
         
         author = ctx.author
         guild = ctx.guild
@@ -42,15 +46,7 @@ class Shutup(commands.Cog):
                 )
             elif guild.me.top_role <= user.top_role or user == guild.owner:
                 return False, _("I cannot do that due to Discord hierarchy rules.")
-
-
-    @commands.command(invoke_without_command=True, require_var_positional=True)
-    @commands.has_permissions(manage_messages=True)
-    async def stfu(self, ctx: commands.Context, user: discord.Member):
-        """
-        Add a certain user to get auto kicked.
-        """
-        
+            
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         
         if user.id in enabled_list:
