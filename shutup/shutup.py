@@ -32,7 +32,7 @@ class Shutup(commands.Cog):
         enabled_list.append(user.id)
         
         if user.id in enabled_list:
-            enabled_list.remove(user.id)
+            enabled_list.unappend(user.id)
             return await ctx.send(f"{user} has been unstfu'ed.")
         
         else:
