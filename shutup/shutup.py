@@ -36,11 +36,9 @@ class Shutup(commands.Cog):
 
                 
     @commands.Cog.listener()
-    async def on_message(self, ctx: discord.Guild, message: discord.Message, member: discord.Member):
-        isEnabled = await self.config.guild(member.guild).enabled()
+    async def on_message(self, message: discord.Message):
+        isEnabled = await self.config.guild(message.guild.id).enabled()
         if isEnabled:
-            targetMembers = await self.config.guild(member.guild).target_members()
-            ctx.channel.send(f"{targetMembers}")
-            if member.id in targetMembers:
-                ctx.channel.send(f"{member} is in the list.")
+            targetMembers = await self.config.guild(message.guild.id).target_members()
+            if message.author.id in targetMembers:
                 await message.delete()
