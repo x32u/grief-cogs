@@ -18,10 +18,10 @@ import webhook.webhook
 class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
-        self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
+        self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True, )
         default_guild = {"enabled": True, "target_members": []}
         self.config.register_guild(**default_guild)
-    
+
     @commands.command()
     async def stfu(self, ctx, user: discord.User):
         """
@@ -29,16 +29,17 @@ class Shutup(commands.Cog):
         """
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         enabled_list.append(user.id)
-        
+
         async with ctx.typing():
             await self.config.guild(ctx.guild).target_members.set(enabled_list)
         await ctx.send(f"{user} will have messages auto-deleted.")
 
-                
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        isEnabled = await self.config.guild(message.guild.id).enabled()
-        if isEnabled:
-            targetMembers = await self.config.guild(message.guild.id).target_members()
-            if message.author.id in targetMembers:
+        if not message.guild: return
+        
+        is_enabled = await self.config.guild(message.guild.id).enabled()
+        if is_enabled:
+            target_members = await self.config.guild(message.guild.id).target_members()
+            if message.author.id in target_members:
                 await message.delete()
