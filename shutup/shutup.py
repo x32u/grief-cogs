@@ -27,6 +27,7 @@ class Shutup(commands.Cog):
         """
         Add a certain user to get auto kicked.
         """
+        
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         enabled_list.append(user.id)
 
@@ -39,11 +40,10 @@ class Shutup(commands.Cog):
         """
         Add a certain user to get auto kicked.
         """
+        
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         enabled_list.remove(user.id)
-
-        async with ctx.typing():
-            await self.config.guild(ctx.guild).target_members.set(enabled_list)
+        
         await ctx.send(f"{user} will have messages auto-deleted.")
 
 
