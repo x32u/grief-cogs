@@ -33,6 +33,7 @@ class Shutup(commands.Cog):
 
                 
     @commands.Cog.listener()
-    async def on_message(self, ctx: discord.Guild, message: discord.Message, user: discord.Member):
-                if user.id in await self.config.guild(ctx.guild).blacklisted_ids():
+    async def on_message(self, ctx: discord.Guild, message: discord.Message, member: discord.Member):
+            if await self.config.guild(member.guild).enabled():
+                if member.id in await self.config.guild(ctx.guild).blacklisted_ids():
                     await message.delete()
