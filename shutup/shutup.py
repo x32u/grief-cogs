@@ -52,7 +52,7 @@ class Shutup(commands.Cog):
         if user.id in self.bot.owner_ids:
             return
 
-        if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
+        if ctx.author.top_role < user.top_role and ctx.author.id not in self.bot.owner_ids:
             return await ctx.send("You may only target someone with a higher top role than you.")
         
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
