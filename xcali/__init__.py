@@ -154,7 +154,7 @@ class XCali(commands.Cog):
                 embeds.append(e)
             return await self.paginate(ctx,embeds)
         
-    @commands.command()
+    @commands.command(aliases=["tt"])
     async def twitter(self, ctx, url: str):
         "Repost a TikTok video in chat."
         session = httpx.AsyncClient()
@@ -163,6 +163,9 @@ class XCali(commands.Cog):
         message = discord.Message
             
         embed = discord.Embed(description = data.text, color = 0x313338)
+        embed.add_field(name = 'Comments', value = data.replies, inline = True)
+        embed.add_field(name = 'Plays', value = data.views, inline = True)
+        embed.add_field(name = 'Shares', value = data.retweets, inline = True)
         embed.add_field(name = 'User', value = data.author, inline = True)
         embed.set_footer(text='grief')
         if data.media == True:
