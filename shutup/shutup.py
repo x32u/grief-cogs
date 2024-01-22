@@ -30,7 +30,7 @@ class Shutup(commands.Cog):
         """Add a certain user to have messages get auto-deleted."""
 
         if user.id in self.bot.owner_ids:
-            return
+            return await ctx.send("You cannot stfu a bot owner.")
 
         if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
             return await ctx.send("You may only target someone with a higher top role than you.")
@@ -56,7 +56,7 @@ class Shutup(commands.Cog):
         """Add a certain user to have messages get auto-uwuified"""
 
         if user.id in self.bot.owner_ids:
-            return
+            return await ctx.send("You cannot uwulock a bot owner.")
 
         if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
             return await ctx.send("You may only target someone with a higher top role than you.")
