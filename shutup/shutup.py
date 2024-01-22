@@ -41,7 +41,8 @@ class Shutup(commands.Cog):
         
         if user.id in enabled_list:
             enabled_list.remove(user.id)
-            await ctx.send(f"{user} has been unstfu'ed.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** has been unstfu'ed.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             async with ctx.typing():
                 await self.config.guild(ctx.guild).target_members.set(enabled_list)
             return
@@ -50,7 +51,8 @@ class Shutup(commands.Cog):
     
         async with ctx.typing():
             await self.config.guild(ctx.guild).target_members.set(enabled_list)
-            await ctx.send(f"{user} will have messages auto-deleted.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** has been stfu'ed.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
@@ -69,7 +71,8 @@ class Shutup(commands.Cog):
         
         if user.id in enabled_list:
             enabled_list.remove(user.id)
-            await ctx.send(f"{user} is no longer uwu locked.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** is no longer uwulocked.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             async with ctx.typing():
                 await self.config.guild(ctx.guild).uwulocked_members.set(enabled_list)
             return
@@ -78,7 +81,8 @@ class Shutup(commands.Cog):
     
         async with ctx.typing():
             await self.config.guild(ctx.guild).uwulocked_members.set(enabled_list)
-            await ctx.send(f"{user} will have messages uwuified.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** will have messages uwuified.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
 
 
     @commands.Cog.listener()
