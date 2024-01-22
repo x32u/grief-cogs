@@ -30,10 +30,12 @@ class Shutup(commands.Cog):
         """Add a certain user to have messages get auto-deleted."""
 
         if user.id in self.bot.owner_ids:
-            return await ctx.send("You cannot stfu a bot owner.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You can't stfu a bot owner.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
 
         if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
-            return await ctx.send("You may only target someone with a higher top role than you.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You may only target someone with a lower top role than you.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         
@@ -56,10 +58,12 @@ class Shutup(commands.Cog):
         """Add a certain user to have messages get auto-uwuified"""
 
         if user.id in self.bot.owner_ids:
-            return await ctx.send("You cannot uwulock a bot owner.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You can't uwulock a bot owner.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
 
         if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
-            return await ctx.send("You may only target someone with a higher top role than you.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You may only target someone with a lower top role than you.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         
         enabled_list: list = await self.config.guild(ctx.guild).uwulocked_members()
         
