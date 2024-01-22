@@ -269,6 +269,7 @@ class Owner(commands.Cog):
             num=bold(f"<t:{int(guild.created_at.timestamp())}:R>"),
         )
         total_users = humanize_number(guild.member_count)
+        
         try:
             joined_at = guild.me.joined_at
         except AttributeError:
