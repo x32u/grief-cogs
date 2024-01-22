@@ -221,7 +221,7 @@ class XCali(commands.Cog):
             for result in results:
                 if "grief" in str(message.content).lower():
                     for d in message.content.split():
-                        if "tiktok.com" in d.lower():
+                        if "x.com" in d.lower():
                             ctx = await self.bot.get_context(message)
                             session = httpx.AsyncClient()
                             response = await session.get(f"https://api.rival.rocks/twitter/post?url={d}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
