@@ -162,7 +162,7 @@ class XCali(commands.Cog):
         data = TwitterPostResponse(**response.json())
         message = discord.Message
             
-        embed = discord.Embed(description = data.desc, color = 0x313338)
+        embed = discord.Embed(description = data.text, color = 0x313338)
         embed.add_field(name = 'User', value = data.author, inline = True)
         embed.set_footer(text='grief')
         if data.media == True:
