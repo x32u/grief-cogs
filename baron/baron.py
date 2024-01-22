@@ -685,7 +685,7 @@ class Baron(commands.Cog):
             return
         
         elif guild.id in data["blacklist"]:
-            await self.notify_guild(guild, f"This server has been blacklisted, please join https://discord.gg/seer for support.",)
+            await self.notify_guild(guild, f"This server has been blacklisted, please join https://discord.gg/z9EWUn6WMj for support.",)
             await guild.leave()
             await self.baron_log("bl_leave", guild=guild)
 
@@ -697,8 +697,8 @@ class Baron(commands.Cog):
             await guild.chunk()
         
         if data["min_members"] and guild.member_count < data["min_members"]:
-            await self.notify_guild(guild, f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148"),
+            await self.notify_guild(guild, f"you must have at least 50 members, if your server is active you can request a whitelist at https://discord.gg/z9EWUn6WMj"),
             await guild.leave()
         else:
-            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/seer\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>"),
+            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/z9EWUn6WMj\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>"),
             return
