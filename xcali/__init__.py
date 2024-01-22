@@ -215,6 +215,37 @@ class XCali(commands.Cog):
                                     embeds.append(e)
                                 return await self.paginate(ctx,embeds)
                             
+    async def reposterr(self, message: discord.Message, query:Any):
+        results = query.findall(message.content)
+        if results:
+            for result in results:
+                if "grief" in str(message.content).lower():
+                    for d in message.content.split():
+                        if "tiktok.com" in d.lower():
+                            ctx = await self.bot.get_context(message)
+                            session = httpx.AsyncClient()
+                            response = await session.get(f"https://api.rival.rocks/twitter/post?url={d}&api-key=05eab8f3-f0f6-443b-9d5e-fba1339c4b04", headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+                            data = TwitterPostResponse(**response.json())
+                                
+                            embed = discord.Embed(description = data.desc, color = 0x313338)
+                            embed.add_field(name = 'Comments', value = data.replies, inline = True)
+                            embed.add_field(name = 'User', value = data.author, inline = True)
+                            embed.set_footer(text='grief')
+                            if data.is_video == True:
+                                session = httpx.AsyncClient()
+                                f = await session.get(data.items,headers={'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) 20100101 Firefox/103.0"})
+                                file = discord.File(fp=io.BytesIO(f.read()), filename='tiktok.mp4')
+                                await message.delete()   
+                                return await ctx.send(embed=embed, file=file)  
+                            else:
+                                file = None
+                                embeds = []
+                                for item in data.items:
+                                    e = embed.copy()
+                                    e.set_image(url=item)
+                                    embeds.append(e)
+                                return await self.paginate(ctx,embeds)
+                            
     @commands.command()
     async def google(self, ctx, str: str):
         "Repost a TikTok video in chat."
