@@ -845,7 +845,7 @@ class KickBanMixin(MixinMeta):
                     return await ctx.send(_("Something went wrong while trying to get the image."))
         else:
             await ctx.guild.edit(banner=None)
-            return
+            await ctx.send("server banner has been cleared.")
 
         try:
             async with ctx.typing():
