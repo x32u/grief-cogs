@@ -486,7 +486,7 @@ class Baron(commands.Cog):
         await self.leave_guilds(
             ctx,
             guilds,
-            f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/seer and check out https://discord.com/channels/926754520682336297/1173290858339115148",
+            f"grief is whitelist only if you would like your server whitelisted, please join https://discord.gg/KVbq2pDD5J and check out https://discord.com/channels/926754520682336297/1173290858339115148",
             confirmed=confirm,
         )
 
@@ -681,7 +681,7 @@ class Baron(commands.Cog):
         data = self.settings_cache
         
         if guild.id in data["whitelist"]:
-            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/seer\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>",)
+            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/KVbq2pDD5J\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>",)
             return
         
         elif guild.id in data["blacklist"]:
