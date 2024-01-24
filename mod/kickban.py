@@ -820,6 +820,48 @@ class KickBanMixin(MixinMeta):
         """Edit various guild settings."""
    
 
+    @commands.command(name="setbanner", hidden=True)
+    async def guild_banner(self, ctx, url: str=None):
+        """Set the invite splash screen of the server.
+
+        `<image>` URL to the image or image uploaded with running the
+        command
+
+        """
+        if len(ctx.message.attachments) > 0:  # Attachments take priority
+            data = await ctx.message.attachments[0].read()
+        elif url is not None:
+            if url.startswith("<") and url.endswith(">"):
+                url = url[1:-1]
+
+            async with aiohttp.ClientSession() as session:
+                try:
+                    async with session.get(url) as r:
+                        data = await r.read()
+                except aiohttp.InvalidURL:
+                    return await ctx.send(_("That URL is invalid."))
+                except aiohttp.ClientError:
+                    return await ctx.send(_("Something went wrong while trying to get the image."))
+        else:
+            await ctx.send_help()
+            return
+
+        try:
+            async with ctx.typing():
+                await ctx.guild.edit(banner=data)
+        except discord.HTTPException:
+            await ctx.send(
+                _(
+                    "Failed. Remember that you can edit my avatar "
+                    "up to two times a hour. The URL or attachment "
+                    "must be a valid image in either JPG or PNG format."
+                )
+            )
+        except ValueError:
+            await ctx.send(_("JPG / PNG format only."))
+        else:
+            await ctx.send(_("Done."))
+    
     @commands.command(name="seticon", hidden=True)
     async def guild_icon(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
