@@ -846,6 +846,7 @@ class KickBanMixin(MixinMeta):
         else:
             await ctx.guild.edit(banner=None)
             await ctx.send("server banner has been cleared.")
+            return
 
         try:
             async with ctx.typing():
