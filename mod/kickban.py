@@ -814,7 +814,7 @@ class KickBanMixin(MixinMeta):
                         ).format(invite_link=invite)
                     )
     
-    @commands.group(name="gedit",)
+    @commands.group(name="guildedit",)
     @commands.is_owner()
     async def gedit(self, ctx: commands.Context) -> None:
         """Edit various guild settings."""
