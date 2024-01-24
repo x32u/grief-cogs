@@ -847,15 +847,10 @@ class KickBanMixin(MixinMeta):
         command
 
         """
-        if image is None:
-            image = await ImageFinder().search_for_images(ctx)
+
         url = image[0]
 
-        b, mime = await self.bytes_download(url)
-        if not b:
-            return await ctx.send("That's not a valid image.")
-
-        await ctx.guild.edit(splash=b.getvalue())
+        await ctx.guild.edit(splash=url())
         return await ctx.tick()
 
     @commands.command()
