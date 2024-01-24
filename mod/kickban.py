@@ -828,6 +828,9 @@ class KickBanMixin(MixinMeta):
         command
 
         """
+        if ctx.guild.premium_tier != 2:
+            return await ctx.send("Your server must be boosted to level 2 before setting a banner.")
+        
         if len(ctx.message.attachments) > 0:  # Attachments take priority
             data = await ctx.message.attachments[0].read()
         
@@ -861,7 +864,7 @@ class KickBanMixin(MixinMeta):
         except ValueError:
             await ctx.send(_("JPG / PNG format only."))
         else:
-            embed = discord.Embed(description=f"> {ctx.author.mention}: server banner has been updated to [image]({url}).", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: server banner has been updated.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
     
     @commands.command(name="seticon", hidden=True)
