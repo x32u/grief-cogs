@@ -814,12 +814,12 @@ class KickBanMixin(MixinMeta):
                         ).format(invite_link=invite)
                     )
     
-    @commands.group(aliases=["gedit", "sedit", "serveredit"], hidden=True)
+    @commands.group(name="gedit",)
     @commands.is_owner()
     async def guildedit(self, ctx: commands.Context) -> None:
         """Edit various guild settings."""
    
-
+    @guildedit.command()
     @commands.command(name="setbanner", hidden=True)
     async def guild_banner(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
@@ -828,10 +828,7 @@ class KickBanMixin(MixinMeta):
         command
 
         """
-        if ctx.guild.premium_tier != 2:
-            embed = discord.Embed(description=f"> {ctx.author.mention}: your server must have level 2 before setting a banner.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
-        
+
         if len(ctx.message.attachments) > 0:  # Attachments take priority
             data = await ctx.message.attachments[0].read()
         
@@ -868,6 +865,7 @@ class KickBanMixin(MixinMeta):
             embed = discord.Embed(description=f"> {ctx.author.mention}: server banner has been updated.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
     
+    @guildedit.command()
     @commands.command(name="seticon", hidden=True)
     async def guild_icon(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
@@ -911,6 +909,7 @@ class KickBanMixin(MixinMeta):
             embed = discord.Embed(description=f"> {ctx.author.mention}: server icon has been updated.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
 
+    @guildedit.command()
     @commands.command(name="setinvitesplash", hidden=True)
     async def guild_invite(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
