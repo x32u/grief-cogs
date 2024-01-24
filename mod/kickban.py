@@ -816,7 +816,7 @@ class KickBanMixin(MixinMeta):
     
     @commands.group(name="gedit",)
     @commands.guild_only()
-    @commands.has_guild_permissions(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def guildedit(self, ctx: commands.Context) -> None:
         """Vanity management for Grief."""
    
