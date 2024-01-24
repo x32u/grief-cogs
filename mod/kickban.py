@@ -817,7 +817,8 @@ class KickBanMixin(MixinMeta):
     @commands.is_owner()
     async def guildedit(self, ctx: commands.Context) -> None:
         """Edit various guild settings."""
-   
+    
+    @guildedit.command()
     @commands.command(name="seticon", hidden=True)
     async def guild_icon(self, ctx, image: ImageFinder = None):
         """Set the icon of the server.
@@ -837,7 +838,8 @@ class KickBanMixin(MixinMeta):
 
         await ctx.guild.edit(icon=b.getvalue())
         return await ctx.tick()
-
+    
+    @guildedit.command()
     @commands.command(name="setinvitesplash", aliases=["splash"], hidden=True)
     async def guild_invite(self, ctx, image: ImageFinder = None):
         """Set the invite splash screen of the server.
@@ -877,9 +879,7 @@ class KickBanMixin(MixinMeta):
     @commands.has_permissions(manage_guild=True)
     async def clearinvites(self, ctx):
         """Delete all invites in the server."""
-        
-        guild = ctx
-        author = ctx.author
+    
         invites = await ctx.guild.invites()
         for invite in invites:
             await invite.delete()
