@@ -875,10 +875,13 @@ class KickBanMixin(MixinMeta):
 
     @commands.command(aliases=["ci"])
     @commands.has_permissions(manage_guild=True)
-    async def clearinvites(self, ctx: commands.Context):
+    async def clearinvites(self, ctx):
         """Delete all invites in the server."""
+        
+        guild = ctx
+        author = ctx.author
         invites = await ctx.guild.invites()
         for invite in invites:
             await invite.delete()
-        embed = discord.Embed(description="{ctx.author.mention}: All existing invites have been removed.", color=0x313338)
+        embed = discord.Embed(description="> {ctx.author.mention}: All existing invites have been removed.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
