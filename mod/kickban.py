@@ -816,10 +816,10 @@ class KickBanMixin(MixinMeta):
     
     @commands.group(name="gedit",)
     @commands.is_owner()
-    async def guildedit(self, ctx: commands.Context) -> None:
+    async def gedit(self, ctx: commands.Context) -> None:
         """Edit various guild settings."""
    
-    @guildedit.command()
+    @gedit.command()
     @commands.command(name="setbanner", hidden=True)
     async def guild_banner(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
@@ -865,7 +865,7 @@ class KickBanMixin(MixinMeta):
             embed = discord.Embed(description=f"> {ctx.author.mention}: server banner has been updated.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
     
-    @guildedit.command()
+    @gedit.command()
     @commands.command(name="seticon", hidden=True)
     async def guild_icon(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
@@ -909,7 +909,7 @@ class KickBanMixin(MixinMeta):
             embed = discord.Embed(description=f"> {ctx.author.mention}: server icon has been updated.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
 
-    @guildedit.command()
+    @gedit.command()
     @commands.command(name="setinvitesplash", hidden=True)
     async def guild_invite(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
