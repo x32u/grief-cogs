@@ -821,7 +821,7 @@ class KickBanMixin(MixinMeta):
    
     @gedit.command()
     @commands.command(name="setbanner", hidden=True)
-    async def guild_banner(self, ctx, url: str=None):
+    async def guild_baner(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
 
         `<image>` URL to the image or image uploaded with running the
