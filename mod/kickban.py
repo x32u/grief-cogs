@@ -830,6 +830,7 @@ class KickBanMixin(MixinMeta):
         """
         if len(ctx.message.attachments) > 0:  # Attachments take priority
             data = await ctx.message.attachments[0].read()
+        
         elif url is not None:
             if url.startswith("<") and url.endswith(">"):
                 url = url[1:-1]
@@ -843,7 +844,7 @@ class KickBanMixin(MixinMeta):
                 except aiohttp.ClientError:
                     return await ctx.send(_("Something went wrong while trying to get the image."))
         else:
-            await ctx.send_help()
+            await ctx.guild.edit(banner=None)
             return
 
         try:
@@ -852,9 +853,7 @@ class KickBanMixin(MixinMeta):
         except discord.HTTPException:
             await ctx.send(
                 _(
-                    "Failed. Remember that you can edit my avatar "
-                    "up to two times a hour. The URL or attachment "
-                    "must be a valid image in either JPG or PNG format."
+                    "Must be a valid image in either JPG or PNG format."
                 )
             )
         except ValueError:
