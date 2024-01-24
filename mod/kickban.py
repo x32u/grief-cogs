@@ -845,7 +845,8 @@ class KickBanMixin(MixinMeta):
                     return await ctx.send(_("Something went wrong while trying to get the image."))
         else:
             await ctx.guild.edit(banner=None)
-            await ctx.send("server banner has been cleared.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: server banner has been cleared.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             return
 
         try:
@@ -860,7 +861,8 @@ class KickBanMixin(MixinMeta):
         except ValueError:
             await ctx.send(_("JPG / PNG format only."))
         else:
-            await ctx.send(_("Done."))
+            embed = discord.Embed(description=f"> {ctx.author.mention}: server banner has been updated to {url}.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
     
     @commands.command(name="seticon", hidden=True)
     async def guild_icon(self, ctx, url: str=None):
