@@ -829,7 +829,8 @@ class KickBanMixin(MixinMeta):
 
         """
         if ctx.guild.premium_tier != 2:
-            return await ctx.send("Your server must be boosted to level 2 before setting a banner.")
+            embed = discord.Embed(description=f"> {ctx.author.mention}: your server must have level 2 before setting a banner.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         
         if len(ctx.message.attachments) > 0:  # Attachments take priority
             data = await ctx.message.attachments[0].read()
@@ -890,7 +891,9 @@ class KickBanMixin(MixinMeta):
                 except aiohttp.ClientError:
                     return await ctx.send(_("Something went wrong while trying to get the image."))
         else:
-            await ctx.send_help()
+            await ctx.guild.edit(icon=None)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: server icon has been cleared.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             return
 
         try:
@@ -899,15 +902,14 @@ class KickBanMixin(MixinMeta):
         except discord.HTTPException:
             await ctx.send(
                 _(
-                    "Failed. Remember that you can edit my avatar "
-                    "up to two times a hour. The URL or attachment "
                     "must be a valid image in either JPG or PNG format."
                 )
             )
         except ValueError:
             await ctx.send(_("JPG / PNG format only."))
         else:
-            await ctx.send(_("Done."))
+            embed = discord.Embed(description=f"> {ctx.author.mention}: server icon has been updated.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command(name="setinvitesplash", hidden=True)
     async def guild_invite(self, ctx, url: str=None):
@@ -917,6 +919,10 @@ class KickBanMixin(MixinMeta):
         command
 
         """
+        if ctx.guild.premium_tier != 1:
+            embed = discord.Embed(description=f"> {ctx.author.mention}: your server must have level 1 before setting a banner.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
+        
         if len(ctx.message.attachments) > 0:  # Attachments take priority
             data = await ctx.message.attachments[0].read()
         elif url is not None:
@@ -932,7 +938,9 @@ class KickBanMixin(MixinMeta):
                 except aiohttp.ClientError:
                     return await ctx.send(_("Something went wrong while trying to get the image."))
         else:
-            await ctx.send_help()
+            await ctx.guild.edit(splash=None)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: server icon has been cleared.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
             return
 
         try:
@@ -949,7 +957,8 @@ class KickBanMixin(MixinMeta):
         except ValueError:
             await ctx.send(_("JPG / PNG format only."))
         else:
-            await ctx.send(_("Done."))
+            embed = discord.Embed(description=f"> {ctx.author.mention}: server invite splash has been updated.", color=0x313338)
+            await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command()
     @commands.has_permissions(manage_channels=True)
