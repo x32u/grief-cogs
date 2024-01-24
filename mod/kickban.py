@@ -820,8 +820,8 @@ class KickBanMixin(MixinMeta):
         """Edit various guild settings."""
    
 
-    @commands.command(name="setinvitesplash", hidden=True)
-    async def guild_invite(self, ctx, url: str=None):
+    @commands.command(name="seticon", hidden=True)
+    async def guild_icon(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
 
         `<image>` URL to the image or image uploaded with running the
