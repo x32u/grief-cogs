@@ -681,7 +681,7 @@ class Baron(commands.Cog):
         data = self.settings_cache
         
         if guild.id in data["whitelist"]:
-            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/KVbq2pDD5J\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>",)
+            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/KVbq2pDD5Jn\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>",)
             return
         
         elif guild.id in data["blacklist"]:
@@ -700,5 +700,5 @@ class Baron(commands.Cog):
             await self.notify_guild(guild, f"you must have at least 50 members, if your server is active you can request a whitelist at https://discord.gg/KVbq2pDD5J"),
             await guild.leave()
         else:
-            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/z9EWUn6WMj\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>"),
+            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/KVbq2pDD5J\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>"),
             return
