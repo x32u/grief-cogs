@@ -822,7 +822,7 @@ class KickBanMixin(MixinMeta):
    
     @guildedit.command()
     async def setbanner(self, ctx, url: str=None):
-        """Set the invite splash screen of the server.
+        """Set the server banner.
 
         `<image>` URL to the image or image uploaded with running the
         command
@@ -867,7 +867,7 @@ class KickBanMixin(MixinMeta):
     
     @guildedit.command()
     async def seticon(self, ctx, url: str=None):
-        """Set the invite splash screen of the server.
+        """Set the server icon of the server.
 
         `<image>` URL to the image or image uploaded with running the
         command
