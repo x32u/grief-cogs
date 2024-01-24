@@ -840,7 +840,7 @@ class KickBanMixin(MixinMeta):
         return await ctx.tick()
     
     @guildedit.command()
-    @commands.command(name="setinvitesplash", aliases=["splash"], hidden=True)
+    @commands.command(name="setinvitesplash", hidden=True)
     async def guild_invite(self, ctx, image: ImageFinder = None):
         """Set the invite splash screen of the server.
 
