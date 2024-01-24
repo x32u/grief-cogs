@@ -919,7 +919,7 @@ class KickBanMixin(MixinMeta):
         command
 
         """
-        if ctx.guild.premium_tier != 1:
+        if ctx.guild.premium_tier >= 1:
             embed = discord.Embed(description=f"> {ctx.author.mention}: your server must have level 1 before setting a invite splash.", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
         
