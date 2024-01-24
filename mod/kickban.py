@@ -1,5 +1,6 @@
 import msgpack
 import orjson
+import aiohttp
 import asyncio
 import contextlib
 import logging
@@ -840,18 +841,46 @@ class KickBanMixin(MixinMeta):
         return await ctx.tick()
 
     @commands.command(name="setinvitesplash", hidden=True)
-    async def guild_invite(self, ctx, image: ImageFinder = None):
+    async def guild_invite(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
 
         `<image>` URL to the image or image uploaded with running the
         command
 
         """
+        if len(ctx.message.attachments) > 0:  # Attachments take priority
+            data = await ctx.message.attachments[0].read()
+        elif url is not None:
+            if url.startswith("<") and url.endswith(">"):
+                url = url[1:-1]
 
-        url = image[0]
+            async with aiohttp.ClientSession() as session:
+                try:
+                    async with session.get(url) as r:
+                        data = await r.read()
+                except aiohttp.InvalidURL:
+                    return await ctx.send(_("That URL is invalid."))
+                except aiohttp.ClientError:
+                    return await ctx.send(_("Something went wrong while trying to get the image."))
+        else:
+            await ctx.send_help()
+            return
 
-        await ctx.guild.edit(splash=url())
-        return await ctx.tick()
+        try:
+            async with ctx.typing():
+                await ctx.guild.edit(splash=url)
+        except discord.HTTPException:
+            await ctx.send(
+                _(
+                    "Failed. Remember that you can edit my avatar "
+                    "up to two times a hour. The URL or attachment "
+                    "must be a valid image in either JPG or PNG format."
+                )
+            )
+        except ValueError:
+            await ctx.send(_("JPG / PNG format only."))
+        else:
+            await ctx.send(_("Done."))
 
     @commands.command()
     @commands.has_permissions(manage_channels=True)
