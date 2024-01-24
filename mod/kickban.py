@@ -868,7 +868,7 @@ class KickBanMixin(MixinMeta):
 
         try:
             async with ctx.typing():
-                await ctx.guild.edit(splash=url)
+                await ctx.guild.edit(splash=data)
         except discord.HTTPException:
             await ctx.send(
                 _(
