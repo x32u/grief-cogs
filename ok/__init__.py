@@ -11,6 +11,11 @@ load_dotenv()
 dotenv_values()
 
 class Ok(commands.Cog):
+    
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        pre_processed = super().format_help_for_context(ctx)
+        return (f"{pre_processed}\n")
+    
     def __init__(self, bot):
         self.bot: Grief = bot
         self.topggtoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxNjkzOTI5NzAwOTQzNDY1NiIsImJvdCI6dHJ1ZSwiaWF0IjoxNzA2MTU5NTM4fQ.sv_iYnZzcTMoSRm3Q7TPRBY517VPxDYRo6HKms2ksXU"  # Set this to your bot's Top.gg token
