@@ -13,7 +13,6 @@ class Ok(commands.Cog):
     def __init__(self, bot: Grief):
         self.bot: Grief = bot
         self.logger: Logger = getLogger("grief.topgg")
-        default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
         self.topggtoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxNjkzOTI5NzAwOTQzNDY1NiIsImJvdCI6dHJ1ZSwiaWF0IjoxNzA2MTU5NTM4fQ.sv_iYnZzcTMoSRm3Q7TPRBY517VPxDYRo6HKms2ksXU"  # Set this to your bot's Top.gg token
         self.topgg_client = topgg.DBLClient(self.bot, self.topggtoken, autopost=True)
         self.config = Config.get_conf(self, identifier=0x28411747)
