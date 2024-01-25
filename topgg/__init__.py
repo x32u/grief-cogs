@@ -22,8 +22,10 @@ class TopgShit(commands.Cog):
         try:
             await self.topggpy.post_guild_count()
             msg = await okkkk.send(f"**Top.gg API:** Posted server count ({self.topggpy.guild_count})")
+            await msg.add_reaction("<:grief_check:1107472942830456892>")
         except Exception as e:
              msg = await okkkk.send(f"**Top.gg API:** Failed to post server count\n{e.__class__.__name__}: {e}")
+             await msg.add_reaction("<:grief_x:1107472962333978655>")
 
     @update_stats.before_loop
     async def before_update_stats(self):
