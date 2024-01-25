@@ -21,16 +21,17 @@ class Ok(commands.Cog):
         
 
     @tasks.loop(minutes=25)
-    async def update_stats(self):
-        okkkk = self.bot.get_channel(1199945545117085746)
+    async def update_stats(self, bot:Grief):
+        okkkk = self.bot.get_channel(1199957267882180758)
         """This function runs every 30 minutes to automatically update your server count."""
         try:
-            await self.topgg.post_guild_count()
-            msg = await okkkk.send(f"**Top.gg API:** Posted server count)")
+            await bot.topggpy.post_guild_count()
+            msg = await okkkk.send(f"**Top.gg API:** Posted server count ({bot.topgg.guild_count})")
             await msg.add_reaction("<:grief_check:1107472942830456892>")
         except Exception as e:
              msg = await okkkk.send(f"**Top.gg API:** Failed to post server count\n{e.__class__.__name__}: {e}")
              await msg.add_reaction("<:grief_x:1107472962333978655>")
+             
 
     @update_stats.before_loop
     async def before_update_stats(self):
