@@ -2,16 +2,16 @@ from discord.ext import commands, tasks
 import topgg
 from dotenv import load_dotenv, dotenv_values
 from discord.ext.commands import Context
-from grief.core.bot import Grief
+from grief import Grief
 
 load_dotenv()
 dotenv_values()
 
 class TopgShit(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
-        self.dbl_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxNjkzOTI5NzAwOTQzNDY1NiIsImJvdCI6dHJ1ZSwiaWF0IjoxNzA2MTU5NTM4fQ.sv_iYnZzcTMoSRm3Q7TPRBY517VPxDYRo6HKms2ksXU"  # Set this to your bot's Top.gg token
-        self.topggpy = topgg.DBLClient(self.bot, self.dbl_token, autopost=True, post_shard_count=True)
+        self.bot: Grief = bot
+        dbl_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxNjkzOTI5NzAwOTQzNDY1NiIsImJvdCI6dHJ1ZSwiaWF0IjoxNzA2MTU5NTM4fQ.sv_iYnZzcTMoSRm3Q7TPRBY517VPxDYRo6HKms2ksXU"  # Set this to your bot's Top.gg token
+        self.topggpy = topgg.DBLClient(self.bot, dbl_token, autopost=True, post_shard_count=True)
         self.update_stats.start()
         
 
