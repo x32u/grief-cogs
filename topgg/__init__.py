@@ -1,3 +1,5 @@
+
+import requests
 from discord.ext import commands, tasks
 from topgg import DBLClient
 from dotenv import load_dotenv, dotenv_values
