@@ -10,7 +10,7 @@ from grief.core.bot import Grief
 load_dotenv()
 dotenv_values()
 
-class TopgShit(commands.Cog):
+class Ok(commands.Cog):
     def __init__(self, bot):
         self.bot: Grief = bot
         self.topggtoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxNjkzOTI5NzAwOTQzNDY1NiIsImJvdCI6dHJ1ZSwiaWF0IjoxNzA2MTU5NTM4fQ.sv_iYnZzcTMoSRm3Q7TPRBY517VPxDYRo6HKms2ksXU"  # Set this to your bot's Top.gg token
@@ -35,4 +35,4 @@ class TopgShit(commands.Cog):
         await self.bot.wait_until_red_ready()
 
 async def setup(bot: Grief):
-    await bot.add_cog(TopgShit(bot))  
+    await bot.add_cog(Ok(bot))  
