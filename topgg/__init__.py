@@ -2,7 +2,7 @@ from discord.ext import commands, tasks
 import topgg
 from dotenv import load_dotenv, dotenv_values
 from discord.ext.commands import Context
-from grief import Grief
+from grief.core.bot import Grief
 
 load_dotenv()
 dotenv_values()
