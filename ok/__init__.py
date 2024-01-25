@@ -1,25 +1,23 @@
 
-import requests
+
 import topgg
 from discord.ext import commands, tasks
 import discord
-from dotenv import load_dotenv, dotenv_values
 from discord.ext.commands import Context
 from grief.core.bot import Grief
-
-load_dotenv()
-dotenv_values()
+from grief.core import Config, commands
+from logging import Logger, getLogger
 
 class Ok(commands.Cog):
     
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        pre_processed = super().format_help_for_context(ctx)
-        return (f"{pre_processed}\n")
-    
     def __init__(self, bot: Grief):
         self.bot: Grief = bot
+        self.logger: Logger = getLogger("grief.topgg")
+        default_guild = {"role": None, "toggled": False, "channel": None, "vanity": None,}
         self.topggtoken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjcxNjkzOTI5NzAwOTQzNDY1NiIsImJvdCI6dHJ1ZSwiaWF0IjoxNzA2MTU5NTM4fQ.sv_iYnZzcTMoSRm3Q7TPRBY517VPxDYRo6HKms2ksXU"  # Set this to your bot's Top.gg token
         self.topgg_client = topgg.DBLClient(self.bot, self.topggtoken, autopost=True)
+        self.config = Config.get_conf(self, identifier=0x28411747)
+        self.config.register_guild(enabled=True)
         self.update_stats.start()
         
 
