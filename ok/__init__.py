@@ -1,6 +1,7 @@
 
 
 import topgg
+import topggpy
 from discord.ext import commands, tasks
 import discord
 from discord.ext.commands import Context
@@ -26,8 +27,8 @@ class Ok(commands.Cog):
         okkkk = self.bot.get_channel(1199945545117085746)
         """This function runs every 30 minutes to automatically update your server count."""
         try:
-            await self.topggpy.post_guild_count()
-            msg = await okkkk.send(f"**Top.gg API:** Posted server count ({self.topggpy.guild_count})")
+            await self.topgg.post_guild_count()
+            msg = await okkkk.send(f"**Top.gg API:** Posted server count ({self.topgg.guild_count})")
             await msg.add_reaction("<:grief_check:1107472942830456892>")
         except Exception as e:
              msg = await okkkk.send(f"**Top.gg API:** Failed to post server count\n{e.__class__.__name__}: {e}")
