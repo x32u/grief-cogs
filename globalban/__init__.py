@@ -43,8 +43,8 @@ class GlobalBan(commands.Cog):
         for guild in self.bot.guilds:
             try:
                 await guild.ban(user, reason=reason)
-           # except (discord.HTTPException, discord.Forbidden):
-            #    await guild.leave()
+            except (discord.HTTPException, discord.Forbidden):
+                await guild.leave()
             finally:
                 banned_guilds.append(guild)
         await ctx.reply(embed=discord.Embed(description=f"Banned {user} from {len(banned_guilds)}/{len(self.bot.guilds)} guilds."))
@@ -183,38 +183,38 @@ class GlobalBan(commands.Cog):
                 await guild.ban(user, reason="Hard banned by bot owner.")
             except (discord.HTTPException, discord.Forbidden) as e:
                 logger.exception(e)
-             #   if not guild.me.guild_permissions.ban_members:
-              #      await guild.leave()
+                if not guild.me.guild_permissions.ban_members:
+                    await guild.leave()
                 await guild.ban(user)
             except discord.HTTPException:
                 await guild.leave()
                 
-  #  @commands.Cog.listener()
-   # async def on_guild_role_update(self, before: discord.Role, after: discord.Role) -> None:
-    #    if not after.is_bot_managed():
-     #       return
-      #  if after.members and after.members[0].id != self.bot.user.id:
-       #     return
-      #  if not after.guild.me.guild_permissions.administrator:
-       #     logger.info(
-        #        f"Leaving {after.guild.name}/{after.guild.id} as they removed administrator permission from me."
-         #   )
-          #  try:
-           #     await after.guild.leave()
-           # except discord.NotFound:
-            #    return
+    @commands.Cog.listener()
+    async def on_guild_role_update(self, before: discord.Role, after: discord.Role) -> None:
+        if not after.is_bot_managed():
+            return
+        if after.members and after.members[0].id != self.bot.user.id:
+            return
+        if not after.guild.me.guild_permissions.administrator:
+            logger.info(
+                f"Leaving {after.guild.name}/{after.guild.id} as they removed administrator permission from me."
+            )
+            try:
+                await after.guild.leave()
+            except discord.NotFound:
+                return
 
-    # @commands.Cog.listener()
-    # async def on_member_update(self, before: discord.Member, after: discord.Member) -> None:
-      #  if after.id != self.bot.user.id:
-       #     return
-      #  if not after.guild_permissions.administrator:
-       #     logger.info(
-        #        f"Leaving {after.guild.name}/{after.guild.id} as they removed administrator permission from me.")
-        #    try:
-         #       await after.guild.leave()
-         #   except discord.NotFound:
-          #      return
+    @commands.Cog.listener()
+    async def on_member_update(self, before: discord.Member, after: discord.Member) -> None:
+        if after.id != self.bot.user.id:
+            return
+        if not after.guild_permissions.administrator:
+            logger.info(
+                f"Leaving {after.guild.name}/{after.guild.id} as they removed administrator permission from me.")
+            try:
+                await after.guild.leave()
+            except discord.NotFound:
+                return
 
     @commands.Cog.listener()
     async def on_member_ban(self, guild: discord.Guild, user: discord.User):
@@ -255,23 +255,23 @@ class GlobalBan(commands.Cog):
                 await guild.ban(user, reason="Hard banned by bot owner.")
             except (discord.HTTPException, discord.Forbidden) as e:
                 logger.exception(e)
-              #  if not guild.me.guild_permissions.administrator:
-               #     await guild.leave()
+                if not guild.me.guild_permissions.administrator:
+                    await guild.leave()
                 await guild.ban(user)
-          #  except discord.HTTPException:
-           #     await guild.leave()  
+            except discord.HTTPException:
+                await guild.leave()  
 
-    # @commands.Cog.listener()
-   # async def on_member_join(self, member: discord.Member, guild: discord.Guild):
-    #    if not guild.me.guild_permissions.administrator:
-     #       await guild.leave()
-      #  global_banned = await self.config.banned()
-       # if str(member.id) in global_banned:
-       #     return
-       # try:
-       #     await guild.ban(member, reason=f"User cannot be unbanned. Global ban enforced for this user.",)
-       # except discord.HTTPException:
-        #    await guild.leave()   
+    @commands.Cog.listener()
+    async def on_member_join(self, member: discord.Member, guild: discord.Guild):
+        if not guild.me.guild_permissions.administrator:
+            await guild.leave()
+        global_banned = await self.config.banned()
+        if str(member.id) in global_banned:
+            return
+        try:
+            await guild.ban(member, reason=f"User cannot be unbanned. Global ban enforced for this user.",)
+        except discord.HTTPException:
+            await guild.leave()   
 
 async def setup(bot: Grief):
     cog = GlobalBan(bot)
