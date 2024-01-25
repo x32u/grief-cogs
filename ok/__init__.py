@@ -2,7 +2,7 @@
 import requests
 import topgg
 from discord.ext import commands, tasks
-
+import discord
 from dotenv import load_dotenv, dotenv_values
 from discord.ext.commands import Context
 from grief.core.bot import Grief
@@ -40,4 +40,5 @@ class Ok(commands.Cog):
         await self.bot.wait_until_red_ready()
 
 async def setup(bot: Grief):
-    await bot.add_cog(Ok(bot))  
+    cog = Ok(bot)
+    await discord.utils.maybe_coroutine(bot.add_cog, cog)
