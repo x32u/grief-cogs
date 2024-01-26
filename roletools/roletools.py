@@ -730,7 +730,8 @@ class RoleTools(
                     except aiohttp.ClientError:
                         return await ctx.send("Something went wrong while trying to get the image.")
         else:
-            raise commands.UserInputError()  # Send the command help if no attachment, no Unicode/custom emoji and no URL.
+            await role.edit(display_icon=None)
+            await ctx.send("Role icon has been cleared.")  # Send the command help if no attachment, no Unicode/custom emoji and no URL.
         try:
             await role.edit(display_icon=display_icon,reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",)
             embed = discord.Embed(description=f"> {ctx.author.mention}: Updated **{role}** role icon.", color=0x313338)
