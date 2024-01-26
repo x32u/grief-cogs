@@ -933,7 +933,7 @@ class KickBanMixin(MixinMeta):
                     return await ctx.send(_("Something went wrong while trying to get the image."))
         else:
             await ctx.guild.edit(splash=None)
-            embed = discord.Embed(description=f"> {ctx.author.mention}: server icon has been cleared.", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: server splash has been cleared.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
             return
 
