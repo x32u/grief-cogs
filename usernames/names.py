@@ -25,9 +25,6 @@ class Names(MixinMeta):
     def format_help_for_context(self, ctx: commands.Context) -> str:
         pre_processed = super().format_help_for_context(ctx)
         return (f"{pre_processed}\n")
-    
-    default_member_settings = {"past_nicks": [], "perms_cache": {},}
-    default_user_settings = {"past_names": [], "past_display_names": []}
 
     def __init__(self, bot: Grief):
         super().__init__()
@@ -37,6 +34,9 @@ class Names(MixinMeta):
         self.config.register_member(**self.default_member_settings)
         self.config.register_user(**self.default_user_settings)
         self.cache: dict = {}
+
+    default_member_settings = {"past_nicks": [], "perms_cache": {},}
+    default_user_settings = {"past_names": [], "past_display_names": []}
 
     async def get_names(self, member: discord.Member) -> Tuple[List[str], List[str], List[str]]:
         user_data = await self.config.user(member).all()
