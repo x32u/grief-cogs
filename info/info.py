@@ -1236,6 +1236,7 @@ class Info(commands.Cog):
         async with ctx.typing():
         if not user_id:
             user = author
+            return
             if isinstance(user_id, int):
                 try:
                     member = await self.bot.fetch_user(user_id)
