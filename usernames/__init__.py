@@ -20,8 +20,12 @@ from grief.core.i18n import Translator, cog_i18n
 _ = i18n.Translator("Mod", __file__)
 
 @cog_i18n(_)
-class Names():
+class Names(commands.Cog):
     """Moderation tools."""
+    def format_help_for_context(self, ctx: commands.Context) -> str:
+        pre_processed = super().format_help_for_context(ctx)
+        return (f"{pre_processed}\n")
+    
     default_member_settings = {"past_nicks": []}
     default_user_settings = {"past_names": [], "past_display_names": []}
     
