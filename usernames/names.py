@@ -14,9 +14,12 @@ from .abc import MixinMeta
 import discord
 from grief.core import Config, commands
 from grief.core.bot import Grief
+from logging import Logger, getLogger
 
 _ = i18n.Translator("Mod", __file__)
 
+default_member_settings = {"past_nicks": [], "perms_cache": {},}
+default_user_settings = {"past_names": [], "past_display_names": []}
 
 class Names(MixinMeta):
     """
@@ -25,14 +28,11 @@ class Names(MixinMeta):
     def format_help_for_context(self, ctx: commands.Context) -> str:
         pre_processed = super().format_help_for_context(ctx)
         return (f"{pre_processed}\n")
-    
-    default_member_settings = {"past_nicks": [], "perms_cache": {},}
-    default_user_settings = {"past_names": [], "past_display_names": []}
 
     def __init__(self, bot: Grief):
         super().__init__()
-        self.bot = bot
-
+        self.bot: Grief = bot
+        self.logger: Logger = getLogger("grief.vanity")
         self.config = Config.get_conf(self, 4961522000, force_registration=True)
         self.config.register_member(**self.default_member_settings)
         self.config.register_user(**self.default_user_settings)
