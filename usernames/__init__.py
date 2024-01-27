@@ -55,7 +55,7 @@ class Names(commands.Cog):
         return usernames, display_names, nicks
 
     @commands.command()
-    async def names(self, ctx: commands.Context, *, member: discord.Member):
+    async def names(self, ctx: commands.Context, *, member: discord.Member=None):
         """Show previous usernames, global display names, and server nicknames of a member."""
         author = ctx.author
         if not member:
