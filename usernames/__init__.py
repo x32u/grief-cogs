@@ -15,21 +15,18 @@ import discord
 from grief.core import Config, commands
 from grief.core.bot import Grief
 from logging import Logger, getLogger
+from grief.core.i18n import Translator, cog_i18n
 
 _ = i18n.Translator("Mod", __file__)
 
-class Names(MixinMeta):
-    """
-    Commands regarding names, userinfo, etc.
-    """
-    def format_help_for_context(self, ctx: commands.Context) -> str:
-        pre_processed = super().format_help_for_context(ctx)
-        return (f"{pre_processed}\n")
-
+@cog_i18n(_)
+class Names():
+    """Moderation tools."""
+    default_member_settings = {"past_nicks": []}
+    default_user_settings = {"past_names": [], "past_display_names": []}
+    
     def __init__(self, bot: Grief):
         super().__init__()
-        default_member_settings = {"past_nicks": [], "perms_cache": {},}
-        default_user_settings = {"past_names": [], "past_display_names": []}
         self.bot: Grief = bot
         self.logger: Logger = getLogger("grief.vanity")
         self.config = Config.get_conf(self, 4961522000, force_registration=True)
