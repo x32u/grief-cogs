@@ -1235,8 +1235,7 @@ class Info(commands.Cog):
         """
         async with ctx.typing():
             if not user_id:
-                await ctx.send(_("You need to supply a user ID for this to work properly."))
-                return
+            user = author
             if isinstance(user_id, int):
                 try:
                     member = await self.bot.fetch_user(user_id)
