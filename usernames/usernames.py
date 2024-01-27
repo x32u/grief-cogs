@@ -5,9 +5,9 @@ from abc import ABC
 from collections import defaultdict
 from typing import Literal
 
-from redbot.core import Config, commands
-from redbot.core.bot import Red
-from redbot.core.i18n import Translator, cog_i18n
+from grief.core import Config, commands
+from grief.core.bot import Grief
+from grief.core.i18n import Translator, cog_i18n
 from .events import Events
 from .names import ModInfo
 
@@ -45,7 +45,7 @@ class Usernames(
 
     default_user_settings = {"past_names": [], "past_display_names": []}
 
-    def __init__(self, bot: Red):
+    def __init__(self, bot: Grief):
         super().__init__()
         self.bot = bot
 
