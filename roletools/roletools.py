@@ -731,7 +731,8 @@ class RoleTools(
                         return await ctx.send("Something went wrong while trying to get the image.")
         else:
             await role.edit(display_icon=None, reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).")
-            return await ctx.send("Role icon has been cleared.")  # Send the command help if no attachment, no Unicode/custom emoji and no URL.
+            embed = discord.Embed(description=f"> {ctx.author.mention}: Cleared **{role}** role icon.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         try:
             await role.edit(display_icon=display_icon,reason=f"{ctx.author} ({ctx.author.id}) has edited the role {role.name} ({role.id}).",)
             embed = discord.Embed(description=f"> {ctx.author.mention}: Updated **{role}** role icon.", color=0x313338)
