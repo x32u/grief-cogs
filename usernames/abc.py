@@ -1,7 +1,6 @@
+
 from abc import ABC, abstractmethod
 from typing import Optional
-
-import discord
 from grief.core import Config, commands
 from grief.core.bot import Grief
 
