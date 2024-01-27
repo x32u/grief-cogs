@@ -189,8 +189,8 @@ class Names(commands.Cog):
             )
         )
 
-        def handle_custom(self, user):
-            a = [c for c in user.activities if c.type == discord.ActivityType.custom]
+    def handle_custom(self, user):
+        a = [c for c in user.activities if c.type == discord.ActivityType.custom]
         if not a:
             return None, discord.ActivityType.custom
         a = a[0]
