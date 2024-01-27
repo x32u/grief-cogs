@@ -1,5 +1,5 @@
 
-from typing import List, Tuple, cast
+from typing import List, Tuple, cast, Optional
 import asyncio
 from collections import defaultdict
 import discord
@@ -193,6 +193,16 @@ class Names(commands.Cog):
             )
         )
 
+    @staticmethod
+    def _update_past_names(name: str, name_list: List[Optional[str]]) -> None:
+        while None in name_list:  # clean out null entries from a bug
+            name_list.remove(None)
+        if name in name_list:
+            # Ensure order is maintained without duplicates occurring
+            name_list.remove(name)
+        name_list.append(name)
+        while len(name_list) > 20:
+            name_list.pop(0)
 
     @commands.Cog.listener()
     async def on_user_update(self, before: discord.User, after: discord.User):
