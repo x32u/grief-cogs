@@ -95,5 +95,5 @@ class Names(MixinMeta):
             async with self.config.member(before).past_nicks() as nick_list:
                 self._update_past_names(before.nick, nick_list)
 
-    async def setup(bot: Grief) -> None:
+async def setup(bot: Grief) -> None:
         await bot.add_cog(Names(bot))
