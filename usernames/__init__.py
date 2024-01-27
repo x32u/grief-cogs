@@ -60,9 +60,9 @@ class Names(commands.Cog):
         usernames, display_names, nicks = await self.get_names(member)
         parts = []
         for header, names in (
-            (_("Past 20 usernames:"), usernames),
-            (_("Past 20 global display names:"), display_names),
-            (_("Past 20 server nicknames:"), nicks),
+            (_(f"Past 20 usernames: \n"), usernames),
+            (_(f"Past 20 global display names:\n"), display_names),
+            (_(f"Past 20 server nicknames:\n"), nicks),
         ):
             if names:
                 parts.append(bold(header) + ", ".join(names))
