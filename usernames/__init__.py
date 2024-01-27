@@ -1,5 +1,5 @@
 from grief.core.bot import Grief
-from .usernames import Usernames
+from .names import Usernames
 
 
 async def setup(bot: Grief) -> None:

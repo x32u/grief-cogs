@@ -1,6 +1,7 @@
 
 from typing import List, Tuple, cast
-
+import asyncio
+from collections import defaultdict
 import discord
 from grief.core import commands, i18n
 from grief.core.utils.chat_formatting import bold, pagify
@@ -10,14 +11,30 @@ from grief.core.utils.common_filters import (
     escape_spoilers_and_mass_mentions,
 )
 from .abc import MixinMeta
+import discord
+from grief.core import Config, commands
+from grief.core.bot import Grief
 
 _ = i18n.Translator("Mod", __file__)
 
 
-class ModInfo(MixinMeta):
+class Names(MixinMeta):
     """
     Commands regarding names, userinfo, etc.
     """
+    default_member_settings = {"past_nicks": [], "perms_cache": {},}
+    default_user_settings = {"past_names": [], "past_display_names": []}
+
+    def __init__(self, bot: Grief):
+        super().__init__()
+        self.bot = bot
+
+        self.config = Config.get_conf(self, 4961522000, force_registration=True)
+        self.config.register_member(**self.default_member_settings)
+        self.config.register_user(**self.default_user_settings)
+        self.cache: dict = {}
+        self.tban_expiry_task = asyncio.create_task(self.tempban_expirations_task())
+        self.last_case: dict = defaultdict(dict)
 
     async def get_names(self, member: discord.Member) -> Tuple[List[str], List[str], List[str]]:
         user_data = await self.config.user(member).all()
@@ -47,3 +64,32 @@ class ModInfo(MixinMeta):
                 await ctx.send(msg)
         else:
             await ctx.send(_("That member doesn't have any recorded name or nickname change."))
+
+
+    @commands.Cog.listener()
+    async def on_user_update(self, before: discord.User, after: discord.User):
+        if before.name != after.name:
+            track_all_names = await self.config.track_all_names()
+            if not track_all_names:
+                return
+            async with self.config.user(before).past_names() as name_list:
+                self._update_past_names(before.name, name_list)
+        if before.display_name != after.display_name:
+            track_all_names = await self.config.track_all_names()
+            if not track_all_names:
+                return
+            async with self.config.user(before).past_display_names() as name_list:
+                self._update_past_names(before.display_name, name_list)
+
+    @commands.Cog.listener()
+    async def on_member_update(self, before: discord.Member, after: discord.Member):
+        if before.nick != after.nick and before.nick is not None:
+            guild = after.guild
+            if (not guild) or await self.bot.cog_disabled_in_guild(self, guild):
+                return
+            track_all_names = await self.config.track_all_names()
+            track_nicknames = await self.config.guild(guild).track_nicknames()
+            if (not track_all_names) or (not track_nicknames):
+                return
+            async with self.config.member(before).past_nicks() as nick_list:
+                self._update_past_names(before.nick, nick_list)
