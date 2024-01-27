@@ -1227,26 +1227,23 @@ class Info(commands.Cog):
             ).start(ctx=ctx)
 
     @commands.hybrid_command()
-    async def whois(self, ctx: commands.Context, *, member: discord.Member=None):
+    async def whois(self, ctx: commands.Context, *, user_id: discord.User) -> None:
         """
         Display servers a user shares with the bot
 
         `member` can be a user ID or mention
         """
         async with ctx.typing():
-            author = ctx.author
-        if not member:
-            member = author
-            if isinstance(member, int):
+            if isinstance(user_id, int):
                 try:
-                    member = await self.bot.fetch_user(member)
+                    member = await self.bot.fetch_user(user_id)
                 except AttributeError:
-                    member = await self.bot.get_user_info(member)
+                    member = await self.bot.get_user_info(user_id)
                 except discord.errors.NotFound:
-                    await ctx.send(str(member) + _(" doesn't seem to be a discord user."))
+                    await ctx.send(str(user_id) + _(" doesn't seem to be a discord user."))
                     return
             else:
-                member = member
+                member = user_id
 
             if await self.bot.is_owner(ctx.author):
                 guild_list = []
