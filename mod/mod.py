@@ -15,7 +15,6 @@ from grief.core.utils.chat_formatting import inline
 from grief.core.utils.views import ConfirmView
 from .events import Events
 from .kickban import KickBanMixin
-from .settings import ModSettings
 from grief.core.utils.chat_formatting import box, humanize_list
 from grief.core.utils.mod import get_audit_reason
 from datetime import timedelta
@@ -54,7 +53,6 @@ class CompositeMetaClass(type(commands.Cog), type(ABC)):
 
 @cog_i18n(_)
 class Mod(
-    ModSettings,
     Events,
     KickBanMixin,
     commands.Cog,
