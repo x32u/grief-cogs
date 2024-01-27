@@ -60,7 +60,6 @@ class Names(commands.Cog):
         author = ctx.author
         if not member:
             member = author
-            
         usernames, display_names, nicks = await self.get_names(member)
         parts = []
         for header, names in (
