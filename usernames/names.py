@@ -18,9 +18,6 @@ from logging import Logger, getLogger
 
 _ = i18n.Translator("Mod", __file__)
 
-default_member_settings = {"past_nicks": [], "perms_cache": {},}
-default_user_settings = {"past_names": [], "past_display_names": []}
-
 class Names(MixinMeta):
     """
     Commands regarding names, userinfo, etc.
@@ -28,6 +25,9 @@ class Names(MixinMeta):
     def format_help_for_context(self, ctx: commands.Context) -> str:
         pre_processed = super().format_help_for_context(ctx)
         return (f"{pre_processed}\n")
+    
+    default_member_settings = {"past_nicks": [], "perms_cache": {},}
+    default_user_settings = {"past_names": [], "past_display_names": []}
 
     def __init__(self, bot: Grief):
         super().__init__()
