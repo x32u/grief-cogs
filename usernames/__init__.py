@@ -16,18 +16,23 @@ from grief.core import Config, commands
 from grief.core.bot import Grief
 from logging import Logger, getLogger
 from grief.core.i18n import Translator, cog_i18n
+from grief.core.utils import AsyncIter
+from grief.core.utils.chat_formatting import box, humanize_timedelta, inline
 
 _ = i18n.Translator("Mod", __file__)
 
 @cog_i18n(_)
 class Names(commands.Cog):
     """Moderation tools."""
+    
     def format_help_for_context(self, ctx: commands.Context) -> str:
         pre_processed = super().format_help_for_context(ctx)
         return (f"{pre_processed}\n")
     
     default_member_settings = {"past_nicks": []}
     default_user_settings = {"past_names": [], "past_display_names": []}
+    default_global_settings = { "track_all_names": True,}
+    default_guild_settings = {"track_nicknames": True,}
     
     def __init__(self, bot: Grief):
         super().__init__()
@@ -36,6 +41,8 @@ class Names(commands.Cog):
         self.config = Config.get_conf(self, 4961522000, force_registration=True)
         self.config.register_member(**self.default_member_settings)
         self.config.register_user(**self.default_user_settings)
+        self.config.register_global(**self.default_global_settings)
+        self.config.register_guild(**self.default_guild_settings)
         self.cache: dict = {}
 
     async def get_names(self, member: discord.Member) -> Tuple[List[str], List[str], List[str]]:
@@ -66,6 +73,125 @@ class Names(commands.Cog):
                 await ctx.send(msg)
         else:
             await ctx.send(_("That member doesn't have any recorded name or nickname change."))
+
+    @commands.is_owner()
+    @commands.command()
+    @commands.guild_only()
+    async def tracknicknames(self, ctx: commands.Context, enabled: bool = None):
+        """
+        Toggle whether server nickname changes should be tracked.
+
+        This setting will be overridden if trackallnames is disabled.
+        """
+        guild = ctx.guild
+        if enabled is None:
+            state = await self.config.guild(guild).track_nicknames()
+            if state:
+                msg = _("Nickname changes are currently being tracked.")
+            else:
+                msg = _("Nickname changes are not currently being tracked.")
+            await ctx.send(msg)
+            return
+
+        if enabled:
+            msg = _("Nickname changes will now be tracked.")
+        else:
+            msg = _("Nickname changes will no longer be tracked.")
+        await self.config.guild(guild).track_nicknames.set(enabled)
+        await ctx.send(msg)
+
+    @commands.command()
+    @commands.is_owner()
+    async def trackallnames(self, ctx: commands.Context, enabled: bool = None):
+        """
+        Toggle whether all name changes should be tracked.
+
+        Toggling this off also overrides the tracknicknames setting.
+        """
+        if enabled is None:
+            state = await self.config.track_all_names()
+            if state:
+                msg = _("Name changes are currently being tracked.")
+            else:
+                msg = _("All name changes are currently not being tracked.")
+            await ctx.send(msg)
+            return
+
+        if enabled:
+            msg = _("Name changes will now be tracked.")
+        else:
+            msg = _(
+                "All name changes will no longer be tracked.\n"
+                "To delete existing name data, use {command}."
+            ).format(command=inline(f"{ctx.clean_prefix}modset deletenames"))
+        await self.config.track_all_names.set(enabled)
+        await ctx.send(msg)
+
+    @commands.command()
+    @commands.max_concurrency(1, commands.BucketType.default)
+    @commands.is_owner()
+    async def deletenames(self, ctx: commands.Context, confirmation: bool = False) -> None:
+        """Delete all stored usernames, global display names, and server nicknames.
+
+        Examples:
+        - `[p]modset deletenames` - Did not confirm. Shows the help message.
+        - `[p]modset deletenames yes` - Deletes all stored usernames, global display names, and server nicknames.
+
+        **Arguments**
+
+        - `<confirmation>` This will default to false unless specified.
+        """
+        if not confirmation:
+            await ctx.send(
+                _(
+                    "This will delete all stored usernames, global display names,"
+                    " and server nicknames the bot has stored.\nIf you're sure, type {command}"
+                ).format(command=inline(f"{ctx.clean_prefix}modset deletenames yes"))
+            )
+            return
+
+        async with ctx.typing():
+            # Nickname data
+            async with self.config._get_base_group(self.config.MEMBER).all() as mod_member_data:
+                guilds_to_remove = []
+                for guild_id, guild_data in mod_member_data.items():
+                    await asyncio.sleep(0)
+                    members_to_remove = []
+
+                    async for member_id, member_data in AsyncIter(guild_data.items(), steps=100):
+                        if "past_nicks" in member_data:
+                            del member_data["past_nicks"]
+                        if not member_data:
+                            members_to_remove.append(member_id)
+
+                    async for member_id in AsyncIter(members_to_remove, steps=100):
+                        del guild_data[member_id]
+                    if not guild_data:
+                        guilds_to_remove.append(guild_id)
+
+                async for guild_id in AsyncIter(guilds_to_remove, steps=100):
+                    del mod_member_data[guild_id]
+
+            # Username and global display name data
+            async with self.config._get_base_group(self.config.USER).all() as mod_user_data:
+                users_to_remove = []
+                async for user_id, user_data in AsyncIter(mod_user_data.items(), steps=100):
+                    if "past_names" in user_data:
+                        del user_data["past_names"]
+                    if "past_display_names" in user_data:
+                        del user_data["past_display_names"]
+                    if not user_data:
+                        users_to_remove.append(user_id)
+
+                async for user_id in AsyncIter(users_to_remove, steps=100):
+                    del mod_user_data[user_id]
+
+        await ctx.send(
+            _(
+                "Usernames, global display names, and server nicknames"
+                " have been deleted from Mod config."
+            )
+        )
 
 
     @commands.Cog.listener()
