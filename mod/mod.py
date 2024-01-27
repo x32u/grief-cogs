@@ -1,16 +1,11 @@
 import asyncio
-import logging
-import re
 from abc import ABC
 from collections import defaultdict
 from typing import Literal
 import discord
-import logging
-
 from copy import copy
 from typing import List, Literal, Optional, Union, TYPE_CHECKING
 from random import choice
-
 from grief.core import Config, commands
 from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
@@ -20,30 +15,22 @@ from grief.core.utils.chat_formatting import inline
 from grief.core.utils.views import ConfirmView
 from .events import Events
 from .kickban import KickBanMixin
-from .names import ModInfo
 from .settings import ModSettings
 from grief.core.utils.chat_formatting import box, humanize_list
 from grief.core.utils.mod import get_audit_reason
 from datetime import timedelta
 from grief.core.utils.chat_formatting import humanize_timedelta
-
 from .converters import ChannelToggle, LockableChannel, LockableRole
-
 from grief.core.utils.predicates import MessagePredicate
-
 from discord.utils import utcnow
-from grief.core import Config, commands
-from grief.core.bot import Grief
 from grief.core.commands.converter import TimedeltaConverter
 import datetime
-from typing import Any, Dict, Final, List, Literal, Optional
-
+from typing import Any, Dict, Final, List, Literal, Optional, cast
 from .components.setup import SetupModal, StartSetupView
 from .poll import Poll
 from .vexutils import format_help, format_info, get_vex_logger
 from .vexutils.loop import VexLoop
 from concurrent.futures import ThreadPoolExecutor
-import discord
 from discord.channel import TextChannel
 
 # from vanity.__init__ import Vanity
@@ -70,7 +57,6 @@ class Mod(
     ModSettings,
     Events,
     KickBanMixin,
-    ModInfo,
     commands.Cog,
     metaclass=CompositeMetaClass,
 ):
@@ -1008,6 +994,57 @@ class Mod(
                 await self.timeout_user(ctx, member, None, reason)
         embed = discord.Embed(description=f"> Removed the timeout for {member.mention}.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.bot_has_permissions(manage_nicknames=True)
+    @commands.has_permissions(manage_nicknames=True)
+    async def nick(self, ctx: commands.Context, member: discord.Member, *, nickname: str = ""):
+        """Change a member's server nickname.
+
+        Leaving the nickname argument empty will remove it.
+        """
+        nickname = nickname.strip()
+        me = cast(discord.Member, ctx.me)
+        if not nickname:
+            nickname = None
+        elif not 2 <= len(nickname) <= 32:
+            await ctx.send(_("Nicknames must be between 2 and 32 characters long."))
+            return
+        if not (
+            (me.guild_permissions.manage_nicknames or me.guild_permissions.administrator)
+            and me.top_role > member.top_role
+            and member != ctx.guild.owner
+        ):
+            await ctx.send(
+                _(
+                    "I do not have permission to rename that member. They may be higher than or "
+                    "equal to me in the role hierarchy."
+                )
+            )
+        elif ctx.author != member and not await is_allowed_by_hierarchy(
+            self.bot, self.config, ctx.guild, ctx.author, member
+        ):
+            await ctx.send(
+                _(
+                    "I cannot let you do that. You are "
+                    "not higher than the user in the role "
+                    "hierarchy."
+                )
+            )
+        else:
+            try:
+                await member.edit(reason=get_audit_reason(ctx.author, None), nick=nickname)
+            except discord.Forbidden:
+                # Just in case we missed something in the permissions check above
+                await ctx.send(_("I do not have permission to rename that member."))
+            except discord.HTTPException as exc:
+                if exc.status == 400:  # BAD REQUEST
+                    await ctx.send(_("That nickname is invalid."))
+                else:
+                    await ctx.send(_("An unexpected error has occurred."))
+            else:
+                await ctx.send(_("Done."))
 
     @commands.guild_only()  # type:ignore
     @commands.bot_has_permissions(embed_links=True)
