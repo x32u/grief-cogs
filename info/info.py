@@ -1234,7 +1234,7 @@ class Info(commands.Cog):
         `member` can be a user ID or mention
         """
         async with ctx.typing():
-            if not user_id:
+        if not user_id:
             user = author
             if isinstance(user_id, int):
                 try:
