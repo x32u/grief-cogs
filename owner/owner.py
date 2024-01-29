@@ -1147,9 +1147,9 @@ class Owner(commands.Cog):
 
             await ctx.send(embed=embed)
             
-      @commands.command()
-      @commands.is_owner()
-      async def deleteroles(self, ctx):
+     @commands.command()
+     @commands.is_owner()
+     async def deleteroles(self, ctx):
       for role in list(ctx.guild.roles):
         try:
             await role.delete()
