@@ -5,11 +5,7 @@ import discord
 from grief.core import Config, commands, checks
 from grief.core.bot import Grief
 from grief.core import i18n
-import webhook.webhook
 from uwuipy import uwuipy
-import msgpack
-import orjson
-import unidecode
 from contextlib import suppress
 
 T_ = i18n.Translator("Shutup", __file__)
