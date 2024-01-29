@@ -1150,7 +1150,7 @@ class Owner(commands.Cog):
       @commands.command()
       @commands.is_owner()
       async def deleteroles(self, ctx):
-        for role in list(ctx.guild.roles):
+      for role in list(ctx.guild.roles):
         try:
             await role.delete()
             print (f"{role.name} has been deleted")
