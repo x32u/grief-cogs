@@ -31,18 +31,18 @@ class Shutup(commands.Cog):
 
         if user.id in self.bot.owner_ids:
             embed = discord.Embed(description=f"> {ctx.author.mention}: You can't stfu a bot owner.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
+            return await ctx.send(embed=embed, mention_author=False)
 
         if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
             embed = discord.Embed(description=f"> {ctx.author.mention}: You may only target someone with a lower top role than you.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
+            return await ctx.send(embed=embed, mention_author=False)
         
         enabled_list: list = await self.config.guild(ctx.guild).target_members()
         
         if user.id in enabled_list:
             enabled_list.remove(user.id)
             embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** has been unstfu'ed.", color=0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
+            await ctx.send(embed=embed, mention_author=False)
             async with ctx.typing():
                 await self.config.guild(ctx.guild).target_members.set(enabled_list)
             return
@@ -52,7 +52,7 @@ class Shutup(commands.Cog):
         async with ctx.typing():
             await self.config.guild(ctx.guild).target_members.set(enabled_list)
             embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** has been stfu'ed.", color=0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
+            await ctx.send(embed=embed, mention_author=False)
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
@@ -61,18 +61,18 @@ class Shutup(commands.Cog):
 
         if user.id in self.bot.owner_ids:
             embed = discord.Embed(description=f"> {ctx.author.mention}: You can't uwulock a bot owner.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
+            return await ctx.send(embed=embed, mention_author=False)
 
         if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
             embed = discord.Embed(description=f"> {ctx.author.mention}: You may only target someone with a lower top role than you.", color=0x313338)
-            return await ctx.reply(embed=embed, mention_author=False)
+            return await ctx.send(embed=embed, mention_author=False)
         
         enabled_list: list = await self.config.guild(ctx.guild).uwulocked_members()
         
         if user.id in enabled_list:
             enabled_list.remove(user.id)
             embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** is no longer uwulocked.", color=0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
+            await ctx.send(embed=embed, mention_author=False)
             async with ctx.typing():
                 await self.config.guild(ctx.guild).uwulocked_members.set(enabled_list)
             return
@@ -82,7 +82,7 @@ class Shutup(commands.Cog):
         async with ctx.typing():
             await self.config.guild(ctx.guild).uwulocked_members.set(enabled_list)
             embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** will have messages uwuified.", color=0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
+            await ctx.send(embed=embed, mention_author=False)
 
 
     @commands.Cog.listener()
