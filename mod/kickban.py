@@ -252,22 +252,15 @@ class KickBanMixin(MixinMeta):
                     return await ctx.reply(embed=embed, mention_author=False)
 
         if author == user:
-                return (
-                    False,
-                    _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
-                )
+                return await ctx.send("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
             
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
-                return (
-                    False,
-                    _("I cannot let you do that. You are "
+                return await ctx.send("I cannot let you do that. You are "
                         "not higher than the user in the role "
-                        "hierarchy."
-                    ),
-                )
+                        "hierarchy."),
         
         elif guild.me.top_role <= user.top_role or user == guild.owner:
-                return False, _("I cannot do that due to Discord hierarchy rules.")
+                return await ctx.send("I cannot do that due to Discord hierarchy rules.")
 
         toggle = await self.config.guild(guild).dm_on_kickban()
         if toggle:
