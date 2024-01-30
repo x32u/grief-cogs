@@ -358,7 +358,7 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], *, reason: str = None,):
+    async def ban(self, ctx: commands.Context, user: commands.Greedy[RawUserIdConverter], *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
         author = ctx.author
