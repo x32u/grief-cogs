@@ -379,10 +379,6 @@ class KickBanMixin(MixinMeta):
                     ),
                 )
             
-            elif user.id in self.bot.owner_ids:
-                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot ban the bot owner.", color=0x313338)
-                return await ctx.reply(embed=embed, mention_author=False)
-            
             elif guild.me.top_role <= user.top_role or user == guild.owner:
                 return False, _("I cannot do that due to Discord hierarchy rules.")
             
