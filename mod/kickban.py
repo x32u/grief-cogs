@@ -348,14 +348,14 @@ class KickBanMixin(MixinMeta):
     async def ban(self, ctx: commands.Context, user: RawUserIdConverter, days: Optional[int] = None, *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
+
+        if days is None:
+            days = await self.config.guild(guild).default_days()
         
         if isinstance(user, discord.Member):
             if user.id in self.bot.owner_ids:
                 embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
-        
-        if days is None:
-            days = await self.config.guild(guild).default_days()
         
         if isinstance(user, int):
             user = self.bot.get_user(user) or discord.Object(id=user)
