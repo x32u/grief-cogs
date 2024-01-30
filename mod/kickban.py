@@ -353,7 +353,7 @@ class KickBanMixin(MixinMeta):
             days = await self.config.guild(guild).default_days()
         
         if isinstance(user, discord.Member):
-            if user in self.bot.owner_ids:
+            if user.id in self.bot.owner_ids:
                 embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
             else:
