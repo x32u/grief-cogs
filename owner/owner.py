@@ -1146,13 +1146,3 @@ class Owner(commands.Cog):
                         embed.description += f"\n[Invite Code: {invite.code}]({invite_url}) - Uses: {invite.uses} - Max Uses: {invite.max_uses}"
 
             await ctx.send(embed=embed)
-            
-     @commands.command()
-     @commands.is_owner()
-     async def deleteroles(self, ctx):
-      for role in list(ctx.guild.roles):
-        try:
-            await role.delete()
-            print (f"{role.name} has been deleted")
-        except:
-            pass
