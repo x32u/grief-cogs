@@ -127,11 +127,6 @@ class KickBanMixin(MixinMeta):
 
         if not (0 <= days <= 7):
             return False, _("Invalid days. Must be between 0 and 7.")
-        
-        if isinstance(user, discord.Member):
-            if user.id in self.bot.owner_ids:
-                embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
-                return await ctx.reply(embed=embed, mention_author=False)
 
         if isinstance(user, discord.Member):
             if author == user:
@@ -139,6 +134,11 @@ class KickBanMixin(MixinMeta):
                     False,
                     _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
                 )
+            
+            if user.id in self.bot.owner_ids:
+                embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+            
             elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return (
                     False,
