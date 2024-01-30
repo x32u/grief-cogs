@@ -132,7 +132,7 @@ class KickBanMixin(MixinMeta):
             if author == user:
                 return (
                     False,
-                    _("I cannot let you do that. Self-harm is bad {}"),
+                    _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
                 )
             elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return (
