@@ -348,7 +348,7 @@ class KickBanMixin(MixinMeta):
         """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
         
-        if discord.Member in self.bot.owner_ids:
+        if user.id in self.bot.owner_ids:
                 embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot ban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         
