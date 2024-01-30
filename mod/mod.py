@@ -964,19 +964,19 @@ class Mod(
         timestamp = int(datetime.datetime.timestamp(utcnow() + time))
         if isinstance(member, discord.Member):
             if member.id in self.bot.owner_ids:
-                embed = discord.Embed(description=f"> You cannot timeout the bot owner.", color=0x313338)
+                embed = discord.Embed(description=f"> {ctx.author.mention}: you cannot timeout the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
             if member.is_timed_out():
-                embed = discord.Embed(description=f"> {member.mention} is already timed out.", color=0x313338)
+                embed = discord.Embed(description=f"> {ctx.author.mention}: **{member}** is already timed out.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
             if not await is_allowed_by_hierarchy(ctx.bot, ctx.author, member):
-                embed = discord.Embed(description=f"> You cannot timeout this user due to hierarchy.", color=0x313338)
+                embed = discord.Embed(description=f"> {ctx.author.mention}: you cannot timeout this user due to hierarchy.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
             if ctx.channel.permissions_for(member).administrator:
-                embed = discord.Embed(description=f"> You can't timeout an administrator.", color=0x313338)
+                embed = discord.Embed(description=f"> {ctx.author.mention}: you can't timeout an administrator.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
             await self.timeout_user(ctx, member, time, reason)
-            embed = discord.Embed(description=f"> {member.mention} has been timed out until <t:{timestamp}:f>.", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: **{member}** has been timed out until <t:{timestamp}:f>.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command(aliases=["ut"])
@@ -987,10 +987,10 @@ class Mod(
         """Untimeout users."""
         if isinstance(member, discord.Member):
                 if not member.is_timed_out():
-                    embed = discord.Embed(description=f"> {member.mention} is not timed out.", color=0x313338)
+                    embed = discord.Embed(description=f"> {ctx.author.mention}: **{member}** is not timed out.", color=0x313338)
                     return await ctx.reply(embed=embed, mention_author=False)
                 await self.timeout_user(ctx, member, None, reason)
-        embed = discord.Embed(description=f"> Removed the timeout for {member.mention}.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: removed the timeout for **{member}**.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command()

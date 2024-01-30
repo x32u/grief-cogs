@@ -298,11 +298,11 @@ class KickBanMixin(MixinMeta):
 
         if isinstance(member, discord.Member):
             if member.id in self.bot.owner_ids:
-                embed = discord.Embed(description=f"> {ctx.author.mention} You cannot kick the bot owner.", color=0x313338)
+                embed = discord.Embed(description=f"> {ctx.author.mention} you cannot kick the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         
         if author == member:
-            embed = discord.Embed(description=f"> {ctx.author.mention}: You can't kick yourself.", color=0x313338)
+            embed = discord.Embed(description=f"> {ctx.author.mention}: you can't kick yourself.", color=0x313338)
             return await ctx.reply(embed=embed, mention_author=False)
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, member):
             await ctx.send(
@@ -351,9 +351,15 @@ class KickBanMixin(MixinMeta):
     async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
+        author = ctx.author
+        member = discord.Member
 
         if days is None:
             days = await self.config.guild(guild).default_days()
+
+        if author == member:
+            embed = discord.Embed(description=f"> {ctx.author.mention}: you can't ban yourself.", color=0x313338)
+            return await ctx.reply(embed=embed, mention_author=False)
         
         if isinstance(user, int):
             user = self.bot.get_user(user) or discord.Object(id=user)
