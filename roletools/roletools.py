@@ -701,7 +701,7 @@ class RoleTools(
     @role.command(name="displayicon", aliases=["icon"])
     @commands.has_guild_permissions(manage_roles=True)
     @commands.cooldown(1, 10, commands.BucketType.guild)
-    async def role_display_icon(self, ctx: commands.Context, role: discord.Role, display_icon: EmojiOrUrlConverter = None,) -> None:
+    async def role_display_icon(self, ctx: commands.Context, role: RoleHierarchyConverter, display_icon: EmojiOrUrlConverter = None,) -> None:
         """Edit role display icon.
 
         `display_icon` can be an Unicode emoji, a custom emoji or an url. You can also upload an attachment.

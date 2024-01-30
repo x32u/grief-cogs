@@ -821,7 +821,7 @@ class KickBanMixin(MixinMeta):
         """Vanity management for Grief."""
    
     @guildedit.command()
-    async def setbanner(self, ctx, url: str=None):
+    async def banner(self, ctx, url: str=None):
         """Set the server banner.
 
         `<image>` URL to the image or image uploaded with running the
@@ -866,7 +866,7 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=embed, mention_author=False)
     
     @guildedit.command()
-    async def seticon(self, ctx, url: str=None):
+    async def icon(self, ctx, url: str=None):
         """Set the server icon of the server.
 
         `<image>` URL to the image or image uploaded with running the
@@ -909,7 +909,7 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=embed, mention_author=False)
 
     @guildedit.command()
-    async def setsplash(self, ctx, url: str=None):
+    async def splash(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
 
         `<image>` URL to the image or image uploaded with running the
