@@ -127,6 +127,7 @@ class KickBanMixin(MixinMeta):
 
         if isinstance(user, discord.Member):
                 if user.id in self.bot.owner_ids:
+                    False,
                     embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
 
