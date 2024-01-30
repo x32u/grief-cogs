@@ -251,15 +251,14 @@ class KickBanMixin(MixinMeta):
                     embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
                     return await ctx.reply(embed=embed, mention_author=False)
 
-        if author == user:
+        if isinstance(user, discord.Member):
+            if author == user:
                 embed = discord.Embed(description=f"> {ctx.author.mention}: you cannot ban yourself.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
-            
-        elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
+            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return await ctx.send("I cannot let you do that. You are "
                         "not higher than the user in the role "
                         "hierarchy."),
-        
         elif guild.me.top_role <= user.top_role or user == guild.owner:
                 return await ctx.send("I cannot do that due to Discord hierarchy rules.")
 
@@ -279,6 +278,7 @@ class KickBanMixin(MixinMeta):
         
         if isinstance(user, int):
             user = self.bot.get_user(user) or discord.Object(id=user)
+        
         await guild.ban(user=user, reason=reason)
         embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** has been banned.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
