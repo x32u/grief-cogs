@@ -26,7 +26,7 @@ from io import BytesIO
 from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
 from grief.core.utils.views import ConfirmView
-from grief.core.converters.converters import ImageFinder
+from grief.core.converters.converter import ImageFinder
 from pydantic import BaseModel
 from grief.core.bot import Grief
 from grief.core import Config
