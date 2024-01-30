@@ -134,13 +134,12 @@ class KickBanMixin(MixinMeta):
                     False,
                     _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
                 )
-            
-        if isinstance(user, discord.Member):
-                if user.id in self.bot.owner_ids:
+            if isinstance(user, discord.Member):
+                if user in self.bot.owner_ids:
                     embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
             
-        elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
+            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return (
                     False,
                     _("I cannot let you do that. You are "
@@ -148,11 +147,11 @@ class KickBanMixin(MixinMeta):
                         "hierarchy."
                     ),
                 )
-        elif guild.me.top_role <= user.top_role or user == guild.owner:
+            elif guild.me.top_role <= user.top_role or user == guild.owner:
                 return False, _("I cannot do that due to Discord hierarchy rules.")
 
-        toggle = await self.config.guild(guild).dm_on_kickban()
-        if toggle:
+            toggle = await self.config.guild(guild).dm_on_kickban()
+            if toggle:
                 with contextlib.suppress(discord.HTTPException):
                     em = discord.Embed(
                         title=bold(_("You have been banned from {guild}.").format(guild=guild)),
@@ -165,15 +164,15 @@ class KickBanMixin(MixinMeta):
                     )
                     await user.send(embed=em)
 
-        ban_type = "ban"
-
-        tempbans = await self.config.guild(guild).current_tempbans()
-
-        try:
-                await guild.fetch_ban(user)
-        except discord.NotFound:
-                pass
+            ban_type = "ban"
         else:
+            tempbans = await self.config.guild(guild).current_tempbans()
+
+            try:
+                await guild.fetch_ban(user)
+            except discord.NotFound:
+                pass
+            else:
                 if user.id in tempbans:
                     async with self.config.guild(guild).current_tempbans() as tempbans:
                         tempbans.remove(user.id)
@@ -184,7 +183,7 @@ class KickBanMixin(MixinMeta):
                         _("User with ID {user_id} is already banned.").format(user_id=user.id),
                     )
 
-        ban_type = "hackban"
+            ban_type = "hackban"
 
         audit_reason = get_audit_reason(author, reason, shorten=True)
 
