@@ -252,7 +252,7 @@ class KickBanMixin(MixinMeta):
                     return await ctx.reply(embed=embed, mention_author=False)
 
         if author == user:
-                return await ctx.send("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
+                return await ctx.send("I cannot let you do that. Self-harm is bad {}"),
             
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return await ctx.send("I cannot let you do that. You are "
