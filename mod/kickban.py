@@ -255,16 +255,6 @@ class KickBanMixin(MixinMeta):
             if author == user:
                 embed = discord.Embed(description=f"> {ctx.author.mention}: you cannot ban yourself.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
-            
-        elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
-            await ctx.send(
-                _(
-                    "I cannot let you do that. You are "
-                    "not higher than the user in the role "
-                    "hierarchy."
-                )
-            )
-            return
 
         toggle = await self.config.guild(guild).dm_on_kickban()
         if toggle:
