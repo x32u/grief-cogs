@@ -242,13 +242,10 @@ class KickBanMixin(MixinMeta):
     @commands.command(aliases=["b"])
     @commands.guild_only()
     @commands.admin_or_permissions(ban_members=True)
-    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
+    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
         author = ctx.author
         guild = ctx.guild
-
-        if not (0 <= days <= 7):
-            return False, _("Invalid days. Must be between 0 and 7.")
         
         if user.id in self.bot.owner_ids:
                     embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
@@ -285,13 +282,10 @@ class KickBanMixin(MixinMeta):
                         inline=False,
                     )
                     await user.send(embed=em)
-
-        if days is None:
-            days = await self.config.guild(guild).default_days()
         
         if isinstance(user, int):
             user = self.bot.get_user(user) or discord.Object(id=user)
-        await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
+        await self.ban_user(user=user, ctx=ctx, reason=reason)
         embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** has been banned.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
 
