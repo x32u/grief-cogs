@@ -355,9 +355,11 @@ class KickBanMixin(MixinMeta):
         if isinstance(user, discord.Member):
             if user in self.bot.owner_ids:
                 embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
-                await ctx.reply(embed=embed, mention_author=False)
-                return
-            user = self.bot.get_user(user) or discord.Object(id=user)
+                return await ctx.reply(embed=embed, mention_author=False)
+            else:
+        
+                if isinstance(user, int):
+                    user = self.bot.get_user(user) or discord.Object(id=user)
         await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
