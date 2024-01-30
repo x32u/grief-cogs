@@ -201,7 +201,8 @@ class KickBanMixin(MixinMeta):
                     days,
                 )
                 embed = discord.Embed(description=f"> {ctx.author.mention}: {user} has been banned.", color=0x313338)
-                return await ctx.reply(embed=embed, mention_author=True)
+                await ctx.reply(embed=embed, mention_author=False)
+                return
             
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
