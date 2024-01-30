@@ -252,7 +252,8 @@ class KickBanMixin(MixinMeta):
                     return await ctx.reply(embed=embed, mention_author=False)
 
         if author == user:
-                return await ctx.send("I cannot let you do that. Self-harm is bad {}"),
+                embed = discord.Embed(description=f"> {ctx.author.mention}: you cannot ban yourself.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
             
         elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return await ctx.send("I cannot let you do that. You are "
