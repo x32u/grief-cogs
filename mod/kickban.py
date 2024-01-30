@@ -125,12 +125,6 @@ class KickBanMixin(MixinMeta):
         guild = ctx.guild
         removed_temp = False
 
-        if isinstance(user, discord.Member):
-                if user.id in self.bot.owner_ids:
-                    False,
-                    embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
-                return await ctx.reply(embed=embed, mention_author=False)
-
         if not (0 <= days <= 7):
             return False, _("Invalid days. Must be between 0 and 7.")
 
@@ -210,7 +204,6 @@ class KickBanMixin(MixinMeta):
                 embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** has been banned.", color=0x313338)
                 await ctx.reply(embed=embed, mention_author=False)
                 return
-            
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
