@@ -1009,7 +1009,7 @@ class RoleTools(
         embed = discord.Embed(description=f"> {ctx.author.mention}: Beginning to {verb} **{role.name}** {word} **{len(member_list)}** members.", color=0x313338)
         await ctx.reply(embed=embed, mention_author=False)
         await self.massrole(member_list, [role], get_audit_reason(ctx.author), adding)
-        await ctx.reply(embed = discord.Embed(description=f"> {ctx.author.mention}: {verb.title()[:5]}ed **{role.name}** {word} **{len(member_list)}** members.", color=0x313338), mention_author=False)
+        await ctx.send(embed = discord.Embed(description=f"> {ctx.author.mention}: {verb.title()[:5]}ed **{role.name}** {word} **{len(member_list)}** members.", color=0x313338))
 
     def get_member_list(
         self, members: List[discord.Member], role: discord.Role, adding: bool = True

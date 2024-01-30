@@ -292,8 +292,9 @@ class KickBanMixin(MixinMeta):
         if reason == None:
             reason = "no reason given"
 
-        if member.id in self.bot.owner_ids:
-                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot kick the bot owner.", color=0x313338)
+        if isinstance(member, discord.Member):
+            if member.id in self.bot.owner_ids:
+                embed = discord.Embed(description=f"> {ctx.author.mention} You cannot kick the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         
         if author == member:
@@ -401,8 +402,9 @@ class KickBanMixin(MixinMeta):
         author = ctx.author
         guild = ctx.guild
         
-        if member.id in self.bot.owner_ids:
-                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot ban the bot owner.", color=0x313338)
+        if isinstance(user, discord.Member):
+            if user.id in self.bot.owner_ids:
+                embed = discord.Embed(description=f"> {ctx.author.mention} You cannot ban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         
         if not user_ids:
@@ -532,7 +534,8 @@ class KickBanMixin(MixinMeta):
         guild = ctx.guild
         author = ctx.author
        
-        if member.id in self.bot.owner_ids:
+        if isinstance(member, discord.Member):
+            if member.id in self.bot.owner_ids:
                 embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot tempban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         
@@ -604,7 +607,8 @@ class KickBanMixin(MixinMeta):
         guild = ctx.guild
         author = ctx.author
         
-        if member.id in self.bot.owner_ids:
+        if isinstance(member, discord.Member):
+            if member.id in self.bot.owner_ids:
                 embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot softban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         
@@ -674,8 +678,9 @@ class KickBanMixin(MixinMeta):
         author = ctx.author
         guild = ctx.guild
         user_voice_state: discord.VoiceState = member.voice
-
-        if member.id in self.bot.owner_ids:
+        
+        if isinstance(member, discord.Member):
+            if member.id in self.bot.owner_ids:
                 embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot voicekick the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         
@@ -690,7 +695,9 @@ class KickBanMixin(MixinMeta):
                 )
             )
             return
-        await ctx.tick()
+        
+        embed = discord.Embed(description=f"> {ctx.author.mention}: {member} has been voice kicked.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=True)
 
         try:
             await member.move_to(None)
@@ -715,7 +722,9 @@ class KickBanMixin(MixinMeta):
             is False
         ):
             return
-        await ctx.tick()
+        
+        embed = discord.Embed(description=f"> {ctx.author.mention}: {member} has been un-voice banned.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
         needs_unmute = True if user_voice_state.mute else False
         needs_undeafen = True if user_voice_state.deaf else False
@@ -738,7 +747,8 @@ class KickBanMixin(MixinMeta):
         """Ban a user from speaking and listening in the server's voice channels."""
         user_voice_state: discord.VoiceState = member.voice
         
-        if member.id in self.bot.owner_ids:
+        if isinstance(member, discord.Member):
+            if member.id in self.bot.owner_ids:
                 embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot voiceban the bot owner.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         if (
@@ -776,6 +786,7 @@ class KickBanMixin(MixinMeta):
         guild = ctx.guild
         author = ctx.author
         audit_reason = get_audit_reason(ctx.author, reason, shorten=True)
+        
         try:
             ban_entry = await guild.fetch_ban(discord.Object(user_id))
         except discord.NotFound:
@@ -794,10 +805,12 @@ class KickBanMixin(MixinMeta):
                     _("I don't share another server with this user. I can't reinvite them.")
                 )
                 return
-            await ctx.tick()
+            
+        embed = discord.Embed(description=f"> {ctx.author.mention}: {user} has been unbanned.", color=0x313338)
+        await ctx.reply(embed=embed, mention_author=False)
 
-            invite = await self.get_invite_for_reinvite(ctx)
-            if invite:
+        invite = await self.get_invite_for_reinvite(ctx)
+        if invite:
                 try:
                     await user.send(
                         _(
@@ -828,7 +841,7 @@ class KickBanMixin(MixinMeta):
         """Vanity management for Grief."""
    
     @guildedit.command()
-    async def setbanner(self, ctx, url: str=None):
+    async def banner(self, ctx, url: str=None):
         """Set the server banner.
 
         `<image>` URL to the image or image uploaded with running the
@@ -873,7 +886,7 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=embed, mention_author=False)
     
     @guildedit.command()
-    async def seticon(self, ctx, url: str=None):
+    async def icon(self, ctx, url: str=None):
         """Set the server icon of the server.
 
         `<image>` URL to the image or image uploaded with running the
@@ -916,7 +929,7 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=embed, mention_author=False)
 
     @guildedit.command()
-    async def setsplash(self, ctx, url: str=None):
+    async def splash(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
 
         `<image>` URL to the image or image uploaded with running the
@@ -981,9 +994,9 @@ class KickBanMixin(MixinMeta):
     @commands.has_permissions(manage_guild=True)
     async def clearinvites(self, ctx):
         """Delete all invites in the server."""
-    
+        
         invites = await ctx.guild.invites()
         for invite in invites:
             await invite.delete()
-        embed = discord.Embed(description="> {ctx.author.mention}: All existing invites have been removed.", color=0x313338)
-        await ctx.reply(embed=embed, mention_author=False)
+        embed = discord.Embed(description="> All existing invites have been removed.", color=0x313338)
+        await ctx.send(embed=embed)
