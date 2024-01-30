@@ -358,19 +358,19 @@ class KickBanMixin(MixinMeta):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    async def ban(self, ctx: commands.Context, user: commands.Greedy[RawUserIdConverter], *, reason: str = None,):
+    async def ban(self, ctx: commands.Context, user_id: commands.Greedy[RawUserIdConverter], *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
         author = ctx.author
         
-        if isinstance(user, discord.Member):
-            if author == user:
+        if isinstance(user_id, discord.Member):
+            if author == user_id:
                 return (
                     False,
                     _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
                 )
             
-            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
+            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user_id):
                 return (
                     False,
                     _("I cannot let you do that. You are "
@@ -379,12 +379,12 @@ class KickBanMixin(MixinMeta):
                     ),
                 )
             
-            elif guild.me.top_role <= user.top_role or user == guild.owner:
+            elif guild.me.top_role <= user_id.top_role or user_id == guild.owner:
                 return False, _("I cannot do that due to Discord hierarchy rules.")
             
             else:
-                await self.ban_user(user=user, ctx=ctx, reason=reason)
-                await ctx.send(f"{user} has beeen banned.")
+                await self.ban_user(user=user_id, ctx=ctx, reason=reason)
+                await ctx.send(f"{user_id} has beeen banned.")
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
