@@ -21,7 +21,7 @@ from grief.core.utils.chat_formatting import (
 from contextlib import suppress
 from grief.core.utils.mod import get_audit_reason
 from .abc import MixinMeta
-from .utils import is_allowed_by_hierarchy
+from grief.core.converters.converters import is_allowed_by_hierarchy
 from io import BytesIO
 from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
