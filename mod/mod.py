@@ -19,7 +19,7 @@ from grief.core.utils.chat_formatting import box, humanize_list
 from grief.core.utils.mod import get_audit_reason
 from datetime import timedelta
 from grief.core.utils.chat_formatting import humanize_timedelta
-from grief.core.converters.converter import ChannelToggle, LockableChannel, LockableRole
+from .converters import ChannelToggle, LockableChannel, LockableRole
 from grief.core.utils.predicates import MessagePredicate
 from discord.utils import utcnow
 from grief.core.commands.converter import TimedeltaConverter

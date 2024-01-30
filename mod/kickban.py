@@ -26,7 +26,7 @@ from io import BytesIO
 from grief.core.commands.converter import TimedeltaConverter
 from discord.utils import utcnow
 from grief.core.utils.views import ConfirmView
-from grief.core.converters.converter import ImageFinder
+from .converters import ImageFinder
 from pydantic import BaseModel
 from grief.core.bot import Grief
 from grief.core import Config
@@ -132,7 +132,7 @@ class KickBanMixin(MixinMeta):
             if author == user:
                 return (
                     False,
-                    _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
+                    _("I cannot let you do that. Self-harm is bad {}"),
                 )
             elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user):
                 return (
@@ -200,7 +200,9 @@ class KickBanMixin(MixinMeta):
                     user.id,
                     days,
                 )
-                await ctx.tick()
+                embed = discord.Embed(description=f"> {ctx.author.mention}: {user} has been banned.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=True)
+            
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
@@ -337,54 +339,21 @@ class KickBanMixin(MixinMeta):
                 )
             )
 
-  #  @commands.command(aliases=["b"])
-   # @commands.guild_only()
-    #@commands.has_permissions(ban_members=True)
-    #@commands.cooldown(1, 3, commands.BucketType.guild)
-   # async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
-        """Ban a user from this server and optionally delete days of messages."""
-    #    guild = ctx.guild
-     #   if user.id in self.bot.owner_ids:
-      #          embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot ban the bot owner.", color=0x313338)
-       #         return await ctx.reply(embed=embed, mention_author=False)
-      #  if days is None:
-       #     days = await self.config.guild(guild).default_days()
-       # if isinstance(user, int):
-        #    user = self.bot.get_user(user) or discord.Object(id=user)
-       # await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
-
-
     @commands.command(aliases=["b"])
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.cooldown(1, 3, commands.BucketType.guild)
-    async def ban(self, ctx: commands.Context, user_id: commands.Greedy[RawUserIdConverter], *, reason: str = None,):
+    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], days: Optional[int] = None, *, reason: str = None,):
         """Ban a user from this server and optionally delete days of messages."""
         guild = ctx.guild
-        author = ctx.author
-        
-        if isinstance(user_id, discord.Member):
-            if author == user_id:
-                return (
-                    False,
-                    _("I cannot let you do that. Self-harm is bad {}").format("\N{PENSIVE FACE}"),
-                )
-            
-            elif not await is_allowed_by_hierarchy(self.bot, self.config, guild, author, user_id):
-                return (
-                    False,
-                    _("I cannot let you do that. You are "
-                        "not higher than the user in the role "
-                        "hierarchy."
-                    ),
-                )
-            
-            elif guild.me.top_role <= user_id.top_role or user_id == guild.owner:
-                return False, _("I cannot do that due to Discord hierarchy rules.")
-            
-            else:
-                await self.ban_user(user=user_id, ctx=ctx, reason=reason)
-                await ctx.send(f"{user_id} has beeen banned.")
+        if user.id in self.bot.owner_ids:
+                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot ban the bot owner.", color=0x313338)
+                return await ctx.reply(embed=embed, mention_author=False)
+        if days is None:
+            days = await self.config.guild(guild).default_days()
+        if isinstance(user, int):
+            user = self.bot.get_user(user) or discord.Object(id=user)
+        await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
 
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
     @commands.guild_only()
@@ -854,7 +823,7 @@ class KickBanMixin(MixinMeta):
         """Vanity management for Grief."""
    
     @guildedit.command()
-    async def banner(self, ctx, url: str=None):
+    async def setbanner(self, ctx, url: str=None):
         """Set the server banner.
 
         `<image>` URL to the image or image uploaded with running the
@@ -899,7 +868,7 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=embed, mention_author=False)
     
     @guildedit.command()
-    async def icon(self, ctx, url: str=None):
+    async def seticon(self, ctx, url: str=None):
         """Set the server icon of the server.
 
         `<image>` URL to the image or image uploaded with running the
@@ -942,7 +911,7 @@ class KickBanMixin(MixinMeta):
             await ctx.reply(embed=embed, mention_author=False)
 
     @guildedit.command()
-    async def splash(self, ctx, url: str=None):
+    async def setsplash(self, ctx, url: str=None):
         """Set the invite splash screen of the server.
 
         `<image>` URL to the image or image uploaded with running the
