@@ -17,7 +17,7 @@ from grief.core.utils import AsyncIter, bounded_gather
 from grief.core.utils.chat_formatting import humanize_list
 
 from .abc import RoleToolsMixin
-from ..converters.converters import RawUserIds, RoleHierarchyConverter, SelfRoleConverter
+from grief.core.converters import RawUserIds, RoleHierarchyConverter, SelfRoleConverter
 from .events import RoleToolsEvents
 from .exclusive import RoleToolsExclusive
 from .inclusive import RoleToolsInclusive
