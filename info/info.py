@@ -1532,7 +1532,7 @@ class Info(commands.Cog):
         sys_uptime = humanize_timedelta(timedelta=td)
         async with ctx.typing():
             embed = discord.Embed(color=0x2B2D31, title=f"About")
-        embed.add_field(name="Stats", value=f"Users: {len(self.bot.users)}\nServers: {len(self.bot.guilds)}", inline=False)
+        embed.add_field(name="Stats", value=f"Developer: [sin](https://slit.sh)\nUsers: {len(self.bot.users)}\nServers: {len(self.bot.guilds)}", inline=False)
         embed.add_field(name="Backend:", value=f"Latency: {round(self.bot.latency * 1000)}ms\nLibrary: discord.py\nCPU Usage: {psutil.cpu_percent(interval=0)}%\nMemory Usage: {psutil.virtual_memory().percent}%", inline=False)
         embed.add_field(name="System:", value=f"CPU: AMD Ryzen 5 3600\nRam: 62.7GB\nDisk: 435.8GB", inline=False)
         embed.set_footer(text="grief", icon_url="https://cdn.discordapp.com/emojis/886356428116357120.gif")
@@ -1541,9 +1541,7 @@ class Info(commands.Cog):
         # embed.add_field(name="System:", value=f"`Latency:` `{round(self.bot.latency * 1000)}ms`\n`Language:` `Python`\n`System`: `{my_system.system}`\n`CPU Usage:` `{psutil.cpu_percent(interval=0.6)}%`\n`Memory Usage:` `{psutil.virtual_memory().percent}%`", inline=True
         button1 = discord.ui.Button(label="Invite", style=discord.ButtonStyle.url, url="https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=bot%20applications.commands")
         button2 = discord.ui.Button(label="Support", style=discord.ButtonStyle.url, url="https://discord.gg/seer")
-        button3 = discord.ui.Button(label="Developer", style=discord.ButtonStyle.url, url="https://discordapp.com/users/334593049319571456")
         view = discord.ui.View()
         view.add_item(button1)
         view.add_item(button2)
-        view.add_item(button3)
         await ctx.reply(embed=embed, view=view, mention_author=False)
