@@ -156,11 +156,11 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.avatar == None:
-            em = discord.Embed(color=0x313338,description=f"{ctx.author.mention}: **{member.mention}** doesn't have a pfp set.")
+            em = discord.Embed(color=0x313338,description=f"{ctx.author.mention}: **{member}** doesn't have a pfp set.")
             await ctx.reply(embed=em, mention_author=False)
         else:
             avatar_url = user.avatar.url
-            button1 = Button(label="avatar", url=avatar_url)
+            button1 = Button(emoji="<:info:1202073815140810772>", label="avatar", url=avatar_url)
             e = discord.Embed(color=0x313338, url=user.avatar.url)
             e.set_author(name=f"{member.display_name}'s avatar", icon_url=f"{member.avatar}", url=f"https://discord.com/users/{member.id}")
             e.set_image(url=avatar_url)
@@ -175,7 +175,7 @@ class Info(commands.Cog):
             user = ctx.author
         gld_avatar = user.guild_avatar
         if gld_avatar is None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{user.mention}** doesn't have a server avatar set.", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{user}** doesn't have a server avatar set.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
         else:
             gld_avatar_url = gld_avatar.url
@@ -195,7 +195,7 @@ class Info(commands.Cog):
         e = discord.Embed(color=0x313338)
         e.set_author(name=f"{ctx.guild.name}'s server icon", icon_url=f"{ctx.guild.icon.url}")
         e.set_image(url=f"{ctx.guild.icon.url}")
-        avatar = Button(label="server icon", url=f"{ctx.guild.icon.url}")
+        avatar = Button(emoji="<:info:1202073815140810772>", label="server icon", url=f"{ctx.guild.icon.url}")
         view = View()
         view.add_item(avatar)
         await ctx.reply(embed=e, view=view, mention_author=False)
@@ -211,7 +211,7 @@ class Info(commands.Cog):
         e = discord.Embed(color=0x313338)
         e.set_author(name=f"**{ctx.guild.name}'s server banner**", icon_url=f"{ctx.guild.icon.url}")
         e.set_image(url=f"{ctx.guild.banner.url}")
-        button = Button(label="server banner", url=f"{ctx.guild.banner.url}")
+        button = Button(emoji="<:info:1202073815140810772>", label="server banner", url=f"{ctx.guild.banner.url}")
         view = View()
         view.add_item(button)
         await ctx.reply(view=view, embed=e, mention_author=False)
@@ -225,7 +225,7 @@ class Info(commands.Cog):
             await ctx.reply(embed=embed, mention_author=False)
         else:
             invsplash_url = ctx.guild.splash
-            button1 = Button(label="invite splash", url=ctx.guild.splash.url)
+            button1 = Button(emoji="<:info:1202073815140810772>", label="invite splash", url=ctx.guild.splash.url)
             e = discord.Embed(color=0x313338)
             e.set_author(name=f"{ctx.guild.name}'s server invite splash")
             e.set_image(url=invsplash_url)
@@ -240,11 +240,11 @@ class Info(commands.Cog):
         if member == None:member = ctx.author
         user = await self.bot.fetch_user(member.id)
         if user.banner == None:
-            embed = discord.Embed(description=f"{ctx.author.mention}: **{member.mention}** doesn't have a banner set.", color=0x313338)
+            embed = discord.Embed(description=f"{ctx.author.mention}: **{member}** doesn't have a banner set.", color=0x313338)
             await ctx.reply(embed=embed, mention_author=False)
         else:
             banner_url = user.banner.url
-            button1 = Button(label="banner", url=banner_url)
+            button1 = Button(emoji="<:info:1202073815140810772>", label="banner", url=banner_url)
             e = discord.Embed(color=0x313338)
             e.set_image(url=banner_url)
             e.title = f"{user.display_name}'s banner"
