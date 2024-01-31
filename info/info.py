@@ -760,7 +760,7 @@ class Info(commands.Cog):
         if not (activities := member.activities):
             await ctx.send(chat.info(_("Right now this user is doing nothing")))
             return
-        await BaseMenu(ActivityPager(activities)).start(ctx)
+        await ctx.reply((ActivityPager(activities)).start(ctx), mention_author=False)
         
     @commands.command()
     @commands.guild_only()
@@ -1080,58 +1080,6 @@ class Info(commands.Cog):
 
         await ctx.reply(embed=data, mention_author=False)
         
-    # -------- IMPORTED FROM FRESHMEAT
-    @commands.command()
-    @commands.guild_only()
-    @commands.is_owner()
-    async def freshmembers(self, ctx, hours: int = 24):
-        """Show the members who joined in the specified timeframe
-
-        `hours`: A number of hours to check for new members, must be above 0"""
-        if hours < 1:
-            return await ctx.send("Consider putting hours above 0. Since that helps with searching for members. ;)")
-        elif hours > 300:
-            return await ctx.send("Please use something less then 300 hours.")
-
-        member_list = []
-        for member in ctx.guild.members:
-            if (
-                member.joined_at is not None
-                and member.joined_at > (ctx.message.created_at - datetime.timedelta(hours=hours))
-            ):
-                member_list.append([member.display_name, member.id, member.joined_at])
-
-        member_list.sort(key=lambda member: member[2], reverse=True)
-        member_string = ""
-        for member in member_list:
-            member_string += f"\n{member[0]} ({member[1]})"
-
-        pages = []
-        for page in pagify(escape(member_string, formatting=True), page_length=1000):
-            embed = discord.Embed(description=page)
-            embed.set_author(
-                name=f"{ctx.author.display_name}'s freshmeat of the day.",
-                icon_url=ctx.author.display_avatar,
-            )
-            pages.append(embed)
-
-        page_counter = 1
-        for page in pages:
-            page.set_footer(text=f"Page {page_counter} out of {len(pages)}")
-            page_counter += 1
-
-        if not pages:
-            return await ctx.send("No new members joined in specified timeframe.")
-
-        await menu(
-            ctx,
-            pages=pages,
-            controls=DEFAULT_CONTROLS,
-            message=None,
-            page=0,
-            timeout=90
-        )
-# ------------------- IMPORTED FROM SERVERSTATS
     @commands.command()
     async def botstats(self, ctx: commands.Context) -> None:
         """Display stats about the bot"""
@@ -1344,7 +1292,6 @@ class Info(commands.Cog):
                 cog=self,
             ).start(ctx=ctx)
 
-### ---- STOLEN FROM MELANIE
     @commands.command(name="inviteinfo", aliases=["ii"])
     async def inviteinfo(self, ctx, code: str):
         """Fetch information on a server from its invite/vanity code."""
@@ -1386,30 +1333,6 @@ class Info(commands.Cog):
         await ctx.reply(embed=embed, mention_author=False)
 
     @commands.command()
-    async def getuser(self, ctx, *, user_id: t.Union[int, discord.User]):
-        """Find a user by ID"""
-        if isinstance(user_id, int):
-            try:
-                member = await self.bot.get_or_fetch_user(int(user_id))
-            except discord.NotFound:
-                return await ctx.send(f"I could not find any users with the ID `{user_id}`")
-        else:
-            try:
-                member = await self.bot.get_or_fetch_user(user_id.id)
-            except discord.NotFound:
-                return await ctx.send(f"I could not find any users with the ID `{user_id.id}`")
-        since_created = f"<t:{int(member.created_at.replace(tzinfo=datetime.timezone.utc).timestamp())}:R>"
-        user_created = f"<t:{int(member.created_at.replace(tzinfo=datetime.timezone.utc).timestamp())}:D>"
-        created_on = f"Joined Discord on {user_created}\n({since_created})"
-        embed = discord.Embed(
-            title=f"{member.name} - {member.id}",
-            description=created_on,
-            color=await ctx.embed_color(),
-        )
-        embed.thumbnail(url=member.display_avatar.url)
-        await ctx.send(embed=embed)
-
-    @commands.command()
     @commands.guild_only()
     async def oldestchannels(self, ctx, amount: int = 10):
         """See which channel is the oldest"""
@@ -1425,7 +1348,7 @@ class Info(commands.Cog):
             )
             for p in pagify(txt, page_length=4000):
                 em = discord.Embed(description=p, color=ctx.author.color)
-                await ctx.send(embed=em)
+                await ctx.reply(embed=em, mention_author=False)
 
     @commands.command(aliases=["oldestusers"])
     @commands.guild_only()
@@ -1457,7 +1380,7 @@ class Info(commands.Cog):
             )
             for p in pagify(txt, page_length=4000):
                 em = discord.Embed(description=p, color=ctx.author.color)
-                await ctx.send(embed=em)
+                await ctx.reply(embed=em, mention_author=False)
 
     @commands.command()
     @commands.guild_only()
@@ -1489,7 +1412,7 @@ class Info(commands.Cog):
             )
             for p in pagify(txt, page_length=4000):
                 em = discord.Embed(description=p, color=ctx.author.color)
-                await ctx.send(embed=em)
+                await ctx.reply(embed=em, mention_author=False)
     
     @commands.command(aliases=["sp"])
     @commands.cooldown(1, 3, commands.BucketType.user)
