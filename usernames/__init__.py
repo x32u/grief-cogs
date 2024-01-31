@@ -354,7 +354,7 @@ class Names(commands.Cog):
         else:
             role_str = None
         data = discord.Embed(description=status_string or activity, colour=0x313338)
-        button1 = discord.ui.Button(label="userinfo", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
+        button1 = discord.ui.Button(emoji="<:info:1202073815140810772>", style=discord.ButtonStyle.url, url=f"https://discordapp.com/users/{member.id}")
         view = discord.ui.View()
         view.add_item(button1)
         data.add_field(name=_("Joined Discord on"), value=created_on)
