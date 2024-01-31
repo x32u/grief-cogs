@@ -760,7 +760,7 @@ class Info(commands.Cog):
         if not (activities := member.activities):
             await ctx.send(chat.info(_("Right now this user is doing nothing")))
             return
-        await ctx.reply(BaseMenu(ActivityPager(activities)).start(ctx), mention_author=False)
+        await BaseMenu(ActivityPager(activities)).start(ctx)
         
     @commands.command()
     @commands.guild_only()
@@ -1080,7 +1080,6 @@ class Info(commands.Cog):
 
         await ctx.reply(embed=data, mention_author=False)
         
-
     @commands.command()
     async def botstats(self, ctx: commands.Context) -> None:
         """Display stats about the bot"""
