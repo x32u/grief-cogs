@@ -1020,8 +1020,7 @@ class Mod(
                     "equal to me in the role hierarchy."
                 )
             )
-        elif ctx.author != member and not await is_allowed_by_hierarchy(
-            self.bot, self.config, ctx.guild, ctx.author, member
+        elif ctx.author != member and not await is_allowed_by_hierarchy(ctx.guild, ctx.author, member
         ):
             await ctx.send(
                 _(
