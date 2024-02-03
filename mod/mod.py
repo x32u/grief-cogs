@@ -1041,7 +1041,8 @@ class Mod(
                 else:
                     await ctx.send(_("An unexpected error has occurred."))
             else:
-                await ctx.reply(description=f"{ctx.author.mention} updated **{member}** nickname.", mention_author=False)
+                embed = discord.Embed(description=f"> {ctx.author.mention} updated **{member}**'s nickname.", color=0x313338)
+                await ctx.reply(embed=embed, mention_author=False)
 
     @commands.guild_only()  # type:ignore
     @commands.bot_has_permissions(embed_links=True)
