@@ -12,6 +12,7 @@ import re
 
 from grief.core.commands.converter import get_timedelta_converter
 from grief.core.utils.chat_formatting import box, pagify
+from grief.core import Config
 
 try:
     from emoji import UNICODE_EMOJI_ENGLISH as EMOJI_DATA  # emoji<2.0.0
@@ -70,6 +71,10 @@ class EditThread(Cog):
 
     def __init__(self, bot: Grief) -> None:  # Never executed except manually.
         super().__init__(bot=bot)
+        self.bot = bot
+        self.config = Config.get_conf(self, identifier=1398467138476, force_registration=True)
+        self.config.register_guild(threads=[])
+        self.bump_threads.start()
 
     async def check_thread(self, ctx: commands.Context, thread: typing.Optional[discord.Thread]) -> bool:
         # if (
