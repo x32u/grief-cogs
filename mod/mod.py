@@ -1041,7 +1041,7 @@ class Mod(
                 else:
                     await ctx.send(_("An unexpected error has occurred."))
             else:
-                await ctx.send(_("Done."))
+                await ctx.reply(description=f"{ctx.author.mention} updated **{member}** nickname.", mention_author=False)
 
     @commands.guild_only()  # type:ignore
     @commands.bot_has_permissions(embed_links=True)
