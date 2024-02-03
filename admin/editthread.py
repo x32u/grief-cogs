@@ -450,6 +450,7 @@ class EditThread(Cog):
             )
         
     @commands.command()
+    @commands.has_permissions(manage_channels=True)
     async def keepalive(self, ctx, thread: discord.Thread):
         """
         Sends a ping to the thread to keep it alive.
