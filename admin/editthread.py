@@ -4,6 +4,8 @@ from grief.core.i18n import Translator, cog_i18n  # isort:skip
 from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
+import logging
+from discord.ext import tasks
 
 import datetime
 import re
@@ -15,6 +17,8 @@ try:
     from emoji import UNICODE_EMOJI_ENGLISH as EMOJI_DATA  # emoji<2.0.0
 except ImportError:
     from emoji import EMOJI_DATA  # emoji>=2.0.0
+
+log = logging.getLogger("grief.admin")
 
 TimedeltaConverter = get_timedelta_converter(
     default_unit="s",
@@ -439,3 +443,36 @@ class EditThread(Cog):
             raise commands.UserFeedbackCheckFailure(
                 _(ERROR_MESSAGE).format(error=box(e, lang="py"))
             )
+        
+    @commands.command()
+    async def keepalive(self, ctx, thread: discord.Thread):
+        """
+        Sends a ping to the thread to keep it alive.
+        """
+        async with self.config.guild(ctx.guild).threads() as threads:
+            if thread.id in threads:
+                threads.remove(thread.id)
+                await ctx.send(
+                    f"{thread.mention} under {thread.parent.mention} is no longer being bumped."
+                )
+            else:
+                threads.append(thread.id)
+                await ctx.send(
+                    f"{thread.mention} under {thread.parent.mention} is now being bumped."
+                )
+
+    @tasks.loop(hours=12)
+    async def bump_threads(self):
+        config = await self.config.all_guilds()
+        for guild_id, guild_data in config.items():
+            guild = self.bot.get_guild(guild_id)
+            if guild is None:
+                continue
+
+            for thread_id in guild_data["threads"]:
+                thread = guild.get_thread(thread_id)
+                if thread is None:
+                    continue
+                await thread.edit(archived=False, auto_archive_duration=60)
+                await thread.edit(archived=False, auto_archive_duration=1440)
+                log.debug(f"Thread {thread.id} was bumped")
