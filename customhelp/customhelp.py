@@ -90,12 +90,12 @@ class CustomHelp(commands.Cog):
                 "deletemessage": False,
             },
             "arrows": [
-                {"name": "force_left", "emoji": "⏮️", "style": "primary", "label": ""},
-                {"name": "left", "emoji": "⬅️", "style": "primary", "label": ""},
-                {"name": "cross", "emoji": "❌", "style": "primary", "label": ""},
-                {"name": "right", "emoji": "➡️", "style": "primary", "label": ""},
-                {"name": "force_right", "emoji": "⏭️", "style": "primary", "label": ""},
-                {"name": "home", "emoji": "🏘️", "style": "primary", "label": ""},
+                {"name": "force_left", "emoji": "<:grief_force_arrow_L:1107472953362370650>", "style": "secondary", "label": ""},
+                {"name": "left", "emoji": "<:grief_arrow_L:1107472938069921852>", "style": "secondary", "label": ""},
+                {"name": "cross", "emoji": "<:grief_x:1107472962333978655>", "style": "secondary", "label": ""},
+                {"name": "right", "emoji": "<:grief_arrow_R:1107472965580365836>", "style": "secondary", "label": ""},
+                {"name": "force_right", "emoji": "<:grief_force_arrow_R:1107472947758780456>", "style": "secondary", "label": ""},
+                {"name": "home", "emoji": "<:grief_home:1107472958475214918>", "style": "secondary", "label": ""},
             ],
             "blacklist": {"nsfw": [], "dev": []},
         }
