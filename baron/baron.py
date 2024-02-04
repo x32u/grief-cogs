@@ -697,8 +697,8 @@ class Baron(commands.Cog):
             await guild.chunk()
         
         if data["min_members"] and guild.member_count < data["min_members"]:
-            await self.notify_guild(guild, f"you must have at least 50 members, if your server is active you can request a whitelist at https://discord.gg/seer"),
+            await self.notify_guild(guild, f"this is a private instance requiring a whitelist and permission. please join https://discord.gg/seer or add the main instance: https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=applications.commands%20bot"),
             await guild.leave()
         else:
-            await self.notify_guild(guild, f"Hello, I am grief. I am a free mutlipurpose Discord bot that features vanity rewards, TikTok/YouTube reposting, and pretty much everything you'd need. Below you can find my links:\n\n Community server — https://discord.gg/yor\n\n Support Server — https://discord.gg/KVbq2pDD5J\n\n Commands — <https://grief.cloud/commands>\n\n Docs — <https://docs.grief.cloud>"),
+            await self.notify_guild(guild, f"this is a developement instance, no command is guaranteed to work and features added here are not guaranteed to stay. data can be removed and i wont always be stable. please add the main instance: https://discord.com/api/oauth2/authorize?client_id=716939297009434656&permissions=8&scope=applications.commands%20bot"),
             return
