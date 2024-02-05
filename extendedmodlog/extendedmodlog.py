@@ -76,7 +76,7 @@ class ExtendedModLog(EventMixin, commands.Cog):
         
     async def cog_load(self) -> None:
         for guild_id in await self.config.all_guilds():
-            self.settings[int(guild_id)] = await self.config.guild_from_id(guild_id).all(
+            self.settings[int(guild_id)] = await self.config.guild_from_id(guild_id).all()
 
     async def modlog_settings(self, ctx: commands.Context) -> None:
         guild = ctx.message.guild
