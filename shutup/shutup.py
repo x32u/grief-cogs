@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ..AAA3A_utils.cogsutils import CogsUtils
+from .cogsutils import CogsUtils
 import discord
 from grief.core import Config, commands, checks
 from grief.core.bot import Grief
