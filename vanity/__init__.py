@@ -1,13 +1,14 @@
 import asyncio
 import typing
 from logging import Logger, getLogger
-
 import discord
 from grief.core import Config, commands
 from grief.core.bot import Grief
 from .converter import RoleHierarchyConverter
+from logging import getLogger
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
+logger = getLogger("grief.vanity")
 
 class Vanity(commands.Cog):
     """For level 3 servers, award your users for advertising the vanity in their status. """
@@ -95,7 +96,7 @@ class Vanity(commands.Cog):
                 if vanity.lower() in after_custom_activity[0].name.lower():
                     if role.id not in after._roles:
                         try:
-                            await after.add_roles(role)
+                            await after.add_roles(role, reason='grief vanity: user had the server vanity in their status')
                         except (discord.Forbidden, discord.HTTPException) as e:
                             self.logger.warning(
                                 f"Failed to add role to {after} in {guild.name}/{guild.id}: {str(e)}"
@@ -107,7 +108,7 @@ class Vanity(commands.Cog):
                 if vanity.lower() in before_custom_activity[0].name.lower():
                     if role.id in after._roles:
                         try:
-                            await after.remove_roles(role)
+                            await after.remove_roles(role, reason='grief vanity: user removed the server vanity from their status')
                         except (discord.Forbidden, discord.HTTPException) as e:
                             self.logger.warning(
                                 f"Failed to remove role from {after} in {guild.name}/{guild.id}: {str(e)}"
@@ -201,8 +202,7 @@ class Vanity(commands.Cog):
             f"Vanity log channel has been updated to {channel.mention}",
             allowed_mentions=discord.AllowedMentions.none(),
         )
-
-
+    
 async def setup(bot: Grief):
     cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
