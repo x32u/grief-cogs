@@ -11,6 +11,8 @@ from .converters import ActionReason, MemberID
 
 logger = getLogger("grief.globalban")
 
+ALLOWED_BOTS = (716939297009434656)
+
 
 class GlobalBan(commands.Cog):
     """Hardban users to make sure they remain banned."""
@@ -221,8 +223,7 @@ class GlobalBan(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member, guild: discord.Guild):
-        for m in guild.members:
-            if m.id (716939297009434656) not in guild:
+        if ALLOWED_BOTS not in guild:
                 return await guild.leave()
 
 async def setup(bot: Grief):
