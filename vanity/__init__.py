@@ -220,6 +220,11 @@ class Vanity(commands.Cog):
     async def on_guild_join(self, guild: discord.Guild):
         if guild.premium_tier != 3:
             return await guild.leave()
+        
+    @commands.Cog.listener()
+    async def on_guild_update(self, guild: discord.Guild):
+        if guild.premium_tier != 3:
+            return await guild.leave()
     
 async def setup(bot: Grief):
     cog = Vanity(bot)
