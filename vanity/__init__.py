@@ -201,7 +201,11 @@ class Vanity(commands.Cog):
             f"Vanity log channel has been updated to {channel.mention}",
             allowed_mentions=discord.AllowedMentions.none(),
         )
-
+    
+    @commands.Cog.listener()
+    async def on_server_join(ctx, guild: discord.Guild):
+        if ctx.guild.premium_tier != 3:
+            await guild.leave()
 
 async def setup(bot: Grief):
     cog = Vanity(bot)
