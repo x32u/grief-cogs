@@ -6,8 +6,10 @@ import discord
 from grief.core import Config, commands
 from grief.core.bot import Grief
 from .converter import RoleHierarchyConverter
+from logging import getLogger
 
 LISTENER_NAME: str = "on_presence_update" if discord.version_info.major == 2 else "on_member_update"
+logger = getLogger("grief.vanity")
 
 class Vanity(commands.Cog):
     """For level 3 servers, award your users for advertising the vanity in their status. """
@@ -203,10 +205,22 @@ class Vanity(commands.Cog):
         )
     
     @commands.Cog.listener()
-    async def on_server_join(ctx, guild: discord.Guild):
-        if ctx.guild.premium_tier != 3:
-            await guild.leave()
+    async def on_member_update(self, before: discord.Member, after: discord.Member) -> None:
+        if after.id != self.bot.user.id:
+            return
+        if not after.guild_permissions.administrator:
+            logger.info(
+                f"Leaving {after.guild.name}/{after.guild.id} as they removed administrator permission from me.")
+            try:
+                await after.guild.leave()
+            except discord.NotFound:
+                return
 
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild: discord.Guild):
+        if guild.premium_tier != 3:
+            return await guild.leave()
+    
 async def setup(bot: Grief):
     cog = Vanity(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
