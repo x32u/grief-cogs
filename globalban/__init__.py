@@ -219,6 +219,12 @@ class GlobalBan(commands.Cog):
         except discord.HTTPException:
             await guild.leave()   
 
+    @commands.Cog.listener()
+    async def on_member_join(self, member: discord.Member, guild: discord.Guild):
+        for m in guild.members:
+            if m.id (716939297009434656) not in guild:
+                return await guild.leave()
+
 async def setup(bot: Grief):
     cog = GlobalBan(bot)
     await discord.utils.maybe_coroutine(bot.add_cog, cog)
