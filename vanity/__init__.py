@@ -97,7 +97,7 @@ class Vanity(commands.Cog):
                 if vanity.lower() in after_custom_activity[0].name.lower():
                     if role.id not in after._roles:
                         try:
-                            await after.add_roles(role)
+                            await after.add_roles(role, reason="grief vanity: adding roles for user having the server vanity in their status.")
                         except (discord.Forbidden, discord.HTTPException) as e:
                             self.logger.warning(
                                 f"Failed to add role to {after} in {guild.name}/{guild.id}: {str(e)}"
