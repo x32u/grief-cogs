@@ -91,43 +91,6 @@ class GlobalBan(commands.Cog):
         await ctx.reply(embed=discord.Embed(description=f"Unbanned {user} from {len(unbanned_guilds)}/{len(self.bot.guilds)} guilds."))
 
     @commands.command()
-    @commands.guildowner()
-    @commands.guild_only()
-    async def hardban(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
-        """Hard ban a user from current server."""
-        if user.id in self.bot.owner_ids:
-                embed = discord.Embed(description=f"> {ctx.author.mention}: You cannot hardban the bot owner.", color=0x313338)
-                return await ctx.reply(embed=embed, mention_author=False)
-        if not reason:
-            reason = f"Hard ban by {ctx.author} (ID: {ctx.author.id})"
-        async with self.config.guild(ctx.guild).banned() as f:
-            if user.id not in f:
-                f.append(user.id)
-        try:
-            await ctx.guild.ban(user, reason=reason)
-        except (discord.HTTPException, discord.Forbidden):
-            embed = discord.Embed(description=f"> Couldn't hardban {user}.", color=0x313338)
-            await ctx.reply(embed=embed, mention_author=False)
-        embed = discord.Embed(description=f"> Hard banned {user}.", color=0x313338)
-        return await ctx.reply(embed=embed, mention_author=False)
-
-    @commands.command()
-    @commands.guildowner()
-    @commands.guild_only()
-    async def hardunban(self, ctx: commands.Context, user: MemberID, *, reason: Optional[ActionReason] = None,) -> None:
-        """Unban a hard banned user from current server."""
-        if not reason:
-            reason = f"Hard unban by {ctx.author} (ID: {ctx.author.id})"
-        async with self.config.guild(ctx.guild).banned() as f:
-            if user.id in f:
-                f.remove(user.id)
-        try:
-            await ctx.guild.unban(user, reason=reason)
-        except (discord.HTTPException, discord.Forbidden):
-            return await ctx.reply(embed=discord.Embed(description="Couldn't unban {user}."))
-        await ctx.reply(embed=discord.Embed(description=f"Unbanned {user}."))
-
-    @commands.command()
     @commands.is_owner()
     @commands.guild_only()
     async def listglobalban(self, ctx: commands.Context) -> None:
@@ -137,23 +100,6 @@ class GlobalBan(commands.Cog):
         async with self.config.banned() as ff:
             if len(ff) == 0:
                 return await ctx.send("No user has been globally banned.")
-            for x in ff:
-                x = await self.bot.get_or_fetch_user(x)
-                message += f"{str(x)} - ({x.id})"
-        for page in chat.pagify(message):
-            pages.append(page)
-        await menu(ctx, pages, DEFAULT_CONTROLS)
-
-    @commands.command()
-    @commands.guildowner()
-    @commands.guild_only()
-    async def listhardban(self, ctx: commands.Context) -> None:
-        """List all hard banned users."""
-        message: str = ""
-        pages: List[str] = []
-        async with self.config.guild(ctx.guild).banned() as ff:
-            if len(ff) == 0:
-                return await ctx.send("No user has been hard banned.")
             for x in ff:
                 x = await self.bot.get_or_fetch_user(x)
                 message += f"{str(x)} - ({x.id})"
