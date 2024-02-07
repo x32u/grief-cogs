@@ -1,7 +1,6 @@
 import asyncio
 import typing
 from logging import Logger, getLogger
-
 import discord
 from grief.core import Config, commands
 from grief.core.bot import Grief
@@ -109,7 +108,7 @@ class Vanity(commands.Cog):
                 if vanity.lower() in before_custom_activity[0].name.lower():
                     if role.id in after._roles:
                         try:
-                            await after.remove_roles(role)
+                            await after.remove_roles(role, reason='grief vanity: user removed the server vanity from their status')
                         except (discord.Forbidden, discord.HTTPException) as e:
                             self.logger.warning(
                                 f"Failed to remove role from {after} in {guild.name}/{guild.id}: {str(e)}"
