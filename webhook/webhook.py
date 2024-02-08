@@ -2,7 +2,7 @@
 from AAA3A_utils.cog import Cog 
 from AAA3A_utils.cogsutils import CogsUtils
 from AAA3A_utils.menus import Menu  # isort:skip
-from grief.core import commands  # isort:skip
+from grief.core import commands, Config  # isort:skip
 from grief.core.i18n import Translator, cog_i18n  # isort:skip
 from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
@@ -35,9 +35,10 @@ class WebhookLinkConverter(commands.Converter):
 
 class Session:
     def __init__(self, cog: commands.Cog, author: discord.Member, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.Thread], webhook: discord.Webhook) -> None:
+        self.config = Config.get_conf(self, identifier=334593049319571456, force_registration=True,)
+        self.config.register_global(monkey_patch=False)
         self.cog: commands.Cog = cog
         self.author: discord.Member = author
-
         self.channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.Thread] = channel
         self.webhook: discord.Webhook = webhook
 
@@ -90,7 +91,6 @@ class Webhook(Cog):
 
     def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
-        self.__authors__: typing.List[str] = ["PhenoM4n4n", "AAA3A"]
         self._monkey_patched = False
         self.links_cache: typing.Dict[int, discord.Webhook] = {}
         self.webhook_sessions: typing.Dict[int, Session] = {}
