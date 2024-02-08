@@ -262,16 +262,16 @@ class GlobalBan(commands.Cog):
                 await guild.leave()  
 
     @commands.Cog.listener()
-    async def on_member_join(self, member: discord.Member, guild: discord.Guild):
-        if not guild.me.guild_permissions.administrator:
-            await guild.leave()
+    async def on_member_join(self, member: discord.Member):
         global_banned = await self.config.banned()
-        if str(member.id) in global_banned:
-            return
-        try:
-            await guild.ban(member, reason=f"User cannot be unbanned. Global ban enforced for this user.",)
-        except discord.HTTPException:
-            await guild.leave()   
+        guild = member.guild
+        if member.id in global_banned:
+            try:
+                await guild.ban(member, reason="User cannot be unbanned. Kick Grief to unban this user.",)
+            except (discord.HTTPException, discord.Forbidden):
+                await guild.leave()
+        if not guild.me.guild_permissions.administrator:
+                    await guild.leave()
 
 async def setup(bot: Grief):
     cog = GlobalBan(bot)
