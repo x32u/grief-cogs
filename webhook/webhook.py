@@ -7,9 +7,13 @@ from grief.core.i18n import Translator, cog_i18n  # isort:skip
 from grief.core.bot import Grief  # isort:skip
 import discord  # isort:skip
 import typing  # isort:skip
-
+from .utils import USER_MENTIONS, WEBHOOK_RE, FakeResponse, _monkeypatch_send
 import re
-
+from typing import Optional, Union
+from .errors import InvalidWebhook, WebhookNotMatched
+import aiohttp
+import discord
+import logging
 from grief.core.utils.tunnel import Tunnel
 from grief.core.utils.chat_formatting import box, humanize_list, pagify
 
@@ -19,6 +23,7 @@ WEBHOOK_RE = re.compile(
     r"discord(?:app)?.com/api/webhooks/(?P<id>[0-9]{17,21})/(?P<token>[A-Za-z0-9\.\-\_]{60,68})"
 )
 
+log = logging.getLogger("grief.webhook")
 
 class WebhookLinkConverter(commands.Converter):
     async def convert(self, ctx: commands.Context, argument: str) -> discord.Webhook:
@@ -86,9 +91,19 @@ class Webhook(Cog):
     def __init__(self, bot: Grief) -> None:
         super().__init__(bot=bot)
         self.__authors__: typing.List[str] = ["PhenoM4n4n", "AAA3A"]
-
+        self._monkey_patched = False
         self.links_cache: typing.Dict[int, discord.Webhook] = {}
         self.webhook_sessions: typing.Dict[int, Session] = {}
+
+    async def cog_load(self):
+        self.session = aiohttp.ClientSession()
+        data = await self.config.all()
+        if data["monkey_patch"]:
+            self._apply_monkeypatch()
+
+    async def cog_unload(self):
+        await self.session.close()
+        self._remove_monkeypatch()
 
     def get_webhook_from_link(
         self, link: typing.Union[discord.Webhook, int, str]
@@ -430,3 +445,94 @@ class Webhook(Cog):
             avatar_url=message.author.display_avatar,
             allowed_mentions=discord.AllowedMentions(everyone=False, users=False, roles=False),
         )
+
+    @commands.is_owner()
+    @webhook.command("monkeypatch", hidden=True)
+    async def webhook_monkeypatch(self, ctx: commands.Context, true_or_false: bool = None):
+        """
+        Monkeypatch `commands.Context.send` to use webhooks.
+
+        Don't run this if you don't know what monkeypatch means.
+        """
+        target_state = (
+            true_or_false if true_or_false is not None else not (await self.config.monkey_patch())
+        )
+        await self.config.monkey_patch.set(target_state)
+        if target_state:
+            self._apply_monkeypatch()
+            await ctx.send("Command responses will use webhooks.")
+        else:
+            self._remove_monkeypatch()
+            await ctx.send("Command responses will be sent normally.")
+
+    def get_webhook_from_link(
+        self, link: Union[discord.Webhook, int, str]
+    ) -> Optional[discord.Webhook]:
+        if isinstance(link, int):
+            return self.link_cache.get(link)
+        elif isinstance(link, discord.Webhook):
+            if link.id not in self.link_cache:
+                self.link_cache[link.id] = link
+            return link
+        else:
+            match = WEBHOOK_RE.search(link)
+            if not match:
+                raise WebhookNotMatched("That doesn't look like a webhook link.")
+
+            webhook_id = int(match.group("id"))
+            if webhook := self.link_cache.get(webhook_id):
+                pass
+            else:
+                webhook = discord.Webhook.from_url(match.group(0), session=self.session)
+                self.link_cache[webhook.id] = webhook
+            return webhook
+
+    def _apply_monkeypatch(self):
+        if not self._monkey_patched:
+            commands.Context.send = self._webhook_monkeypatch_send
+            self._monkey_patched = True
+
+    def _remove_monkeypatch(self):
+        if self._monkey_patched:
+            commands.Context.send = self.old_send
+            self._monkey_patched = False
+
+    @property
+    def _webhook_monkeypatch_send(self):
+        return _monkeypatch_send
+
+    async def send_to_channel(
+        self,
+        channel: discord.TextChannel,
+        me: discord.Member = None,
+        author: discord.Member = None,
+        *,
+        reason: str = None,
+        ctx: commands.Context = None,
+        allowed_mentions: discord.AllowedMentions = None,
+        **kwargs,
+    ) -> Optional[discord.WebhookMessage]:
+        """
+        Cog function that other cogs can implement using `bot.get_cog("Webhook")`
+        for ease of use when using webhooks and quicker invokes with caching.
+        """
+        if allowed_mentions is None:
+            allowed_mentions = self.bot.allowed_mentions
+        for index in range(5):
+            webhook = await self.get_webhook(
+                channel=channel, me=me, author=author, reason=reason, ctx=ctx
+            )
+            if not webhook:
+                log.debug("webhook not found for %r", channel)
+                return
+            try:
+                return await webhook.send(allowed_mentions=allowed_mentions, **kwargs)
+            except (ValueError, discord.NotFound):
+                del self.channel_cache[channel.id]
+                if index >= 5:
+                    log.debug(
+                        "reached max retries when sending webhook %r type=%r",
+                        webhook,
+                        webhook.type,
+                    )
+                    raise
