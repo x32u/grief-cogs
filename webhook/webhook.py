@@ -238,7 +238,7 @@ class Webhook(commands.Cog):
                         total_members.add(member)
                         member_string = f"{member} ({member.id})"
                         if member.bot:
-                            member_string = f"[{member_string}](https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO 'This user is a bot')"
+                            member_string = f"{member_string} ({member.id})"
                         members.append(member_string)
                     if members:
                         lines.append(humanize_list(members))
