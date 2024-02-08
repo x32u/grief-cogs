@@ -34,10 +34,7 @@ class WebhookLinkConverter(commands.Converter):
 
 
 class Session:
-    def __init__(self, bot: Grief, cog: commands.Cog, author: discord.Member, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.Thread], webhook: discord.Webhook) -> None:
-        self.bot = bot
-        self.config = Config.get_conf(self, identifier=334593049319571456, force_registration=True,)
-        self.config.register_global(monkey_patch=False)
+    def __init__(self, cog: commands.Cog, author: discord.Member, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.Thread], webhook: discord.Webhook) -> None:
         self.cog: commands.Cog = cog
         self.author: discord.Member = author
         self.channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.Thread] = channel
@@ -95,6 +92,9 @@ class Webhook(Cog):
         self._monkey_patched = False
         self.links_cache: typing.Dict[int, discord.Webhook] = {}
         self.webhook_sessions: typing.Dict[int, Session] = {}
+        self.bot = bot
+        self.config = Config.get_conf(self, identifier=334593049319571456, force_registration=True,)
+        self.config.register_global(monkey_patch=False)
 
     async def cog_load(self):
         self.session = aiohttp.ClientSession()
