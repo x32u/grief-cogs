@@ -34,7 +34,8 @@ class WebhookLinkConverter(commands.Converter):
 
 
 class Session:
-    def __init__(self, cog: commands.Cog, author: discord.Member, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.Thread], webhook: discord.Webhook) -> None:
+    def __init__(self, bot: Grief, cog: commands.Cog, author: discord.Member, channel: typing.Union[discord.TextChannel, discord.VoiceChannel, discord.Thread], webhook: discord.Webhook) -> None:
+        self.bot = bot
         self.config = Config.get_conf(self, identifier=334593049319571456, force_registration=True,)
         self.config.register_global(monkey_patch=False)
         self.cog: commands.Cog = cog
