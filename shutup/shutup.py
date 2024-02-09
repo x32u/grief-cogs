@@ -84,12 +84,12 @@ class Shutup(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if not message.guild: return
+            if message.author.id in await self.config.guild(message.guild).uwulocked_members() and if '@' in message.content:
+                await message.delete()
         if await self.config.guild(message.guild).enabled():
             if message.author.id in await self.config.guild(message.guild).target_members():
                 await message.delete()
             elif message.author.id in await self.config.guild(message.guild).uwulocked_members():
-                await message.delete()
-            elif message.author.id in await self.config.guild(message.guild).uwulocked_members() and if '@' in message.content:
                 await message.delete()
                 uwu = uwuipy()
                 uwu_message = uwu.uwuify(message.content)
