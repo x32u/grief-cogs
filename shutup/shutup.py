@@ -89,7 +89,7 @@ class Shutup(commands.Cog):
                 await message.delete()
             elif message.author.id in await self.config.guild(message.guild).uwulocked_members():
                 await message.delete()
-            if message.author.id in await self.config.guild(message.guild).uwulocked_members() and '@' in message.content:
+            elif message.author.id in await self.config.guild(message.guild).uwulocked_members() and '@' in message.content:
                 await message.delete()
                 uwu = uwuipy()
                 uwu_message = uwu.uwuify(message.content)
