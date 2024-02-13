@@ -335,15 +335,8 @@ class Purge(commands.Cog):
             allowed_mentions=discord.AllowedMentions(replied_user=False),
         )
 
-    @commands.command(name="self")  # type: ignore
-    async def self(
-        self,
-        ctx: commands.GuildContext,
-        number: commands.Range[int, 1, 2000],
-        channel: Optional[
-            Union[discord.Thread, discord.TextChannel, discord.VoiceChannel, discord.StageChannel]
-        ] = None,
-    ):
+    @commands.command(aliases=["self"])  # type: ignore
+    async def selfpurge(self, ctx: commands.GuildContext, number: commands.Range[int, 1, 2000], channel: Optional[Union[discord.Thread, discord.TextChannel, discord.VoiceChannel, discord.StageChannel]] = None,):
         """
         Removes your messages from the channel.
 
