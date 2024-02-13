@@ -158,3 +158,7 @@ class MemberPrefix(Cog):
         """Clear all members prefixes for a specified server."""
         await self.config.clear_all_members(guild=guild)
         await ctx.send(_("All members prefixes purged in this guild."))
+
+async def setup(bot: Grief) -> None:
+    cog = MemberPrefix(bot)
+    await bot.add_cog(cog)
