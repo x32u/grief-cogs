@@ -1,4 +1,4 @@
-
+import logging
 import random
 import datetime
 import time
@@ -27,8 +27,9 @@ from .core import Core
 from uwuipy import uwuipy
 import textwrap
 import asyncio
-
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
+from red_commons.logging import getLogger
+log = getLogger("grief.fun")
 
 
 
@@ -366,3 +367,36 @@ class Fun(commands.Cog):
         guild: discord.Guild = ctx.guild
         mentions = " ".join(m.mention for m in guild.members if not m.bot)
         await asyncio.gather(*[ctx.send(chunk, delete_after=3) for chunk in textwrap.wrap(mentions, 1950)])
+
+    @commands.command()
+    async def customprefix(self, ctx: commands.Context, *, prefix: str = None):
+        """Set your custom prefix to be used across all servers you share with
+        Melanie.
+
+        Set the prefix to `none` to remove your custom prefix.
+
+        """
+        if not prefix:
+            custom = await self.config.user(ctx.author).custom_prefix()
+            if custom:
+                return await ctx.send(
+                        f"Your custom prefix is **{custom}**",
+                        status="info",
+                        tip="re-run this cmd with a new prefix to change it, or set it to 'none' to remove it. ",
+                )
+            else:
+                return await ctx.send_help()
+
+        if len(prefix) > 10:
+            return await ctx.send("The custom prefix needs to be less than 10 characters",)
+
+        if prefix.lower() == "none":
+            prefix = None
+
+        async def set_prefix_backround() -> None:
+            await self.config.user(ctx.author).custom_prefix.set(prefix)
+            await self.build_custom_prefix_cache(ctx.author.id)
+            log.warning(f"Custom prefix for {ctx.author} set to {prefix}")
+
+        asyncio.create_task(set_prefix_backround())
+        return await ctx.send(f"Your custom prefix has been set to **{prefix}**") if prefix else "Your custom prefix has been removed"
