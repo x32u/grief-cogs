@@ -9,6 +9,7 @@ from typing import Final
 import urllib.parse
 import aiohttp
 import discord
+from grief.core import commands
 from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.menus import menu
@@ -29,7 +30,7 @@ import textwrap
 import asyncio
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 from red_commons.logging import getLogger
-from grief.core import Config, commands, checks
+from grief.core import Config, commands
 from pydantic import BaseModel
 import itertools
 
@@ -110,7 +111,7 @@ class Fun(commands.Cog):
         self.stopwatches = {}
         self.lmgtfy_endpoint = "https://cog-creators.github.io"
         self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
-        self.config.register_user(**UserSettings().dict())
+        self.config.register_user(custom_prefix=[])
         self.custom_prefix_cache: dict[int, tuple] = {}
         asyncio.create_task(self.build_custom_prefix_cache())
         self.cache = {}
