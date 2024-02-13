@@ -1,3 +1,4 @@
+import msgpack
 import logging
 import random
 import datetime
@@ -19,6 +20,7 @@ from grief.core.utils.chat_formatting import (
     humanize_number,
     humanize_timedelta,
     pagify,
+    typing
 )
 from typing import Any, Dict, Optional
 from . import constants as sub
@@ -30,6 +32,7 @@ from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 from red_commons.logging import getLogger
 from grief.core import Config, commands
 from pydantic import BaseModel
+import itertools
 
 log = getLogger("grief.fun")
 
@@ -110,6 +113,9 @@ class Fun(commands.Cog):
         self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
         self.config.register_user(custom_prefix=[])
         self.cache = {}
+    
+    def get_case_values(chars: str) -> tuple:
+        return tuple(map("".join, itertools.product(*zip(chars.upper(), chars.lower()))))
 
     @commands.command(usage="<first> <second> [others...]")
     async def choose(self, ctx, *choices):
@@ -405,6 +411,23 @@ class Fun(commands.Cog):
 
         asyncio.create_task(set_prefix_backround())
         return await ctx.send(f"Your custom prefix has been set to **{prefix}**") if prefix else "Your custom prefix has been removed"
+    
+    async def build_custom_prefix_cache(self, user_id: typing.Optional[int] = None) -> None:
+        if user_id:
+            custom_prefix: str = await self.config.user_from_id(user_id).custom_prefix()
+            if not custom_prefix:
+                del self.prefix_cache[user_id]
+            else:
+                self.prefix_cache[user_id] = get_case_values(custom_prefix)
+        else:
+            with log.catch(exclude=asyncio.CancelledError):
+                users = await self.config.all_users()
+                for uid, data in users.items():
+                    if custom_prefix := data.get("custom_prefix"):
+                        self.prefix_cache[uid] = get_case_values(custom_prefix)
+
+            size = len(msgpack.packb(self.prefix_cache))
+            log.success(f"Loaded {len(self.prefix_cache)}")
     
     @commands.Cog.listener()
     async def on_message_no_cmd(self, message: discord.Message):
