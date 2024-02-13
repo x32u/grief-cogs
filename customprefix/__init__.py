@@ -67,6 +67,29 @@ class MemberPrefix(Cog):
         if self.original_prefix_manager is not None:
             self.bot.command_prefix = self.original_prefix_manager
         await super().cog_unload()
+    
+    async def prefix_manager(
+        self, bot: Grief, message: typing.Union[discord.Message, NotMessage]
+    ) -> typing.List[str]:
+        if (
+            not isinstance(message, discord.Message)
+            or message.guild is None
+            or await bot.cog_disabled_in_guild(cog=self, guild=message.guild)
+            or not await bot.allowed_by_whitelist_blacklist(who=message.author)
+        ):
+            return await self.original_prefix_manager(bot, message)
+        custom_prefixes = await self.config.user_from_ids(
+            message.guild.id, message.author.id
+        ).custom_prefixes()
+        if custom_prefixes == []:
+            return await self.original_prefix_manager(bot, message)
+        if (
+            await self.config.use_normal_prefixes()
+        ):  # Always `True` because the setting has been removed.
+            prefixes = await bot._prefix_cache.get_prefixes(message.guild)
+        prefixes.extend(custom_prefixes)
+        prefixes = sorted(prefixes, reverse=True)
+        return commands.when_mentioned_or(*prefixes)(bot, message)
 
     class StrConverter(commands.Converter):
         async def convert(self, ctx: commands.Context, argument: str) -> str:
