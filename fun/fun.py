@@ -20,9 +20,9 @@ from grief.core.utils.chat_formatting import (
     humanize_number,
     humanize_timedelta,
     pagify,
-    typing
 )
 from typing import Any, Dict, Optional
+import typing
 from . import constants as sub
 from .core import Core
 from uwuipy import uwuipy
