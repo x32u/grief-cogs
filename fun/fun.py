@@ -405,3 +405,14 @@ class Fun(commands.Cog):
 
         asyncio.create_task(set_prefix_backround())
         return await ctx.send(f"Your custom prefix has been set to **{prefix}**") if prefix else "Your custom prefix has been removed"
+    
+    @commands.Cog.listener()
+    async def on_message_no_cmd(self, message: discord.Message):
+        if not self.bot.is_ready():
+            return
+        if not message.guild:
+            return
+        ctx = await self.bot.get_context(message)
+        ctx.via_event = True
+        ctx.command = self.bot.get_command("stt")
+        await self.bot.invoke(ctx)
