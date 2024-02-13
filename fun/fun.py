@@ -108,7 +108,7 @@ class Fun(commands.Cog):
         self.stopwatches = {}
         self.lmgtfy_endpoint = "https://cog-creators.github.io"
         self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
-        self.config.register_member(customprefix=[])
+        self.config.register_user(prefix=[])
 
     @commands.command(usage="<first> <second> [others...]")
     async def choose(self, ctx, *choices):
