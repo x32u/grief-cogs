@@ -34,7 +34,7 @@ class MemberPrefix(Cog):
             "custom_prefixes": [],
         }
         self.config.register_global(**self.memberprefix_global)
-        self.config.register_user(**self.memberprefix_member)
+        self.config.register_member(**self.memberprefix_member)
 
         self.original_prefix_manager = self.bot.command_prefix
 
@@ -67,7 +67,7 @@ class MemberPrefix(Cog):
         if self.original_prefix_manager is not None:
             self.bot.command_prefix = self.original_prefix_manager
         await super().cog_unload()
-    
+
     async def prefix_manager(
         self, bot: Grief, message: typing.Union[discord.Message, NotMessage]
     ) -> typing.List[str]:
@@ -78,7 +78,7 @@ class MemberPrefix(Cog):
             or not await bot.allowed_by_whitelist_blacklist(who=message.author)
         ):
             return await self.original_prefix_manager(bot, message)
-        custom_prefixes = await self.config.user_from_ids(
+        custom_prefixes = await self.config.member_from_ids(
             message.guild.id, message.author.id
         ).custom_prefixes()
         if custom_prefixes == []:
@@ -112,20 +112,20 @@ class MemberPrefix(Cog):
             - `<prefixes...>` - The prefixes the bot will respond for you only.
         """
         if len(prefixes) == 0:
-            await self.config.user(ctx.author).custom_prefixes.clear()
+            await self.config.member(ctx.author).custom_prefixes.clear()
             await ctx.send(_("You now use this server or global prefixes."))
             return
-        if any(len(x) > 10 for x in prefixes):
+        if any(len(x) > 25 for x in prefixes):
             raise commands.UserFeedbackCheckFailure(
                 _(
-                    "A prefix is above the maximal length (10 characters).\nThis is possible for global or per-server prefixes, but not for per-member prefixes."
+                    "A prefix is above the maximal length (25 characters).\nThis is possible for global or per-server prefixes, but not for per-member prefixes."
                 )
             )
         if any(prefix.startswith("/") for prefix in prefixes):
             raise commands.UserFeedbackCheckFailure(
                 _("Prefixes cannot start with `/`, as it conflicts with Discord's slash commands.")
             )
-        await self.config.user(ctx.author).custom_prefixes.set(prefixes)
+        await self.config.member(ctx.author).custom_prefixes.set(prefixes)
         if len(prefixes) == 1:
             await ctx.send(
                 _(
@@ -158,7 +158,3 @@ class MemberPrefix(Cog):
         """Clear all members prefixes for a specified server."""
         await self.config.clear_all_members(guild=guild)
         await ctx.send(_("All members prefixes purged in this guild."))
-
-async def setup(bot: Grief) -> None:
-    cog = MemberPrefix(bot)
-    await bot.add_cog(cog)
