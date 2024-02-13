@@ -115,9 +115,7 @@ class Fun(commands.Cog):
         self.custom_prefix_cache: dict[int, tuple] = {}
         asyncio.create_task(self.build_custom_prefix_cache())
         self.cache = {}
-    
-    def get_case_values(chars: str) -> tuple:
-        return tuple(map("".join, itertools.product(*zip(chars.upper(), chars.lower()))))
+
 
     @commands.command(usage="<first> <second> [others...]")
     async def choose(self, ctx, *choices):
@@ -419,14 +417,6 @@ class Fun(commands.Cog):
             custom_prefix: str = await self.config.user_from_id(user_id).custom_prefix()
             if not custom_prefix:
                 del self.prefix_cache[user_id]
-            else:
-                self.prefix_cache[user_id] = get_case_values(custom_prefix)
-        else:
-            with log.catch(exclude=asyncio.CancelledError):
-                users = await self.config.all_users()
-                for uid, data in users.items():
-                    if custom_prefix := data.get("custom_prefix"):
-                        self.prefix_cache[uid] = get_case_values(custom_prefix)
 
             size = len(msgpack.packb(self.prefix_cache))
             log.success(f"Loaded {len(self.prefix_cache)}")
