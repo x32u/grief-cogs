@@ -30,11 +30,11 @@ class MemberPrefix(Cog):
         self.memberprefix_global: typing.Dict[str, bool] = {
             "use_normal_prefixes": True,
         }
-        self.memberprefix_member: typing.Dict[str, typing.List[str]] = {
+        self.memberprefix_user: typing.Dict[str, typing.List[str]] = {
             "custom_prefixes": [],
         }
         self.config.register_global(**self.memberprefix_global)
-        self.config.register_member(**self.memberprefix_member)
+        self.config.register_user(**self.memberprefix_user)
 
         self.original_prefix_manager = self.bot.command_prefix
 
@@ -112,20 +112,20 @@ class MemberPrefix(Cog):
             - `<prefixes...>` - The prefixes the bot will respond for you only.
         """
         if len(prefixes) == 0:
-            await self.config.member(ctx.author).custom_prefixes.clear()
+            await self.config.user(ctx.author).custom_prefixes.clear()
             await ctx.send(_("You now use this server or global prefixes."))
             return
-        if any(len(x) > 25 for x in prefixes):
+        if any(len(x) > 10 for x in prefixes):
             raise commands.UserFeedbackCheckFailure(
                 _(
-                    "A prefix is above the maximal length (25 characters).\nThis is possible for global or per-server prefixes, but not for per-member prefixes."
+                    "A prefix is above the maximal length (10 characters).\nThis is possible for global or per-server prefixes, but not for per-member prefixes."
                 )
             )
         if any(prefix.startswith("/") for prefix in prefixes):
             raise commands.UserFeedbackCheckFailure(
                 _("Prefixes cannot start with `/`, as it conflicts with Discord's slash commands.")
             )
-        await self.config.member(ctx.author).custom_prefixes.set(prefixes)
+        await self.config.user(ctx.author).custom_prefixes.set(prefixes)
         if len(prefixes) == 1:
             await ctx.send(
                 _(
