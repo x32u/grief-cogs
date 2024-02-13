@@ -9,7 +9,6 @@ import urllib.parse
 import aiohttp
 import discord
 from grief.core import commands
-from grief.core import Config as RedDB
 from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.menus import menu
@@ -29,8 +28,8 @@ import textwrap
 import asyncio
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 from red_commons.logging import getLogger
-from grief import BaseModel
 from grief.core import Config, commands
+from pydantic import BaseModel
 
 log = getLogger("grief.fun")
 
