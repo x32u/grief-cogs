@@ -29,6 +29,9 @@ import textwrap
 import asyncio
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 from red_commons.logging import getLogger
+from grief import BaseModel
+from grief.core import Config, commands
+
 log = getLogger("grief.fun")
 
 
@@ -59,6 +62,9 @@ class RPSParser:
             self.choice = RPS.scissors
         else:
             self.choice = None
+
+class UserSettings(BaseModel):
+    custom_prefix: Optional[str]
 
 
 
@@ -95,16 +101,15 @@ class Fun(commands.Cog):
     ]
     _ = T_
 
+    class Fun(commands.Cog):
+        """Purge messages."""
     def __init__(self, bot: Grief) -> None:
         super().__init__()
         self.bot = bot
         self.stopwatches = {}
         self.lmgtfy_endpoint = "https://cog-creators.github.io"
-
-
-    async def red_delete_data_for_user(self, **kwargs):
-        """Nothing to delete"""
-        return
+        self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
+        self.config.register_member(customprefix=[])
 
     @commands.command(usage="<first> <second> [others...]")
     async def choose(self, ctx, *choices):
