@@ -112,6 +112,8 @@ class Fun(commands.Cog):
         self.lmgtfy_endpoint = "https://cog-creators.github.io"
         self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
         self.config.register_user(custom_prefix=[])
+        self.custom_prefix_cache: dict[int, tuple] = {}
+        asyncio.create_task(self.build_custom_prefix_cache())
         self.cache = {}
     
     def get_case_values(chars: str) -> tuple:
