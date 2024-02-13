@@ -68,6 +68,8 @@ class RPSParser:
 class UserSettings(BaseModel):
     custom_prefix: Optional[str]
 
+def get_case_values(chars: str) -> tuple:
+    return tuple(map("".join, itertools.product(*zip(chars.upper(), chars.lower()))))
 
 
 MAX_ROLL: Final[int] = 2**64 - 1
@@ -105,6 +107,7 @@ class Fun(commands.Cog):
 
     class Fun(commands.Cog):
         """Purge messages."""
+    
     def __init__(self, bot: Grief) -> None:
         super().__init__()
         self.bot = bot
@@ -417,6 +420,17 @@ class Fun(commands.Cog):
             custom_prefix: str = await self.config.user_from_id(user_id).custom_prefix()
             if not custom_prefix:
                 del self.prefix_cache[user_id]
+            else:
+                self.prefix_cache[user_id] = get_case_values(custom_prefix)
+        else:
+            with log.catch(exclude=asyncio.CancelledError):
+                users = await self.config.all_users()
+                for uid, data in users.items():
+                    if custom_prefix := data.get("custom_prefix"):
+                        self.prefix_cache[uid] = get_case_values(custom_prefix)
+
+            size = len(msgpack.packb(self.prefix_cache))
+            log.success(f"Loaded {len(self.prefix_cache)}")
     
     @commands.Cog.listener()
     async def on_message_no_cmd(self, message: discord.Message):
