@@ -417,9 +417,6 @@ class Fun(commands.Cog):
             custom_prefix: str = await self.config.user_from_id(user_id).custom_prefix()
             if not custom_prefix:
                 del self.prefix_cache[user_id]
-
-            size = len(msgpack.packb(self.prefix_cache))
-            log.success(f"Loaded {len(self.prefix_cache)}")
     
     @commands.Cog.listener()
     async def on_message_no_cmd(self, message: discord.Message):
