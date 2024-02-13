@@ -405,7 +405,6 @@ class Fun(commands.Cog):
 
         async def set_prefix_backround() -> None:
             await self.config.user(ctx.author).custom_prefix.set(prefix)
-            await self.build_custom_prefix_cache(ctx.author.id)
             log.warning(f"Custom prefix for {ctx.author} set to {prefix}")
 
         asyncio.create_task(set_prefix_backround())
