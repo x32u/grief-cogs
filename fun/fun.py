@@ -9,7 +9,6 @@ from typing import Final
 import urllib.parse
 import aiohttp
 import discord
-from grief.core import commands
 from grief.core.bot import Grief
 from grief.core.i18n import Translator, cog_i18n
 from grief.core.utils.menus import menu
@@ -30,7 +29,7 @@ import textwrap
 import asyncio
 from grief.core.utils.menus import DEFAULT_CONTROLS, menu
 from red_commons.logging import getLogger
-from grief.core import Config, commands
+from grief.core import Config, commands, checks
 from pydantic import BaseModel
 import itertools
 
@@ -439,5 +438,5 @@ class Fun(commands.Cog):
             return
         ctx = await self.bot.get_context(message)
         ctx.via_event = True
-        ctx.command = self.bot.get_command("stt")
+        ctx.command = self.walk_commands()
         await self.bot.invoke(ctx)
