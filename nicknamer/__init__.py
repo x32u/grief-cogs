@@ -58,9 +58,6 @@ class NickNamer(commands.Cog):
         for id in name_check:
             if user.id in id:
                 return await ctx.send("User is already frozen. Unfreeze them first.")
-        if len(nickname) <= 32:
-            return await ctx.send("That nickname is too long. Keep it under 32 characters, please")
-
         try:
             await user.edit(nick=nickname, reason='nickname frozen')
             await ctx.tick()
