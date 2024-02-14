@@ -23,8 +23,9 @@ class NickNamer(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        standard = {"frozen": [], "active": [],}
+        self.config.register_guild(**standard)
         self.config = Config.get_conf(self, identifier=190420201535, force_registration=True)
-        self._rename_tempnicknames.start()
 
     def valid_nickname(self, nickname: str):
         if len(nickname) <= 32:
