@@ -1,4 +1,4 @@
-from grief.core import commands, checks, modlog, Config
+from grief.core import commands, checks, Config
 import discord
 from typing import Optional
 from datetime import datetime
@@ -17,7 +17,6 @@ class NickNamer(commands.Cog):
     """NickNamer"""
 
     def format_help_for_context(self, ctx: commands.Context) -> str:
-        # Thanks Sinbad! And Trusty in whose cogs I found this.
         pre_processed = super().format_help_for_context(ctx)
         return f"{pre_processed}"
 
