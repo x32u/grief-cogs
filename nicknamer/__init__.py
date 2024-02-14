@@ -1,4 +1,5 @@
 from grief.core import commands, checks, Config
+from typing import Any, Dict, Final, List, Literal, Optional, cast
 import discord
 from typing import Optional
 from datetime import datetime
@@ -57,6 +58,8 @@ class NickNamer(commands.Cog):
     @checks.bot_has_permissions(manage_nicknames=True)
     async def freezenick(self, ctx, user: discord.Member, nickname: str = ""):
         """Freeze a users nickname."""
+        nickname = nickname.strip()
+        me = cast(discord.Member, ctx.me)
         name_check = await self.config.guild(ctx.guild).frozen()
         for id in name_check:
             if user.id in id:
