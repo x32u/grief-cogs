@@ -28,11 +28,6 @@ class NickNamer(commands.Cog):
         self.config.register_guild(**default_guild)
         self.settings = {}
 
-    def valid_nickname(self, nickname: str):
-        if len(nickname) <= 32:
-            return True
-        return False
-
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if before.nick != after.nick:
@@ -56,16 +51,14 @@ class NickNamer(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_nicknames=True)
     @checks.bot_has_permissions(manage_nicknames=True)
-    async def freezenick(self, ctx, user: discord.Member, nickname: str = ""):
+    async def freezenick(self, ctx: commands.Context, user: discord.Member, *, nickname: str = ""):
         """Freeze a users nickname."""
         nickname = nickname.strip()
-        me = cast(discord.Member, ctx.me)
         name_check = await self.config.guild(ctx.guild).frozen()
         for id in name_check:
             if user.id in id:
                 return await ctx.send("User is already frozen. Unfreeze them first.")
-        valid_nick_check = self.valid_nickname(nickname=nickname)
-        if not valid_nick_check:
+        if len(nickname) <= 32:
             return await ctx.send("That nickname is too long. Keep it under 32 characters, please")
 
         try:
