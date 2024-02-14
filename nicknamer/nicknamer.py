@@ -22,9 +22,10 @@ class NickNamer(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        standard = {"frozen": [], "active": [],}
-        self.config.register_guild(**standard)
+        default_guild = {"frozen": [], "active": [],}
+        self.config.register_guild(**default_guild)
         self.config = Config.get_conf(self, identifier=190420201535, force_registration=True)
+        self.settings = {}
 
     def valid_nickname(self, nickname: str):
         if len(nickname) <= 32:
