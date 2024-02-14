@@ -46,7 +46,23 @@ class NickNamer(commands.Cog):
                                     if e[0] == before.id:
                                            frozen.remove(e)
 
-
+    @commands.Cog.listener()
+    async def on_member_join(self, before, after):
+        if before.nick != after.nick:
+            settings = await self.config.guild(after.guild).frozen()
+            for e in settings:
+                if after.id in e:
+                    if after.nick != e[1]:
+                        try:
+                            await after.edit(nick=e[1], reason="Nickname frozen.")
+                        except discord.errors.Forbidden:
+                            log.info(
+                                f"Missing permissions to change {before.nick} ({before.id}) in {before.guild.id}, removing freeze"
+                            )
+                            async with self.config.guild(after.guild).frozen() as frozen:
+                                for e in frozen:
+                                    if e[0] == before.id:
+                                           frozen.remove(e)
 
     @commands.command()
     @commands.has_permissions(manage_nicknames=True)
