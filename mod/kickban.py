@@ -349,11 +349,22 @@ class KickBanMixin(MixinMeta):
 
     @commands.command(aliases=["b"])
     @commands.guild_only()
-    @commands.admin_or_permissions(ban_members=True)
-    async def ban(self, ctx: commands.Context, user: Union[discord.Member, RawUserIdConverter], *, reason: str = None,):
+    @commands.has_permissions(ban_members=True)
+    async def ban(
+        self,
+        ctx: commands.Context,
+        user: Union[discord.Member, RawUserIdConverter],
+        days: Optional[int] = None,
+        *,
+        reason: str = None,
+    ):
         """Ban a user from this server and optionally delete days of messages."""
+        
         author = ctx.author
         guild = ctx.guild
+
+        if days is None:
+            days = await self.config.guild(guild).default_days()
         
         if user in self.bot.owner_ids:
                     embed = discord.Embed(description=f"{ctx.author.mention}: you cannot ban the bot owner.", color=0x313338)
@@ -363,26 +374,8 @@ class KickBanMixin(MixinMeta):
             if author == user:
                 embed = discord.Embed(description=f"{ctx.author.mention}: you cannot ban yourself.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
-
-        toggle = await self.config.guild(guild).dm_on_kickban()
-        if toggle:
-                with contextlib.suppress(discord.HTTPException):
-                    em = discord.Embed(
-                        title=bold(_("You have been banned from {guild}.").format(guild=guild)),
-                        color=await self.bot.get_embed_color(user),
-                    )
-                    em.add_field(
-                        name=_("**Reason**"),
-                        value=reason if reason is not None else _("No reason was given."),
-                        inline=False,
-                    )
-                    await user.send(embed=em)
         
-        if isinstance(user, int):
-            user = self.bot.get_user(user) or discord.Object(id=user)
-        
-        await guild.ban(user=user, reason=reason)
-        await ctx.tick()
+        await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
 
     
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
