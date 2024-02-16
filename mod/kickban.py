@@ -207,7 +207,7 @@ class KickBanMixin(MixinMeta):
                     user.id,
                     days,
                 )
-                success_message = _("Done. That felt good.")
+                success_message = None
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
