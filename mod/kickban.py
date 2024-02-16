@@ -74,7 +74,49 @@ class KickBanMixin(MixinMeta):
                 return (await channel.create_invite(max_age=max_age)).url
             except discord.HTTPException:
                 return ""
-            
+
+    @staticmethod
+    async def _voice_perm_check(
+        ctx: commands.Context, user_voice_state: Optional[discord.VoiceState], **perms: bool
+    ) -> bool:
+        """Check if the bot and user have sufficient permissions for voicebans.
+
+        This also verifies that the user's voice state and connected
+        channel are not ``None``.
+
+        Returns
+        -------
+        bool
+            ``True`` if the permissions are sufficient and the user has
+            a valid voice state.
+
+        """
+        if user_voice_state is None or user_voice_state.channel is None:
+            await ctx.send(_("That user is not in a voice channel."))
+            return False
+        voice_channel: discord.VoiceChannel = user_voice_state.channel
+        required_perms = discord.Permissions()
+        required_perms.update(**perms)
+        if not voice_channel.permissions_for(ctx.me) >= required_perms:
+            await ctx.send(
+                _("I require the {perms} permission(s) in that user's channel to do that.").format(
+                    perms=format_perms_list(required_perms)
+                )
+            )
+            return False
+        if (
+            ctx.permission_state is commands.PermState.NORMAL
+            and not voice_channel.permissions_for(ctx.author) >= required_perms
+        ):
+            await ctx.send(
+                _(
+                    "You must have the {perms} permission(s) in that user's channel to use this "
+                    "command."
+                ).format(perms=format_perms_list(required_perms))
+            )
+            return False
+        return True
+
     async def ban_user(
         self,
         user: Union[discord.Member, discord.User, discord.Object],
@@ -165,7 +207,7 @@ class KickBanMixin(MixinMeta):
                     user.id,
                     days,
                 )
-                await ctx.tick()
+                success_message = _("Done. That felt good.")
             except discord.Forbidden:
                 return False, _("I'm not allowed to do that.")
             except discord.NotFound:
@@ -180,53 +222,8 @@ class KickBanMixin(MixinMeta):
                     user.id,
                 )
                 return False, _("An unexpected error occurred.")
-
         return True, success_message
-                
 
-    @staticmethod
-    async def _voice_perm_check(
-        ctx: commands.Context, user_voice_state: Optional[discord.VoiceState], **perms: bool
-    ) -> bool:
-        """Check if the bot and user have sufficient permissions for voicebans.
-
-        This also verifies that the user's voice state and connected
-        channel are not ``None``.
-
-        Returns
-        -------
-        bool
-            ``True`` if the permissions are sufficient and the user has
-            a valid voice state.
-
-        """
-        if user_voice_state is None or user_voice_state.channel is None:
-            await ctx.send(_("That user is not in a voice channel."))
-            return False
-        
-        voice_channel: discord.VoiceChannel = user_voice_state.channel
-        required_perms = discord.Permissions()
-        required_perms.update(**perms)
-        if not voice_channel.permissions_for(ctx.me) >= required_perms:
-            await ctx.send(
-                _("I require the {perms} permission(s) in that user's channel to do that.").format(
-                    perms=format_perms_list(required_perms)
-                )
-            )
-            return False
-        if (
-            ctx.permission_state is commands.PermState.NORMAL
-            and not voice_channel.permissions_for(ctx.author) >= required_perms
-        ):
-            await ctx.send(
-                _(
-                    "You must have the {perms} permission(s) in that user's channel to use this "
-                    "command."
-                ).format(perms=format_perms_list(required_perms))
-            )
-            return False
-        return True
-    
     async def tempban_expirations_task(self) -> None:
         while True:
             try:
@@ -347,9 +344,10 @@ class KickBanMixin(MixinMeta):
                 )
             )
 
-    @commands.command(aliases=["b"])
+    @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(ban_members=True)
+    @commands.bot_has_permissions(ban_members=True)
+    @commands.admin_or_permissions(ban_members=True)
     async def ban(
         self,
         ctx: commands.Context,
@@ -358,24 +356,23 @@ class KickBanMixin(MixinMeta):
         *,
         reason: str = None,
     ):
-        """Ban a user from this server and optionally delete days of messages."""
-        
-        author = ctx.author
         guild = ctx.guild
-
-        if days is None:
-            days = await self.config.guild(guild).default_days()
-        
         if user in self.bot.owner_ids:
                     embed = discord.Embed(description=f"{ctx.author.mention}: you cannot ban the bot owner.", color=0x313338)
                     return await ctx.reply(embed=embed, mention_author=False)
-
-        if isinstance(user, discord.Member):
-            if author == user:
-                embed = discord.Embed(description=f"{ctx.author.mention}: you cannot ban yourself.", color=0x313338)
-                return await ctx.reply(embed=embed, mention_author=False)
         
-        await self.ban_user(user=user, ctx=ctx, days=days, reason=reason)
+        if days is None:
+            days = await self.config.guild(guild).default_days()
+        
+        if isinstance(user, int):
+            user = self.bot.get_user(user) or discord.Object(id=user)
+
+        message = await self.ban_user(
+            user=user, ctx=ctx, days=days, reason=reason
+        )
+
+        await ctx.send(message)
+        await ctx.tick()
 
     
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
