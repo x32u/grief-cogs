@@ -375,7 +375,7 @@ class KickBanMixin(MixinMeta):
                 embed = discord.Embed(description=f"{ctx.author.mention}: you cannot ban yourself.", color=0x313338)
                 return await ctx.reply(embed=embed, mention_author=False)
         
-        await ctx.guild.ban(user=user, ctx=ctx, days=days, reason=reason)
+        await ctx.guild.ban(user=user, days=days, reason=reason)
 
     
     @commands.command(aliases=["hackban", "mb"], usage="<user_ids...> [days] [reason]")
