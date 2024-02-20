@@ -114,10 +114,6 @@ class Fun(commands.Cog):
         self.stopwatches = {}
         self.lmgtfy_endpoint = "https://cog-creators.github.io"
         self.config = Config.get_conf(self, identifier=12039492, force_registration=True)
-        self.config.register_user(custom_prefix=[])
-        self.custom_prefix_cache: dict[int, tuple] = {}
-        asyncio.create_task(self.build_custom_prefix_cache())
-        self.cache = {}
 
 
     @commands.command(usage="<first> <second> [others...]")
@@ -381,14 +377,3 @@ class Fun(commands.Cog):
         guild: discord.Guild = ctx.guild
         mentions = " ".join(m.mention for m in guild.members if not m.bot)
         await asyncio.gather(*[ctx.send(chunk, delete_after=3) for chunk in textwrap.wrap(mentions, 1950)])
-    
-    @commands.Cog.listener()
-    async def on_message_no_cmd(self, message: discord.Message):
-        if not self.bot.is_ready():
-            return
-        if not message.guild:
-            return
-        ctx = await self.bot.get_context(message)
-        ctx.via_event = True
-        ctx.command = self.walk_commands()
-        await self.bot.invoke(ctx)
