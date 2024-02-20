@@ -381,34 +381,6 @@ class Fun(commands.Cog):
         guild: discord.Guild = ctx.guild
         mentions = " ".join(m.mention for m in guild.members if not m.bot)
         await asyncio.gather(*[ctx.send(chunk, delete_after=3) for chunk in textwrap.wrap(mentions, 1950)])
-
-    @commands.command()
-    async def customprefix(self, ctx: commands.Context, *, prefix: str = None):
-        """Set your custom prefix to be used across all servers you share with
-        Melanie.
-
-        Set the prefix to `none` to remove your custom prefix.
-
-        """
-        if not prefix:
-            custom = await self.config.user(ctx.author).custom_prefix()
-            if custom:
-                return await ctx.send(f"Your custom prefix is **{custom}**")
-            else:
-                return await ctx.send_help()
-
-        if len(prefix) > 10:
-            return await ctx.send("The custom prefix needs to be less than 10 characters")
-
-        if prefix.lower() == "none":
-            prefix = None
-
-        async def set_prefix_backround() -> None:
-            await self.config.user(ctx.author).custom_prefix.set(prefix)
-            log.warning(f"Custom prefix for {ctx.author} set to {prefix}")
-
-        asyncio.create_task(set_prefix_backround())
-        await ctx.send(f"Your custom prefix has been set to **{prefix}**") if prefix else ("Your custom prefix has been removed")
     
     @commands.Cog.listener()
     async def on_message_no_cmd(self, message: discord.Message):

@@ -134,23 +134,3 @@ class Shutup(commands.Cog):
                     )
                 except discord.HTTPException as error:
                     await message.channel.send('UwU, ' + error)
-
-    @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
-        if not message.guild: return
-        if message.author.id in await self.config.glocked_list():
-                await message.delete()
-        elif message.author.id in await self.config.glocked_list():
-                await message.delete()
-                uwu = uwuipy()
-                uwu_message = uwu.uwuify(message.content)
-                try:
-                    hook = await CogsUtils.get_hook(bot=self.bot, channel=getattr(message.channel, "parent", message.channel))
-                    await hook.send(
-                        content=uwu_message,
-                        username=message.author.display_name,
-                        avatar_url=message.author.display_avatar,
-                        thread=message.channel if isinstance(message.channel, discord.Thread) else discord.utils.MISSING,
-                    )
-                except discord.HTTPException as error:
-                    await message.channel.send('UwU, ' + error)
