@@ -12,15 +12,12 @@ T_ = i18n.Translator("Shutup", __file__)
 
 _ = lambda s: s
 
-default_global_settings = {"glocked" : {}}
-
 class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
         self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True, )
         default_guild = {"enabled": True, "target_members": [], "uwulocked_members": [],}
         self.config.register_guild(**default_guild)
-        self.config.register_global(**default_global_settings)
 
 
     @commands.command()
@@ -80,36 +77,6 @@ class Shutup(commands.Cog):
     
         async with ctx.typing():
             await self.config.guild(ctx.guild).uwulocked_members.set(enabled_list)
-            embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** will have messages uwuified.", color=0x313338)
-            await ctx.send(embed=embed, mention_author=False)
-
-    @commands.is_owner()
-    @commands.command()
-    async def glock(self, ctx: commands.Context, user: discord.Member):
-        """Add a certain user to have messages get auto-uwuified"""
-
-        if user.id in self.bot.owner_ids:
-            embed = discord.Embed(description=f"> {ctx.author.mention}: You can't glock a bot owner.", color=0x313338)
-            return await ctx.send(embed=embed, mention_author=False)
-
-        if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
-            embed = discord.Embed(description=f"> {ctx.author.mention}: You may only target someone with a lower top role than you.", color=0x313338)
-            return await ctx.send(embed=embed, mention_author=False)
-        
-        glocked_list: list = await self.config.glocked_list()
-        
-        if user.id in glocked_list:
-            glocked_list.remove(user.id)
-            embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** is no longer uwulocked.", color=0x313338)
-            await ctx.send(embed=embed, mention_author=False)
-            async with ctx.typing():
-                await self.config.glocked_members.set(glocked_list)
-            return
-        
-        glocked_list.append(user.id)
-    
-        async with ctx.typing():
-            await self.config.guild(ctx.guild).uwulocked_members.set(glocked_list)
             embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** will have messages uwuified.", color=0x313338)
             await ctx.send(embed=embed, mention_author=False)
 
