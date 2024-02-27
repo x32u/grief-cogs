@@ -15,7 +15,7 @@ _ = lambda s: s
 class Shutup(commands.Cog):
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
-        self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True, )
+        self.config = Config.get_conf(self, identifier=959292943657746464, force_registration=True, )
         default_guild = {"enabled": True, "target_members": [], "uwulocked_members": [],}
         self.config.register_guild(**default_guild)
 
