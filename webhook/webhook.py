@@ -26,7 +26,7 @@ class Webhook(commands.Cog):
         self.bot = bot
         self.config = Config.get_conf(
             self,
-            identifier=334593049319571456,
+            identifier=959292943657746464,
             force_registration=True,
         )
         self.config.register_global(monkey_patch=False)
