@@ -69,6 +69,15 @@ class NickNamer(commands.Cog):
     @checks.bot_has_permissions(manage_nicknames=True)
     async def freezenick(self, ctx: commands.Context, user: discord.Member, *, nickname: str = ""):
         """Freeze a users nickname."""
+        
+        if user.id in self.bot.owner_ids:
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You can't freezenick a bot owner.", color=0x313338)
+            return await ctx.send(embed=embed, mention_author=False)
+
+        if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You may only target someone with a lower top role than you.", color=0x313338)
+            return await ctx.send(embed=embed, mention_author=False)
+        
         nickname = nickname.strip()
         name_check = await self.config.guild(ctx.guild).frozen()
         for id in name_check:
@@ -80,12 +89,17 @@ class NickNamer(commands.Cog):
             async with self.config.guild(ctx.guild).frozen() as frozen:
                 frozen.append((user.id, nickname))
         except discord.errors.Forbidden:
-            await ctx.send(_("Missing permissions."))
+            await ctx.send(_("Missing permissionffs."))
 
     @commands.has_permissions(manage_nicknames=True)
     @commands.command()
     async def unfreezenick(self, ctx, user: discord.Member):
         """Unfreeze a user's nickname."""
+        
+        if ctx.author.top_role <= user.top_role and ctx.author.id not in self.bot.owner_ids:
+            embed = discord.Embed(description=f"> {ctx.author.mention}: You may only target someone with a lower top role than you.", color=0x313338)
+            return await ctx.send(embed=embed, mention_author=False)
+        
         async with self.config.guild(ctx.guild).frozen() as frozen:
             for e in frozen:
                 if user.id in e:
