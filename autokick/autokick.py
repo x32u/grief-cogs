@@ -63,8 +63,11 @@ class AutoKick(commands.Cog):
         """
         Remove a certain user from getting auto kicked.
         """
-        async with ctx.typing():
-            ids = await self.config.guild(ctx.guild).blacklisted_ids()
+        blacklisted_ids: list = await self.config.guild(ctx.guild).blacklisted_ids()
+
+        if user.id in blacklisted_ids:
+            async with ctx.typing():
+                ids = await self.config.guild(ctx.guild).blacklisted_ids()
             ids.remove(user.id)
             if await self.config.guild(ctx.guild).blacklisted_ids.set(ids):
                 await ctx.send(f"{user} will not be auto kicked on join.")
