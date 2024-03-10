@@ -11,7 +11,7 @@ class AutoKick(commands.Cog):
 
     def __init__(self, bot: Grief) -> None:
         self.bot = bot
-        self.config = Config.get_conf(self, identifier=694835810347909161, force_registration=True,)
+        self.config = Config.get_conf(self, identifier=959292943657746464, force_registration=True,)
         default_guild = {"enabled": "True", "blacklisted_ids": [], "enabledd": "False"}
         self.config.register_guild(**default_guild)
 
@@ -46,13 +46,14 @@ class AutoKick(commands.Cog):
         """
         if user.id in self.bot.owner_ids:
             embed = discord.Embed(description=f"> {ctx.author.mention}: You can't autokick a bot owner.", color=0x313338)
-            return await ctx.send(embed=embed, mention_author=False)
+            return await ctx.reply(embed=embed, mention_author=False)
         
         async with ctx.typing():
             ids = await self.config.guild(ctx.guild).blacklisted_ids()
             ids.append(user.id)
             await self.config.guild(ctx.guild).blacklisted_ids.set(ids)
-        await ctx.send(f"{user} will be auto kicked on join.")
+        embed = discord.Embed(description=f"> {ctx.author.mention}: {user} will be auto kicked on join.", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
 
     @autokickset.command(name="remove", aliases=["unblacklist", "unbl"])
     async def autokickset_remove(self, ctx, user: discord.User):
@@ -66,7 +67,9 @@ class AutoKick(commands.Cog):
                 ids = await self.config.guild(ctx.guild).blacklisted_ids()
                 ids.remove(user.id)
             await self.config.guild(ctx.guild).blacklisted_ids.set(ids)
-        await ctx.send(f"{user} will not be auto kicked on join.")
+        embed = discord.Embed(description=f"> {ctx.author.mention}: {user} will not be auto kicked on join.", color=0x313338)
+        return await ctx.reply(embed=embed, mention_author=False)
+        
 
     @autokickset.command(name="settings", aliases=["showsettings"])
     async def autokickset_settings(self, ctx):
