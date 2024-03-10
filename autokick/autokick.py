@@ -52,7 +52,7 @@ class AutoKick(commands.Cog):
             ids = await self.config.guild(ctx.guild).blacklisted_ids()
             ids.append(user.id)
             await self.config.guild(ctx.guild).blacklisted_ids.set(ids)
-        embed = discord.Embed(description=f"> {ctx.author.mention}: {user} will be auto kicked on join.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** will be auto kicked on join.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
 
     @autokickset.command(name="remove", aliases=["unblacklist", "unbl"])
@@ -67,7 +67,7 @@ class AutoKick(commands.Cog):
                 ids = await self.config.guild(ctx.guild).blacklisted_ids()
                 ids.remove(user.id)
             await self.config.guild(ctx.guild).blacklisted_ids.set(ids)
-        embed = discord.Embed(description=f"> {ctx.author.mention}: {user} will not be auto kicked on join.", color=0x313338)
+        embed = discord.Embed(description=f"> {ctx.author.mention}: **{user}** will not be auto kicked on join.", color=0x313338)
         return await ctx.reply(embed=embed, mention_author=False)
         
 
