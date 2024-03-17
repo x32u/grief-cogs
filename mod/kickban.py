@@ -887,7 +887,7 @@ class KickBanMixin(MixinMeta):
 
         try:
             async with ctx.typing():
-                await ctx.guild.edit(banner=data)
+                await ctx.guild.edit(banner=data, reason=f'server banner updated by {ctx.author}')
         except discord.HTTPException:
             await ctx.send(
                 _(
@@ -930,7 +930,7 @@ class KickBanMixin(MixinMeta):
 
         try:
             async with ctx.typing():
-                await ctx.guild.edit(icon=data)
+                await ctx.guild.edit(icon=data, reason=f'server icon updated by {ctx.author}')
         except discord.HTTPException:
             await ctx.send(
                 _(
@@ -974,7 +974,7 @@ class KickBanMixin(MixinMeta):
 
         try:
             async with ctx.typing():
-                await ctx.guild.edit(splash=data)
+                await ctx.guild.edit(splash=data, reason=f'server splash updated by {ctx.author}')
         except discord.HTTPException:
             await ctx.send(
                 _(
